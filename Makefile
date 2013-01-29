@@ -36,7 +36,7 @@ LIBDIR = -L $(SYSTEMC)/lib-$(T_ARCH)
 ## Build with maximum gcc warning level
 CFLAGS = -Wall $(DEBUG) $(OPT)
 ## More libraries
-LIBS   =  -lsystemc -lstdc++ -lm
+LIBS   =    -lsystemc-2.3.0 -Wl,-rpath,$(SYSTEMC)/lib-$(T_ARCH) -lstdc++ -lm
 
 ## Define 'all'
 all:$(EXE)
