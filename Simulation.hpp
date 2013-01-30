@@ -35,11 +35,6 @@ using namespace sc_dt;
   //Simulation parameters
 
 
-/*! \def SIMULATION_DURATION
- *  Defines the duration of simulation in ns
- */
-#define SIMULATION_DURATION 40
-
 /*! \def ROUTER_COUNT
  *  Defines the number of rotuers in the simulation
  */

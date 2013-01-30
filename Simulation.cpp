@@ -72,10 +72,6 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
 
     }
 
-  cout << name() << ": Simulation starts for " << SIMULATION_DURATION << " ns" << endl;
-  /// \li Start the simulation 
-  sc_start(SIMULATION_DURATION, SC_NS);
-
 
 
 
