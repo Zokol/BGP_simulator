@@ -26,7 +26,7 @@ DEBUG  = -g
 OPT    =
 ## SystemC install directory 
 ##for example, SYSTEMC = /usr/local/lib/systemc-2.3
-SYSTEMC = /systemc-2.3.0
+SYSTEMC = /usr/local/lib/systemc-2.3
 
 ## Included source directories
 INCDIR = -I $(SYSTEMC)/include
