@@ -27,9 +27,9 @@ void ProtocolEngine::main(void)
 
   cout << name() << " starts processing at time" << sc_time_stamp() << endl;
   int i = 0;
-  m_Packet.setSourceIP(100);
-  m_Packet.setDestinationIP(200);
+ 
   m_Packet.setProtocolType(0);
+  m_Packet.setIPPayload("1");
 
   port_ToInterface[0]->write(m_Packet);
     while(true)
@@ -37,16 +37,17 @@ void ProtocolEngine::main(void)
       wait();
       
       if(port_FromInterface[i]->num_available() > 0)
-	{
-	  port_FromInterface[i]->read(m_Packet);
-	  cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
-	  m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
-	  cout << name() << " forwarding out from interface 0" << endl;
-	  port_ToInterface[0]->write(m_Packet);
-	  cout << name() << " forwarding out from interface 1" << endl;
-	  port_ToInterface[1]->write(m_Packet);
-
-	}
+          {
+              port_FromInterface[i]->read(m_Packet);
+              cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
+              m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
+              m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
+              cout << name() << " forwarding out from interface 0" << endl;
+              port_ToInterface[0]->write(m_Packet);
+              cout << name() << " forwarding out from interface 1" << endl;
+              port_ToInterface[1]->write(m_Packet);
+              
+          }
       i++;
       if(i == m_InterfaceCount-1)
 	i = 0;
