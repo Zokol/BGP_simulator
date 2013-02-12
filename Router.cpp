@@ -20,9 +20,9 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_Mo
     m_ClkRouter = new sc_clock("CLK", *m_ClkPeriod);
 
   
-  //TO-DO
+ 
   //bind the ports here
-    m_Bgp = new DataPlane("Engine", m_InterfaceCount);
+    m_Bgp = new DataPlane("Data_Plane", m_InterfaceCount);
     m_Bgp->port_Clk(*m_ClkRouter);
 
   
