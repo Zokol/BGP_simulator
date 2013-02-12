@@ -17,6 +17,8 @@
 #include "Packet.hpp"
 #include "Interface_If.hpp"
 
+
+
 using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
@@ -50,8 +52,8 @@ public:
   
 
 
-  sc_export<sc_fifo_out_if<Packet> > export_FromProtocolEngine;
-  sc_export<sc_fifo_in_if<Packet> > export_ToProtocolEngine;
+  sc_export<sc_fifo_out_if<Packet> > export_FromDataPlane;
+  sc_export<sc_fifo_in_if<Packet> > export_ToDataPlane;
 
 
 

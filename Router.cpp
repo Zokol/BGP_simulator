@@ -22,7 +22,7 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_Mo
   
   //TO-DO
   //bind the ports here
-    m_Bgp = new ProtocolEngine("Engine", m_InterfaceCount);
+    m_Bgp = new DataPlane("Engine", m_InterfaceCount);
     m_Bgp->port_Clk(*m_ClkRouter);
 
   
@@ -61,8 +61,8 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_Mo
 
 
 
-      m_Bgp->port_FromInterface(m_NetworkInterface[i]->export_ToProtocolEngine);//bind the receiving buffer's output to the protcol engine's output
-      m_Bgp->port_ToInterface(m_NetworkInterface[i]->export_FromProtocolEngine);//bind the protocol engine's output to the forwarding buffer's input
+      m_Bgp->port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);//bind the receiving buffer's output to the protcol engine's output
+      m_Bgp->port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);//bind the protocol engine's output to the forwarding buffer's input
 
     }
 

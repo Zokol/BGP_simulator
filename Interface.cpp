@@ -9,11 +9,12 @@
 
 #include "Interface.hpp"
 
+
 Interface::Interface(sc_module_name p_ModName):sc_module(p_ModName)
 {
   //make the inner bindings
-    export_FromProtocolEngine(m_ForwardingBuffer); //export the forwarding buffer's input interface for the protocol engine
-    export_ToProtocolEngine(m_ReceivingBuffer); // //export the forwarding buffer's input interface for the protocol engine
+    export_FromDataPlane(m_ForwardingBuffer); //export the forwarding buffer's input interface for the protocol engine
+    export_ToDataPlane(m_ReceivingBuffer); // //export the forwarding buffer's input interface for the protocol engine
 
     m_InterfaceState = DOWN;
 

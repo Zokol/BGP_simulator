@@ -17,7 +17,7 @@
 
 #include "systemc"
 #include "Interface.hpp"
-#include "ProtocolEngine.hpp"
+#include "DataPlane.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -74,7 +74,7 @@ private:
   sc_clock *m_ClkRouter;
 
 
-  ProtocolEngine *m_Bgp;
+  DataPlane *m_Bgp;
 
   Interface **m_NetworkInterface;
 
