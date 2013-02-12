@@ -11,6 +11,8 @@
 
 DataPlane::DataPlane(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount)
 {
+    // Export the BGP message buffer interface
+    export_ToDataPlane(m_BGPForwardingBuffer);
 
     SC_THREAD(main);
     sensitive << port_Clk.pos();

@@ -14,8 +14,8 @@
 
 
 #include "systemc"
-#include "Packet.hpp"
-#include "Interface_If.hpp"
+#include "BGPMessage.hpp"
+#include "RoutingTable_Manage_If.hpp"
 
 
 
@@ -36,15 +36,31 @@ class ControlPlane: public sc_module
 
 public:
 
-
-  /*! \brief Clock signal
-   * \details 
-   * \public
-   */
-  sc_in_clk port_Clk;
-
-    sc_port<sc_fifo_out_if,1, SC_ZERO_OR_MORE_BOUND> port_Output;
-    sc_export<sc_fifo_in_if, 1, SC_ZERO_OR_MORE_BOUND> export_Input;
+    
+    /*! \brief System clock signal
+     * \details The router's internal clock
+     * \public
+     */
+    sc_in_clk port_Clk;
+   
+    /*! \brief Forwarding port
+     * \details Used to write BGP messages to the data plane
+     * \public
+     */
+    sc_port<sc_fifo_out_if<BGPMessage>,1, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
+   
+    /*! \brief Routing Table's management port
+     * \details Used to manage the routing table. Add, remove, update routes
+     * \public
+     */
+    sc_port<RoutingTable_Manage_If,1, SC_ZERO_OR_MORE_BOUND> port_RTManage;
+   
+    /*! \brief Input interface
+     * \details Allows data plane to write received BGP messages into
+     *  m_ReceivingBuffer-fifo
+     * \public
+     */
+    sc_export<sc_fifo_in_if<BGPMessage> > export_ToControlPlane;
   
 
 
@@ -56,9 +72,23 @@ public:
    */
   ControlPlane(sc_module_name p_ModuleName);
 
+
+
+  /*! \brief Destructor of the ControlPlane module
+   * \details Free's all the dynamically allocated memory 
+   * \public
+   */
   ~ControlPlane();
   
 
+
+  /*! \brief The main process of Control Plane module
+   * \details \li Reads BGP messages from the m_ReceivingBuffer. \li
+   * performs the route resolution process accoriding to BGP protocol.
+   * \li Generates the required update messages. \li Keeps track on
+   * different BGP sessions.
+   * \public
+   */
   void controlPlaneMain(void);
 
   /*! \brief Indicate the systemC producer that this module has a process.
