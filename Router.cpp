@@ -9,7 +9,7 @@
 
 #include "Router.hpp"
 
-Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount)
+Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount), m_Bgp("BGP"), m_IP("IP")
 {
 
   
@@ -21,9 +21,14 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_Mo
 
   
  
-  //bind the ports here
-    m_Bgp = new DataPlane("Data_Plane", m_InterfaceCount);
-    m_Bgp->port_Clk(*m_ClkRouter);
+  //set the clock for the planes
+    m_Bgp.port_Clk(*m_ClkRouter);
+    m_IP.port_Clk(*m_ClkRouter);
+
+    //bind the planes
+    m_IP.port_ToControlPlane(m_Bgp.export_ToControlPlane);
+    m_Bgp.port_ToDataPlane(m_IP);
+    m_IP.export_ToDataPlane.bind(m_Bgp.export_ToDataPlane);
 
   
   m_Name = "Interface_";
@@ -83,7 +88,7 @@ Router::~Router()
   delete port_ForwardingInterface;
   delete m_NetworkInterface;
 
-  delete m_Bgp;
+
   delete m_ClkPeriod;
   delete m_ClkRouter;
 }

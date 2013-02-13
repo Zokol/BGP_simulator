@@ -57,3 +57,11 @@ void DataPlane::main(void)
 
     }
 }
+
+bool DataPlane::write(BGPMessage p_BGPMsg)
+{
+    m_BGPForwardingBufferMutex.lock();
+    m_BGPForwardingBuffer.write(p_BGPMsg);
+    m_BGPForwardingBuffer.unlock();
+    return true;
+}

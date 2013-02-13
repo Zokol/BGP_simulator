@@ -73,8 +73,9 @@ private:
    */
   sc_clock *m_ClkRouter;
 
+    ControlPlane m_Bgp;
 
-  DataPlane *m_Bgp;
+  DataPlane m_IP;
 
   Interface **m_NetworkInterface;
 

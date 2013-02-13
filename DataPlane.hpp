@@ -30,7 +30,7 @@ using namespace sc_dt;
 
 
 
-class DataPlane: public sc_module
+class DataPlane: public sc_module, public DataPlane_In_If
 {
 
 public:
@@ -82,6 +82,9 @@ sc_export<sc_fifo_in_if<BGPMessage> > export_ToDataPlane;
 
     void main(void);
 
+
+    virtual bool write(BGPMessage p_BGPMsg);
+
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
      * \public
@@ -89,6 +92,8 @@ sc_export<sc_fifo_in_if<BGPMessage> > export_ToDataPlane;
     SC_HAS_PROCESS(DataPlane);
 
 private:
+
+    sc_mutex m_BGPForwardingBufferMutex;
 
     sc_fifo<BGPMessage> m_BGPForwardingBuffer;
 

@@ -68,6 +68,12 @@ public:
   
 
 
+    /*! \brief Send a keepalive message to the peer
+     * \details A SystemC method, which is sensitive to m_BGPKeepalive event
+     * \public
+     */
+    void sendKeepalive(void);
+
     /*! \brief Invalidates this session
      * \details A SystemC method, which is sensitive to m_BGPHoldDown event
      * \public
@@ -178,6 +184,13 @@ private:
      */
     BGPMessage m_KeepaliveMsg;
 
+
+
+    /*! \brief Resets the Keepalive timer
+     * \details 
+     * \public
+     */
+    void resetKeepalive(void);
 
 
 };
