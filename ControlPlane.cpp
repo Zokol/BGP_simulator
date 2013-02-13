@@ -10,7 +10,7 @@
 #include "ControlPlane.hpp"
 
 
-ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions):sc_module(p_ModName)
+ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionParameters p_BGPParameters):sc_module(p_ModName)
 {
   //make the inner bindings
     export_ToControlPlane(m_ReceivingBuffer); //export the receiving
@@ -19,24 +19,22 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions):sc_module(p
 
 
     //set the session count
-    m_Sessions = p_Sessions;
+    m_SessionCount = p_Sessions;
 
     //initiate the event pointer arrays
-    m_BGPSessionHoldDown = new sc_event*[m_Sessions];
-    m_BGPSessionKeepalive = new sc_event*[m_Sessions];
+    m_BGPSessions = new BGPSession*[m_SessionCount];
 
     //inititate the session events
     for (int i = 0; i < m_Sessions; ++i)
         {
-            m_BGPSessionHoldDown[i] = new sc_event("HoldDown");
-            m_BGPSessionKeepalive[i] = new sc_event("Keepalive");
+            //create a session for the peer behind interface i
+            m_BGPSessions[i] = new BGPSession("BGP_Session", i, p_BGPParameters);
+            //connect the session to the data plane
+            m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
         }
 
 
     SC_THREAD(controlPlaneMain);
-    sensitive << port_Clk.pos();
-
-    SC_THREAD(timer);
     sensitive << port_Clk.pos();
 }
 
@@ -60,20 +58,19 @@ void ControlPlane::controlPlaneMain(void)
 
               //Handle the message here
           }
+
+      //check the timers
+      for (int i = 0; i < m_Sessions; ++i)
+          {
+              //first the keepalives
+              if (m_BGPSessionKeepalive->)
+                  {
+                      
+                  }
+              
+          }
       
     
     }
 
 }
-
-
-
-void ControlPlane::timer(void)
-{
-    while(true)
-        {
-
-        }
-
-}
-

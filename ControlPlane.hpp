@@ -15,7 +15,8 @@
 
 #include "systemc"
 #include "BGPMessage.hpp"
-#include "RoutingTable_Manage_If.hpp"
+//#include "BGPSessionParameters.hpp"
+#include "BGPSession.hpp"
 
 
 
@@ -47,7 +48,7 @@ public:
      * \details Used to write BGP messages to the data plane
      * \public
      */
-    sc_port<sc_fifo_out_if<BGPMessage>,1, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
+    sc_port<DataPlane_In_If,0, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
    
     /*! \brief Routing Table's management port
      * \details Used to manage the routing table. Add, remove, update routes
@@ -61,7 +62,14 @@ public:
      * \public
      */
     sc_export<sc_fifo_in_if<BGPMessage> > export_ToControlPlane;
-  
+   
+   
+    /*! \brief This provides the DataPlane_In_If for BGP sessions
+     * \details 
+     * \public
+     */
+    sc_export<sc_fifo_in_if<BGPMessage> > export_ToDataPlane;
+
 
 
 
@@ -70,7 +78,7 @@ public:
    * \details 
    * \public
    */
-    ControlPlane(sc_module_name p_ModuleName, int sessions);
+    ControlPlane(sc_module_name p_ModuleName, int p_Sessions, BGPSessionParameters p_BGPParameters);
 
 
 
@@ -111,39 +119,18 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
-
-
-  /*! \brief BGP session keepalive timer
-   * \details There is one instance for each session. The keepalive
-   * timer defines when the next keepalice message is to be sent to
-   * the corresponding session.
-   * \private
-   */
-    sc_event **m_BGPSessionKeepalive;
-
-
-
-  /*! \brief BGP session hold down timer
-   * \details There is one instance of sc_event for each session. If
-   * hold down timer expires the link of the corresponding session
-   * shall be concidered to be down and the required action need to be taken.
-   * \private
-   */
-    sc_event **m_BGPSessionHoldDown;
-
-    
   /*! \brief Number of BGP sessions
    * \details This defines how many BGP sessions there are in this router
    * \private
    */
-    int m_Sessions;
+    int  m_SessionCount;
     
-  /*! \brief HoldDown time for each session
-   * \details Defines the holdDown time for each session. The time is
-   * negotiated between the session peers
+  /*! \brief The BGP session modules
+   * \details 
    * \private
    */
-    int *m_HoldDownTime;
+    BGPSession **m_Sessions;
+    
 
 };
 
