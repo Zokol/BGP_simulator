@@ -10,7 +10,7 @@
 #include "BGPSession.hpp"
 
 
-BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters p_SessionParam):sc_module(p_ModuleName)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters p_SessionParam):sc_module(p_ModuleName)
 {
 
     //assign the session parameters
@@ -21,11 +21,15 @@ BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParame
     
     //Register sendKeepalive method to the SystemC kernel
     SC_METHOD(sendKeepalive);
+    dont_initialize();
     sensitive << m_BGPKeepalive;
 
     //Register sessionInvalidation method to the SystemC kernel
     SC_METHOD(sessionInvalidation);
+    dont_initialize();
     sensitive << m_BGPHoldDown;
+
+
 }
 
 BGPSession::~BGPSession()
@@ -44,11 +48,11 @@ void BGPSession::sendKeepalive(void)
     
 
             //TODO build the message
-    
+            
 
-
+            cout << name() << " sending keepalive." << endl;
             //write the message to the control plane
-            port_ToDataPlane.write(m_KeepaliveMsg);
+            port_ToDataPlane->write(m_KeepaliveMsg);
         }
 
 
@@ -57,13 +61,14 @@ void BGPSession::sendKeepalive(void)
     resetKeepalive();
 
     //set next_trigger for this method
-    next_trigger(m_Keepalive);
+    next_trigger(m_BGPKeepalive);
     
 }
 
 
 void BGPSession::sessionInvalidation(void)
 {
+  cout << name() << " session invalid at time " << sc_time_stamp()  << endl;
 
     sessionStop();
 
@@ -86,12 +91,25 @@ void BGPSession::sessionStart(void)
 
 void BGPSession::resetKeepalive(void)
 {
-    m_Keepalive.cancel();
-    m_Keepalive.notify(m_KeepaliveTime, SC_SEC);
+    m_BGPKeepalive.cancel();
+    m_BGPKeepalive.notify(m_KeepaliveTime, SC_SEC);
 }
 
 void BGPSession::resetHoldDown(void)
 {
-    m_HoldDownTime.cancel();
-    m_HoldDownTime.notify(m_HoldDownTime, SC_SEC);
+    m_BGPHoldDown.cancel();
+    m_BGPHoldDown.notify(m_HoldDownTime, SC_SEC);
+}
+
+void BGPSession::setSessionParameters(BGPSessionParameters p_SessionParam)
+{
+    m_HoldDownTime = p_SessionParam.m_HoldDownTime;
+    m_KeepaliveFraction = p_SessionParam.m_KeepaliveFraction;
+
+    m_KeepaliveTime = m_HoldDownTime/m_KeepaliveFraction;
+}
+
+bool BGPSession::isSessionValid(void)
+{
+    return m_SessionValidity;
 }

@@ -17,7 +17,7 @@
 #include "BGPMessage.hpp"
 //#include "BGPSessionParameters.hpp"
 #include "BGPSession.hpp"
-
+#include "RoutingTable_Manage_If.hpp"
 
 
 using namespace std;
@@ -68,9 +68,21 @@ public:
      * \details 
      * \public
      */
-    sc_export<sc_fifo_in_if<BGPMessage> > export_ToDataPlane;
+    sc_export<DataPlane_In_If > export_ToDataPlane;
 
 
+void before_end_of_elaboration()
+        {
+
+            //inititate the session events
+            for (int i = 0; i < m_SessionCount; ++i)
+                {
+                    //connect the session to the data plane
+                    m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
+                }
+
+
+        }
 
 
 
@@ -129,7 +141,7 @@ private:
    * \details 
    * \private
    */
-    BGPSession **m_Sessions;
+    BGPSession **m_BGPSessions;
     
 
 };

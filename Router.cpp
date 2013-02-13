@@ -9,27 +9,30 @@
 
 #include "Router.hpp"
 
-Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount), m_Bgp("BGP"), m_IP("IP")
+Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount), m_Bgp("BGP", p_InterfaceCount, p_BGPSessionParam), m_IP("IP", p_InterfaceCount)
 {
 
   
   /// \li define clock period for Router
-      m_ClkPeriod = new const sc_time(10, SC_NS);
+      m_ClkPeriod = new const sc_time(1, SC_SEC);
 
   /// \li Allocate clock for the Routers using the previously allocated period
     m_ClkRouter = new sc_clock("CLK", *m_ClkPeriod);
 
-  
+    cout << name() << " binding clocks..." << endl;
+      
  
   //set the clock for the planes
     m_Bgp.port_Clk(*m_ClkRouter);
     m_IP.port_Clk(*m_ClkRouter);
 
+    cout << name() << " binding planes..." << endl;
     //bind the planes
     m_IP.port_ToControlPlane(m_Bgp.export_ToControlPlane);
     m_Bgp.port_ToDataPlane(m_IP);
-    m_IP.export_ToDataPlane.bind(m_Bgp.export_ToDataPlane);
+    m_Bgp.export_ToDataPlane(m_IP);
 
+    cout << name() << " binding planes finished." << endl;
   
   m_Name = "Interface_";
 
@@ -66,8 +69,8 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_Mo
 
 
 
-      m_Bgp->port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);//bind the receiving buffer's output to the protcol engine's output
-      m_Bgp->port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);//bind the protocol engine's output to the forwarding buffer's input
+      m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);//bind the receiving buffer's output to the protcol engine's output
+      m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);//bind the protocol engine's output to the forwarding buffer's input
 
     }
 

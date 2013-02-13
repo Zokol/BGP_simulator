@@ -18,7 +18,7 @@
 #include "systemc"
 #include "Packet.hpp"
 #include "BGPMessage.hpp"
-
+#include "DataPlane_In_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -42,7 +42,7 @@ public:
      * \details
      * \public
      */
-sc_export<sc_fifo_in_if<BGPMessage> > export_ToDataPlane;
+    //sc_export<sc_fifo_in_if<BGPMessage> > export_ToDataPlane;
 
     /*! \brief Output port for BGP messages
      * \details Data Plane writes all the received BGP messages into

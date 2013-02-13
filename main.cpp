@@ -20,7 +20,7 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#define SIMULATION_DURATION 50
+#define SIMULATION_DURATION 200
 
 /*!
  * \brief sc_main
@@ -34,7 +34,7 @@ int sc_main(int argc, char * argv [])
 
   cout << "Simulation starts for " << SIMULATION_DURATION << " ns" << endl; 
   ///run the simulation	
-  sc_start(SIMULATION_DURATION, SC_NS);
+  sc_start(SIMULATION_DURATION, SC_SEC);
 
 return 0;
 }//end of main

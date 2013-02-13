@@ -12,7 +12,7 @@
 DataPlane::DataPlane(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount)
 {
     // Export the BGP message buffer interface
-    export_ToDataPlane(m_BGPForwardingBuffer);
+    //    export_ToDataPlane(m_BGPForwardingBuffer);
 
     SC_THREAD(main);
     sensitive << port_Clk.pos();
@@ -62,6 +62,6 @@ bool DataPlane::write(BGPMessage p_BGPMsg)
 {
     m_BGPForwardingBufferMutex.lock();
     m_BGPForwardingBuffer.write(p_BGPMsg);
-    m_BGPForwardingBuffer.unlock();
+    m_BGPForwardingBufferMutex.unlock();
     return true;
 }

@@ -26,7 +26,7 @@ using namespace sc_dt;
 
 
 
-class DataPlane_In_If.hpp: virtual public sc_interface
+class DataPlane_In_If: virtual public sc_interface
 {
 
 public:

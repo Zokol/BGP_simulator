@@ -18,6 +18,8 @@
 #include "systemc"
 #include "Interface.hpp"
 #include "DataPlane.hpp"
+#include "ControlPlane.hpp"
+#include "BGPSessionParameters.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -35,71 +37,73 @@ class Router: public sc_module
 
 public:
 
-  sc_export<Interface_If> **export_ReceivingInterface;
+    sc_export<Interface_If> **export_ReceivingInterface;
 
-  sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND> **port_ForwardingInterface;
+    sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND> **port_ForwardingInterface;
 
 
-  /*!
-   * \brief Constructor
-   * \details Builds the router
-   * @param[in] p_Name The name of the module
-   * \public
-   */
-  Router(sc_module_name p_ModuleName, int p_InterfaceCount);
+    /*!
+     * \brief Constructor
+     * \details Builds the router
+     * @param[in] p_Name The name of the module
+     * \public
+     */
+    Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam);
 
-  ~Router();
+    ~Router();
 
-  void interfaceUp(int p_InterfaceId);  
+    void interfaceUp(int p_InterfaceId);  
 
 private:
 
 
 
-  /*!
-   * \property   const sc_time *clk_Periods
-   * \brief 
-   * \details 
-   * \private
-   */
-  const sc_time *m_ClkPeriod;
+    /*!
+     * \property   const sc_time *clk_Periods
+     * \brief 
+     * \details 
+     * \private
+     */
+    const sc_time *m_ClkPeriod;
 
 
-  /*!
-   * \property sc_clock *clk_Router
-   * \brief Pointer to sc_clock
-   * \details  
-   * \private
-   */
-  sc_clock *m_ClkRouter;
+    /*!
+     * \property sc_clock *clk_Router
+     * \brief Pointer to sc_clock
+     * \details  
+     * \private
+     */
+    sc_clock *m_ClkRouter;
+
+
 
     ControlPlane m_Bgp;
 
-  DataPlane m_IP;
+    DataPlane m_IP;
 
-  Interface **m_NetworkInterface;
+    Interface **m_NetworkInterface;
 
-  int m_InterfaceCount;
+    int m_InterfaceCount;
 
-  /*!
-   * \property  string m_Name
-   * \brief Name string
-   * \details  Used in dynamic module naming.
-   * \private
-   */
-  string m_Name;
+    /*!
+     * \property  string m_Name
+     * \brief Name string
+     * \details  Used in dynamic module naming.
+     * \private
+     */
+    string m_Name;
 
 
-  /*!
-   * \fn   const char *appendName(string p_Name, int p)
-   * \brief Append integer to a string and return const pointer to char string
-   * \details  Used to append module id into the module base name
-   * @param[in] p_Name string  Name string to be appended
-   * @param[in] p int Interger value to be appended into the p_Name
-   * \return const char pointer to the appended string
-   * \private
-   */
-  const char *appendName(string p_Name, int p);
+    /*!
+     * \fn   const char *appendName(string p_Name, int p)
+     * \brief Append integer to a string and return const pointer to char string
+     * \details  Used to append module id into the module base name
+     * @param[in] p_Name string  Name string to be appended
+     * @param[in] p int Interger value to be appended into the p_Name
+     * \return const char pointer to the appended string
+     * \private
+     */
+    const char *appendName(string p_Name, int p);
 };
 
 #endif

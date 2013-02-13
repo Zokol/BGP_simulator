@@ -16,7 +16,7 @@
 #include "systemc"
 #include "BGPMessage.hpp"
 #include "BGPSessionParameters.hpp"
-
+#include "DataPlane_In_If.hpp"
 
 
 using namespace std;
@@ -29,7 +29,7 @@ using namespace sc_dt;
 
 
 
-class BGPSession: public sc_module, public BGPSession_IF
+class BGPSession: public sc_module
 {
 
 public:
@@ -45,7 +45,7 @@ public:
      * receiving FIFO
      * \public
      */
-    sc_port<DataPlane_In_If,1, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
+    sc_port<DataPlane_In_If> port_ToDataPlane;
 
 
     /*! \brief Elaborates the BGPSession module
@@ -105,6 +105,9 @@ public:
      */
     bool isSessionValid(void);
 
+    void sessionStop(void);
+
+    void sessionStart(void);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
@@ -137,8 +140,6 @@ private:
      */
     sc_event m_BGPHoldDown;
 
-    
-    
     /*! \brief Interface of the Session Peer
      * \details Index of the Interface of this router to which the
      * peer of this session connects

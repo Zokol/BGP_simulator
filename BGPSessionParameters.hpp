@@ -47,7 +47,7 @@ public:
      * the peers of this session.
      * \private
      */
-    int m_KeepaliveTime;
+    //    int m_KeepaliveTime;
 
 
     /*! \brief Keepalive fraction

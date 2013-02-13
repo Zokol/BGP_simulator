@@ -15,6 +15,9 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
 ///Constructor briefly: 
 
 
+    m_BGPSessionParam.m_HoldDownTime = 180;
+    m_BGPSessionParam.m_KeepaliveFraction = 3;
+
 
   /// \li Allocate Router pointer array
   m_Router = new Router*[ROUTER_COUNT];
@@ -29,7 +32,7 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
     {
       cout << "Building " << appendName(m_Name, i) << endl;
       /// \li Generate the routers
-      m_Router[i] = new Router(appendName(m_Name, i), INTERFACE_COUNT);
+      m_Router[i] = new Router(appendName(m_Name, i), INTERFACE_COUNT, m_BGPSessionParam);
       cout << appendName(m_Name, i) << " built." << endl;
     }
   
