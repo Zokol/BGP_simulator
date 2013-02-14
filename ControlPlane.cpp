@@ -64,26 +64,41 @@ void ControlPlane::controlPlaneMain(void)
         //Check if there's messages in the input buffer
       if(m_ReceivingBuffer.num_available() > 0)
           {
+              m_ReceivingBuffer.read(m_BGPMsg);
+              int session = 0;
+              //Check the BGP identifier and find the correct session
+              for (int i = 0; i < m_SessionCount; ++i)
+                  {
+                      
+                      //TODO add m_BGPIdentifier to BGPMessage, add
+                      //isThisSession to BGPSession
+                      if (m_BGPSessions[i]->isThisSession(m_BGPMsg.m_BGPIdentifier)) 
+                          {
+                              session = i;
+                              break;
+                          }
+                  }
+              //check the validity of the session
 
+
+              //reset holdDown
+
+
+
+
+
+              //To send a message to data plane
+              port_ToDataPlane->write(m_BGPMSG);
+
+
+              
+              
               //Handle the message here
           }
 
 
 
-      //verify the session validity
-      for (int i = 0; i < m_SessionCount; ++i)
-          {
-              //
-              if (!m_BGPSessions[i]->isSessionValid())
-                  {
-                   
-                      //remove the routes behind the interface i
-                      
-                  }
-
-              
-          }
-      
+        
     
     }
 }

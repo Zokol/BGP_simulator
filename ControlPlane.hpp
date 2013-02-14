@@ -143,6 +143,11 @@ private:
    */
     BGPSession **m_BGPSessions;
     
+  /*! \brief BGP message
+   * \details 
+   * \private
+   */
+    BGPMessage m_BGPMsg;
 
 };
 

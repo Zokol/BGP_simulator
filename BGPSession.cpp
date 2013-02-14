@@ -50,7 +50,7 @@ void BGPSession::sendKeepalive(void)
             //TODO build the message
             
 
-            cout << name() << " sending keepalive." << endl;
+            cout << name() << " sending keepalive at time " << sc_time_stamp() << endl;
             //write the message to the control plane
             port_ToDataPlane->write(m_KeepaliveMsg);
         }
@@ -68,10 +68,10 @@ void BGPSession::sendKeepalive(void)
 
 void BGPSession::sessionInvalidation(void)
 {
-  cout << name() << " session invalid at time " << sc_time_stamp()  << endl;
+    cout << name() << " session invalid at time " << sc_time_stamp()  << endl;
 
     sessionStop();
-
+    next_trigger(m_BGPHoldDown);
 }
 
 void BGPSession::sessionStop(void)

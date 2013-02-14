@@ -29,14 +29,33 @@ class RoutingTable_Manage_If: virtual public sc_interface
 {
 
 public:
-    //TODO Define the methods
 
 
-  /*! \brief Set new route to the Routing Table
-   * \details 
-   * \public
-   */
-  virtual bool setRoute(void) = 0;
+    //TODO Find out what parameters we need for this function.
+    /*! \brief Set new route to the Routing Table
+     * \details 
+     * \public
+     */
+    virtual bool setRoute(void) = 0;
+
+    //TODO 
+    /*! \brief Set new route to the Routing Table
+     * \details 
+     * \public
+     */
+    virtual bool updateRoute(void) = 0;
+
+    //TODO 
+    /*! \brief Set new route to the Routing Table
+     * \details 
+     * \public
+     */
+    virtual int resolveRoute(sc_int<32> p_IPAddress) = 0;
+
+
+
+
+
 };
 
 
