@@ -12,6 +12,7 @@
 
 ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionParameters p_BGPParameters):sc_module(p_ModName)
 {
+
   //make the inner bindings
     export_ToControlPlane(m_ReceivingBuffer); //export the receiving
                                              //buffer's input
@@ -27,8 +28,8 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionP
     //inititate the sessions
     for (int i = 0; i < m_SessionCount; ++i)
         {
-            //create a session for the peer behind interface i
-            m_BGPSessions[i] = new BGPSession("BGP_Session", i, p_BGPParameters);
+            //create a session 
+            m_BGPSessions[i] = new BGPSession("BGP_Session", p_BGPParameters);
         }
     
     SC_THREAD(controlPlaneMain);
@@ -48,15 +49,9 @@ void ControlPlane::controlPlaneMain(void)
 {
   cout << name() << " starting at time" << sc_time_stamp()  << endl;
 
-  cout << name() << " starts the sessions"  << endl;
 
-    //start the sessions
-    for (int i = 0; i < m_SessionCount; ++i)
-        {
-            //create a session for the peer behind interface i
-            m_BGPSessions[i]->sessionStart();
-        }
 
+  //The main thread of the control plane starts
     while(true)
     {
         wait();
@@ -65,23 +60,32 @@ void ControlPlane::controlPlaneMain(void)
       if(m_ReceivingBuffer.num_available() > 0)
           {
               m_ReceivingBuffer.read(m_BGPMsg);
-              int session = 0;
-              //Check the BGP identifier and find the correct session
-              for (int i = 0; i < m_SessionCount; ++i)
+              
+              //check whether the session is valid     
+              if (m_BGPSessions[m_BGPMsg.m_OutboundInterface]->isThisSession(m_BGPMsg.m_BGPIdentifier)) 
                   {
-                      
-                      //TODO add m_BGPIdentifier to BGPMessage, add
-                      //isThisSession to BGPSession
-                      if (m_BGPSessions[i]->isThisSession(m_BGPMsg.m_BGPIdentifier)) 
-                          {
-                              session = i;
-                              break;
-                          }
+                      //if the session is valid do the required routies
+                   
                   }
-              //check the validity of the session
+              //if the session was not valid but this is an OPEN message
+              else if (m_BGPMsg.m_Type = OPEN)
+                  {
 
+                      //start new session for the session index
+                      //corresponding the interface index to which the
+                      //peer is connected
+                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
 
-              //reset holdDown
+                      //start the session
+                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
+
+                  }
+              //Ohterwise
+              else
+                  {
+                      //drop
+
+                  }
 
 
 
