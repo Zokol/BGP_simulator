@@ -28,13 +28,53 @@ using sc_dt::sc_int;
 #define BGPMESSAGE_H
 
 
+/*! \brief BGP message type definitions
+  \details 1 - OPEN, 2 - UPDATE, 3 - NOTIFICATION, 4 - KEEPALIVE
+*/
+
+
+/*! \def OPEN
+ *  \brief Defines the BGP open message type value
+ */
+#define OPEN 1
+
+/*! \def UPDATE
+ *  \brief Defines the BGP update message type value
+ */
+#define UPDATE 2
+
+/*! \def NOTIFICATION
+ *  \brief Defines the BGP notification message type value
+ */
+#define NOTIFICATION 3
+
+/*! \def KEEPALIVE
+ *  \brief Defines the BGP keepalive message type value
+ */
+#define KEEPALIVE 4
 
 class BGPMessage
 {
 public:
 
 
+    /*! \brief Holds the BGP message type value
+     * \details 
+     * \private
+     */
+    int m_Type;
+
+    /*! \brief The originator's BGP identifier
+     * \details 
+     * \private
+     */
     sc_int<32> m_BGPIdentifier;
+
+    /*! \brief The originator's BGP identifier
+     * \details 
+     * \private
+     */
+    int m_OutboundInterface;
 
     BGPMessage():m_Type(0){};
     
@@ -98,12 +138,6 @@ os  << " BGP type: " << p_Msg.m_Type;
 private:
 
 
-
-    /*! \brief Holds the BGP message type value
-     * \details 
-     * \private
-     */
-    int m_Type;
 
 };
 
