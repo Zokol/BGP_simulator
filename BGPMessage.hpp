@@ -22,7 +22,7 @@ using std::string;
 
 using sc_core::sc_trace_file;
 using sc_core::sc_trace;
-
+using sc_dt::sc_int;
 
 #ifndef BGPMESSAGE_H
 #define BGPMESSAGE_H
@@ -32,6 +32,10 @@ using sc_core::sc_trace;
 class BGPMessage
 {
 public:
+
+
+    sc_int<32> m_BGPIdentifier;
+
     BGPMessage():m_Type(0){};
     
     ~BGPMessage(){};
