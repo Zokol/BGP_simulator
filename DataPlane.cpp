@@ -41,12 +41,12 @@ void DataPlane::main(void)
       if(port_FromInterface[i]->num_available() > 0)
           {
               port_FromInterface[i]->read(m_Packet);
-              cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
+              //              cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
               m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
               m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
-              cout << name() << " forwarding out from interface 0" << endl;
+              //              cout << name() << " forwarding out from interface 0" << endl;
               port_ToInterface[0]->write(m_Packet);
-              cout << name() << " forwarding out from interface 1" << endl;
+              //              cout << name() << " forwarding out from interface 1" << endl;
               port_ToInterface[1]->write(m_Packet);
               
           }
