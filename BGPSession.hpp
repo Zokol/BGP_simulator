@@ -8,8 +8,28 @@
 
 /*!
  * \class BGPSession
- * \brief BGPSession module runs the BGP process
- *  \details   
+ * \brief BGPSession module handles the HoldDown and Keepalive timers
+ * of the session and sends keepalive messages to the session peer
+ *  \details BGP session is a sub module of Control Plane. Control
+ * Plane has full control on BGP session. First the session is
+ * elaborated by Control Plane. Then the session is dedicated for some
+ * peer by assigning the peer's BGP identifier to the session. After
+ * that the session is started by calling the sessionStart-function.
+ * After that the session automatically send the keepalive messages to
+ * the peer whenever the keepalive timer expires. Control Plane needs to
+ * reset the HoldDown timer whenever it receives a
+ * message from the peer. Similarly, whenever Control Plane send a
+ * message to the peer, it shall reset the Keepalive timer of the
+ * session. The resets is done by calling the functions
+ * resetHoldDown and resetKeepalive. Control Plane can track message
+ * and the session by comparing the peer's identifier to the one in
+ * the session using the isThisSession-function. When ever the
+ * HoldDown timer expires the session is stopped automatically.
+ * Control plane may check whether the session is still vaid or not
+ * using the isSessionValid-function. The checking shall be done
+ * before the timers are reset. Whenever Control Plane notices that
+ * the session is not valid it shall update the Routing table
+ * accordingly and generate required notification messages.
  */
 
 
@@ -105,9 +125,43 @@ public:
      */
     bool isSessionValid(void);
 
+    /*! \brief Stops this session
+     * \details HoldDown and Keepalive timers are stopped and no
+     * keepalive messages are sent after a call of this function
+     * \public
+     */
     void sessionStop(void);
 
+    /*! \brief Starts the session
+     * \details HoldDown and Keepalive timers are reset and the
+     * sending of keepalive messages starts
+     * \public
+     */
     void sessionStart(void);
+
+    /*! \brief Sets the BGP Identifier of the session peer
+     * \details
+     * @param[in] sc_int<32> p_BGPIdentifier of the session peer
+     * received message
+     * \public
+     */
+    void setPeerIdentifier(sc_int<32> p_BGPIdentifier);
+
+    /*! \brief Checks whether this session is for the passed BGP Identifier
+     * \details
+     * @param[in] sc_int<32> p_BGPIdentifier The BGP Identifier of the
+     * received message
+     * \return <bool> True: if this session corresponds the received
+     * message a identifier. False: in any other case
+     * \public
+     */
+    bool isThisSession(sc_int<32> p_BGPIdentifier);
+
+    /*! \brief Resets the Keepalive timer
+     * \details 
+     * \public
+     */
+    void resetKeepalive(void);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
@@ -121,6 +175,13 @@ public:
 private:
   
 
+
+    /*! \brief Handles the arbitration for Keepalive reset
+     * \details Keepalive can be reset either internally by the
+     * session or externally by the Control Plane.
+     * \private
+     */
+    sc_mutex m_KeepaliveMutex;
 
     /*! \brief BGP session keepalive timer
      * \details There is one instance for each session. The keepalive
@@ -139,7 +200,6 @@ private:
      * \private
      */
     sc_event m_BGPHoldDown;
-
     /*! \brief Interface of the Session Peer
      * \details Index of the Interface of this router to which the
      * peer of this session connects
@@ -185,13 +245,11 @@ private:
      */
     BGPMessage m_KeepaliveMsg;
 
+    sc_int<32> m_BGPIdentifierPeer;
+
+    /***************************Private functions*****************/
 
 
-    /*! \brief Resets the Keepalive timer
-     * \details 
-     * \public
-     */
-    void resetKeepalive(void);
 
 
 };

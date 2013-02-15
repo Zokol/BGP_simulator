@@ -91,8 +91,10 @@ void BGPSession::sessionStart(void)
 
 void BGPSession::resetKeepalive(void)
 {
+    m_KeepaliveMutex.lock();
     m_BGPKeepalive.cancel();
     m_BGPKeepalive.notify(m_KeepaliveTime, SC_SEC);
+    m_KeepaliveMutex.unlock();
 }
 
 void BGPSession::resetHoldDown(void)
@@ -113,3 +115,12 @@ bool BGPSession::isSessionValid(void)
 {
     return m_SessionValidity;
 }
+
+bool BGPSession::isThisSession(sc_int<32> p_BGPIdentifier)
+{
+
+    
+    return m_BGPIdentifierPeer == p_BGPIdentifier ? true : false;
+}
+
+
