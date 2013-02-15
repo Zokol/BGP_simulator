@@ -10,6 +10,26 @@
 #include "BGPSession.hpp"
 
 
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters p_SessionParam):sc_module(p_ModuleName)
+{
+
+    //assign the session parameters
+    setSessionParameters(p_SessionParam);
+    
+    
+    //Register sendKeepalive method to the SystemC kernel
+    SC_METHOD(sendKeepalive);
+    dont_initialize();
+    sensitive << m_BGPKeepalive;
+
+    //Register sessionInvalidation method to the SystemC kernel
+    SC_METHOD(sessionInvalidation);
+    dont_initialize();
+    sensitive << m_BGPHoldDown;
+
+
+}
+
 BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters p_SessionParam):sc_module(p_ModuleName)
 {
 
@@ -21,12 +41,12 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPS
     
     //Register sendKeepalive method to the SystemC kernel
     SC_METHOD(sendKeepalive);
-    dont_initialize();
+    //    dont_initialize();
     sensitive << m_BGPKeepalive;
 
     //Register sessionInvalidation method to the SystemC kernel
     SC_METHOD(sessionInvalidation);
-    dont_initialize();
+    //    dont_initialize();
     sensitive << m_BGPHoldDown;
 
 
@@ -123,4 +143,8 @@ bool BGPSession::isThisSession(sc_int<32> p_BGPIdentifier)
     return m_BGPIdentifierPeer == p_BGPIdentifier ? true : false;
 }
 
+void BGPSession::setPeerIdentifier(sc_int<32> p_BGPIdentifier)
+{
+    m_BGPIdentifierPeer = p_BGPIdentifier;
+}
 

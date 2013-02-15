@@ -72,11 +72,23 @@ public:
      * \details 
      * @param[in] sc_module_name p_ModuleName Defines a unique name
      * for this module
+     * @param[in] int p_PeeringInterface The outbound interface to
+     * which the peer connects
      * @param[in] BGPSessionParameters p_SessionParameters Holds the
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
     BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters p_SessionParam);
+
+    /*! \brief Elaborates the BGPSession module
+     * \details 
+     * @param[in] sc_module_name p_ModuleName Defines a unique name
+     * for this module
+     * @param[in] BGPSessionParameters p_SessionParameters Holds the
+     * keepalive fraction, holddown time, etc. values for this session
+     * \public
+     */
+    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters p_SessionParam);
 
 
 
@@ -200,6 +212,7 @@ private:
      * \private
      */
     sc_event m_BGPHoldDown;
+
     /*! \brief Interface of the Session Peer
      * \details Index of the Interface of this router to which the
      * peer of this session connects
