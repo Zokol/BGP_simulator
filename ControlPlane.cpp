@@ -88,7 +88,7 @@ void ControlPlane::controlPlaneMain(void)
 
 
               //To send a message to data plane
-              port_ToDataPlane->write(m_BGPMSG);
+              port_ToDataPlane->write(m_BGPMsg);
 
 
               
