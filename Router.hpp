@@ -21,6 +21,7 @@
 #include "ControlPlane.hpp"
 #include "BGPSessionParameters.hpp"
 #include "RoutingTable.hpp"
+#include "StringTools.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -117,12 +118,12 @@ private:
     int m_InterfaceCount;
 
     /*!
-     * \property  string m_Name
+     * \property  StringTools m_Name
      * \brief Name string
      * \details  Used in dynamic module naming.
      * \private
      */
-    string m_Name;
+    StringTools m_Name;
 
 
     /*!
@@ -134,7 +135,7 @@ private:
      * \return const char pointer to the appended string
      * \private
      */
-    const char *appendName(string p_Name, int p);
+    //    const char *appendName(string p_Name, int p);
 };
 
 #endif

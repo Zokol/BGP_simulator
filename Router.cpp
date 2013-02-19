@@ -9,7 +9,7 @@
 
 #include "Router.hpp"
 
-Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount), m_Bgp("BGP", p_InterfaceCount, p_BGPSessionParam), m_IP("IP", p_InterfaceCount)
+Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount), m_Bgp("BGP", p_InterfaceCount, p_BGPSessionParam), m_IP("IP", p_InterfaceCount), m_RoutingTable("RoutingTable"), m_Name("Interface")
 {
 
   
@@ -33,24 +33,39 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionPara
     m_Bgp.export_ToDataPlane(m_IP);
 
     cout << name() << " binding planes finished." << endl;
-  
-  m_Name = "Interface_";
+
+    //pass clock to the routing table module
+    m_RoutingTable.port_Clk(*m_ClkRouter);
+
+    //bind the control plane to routing table
+    m_Bgp.port_ToRoutingTable(m_RoutingTable.export_ToRoutingTable);
+
+    //bind data plane to the routing table
+    m_IP.port_ToRoutingTable(m_RoutingTable);
+
+ 
+
 
   //allocate reference array for network interface modules
   m_NetworkInterface = new Interface*[m_InterfaceCount];
 
+
   //allocate reference array for receiving exports
   export_ReceivingInterface = new sc_export<Interface_If>*[m_InterfaceCount];
 
+
   //allocate reference array for fowarding ports
   port_ForwardingInterface = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>*[m_InterfaceCount];
+
+
+
 
   //instantiate the network interface modules
   for(int i = 0; i < m_InterfaceCount; i++)
     {
       
       //instantiate an interface
-      m_NetworkInterface[i] = new Interface(appendName(m_Name, i));
+        m_NetworkInterface[i] = new Interface(m_Name.getNextName());
 
       //instantiate hierarchial forwarding port
       port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
@@ -68,9 +83,9 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionPara
 
 
 
-
-      m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);//bind the receiving buffer's output to the protcol engine's output
-      m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);//bind the protocol engine's output to the forwarding buffer's input
+      //bind the interfaces to the data plane
+      m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
+      m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
 
     }
 
@@ -103,10 +118,10 @@ void Router::interfaceUp(int p_InterfaceId)
 }
 
 
-const char* Router::appendName(string p_Name, int p)
-{
-  stringstream ss;
-  ss << p;
-  p_Name += ss.str();
-  return p_Name.c_str();
-}
+// const char* Router::appendName(string p_Name, int p)
+// {
+//   stringstream ss;
+//   ss << p;
+//   p_Name += ss.str();
+//   return p_Name.c_str();
+// }

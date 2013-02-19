@@ -10,7 +10,7 @@
 #include "ControlPlane.hpp"
 
 
-ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionParameters p_BGPParameters):sc_module(p_ModName)
+ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionParameters p_BGPParameters):sc_module(p_ModName), m_Name("BGP_Session")
 {
 
   //make the inner bindings
@@ -29,7 +29,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionP
     for (int i = 0; i < m_SessionCount; ++i)
         {
             //create a session 
-            m_BGPSessions[i] = new BGPSession("BGP_Session", p_BGPParameters);
+            m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), p_BGPParameters);
         }
     
     SC_THREAD(controlPlaneMain);

@@ -18,7 +18,7 @@
 //#include "BGPSessionParameters.hpp"
 #include "BGPSession.hpp"
 #include "RoutingTable_If.hpp"
-
+#include "StringTools.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -54,7 +54,7 @@ public:
      * \details Used to manage the routing table. Add, remove, update routes
      * \public
      */
-    sc_port<sc_fifo_in_if<BGPMessage> ,1, SC_ZERO_OR_MORE_BOUND> port_RTManage;
+    sc_port<sc_fifo_in_if<BGPMessage> ,1, SC_ZERO_OR_MORE_BOUND> port_ToRoutingTable;
    
     /*! \brief Input interface
      * \details Allows data plane to write received BGP messages into
@@ -148,6 +148,8 @@ private:
    * \private
    */
     BGPMessage m_BGPMsg;
+
+    StringTools m_Name;
 
 };
 

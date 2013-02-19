@@ -21,7 +21,7 @@ using namespace sc_core;
 using namespace sc_dt;
 
 
-#ifndef _ROUTINGTABLE_MANAGE_IF_H_
+#ifndef _ROUTINGTABLE_IF_H_
 #define _ROUTINGTABLE_IF_H_
 
 

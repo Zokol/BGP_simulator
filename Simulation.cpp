@@ -23,17 +23,17 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
   m_Router = new Router*[ROUTER_COUNT];
 
   /// \li Set the base name for the router modules
-  m_Name = "Router_";
+  m_Name.setBaseName("Router");
 
 
 
   /// \li Initiate the Router modules as m_Router
   for(int i = 0; i < ROUTER_COUNT; i++)
     {
-      cout << "Building " << appendName(m_Name, i) << endl;
+        cout << "Building " << m_Name.getNextName() << endl;
       /// \li Generate the routers
-      m_Router[i] = new Router(appendName(m_Name, i), INTERFACE_COUNT, m_BGPSessionParam);
-      cout << appendName(m_Name, i) << " built." << endl;
+      m_Router[i] = new Router(m_Name.getCurrentName(), INTERFACE_COUNT, m_BGPSessionParam);
+      cout << m_Name.getCurrentName() << " built." << endl;
     }
   
 
@@ -88,12 +88,4 @@ Simulation::~Simulation()
     delete m_Router[i];
 
   delete m_Router;
-}
-
-const char* Simulation::appendName(string p_Name, int p)
-{
-  stringstream ss;
-  ss << p;
-  p_Name += ss.str();
-  return p_Name.c_str();
 }

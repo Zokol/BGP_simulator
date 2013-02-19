@@ -16,7 +16,7 @@
 
 #include "systemc"
 #include "RoutingTable_If.hpp"
-
+#include "BGPMessage.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -27,7 +27,7 @@ using namespace sc_dt;
 #ifndef _ROUTINGTABLE_H_
 #define _ROUTINGTABLE_H_
 
-class RoutingTable: public sc_module, RoutingTable_If
+class RoutingTable: public sc_module, public RoutingTable_If
 {
 
 public:
@@ -48,9 +48,9 @@ public:
    
 
 
-    void before_end_of_elaboration()
-    {
-    }
+    //    void before_end_of_elaboration()
+    //{
+    //}
 
 
 
