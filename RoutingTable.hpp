@@ -3,7 +3,7 @@
  *  \details   
  *  \author    Antti Siirilä, 501449
  *  \version   1.0
- *  \date      12.2.2013
+ *  \date      Tue Feb 19 09:27:44 2013
  */
 
 /*!
@@ -48,42 +48,50 @@ public:
    
 
 
-void before_end_of_elaboration()
-        {
-        }
+    void before_end_of_elaboration()
+    {
+    }
 
 
 
-  /*! \brief Elaborates the RoutingTable module
-   * \details 
-   * \public
-   */
+    /*! \brief Elaborates the RoutingTable module
+     * \details 
+     * \public
+     */
     RoutingTable(sc_module_name p_ModuleName);
 
 
 
-  /*! \brief Destructor of the RoutingTable module
-   * \details Free's all the dynamically allocated memory 
-   * \public
-   */
-  ~RoutingTable();
+    /*! \brief Destructor of the RoutingTable module
+     * \details Free's all the dynamically allocated memory 
+     * \public
+     */
+    ~RoutingTable();
   
 
 
-  /*! \brief The main process of Control Plane module
-   * \details \li Reads BGP messages from the m_ReceivingBuffer. \li
-   * performs the route resolution process accoriding to BGP protocol.
-   * \li Generates the required update messages. \li Keeps track on
-   * different BGP sessions.
-   * \public
-   */
-  void routingTableMain(void);
+    /*! \brief The main process of Control Plane module
+     * \details \li Reads BGP messages from the m_ReceivingBuffer. \li
+     * performs the route resolution process accoriding to BGP protocol.
+     * \li Generates the required update messages. \li Keeps track on
+     * different BGP sessions.
+     * \public
+     */
+    void routingTableMain(void);
 
-  /*! \brief Indicate the systemC producer that this module has a process.
-   * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
-   * \public
-   */
-  SC_HAS_PROCESS(RoutingTable);
+    /*! \brief Set new route to the Routing Table
+     * \details 
+     * \public
+     */
+    virtual int resolveRoute(sc_int<32> p_IPAddress);
+
+
+
+    /*! \brief Indicate the systemC producer that this module has a process.
+     * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
+     * \public
+     */
+    SC_HAS_PROCESS(RoutingTable);
 
 
 
@@ -100,26 +108,26 @@ private:
     sc_fifo<BGPMessage> m_ReceivingBuffer;
     
     
-  /*! \brief BGP message
-   * \details 
-   * \private
-   */
+    /*! \brief BGP message
+     * \details 
+     * \private
+     */
     BGPMessage m_BGPMsg;
 
 
-    //TODO Find out what parameters we need for this function.
-    /*! \brief Set new route to the Routing Table
-     * \details 
-     * \public
-     */
-    virtual bool setRoute(void) = 0;
+    // //TODO Find out what parameters we need for this function.
+    // /*! \brief Set new route to the Routing Table
+    //  * \details 
+    //  * \public
+    //  */
+    // bool setRoute(void);
 
-    //TODO 
-    /*! \brief Set new route to the Routing Table
-     * \details 
-     * \public
-     */
-    virtual bool updateRoute(void) = 0;
+    // //TODO 
+    // /*! \brief Set new route to the Routing Table
+    //  * \details 
+    //  * \public
+    //  */
+    // bool updateRoute(void);
 
 
 

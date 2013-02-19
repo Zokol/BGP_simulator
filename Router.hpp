@@ -20,6 +20,7 @@
 #include "DataPlane.hpp"
 #include "ControlPlane.hpp"
 #include "BGPSessionParameters.hpp"
+#include "RoutingTable.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -75,14 +76,44 @@ private:
      */
     sc_clock *m_ClkRouter;
 
-
-
+    /*!
+     * \property ControlPlane m_Bgp 
+     * \brief Conrol plane submodule of Router
+     * \details Runs the BGP process
+     * \private
+     */
     ControlPlane m_Bgp;
 
+    /*!
+     * \property DataPlane m_IP 
+     * \brief Data plane submodule of Router
+     * \details Runs the IP process
+     * \private
+     */
     DataPlane m_IP;
 
+    /*!
+     * \property RoutingTable m_RoutingTable
+     * \brief Routing table module of the router
+     * \details Stores, manages, and resolves routes
+     * \private
+     */
+    RoutingTable m_RoutingTable;
+
+    /*!
+     * \property Interface **m_NetworkInterface
+     * \brief Pointer array to network interfaces of the router
+     * \details 
+     * \private
+     */
     Interface **m_NetworkInterface;
 
+    /*!
+     * \property int m_InterfaceCount 
+     * \brief Defines how many interface modules the router has
+     * \details 
+     * \private
+     */
     int m_InterfaceCount;
 
     /*!

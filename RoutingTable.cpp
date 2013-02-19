@@ -14,10 +14,10 @@
 RoutingTable::RoutingTable(sc_module_name p_ModName):sc_module(p_ModName)
 {
 
-  //make the inner bindings
+    //make the inner bindings
     export_ToRoutingTable(m_ReceivingBuffer); //export the receiving
-                                             //buffer's input
-                                             //interface for the data plane
+    //buffer's input
+    //interface for the data plane
 
     
     SC_THREAD(routingTableMain);
@@ -29,6 +29,7 @@ RoutingTable::~RoutingTable()
 }
 
 
+
 void RoutingTable::routingTableMain(void)
 {
 
@@ -37,10 +38,17 @@ void RoutingTable::routingTableMain(void)
 
 
 
-  //The main thread of routing table module starts
+    //The main thread of routing table module starts
     while(true)
-    {
-        wait();
-    }
+        {
+            wait();
+        }
 }
 
+
+int RoutingTable::resolveRoute(sc_int<32> p_IPAddress)
+{
+
+    //TODO: implement the logic
+    return 1;
+}
