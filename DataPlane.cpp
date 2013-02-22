@@ -8,7 +8,7 @@
 
 
 #include "DataPlane.hpp"
-
+#include "StringTools.hpp"
 
 extern char* g_MessageId;
 
@@ -31,11 +31,12 @@ void DataPlane::main(void)
 {
 
     //TODO: solve this segmentation fault
-    /* StringTools l_Report;
-    l_Report.appendReportString(" testing at ");
-    SC_REPORT_INFO(g_MessageId, l_Report.getReportString());
-    l_Report.resetReportString();
-    */
+    StringTools *l_Report = new StringTools();
+    l_Report->appendReportString(name());
+    l_Report->appendReportString(" testing at ");
+    l_Report->appendReportString(sc_time_stamp());
+    SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
+    l_Report->resetReportString();
 
   int i = 0;
   bool testFlag = true;
@@ -51,8 +52,8 @@ void DataPlane::main(void)
           {
               port_FromInterface[i]->read(m_Packet);
               //cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
-              cout << name() << " resolved route in interface " << port_ToRoutingTable->resolveRoute(9) << endl;
-              SC_REPORT_INFO(g_MessageId, "TESTING");
+              //      cout << name() << " resolved route in interface " << port_ToRoutingTable->resolveRoute(9) << endl;
+              //              SC_REPORT_INFO(g_MessageId, "TESTING");
 
               m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
               m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
@@ -68,6 +69,7 @@ void DataPlane::main(void)
 
 
     }
+    delete l_Report;
 }
 
 bool DataPlane::write(BGPMessage p_BGPMsg)

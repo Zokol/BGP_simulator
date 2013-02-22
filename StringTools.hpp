@@ -48,6 +48,10 @@ public:
 
     void appendReportString(string p_ReportString);
 
+    void appendReportString(const char *p_ReportString);
+
+    void appendReportString(const sc_core::sc_time p_ReportString);
+
     const char* getReportString(void);
 
     void resetReportString(void);

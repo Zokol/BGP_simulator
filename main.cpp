@@ -34,7 +34,7 @@ int sc_main(int argc, char * argv [])
     
     sc_report rp;
     sc_report_handler::set_log_file_name("test_simu.log");
-    sc_report_handler::set_actions(g_MessageId, SC_INFO, SC_DO_NOTHING);
+    sc_report_handler::set_actions(g_MessageId, SC_INFO, SC_DISPLAY);
     SC_REPORT_INFO(g_MessageId, g_SimulationVersion);
 
   ///initiate the simulation

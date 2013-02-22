@@ -54,13 +54,24 @@ const char* StringTools::getNextName(void)
 }
 
 
+void StringTools::appendReportString(const char *p_ReportString)
+{
+    m_ResportString << p_ReportString;
+}
+
 void StringTools::appendReportString(string p_ReportString)
 {
-    m_ResportString << p_ReportString  << endl;
+    m_ResportString << p_ReportString;
+}
+
+void StringTools::appendReportString(const sc_core::sc_time p_ReportString)
+{
+    m_ResportString << p_ReportString;
 }
 
 const char* StringTools::getReportString(void)
 {
+    //    m_ResportString << endl;
     return m_ResportString.str().c_str();
 }
 
