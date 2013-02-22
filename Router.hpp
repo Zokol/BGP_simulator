@@ -125,17 +125,6 @@ private:
      */
     StringTools m_Name;
 
-
-    /*!
-     * \fn   const char *appendName(string p_Name, int p)
-     * \brief Append integer to a string and return const pointer to char string
-     * \details  Used to append module id into the module base name
-     * @param[in] p_Name string  Name string to be appended
-     * @param[in] p int Interger value to be appended into the p_Name
-     * \return const char pointer to the appended string
-     * \private
-     */
-    //    const char *appendName(string p_Name, int p);
 };
 
 #endif

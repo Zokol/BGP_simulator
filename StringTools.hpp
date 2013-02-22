@@ -46,6 +46,12 @@ public:
 
     void setSeparator(string p_Separator);
 
+    void appendReportString(string p_ReportString);
+
+    const char* getReportString(void);
+
+    void resetReportString(void);
+
 private:
 
     string m_BaseName;
@@ -55,6 +61,8 @@ private:
     string m_Separator;
 
     int m_Identifier;
+
+    ostringstream m_ResportString;
     
 };
 

@@ -9,6 +9,9 @@
 
 #include "DataPlane.hpp"
 
+
+extern char* g_MessageId;
+
 DataPlane::DataPlane(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount)
 {
     // Export the BGP message buffer interface
@@ -27,9 +30,15 @@ DataPlane::~DataPlane()
 void DataPlane::main(void)
 {
 
-  cout << name() << " starts processing at time" << sc_time_stamp() << endl;
+    //TODO: solve this segmentation fault
+    /* StringTools l_Report;
+    l_Report.appendReportString(" testing at ");
+    SC_REPORT_INFO(g_MessageId, l_Report.getReportString());
+    l_Report.resetReportString();
+    */
+
   int i = 0;
- 
+  bool testFlag = true;
   m_Packet.setProtocolType(0);
   m_Packet.setIPPayload("1");
 
@@ -41,7 +50,10 @@ void DataPlane::main(void)
       if(port_FromInterface[i]->num_available() > 0)
           {
               port_FromInterface[i]->read(m_Packet);
-              //              cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
+              //cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
+              cout << name() << " resolved route in interface " << port_ToRoutingTable->resolveRoute(9) << endl;
+              SC_REPORT_INFO(g_MessageId, "TESTING");
+
               m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
               m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
               //              cout << name() << " forwarding out from interface 0" << endl;

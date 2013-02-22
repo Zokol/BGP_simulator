@@ -26,8 +26,16 @@ using namespace sc_dt;
  * \brief sc_main
  * \details Initiates the Simulation module, which builds up the Router modules and starts the simulation.
  */
+
+const char* g_MessageId = "PP_G2_simulation/";
+const char* g_SimulationVersion = "Test";
 int sc_main(int argc, char * argv [])
 {
+    
+    sc_report rp;
+    sc_report_handler::set_log_file_name("test_simu.log");
+    sc_report_handler::set_actions(g_MessageId, SC_INFO, SC_DO_NOTHING);
+    SC_REPORT_INFO(g_MessageId, g_SimulationVersion);
 
   ///initiate the simulation
   Simulation test("Test");

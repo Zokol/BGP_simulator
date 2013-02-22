@@ -117,11 +117,3 @@ void Router::interfaceUp(int p_InterfaceId)
   cout << m_NetworkInterface[p_InterfaceId]->name() << " set up." << endl;
 }
 
-
-// const char* Router::appendName(string p_Name, int p)
-// {
-//   stringstream ss;
-//   ss << p;
-//   p_Name += ss.str();
-//   return p_Name.c_str();
-// }

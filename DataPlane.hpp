@@ -43,7 +43,7 @@ public:
      * \details
      * \public
      */
-    sc_port<RoutingTable_If> port_ToRoutingTable;
+    sc_port<RoutingTable_If > port_ToRoutingTable;
 
     /*! \brief Output port for BGP messages
      * \details Data Plane writes all the received BGP messages into

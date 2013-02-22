@@ -52,3 +52,19 @@ const char* StringTools::getNextName(void)
   m_CurrentName = ss.str();
   return m_CurrentName.c_str();
 }
+
+
+void StringTools::appendReportString(string p_ReportString)
+{
+    m_ResportString << p_ReportString  << endl;
+}
+
+const char* StringTools::getReportString(void)
+{
+    return m_ResportString.str().c_str();
+}
+
+void StringTools::resetReportString(void)
+{
+    m_ResportString.clear();
+}
