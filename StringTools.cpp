@@ -2,17 +2,28 @@
 
 
 
-StringTools::StringTools():m_Identifier(0), m_BaseName("--"), m_Separator("_")
+StringTools::StringTools():m_BaseName("--"), m_Separator("_"), m_Identifier(0), m_StampTime(true), m_Reset(true)
 {
 }
 
-
-StringTools::StringTools(string p_BaseName):m_Identifier(0), m_BaseName(p_BaseName), m_Separator("_")
+StringTools::StringTools(string p_BaseName):m_BaseName(p_BaseName), m_Separator("_"), m_Identifier(0)
 {
 }
 
-StringTools::StringTools(string p_BaseName, string p_Separator):m_Identifier(0), m_BaseName(p_BaseName), m_Separator(p_Separator)
+StringTools::StringTools(string p_BaseName, string p_Separator):m_BaseName(p_BaseName), m_Separator(p_Separator), m_Identifier(0)
 {
+}
+
+StringTools::StringTools(const char *p_BaseName):m_Separator("_"), m_Identifier(0), m_StampTime(true), m_Reset(true)
+{
+    m_ResportString << p_BaseName << ": ";
+}
+
+StringTools::StringTools(const char *p_BaseName, bool p_StampTime):m_Separator("_"), m_Identifier(0), m_StampTime(p_StampTime), m_Reset(true)
+{
+    m_ResportString << p_BaseName << ": ";
+    
+
 }
 
 StringTools::~StringTools()
@@ -38,6 +49,16 @@ void StringTools::setIdentifier(int p_Identifier)
 void StringTools::setSeparator(string p_Separator)
 {
     m_Separator = p_Separator;
+}
+
+void StringTools::setStampTime(bool p_StampTime)
+{
+    m_StampTime  = p_StampTime;
+}
+
+void StringTools::setReset(bool p_Reset)
+{
+    m_Reset  = p_Reset;
 }
 
 const char* StringTools::getCurrentName(void)
@@ -71,8 +92,33 @@ void StringTools::appendReportString(const sc_core::sc_time p_ReportString)
 
 const char* StringTools::getReportString(void)
 {
-    //    m_ResportString << endl;
-    return m_ResportString.str().c_str();
+    if(m_StampTime)
+        m_ResportString << m_CurrentName << ": @" << sc_core::sc_time_stamp();
+    const char *temp = m_ResportString.str().c_str();
+    if(m_Reset)
+        resetReportString();
+    return temp;
+}
+
+const char* StringTools::getReportString(bool p_StampTime)
+{
+    m_StampTime = p_StampTime;
+    return getReportString();
+}
+
+const char* StringTools::getReportString(string p_DirectFeed, bool p_StampTime)
+{
+    m_CurrentName = p_DirectFeed;
+    m_StampTime = p_StampTime;
+    return getReportString();
+}
+
+const char* StringTools::getReportString(string p_DirectFeed, bool p_StampTime, bool p_Reset)
+{
+    m_CurrentName = p_DirectFeed;
+    m_Reset = p_Reset;
+    m_StampTime = p_StampTime;
+    return getReportString();
 }
 
 void StringTools::resetReportString(void)

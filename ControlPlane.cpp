@@ -68,7 +68,7 @@ void ControlPlane::controlPlaneMain(void)
                    
                   }
               //if the session was not valid but this is an OPEN message
-              else if (m_BGPMsg.m_Type = OPEN)
+              else if (m_BGPMsg.m_Type == OPEN)
                   {
 
                       //start new session for the session index

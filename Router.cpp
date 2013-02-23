@@ -9,7 +9,7 @@
 
 #include "Router.hpp"
 
-Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount), m_Bgp("BGP", p_InterfaceCount, p_BGPSessionParam), m_IP("IP", p_InterfaceCount), m_RoutingTable("RoutingTable"), m_Name("Interface")
+Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam):sc_module(p_ModuleName), m_Bgp("BGP", p_InterfaceCount, p_BGPSessionParam), m_IP("IP", p_InterfaceCount), m_RoutingTable("RoutingTable"), m_InterfaceCount(p_InterfaceCount), m_Name("Interface")
 {
 
   
@@ -68,7 +68,7 @@ Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionPara
         m_NetworkInterface[i] = new Interface(m_Name.getNextName());
 
       //instantiate hierarchial forwarding port
-      port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
+        port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
       
       //bind network interface port to router's hierarchial port
       m_NetworkInterface[i]->port_Output.bind(*port_ForwardingInterface[i]);

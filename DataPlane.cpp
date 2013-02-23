@@ -30,16 +30,14 @@ DataPlane::~DataPlane()
 void DataPlane::main(void)
 {
 
-    //TODO: solve this segmentation fault
-    StringTools *l_Report = new StringTools();
-    l_Report->appendReportString(name());
+
+    StringTools *l_Report = new StringTools(name());
     l_Report->appendReportString(" testing at ");
-    l_Report->appendReportString(sc_time_stamp());
     SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
-    l_Report->resetReportString();
+
 
   int i = 0;
-  bool testFlag = true;
+
   m_Packet.setProtocolType(0);
   m_Packet.setIPPayload("1");
 

@@ -32,6 +32,10 @@ public:
 
     StringTools(string p_BaseName, string p_Separator);
 
+    StringTools(const char *p_BaseName);
+
+    StringTools(const char *p_BaseName, bool p_StampTime);
+
     virtual ~StringTools();
 
     void setBaseName(string p_BaseName);
@@ -46,6 +50,10 @@ public:
 
     void setSeparator(string p_Separator);
 
+    void setStampTime(bool p_StampTime);
+
+    void setReset(bool p_Reset);
+
     void appendReportString(string p_ReportString);
 
     void appendReportString(const char *p_ReportString);
@@ -53,6 +61,12 @@ public:
     void appendReportString(const sc_core::sc_time p_ReportString);
 
     const char* getReportString(void);
+
+    const char* getReportString(bool p_StampTime);
+
+    const char* getReportString(string p_DirectFeed, bool p_StampTime);
+
+    const char* getReportString(string p_DirectFeed, bool p_StampTime, bool p_Reset);
 
     void resetReportString(void);
 
@@ -68,6 +82,9 @@ private:
 
     ostringstream m_ResportString;
     
+    bool m_StampTime;    
+
+    bool m_Reset;
 };
 
 
