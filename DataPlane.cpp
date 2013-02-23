@@ -30,11 +30,9 @@ DataPlane::~DataPlane()
 void DataPlane::main(void)
 {
 
-
     StringTools *l_Report = new StringTools(name());
-    l_Report->appendReportString(" testing at ");
-    SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
 
+    SC_REPORT_INFO(g_MessageId, l_Report->getReportString("Main of IP plane starts ", false));
 
   int i = 0;
 
