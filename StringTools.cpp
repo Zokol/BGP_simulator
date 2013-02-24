@@ -75,7 +75,7 @@ const char* StringTools::getNextName(void)
 }
 
 
-void StringTools::appendReportString(const char *p_ReportString)
+void StringTools::appendString(const char *p_ReportString)
 {
     ostringstream l_Temp(p_ReportString);
     m_CurrentName += l_Temp.str();
@@ -83,58 +83,33 @@ void StringTools::appendReportString(const char *p_ReportString)
 }
 
 
-void StringTools::appendReportString(const sc_core::sc_time p_ReportString)
-{
-    m_ResportString << p_ReportString;
-}
-
 const char* StringTools::getReportString(void)
 {
     m_ResportString << m_BaseName << ": " << m_CurrentName;
     if(m_StampTime)
         m_ResportString << ": @ " << sc_core::sc_time_stamp();
     const char *temp = m_ResportString.str().c_str();
+    m_ResportString.str("");
     return temp;
 }
 
-const char* StringTools::getReportString(bool p_Reset)
+const char* StringTools::newReportString(const char* p_ReportString)
 {
-    if(p_Reset)
-        {
-            resetReportString();
-            return getReportString();
-        }
-    else
-        return m_ResportString.str().c_str();
+    ostringstream l_Temp(p_ReportString);
+    m_CurrentName = l_Temp.str();
+    return getReportString();
 }
 
-// const char* StringTools::getReportString(const char* p_DirectFeed)
-// {
-//     resetReportString();
-//     appendReportString(p_DirectFeed);
-//     return getReportString();
-// }
-
-const char* StringTools::getReportString(const char* p_DirectFeed, bool p_Append)
+const char* StringTools::appendReportString(const char* p_ReportString)
 {
-    resetReportString();
 
-if (p_Append)
-    {
 
-        appendReportString(p_DirectFeed);
-    }
- else
-     {
-            ostringstream l_Temp(p_DirectFeed);
-            m_CurrentName = l_Temp.str();
-
-     }
+    appendString(p_ReportString);
     return getReportString();
 }
 
 void StringTools::resetReportString(void)
 {
-    m_ResportString.str("");
+    m_CurrentName = "";
 
 }

@@ -54,15 +54,13 @@ public:
 
     void setReset(bool p_Reset);
 
-    void appendReportString(const char *p_ReportString);
+    void appendString(const char *p_ReportString);
 
-    void appendReportString(const sc_core::sc_time p_ReportString);
+    const char* getReportString(void);
 
-    const char* getReportString(bool p_Reset);
+    const char* newReportString(const char* p_ReportString);
 
-    //    const char* getReportString(const char* p_DirectFeed);
-
-    const char* getReportString(const char *p_ReportString, bool p_Append);
+    const char* appendReportString(const char* p_ReportString);
 
     void resetReportString(void);
 
@@ -82,7 +80,6 @@ private:
 
     bool m_Reset;
 
-    const char* getReportString(void);
 
 };
 
