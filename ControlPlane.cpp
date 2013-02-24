@@ -86,19 +86,16 @@ void ControlPlane::controlPlaneMain(void)
                       //drop
 
                   }
-
-
-
-
+          }
 
               //To send a message to data plane
               port_ToDataPlane->write(m_BGPMsg);
 
-
+              m_BGPMsg.m_OutboundInterface = 5;
+              port_ToRoutingTable->write(m_BGPMsg);
               
-              
+              //              cout << "CP wrote to RT"<< endl;
               //Handle the message here
-          }
 
 
 

@@ -54,7 +54,7 @@ public:
      * \details Used to manage the routing table. Add, remove, update routes
      * \public
      */
-    sc_port<sc_fifo_in_if<BGPMessage> ,1, SC_ZERO_OR_MORE_BOUND> port_ToRoutingTable;
+    sc_port<sc_fifo_out_if<BGPMessage> ,1, SC_ZERO_OR_MORE_BOUND> port_ToRoutingTable;
    
     /*! \brief Input interface
      * \details Allows data plane to write received BGP messages into

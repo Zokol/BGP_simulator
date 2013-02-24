@@ -18,6 +18,11 @@ BGPMessage::BGPMessage(BGPMessage& p_Msg)
 
 BGPMessage& BGPMessage::operator = (const BGPMessage& p_Msg)
 {
+    //Remember to add all members fields here
+    m_Type = p_Msg.m_Type;
+    m_BGPIdentifier = p_Msg.m_BGPIdentifier;
+    m_OutboundInterface = p_Msg.m_OutboundInterface;
+    
     
     return *this;
 }

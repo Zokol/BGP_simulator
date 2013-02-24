@@ -40,7 +40,7 @@ int sc_main(int argc, char * argv [])
   ///initiate the simulation
   Simulation test("Test");
 
-  cout << "Simulation starts for " << SIMULATION_DURATION << " ns" << endl; 
+  cout << "Simulation starts for " << SIMULATION_DURATION << " s" << endl; 
   ///run the simulation	
   sc_start(SIMULATION_DURATION, SC_SEC);
 

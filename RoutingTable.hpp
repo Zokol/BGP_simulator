@@ -44,7 +44,7 @@ public:
      *  m_ReceivingBuffer-fifo
      * \public
      */
-    sc_export<sc_fifo_in_if<BGPMessage> > export_ToRoutingTable;
+    sc_export<sc_fifo_out_if<BGPMessage> > export_ToRoutingTable;
    
 
 

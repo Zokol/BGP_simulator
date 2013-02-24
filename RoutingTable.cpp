@@ -42,13 +42,17 @@ void RoutingTable::routingTableMain(void)
     while(true)
         {
             wait();
+            
+            m_ReceivingBuffer.read(m_BGPMsg);
+            //            cout << "Routing table received from Control Plane: Outbound interface: " << m_BGPMsg.m_OutboundInterface << endl;
+
         }
 }
 
 
 int RoutingTable::resolveRoute(sc_int<32> p_IPAddress)
 {
-
+    //    cout << "RT: resolve was called" << endl;
     //TODO: implement the logic
     return 1;
 }

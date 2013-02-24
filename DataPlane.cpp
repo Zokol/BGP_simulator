@@ -33,11 +33,14 @@ void DataPlane::main(void)
     StringTools *l_Report = new StringTools(name());
 
     SC_REPORT_INFO(g_MessageId, l_Report->newReportString("Main of IP plane starts "));
-    SC_REPORT_INFO(g_MessageId, l_Report->appendReportString("--- "));
-    l_Report->setStampTime(false);
-    SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
-    l_Report->resetReportString();
-    SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
+
+    //EXAMPLE OF HOW TO USE STRINGTOOLS FOR REPORTING.
+
+    // SC_REPORT_INFO(g_MessageId, l_Report->appendReportString("--- "));
+    //l_Report->setStampTime(false);
+    // SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
+    //l_Report->resetReportString();
+    // SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
     
   int i = 0;
 
