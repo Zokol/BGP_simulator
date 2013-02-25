@@ -8,8 +8,8 @@
 
 
 #include "Simulation.hpp"
+#include "ReportGlobals.hpp"
 
-extern const char* g_ReportID;
 
 Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
 {
@@ -44,6 +44,7 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
   m_Router[0]->port_ForwardingInterface[0]->bind(*(m_Router[1]->export_ReceivingInterface[0]));
 
   m_Router[1]->port_ForwardingInterface[0]->bind(*(m_Router[0]->export_ReceivingInterface[0]));
+        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Two first routers connected."));
 
   ///set the those interfaces up
   m_Router[0]->interfaceUp(0);
@@ -55,7 +56,7 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
   if(ROUTER_COUNT > 2)
     {
         m_Name.setBaseName(name());
-        SC_REPORT_INFO(g_ReportID, m_Name.newReportString("More than two routers."));
+        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("More than two routers."));
      
 
       ///connect each router to the next one
@@ -68,6 +69,7 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
 	  m_Router[i+1]->interfaceUp(0);
 
 	}
+        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Intermediate routers connected."));
 
       ///close the ring by connecting the last router to the first
       m_Router[ROUTER_COUNT-1]->port_ForwardingInterface[1]->bind(*(m_Router[0]->export_ReceivingInterface[1]));
@@ -75,6 +77,7 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
 
 	  m_Router[0]->interfaceUp(1);
 	  m_Router[ROUTER_COUNT-1]->interfaceUp(1);
+        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("The last and the first router connected."));
 
     }
 

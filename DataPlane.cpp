@@ -57,7 +57,7 @@ void DataPlane::main(void)
               port_FromInterface[i]->read(m_Packet);
               //cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
               //      cout << name() << " resolved route in interface " << port_ToRoutingTable->resolveRoute(9) << endl;
-              //              SC_REPORT_INFO(g_MessageId, "TESTING");
+
 
               m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
               m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
@@ -71,6 +71,8 @@ void DataPlane::main(void)
       if(i == m_InterfaceCount-1)
 	i = 0;
 
+      //Example how to resolve a route
+      port_ToRoutingTable->resolveRoute(1);
 
     }
     delete l_Report;
