@@ -62,6 +62,10 @@ public:
 
     const char* appendReportString(const char* p_ReportString);
 
+    const char* newReportString(int p_ReportInt);
+
+    const char* appendReportString(int p_ReportInt);
+
     void resetReportString(void);
 
 private:
@@ -75,7 +79,7 @@ private:
     int m_Identifier;
 
     ostringstream m_ResportString;
-    
+
     bool m_StampTime;    
 
     bool m_Reset;

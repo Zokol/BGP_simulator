@@ -9,6 +9,9 @@
 
 
 #include "RoutingTable.hpp"
+#include "StringTools.hpp"
+#include "ReportGlobals.hpp"
+
 
 
 RoutingTable::RoutingTable(sc_module_name p_ModName):sc_module(p_ModName)
@@ -32,9 +35,11 @@ RoutingTable::~RoutingTable()
 
 void RoutingTable::routingTableMain(void)
 {
+    StringTools *l_Report = new StringTools(name());
 
     //debugging 
-    cout << name() << " starting at time" << sc_time_stamp()  << endl;
+    SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting") );
+
 
 
 
@@ -44,7 +49,10 @@ void RoutingTable::routingTableMain(void)
             wait();
             
             m_ReceivingBuffer.read(m_BGPMsg);
-            //            cout << "Routing table received from Control Plane: Outbound interface: " << m_BGPMsg.m_OutboundInterface << endl;
+            l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
+            SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_BGPMsg.m_OutboundInterface) );
+
+
 
         }
 }
@@ -52,7 +60,8 @@ void RoutingTable::routingTableMain(void)
 
 int RoutingTable::resolveRoute(sc_int<32> p_IPAddress)
 {
-    //    cout << "RT: resolve was called" << endl;
+    SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
+
     //TODO: implement the logic
     return 1;
 }

@@ -30,5 +30,5 @@ BGPMessage& BGPMessage::operator = (const BGPMessage& p_Msg)
 
 
 bool BGPMessage::operator == (const BGPMessage& p_Msg) const {
-    return true;
+    return (m_Type == p_Msg.m_Type && m_BGPIdentifier == p_Msg.m_BGPIdentifier && m_OutboundInterface == p_Msg.m_OutboundInterface);
 }

@@ -16,7 +16,7 @@
 #include "systemc"
 #include "Packet.hpp"
 #include "Interface_If.hpp"
-
+#include "StringTools.hpp"
 
 
 using namespace std;
@@ -103,6 +103,7 @@ private:
 
   bool m_InterfaceState;
 
+    StringTools m_Report;
 };
 
 

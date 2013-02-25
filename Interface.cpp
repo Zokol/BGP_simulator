@@ -8,6 +8,7 @@
 
 
 #include "Interface.hpp"
+#include "ReportGlobals.hpp"
 
 
 Interface::Interface(sc_module_name p_ModName):sc_module(p_ModName)
@@ -29,7 +30,9 @@ Interface::~Interface()
 
 void Interface::interfaceMain(void)
 {
-  cout << name() << " starting at time" << sc_time_stamp()  << endl;
+    m_Report.setBaseName(name());
+    SC_REPORT_INFO(g_ReportID, m_Report.newReportString("starting") );
+
     while(true)
     {
         wait();

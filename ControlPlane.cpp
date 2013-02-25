@@ -8,7 +8,7 @@
 
 
 #include "ControlPlane.hpp"
-
+#include "ReportGlobals.hpp"
 
 ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionParameters p_BGPParameters):sc_module(p_ModName), m_Name("BGP_Session")
 {
@@ -47,7 +47,9 @@ ControlPlane::~ControlPlane()
 
 void ControlPlane::controlPlaneMain(void)
 {
-  cout << name() << " starting at time" << sc_time_stamp()  << endl;
+    StringTools *l_Temp = new StringTools(name());
+    SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("starting") );
+
 
 
 
@@ -93,14 +95,15 @@ void ControlPlane::controlPlaneMain(void)
 
               m_BGPMsg.m_OutboundInterface = 5;
               port_ToRoutingTable->write(m_BGPMsg);
-              
-              //              cout << "CP wrote to RT"<< endl;
-              //Handle the message here
+
+              SC_REPORT_INFO(g_DebugID, l_Temp->newReportString("wrote to RT"));              
+               //Handle the message here
 
 
 
         
     
     }
+    delete l_Temp;
 }
 

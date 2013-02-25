@@ -9,6 +9,7 @@
 
 #include "Simulation.hpp"
 
+extern const char* g_ReportID;
 
 Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
 {
@@ -22,18 +23,18 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
   /// \li Allocate Router pointer array
   m_Router = new Router*[ROUTER_COUNT];
 
-  /// \li Set the base name for the router modules
+  /// \li Set the base name for the StringTools object
   m_Name.setBaseName("Router");
+
 
 
 
   /// \li Initiate the Router modules as m_Router
   for(int i = 0; i < ROUTER_COUNT; i++)
     {
-        cout << "Building " << m_Name.getNextName() << endl;
       /// \li Generate the routers
-      m_Router[i] = new Router(m_Name.getCurrentName(), INTERFACE_COUNT, m_BGPSessionParam);
-      cout << m_Name.getCurrentName() << " built." << endl;
+      m_Router[i] = new Router(m_Name.getNextName(), INTERFACE_COUNT, m_BGPSessionParam);
+
     }
   
 
@@ -53,10 +54,12 @@ Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
   ///build a ring if there is more than two routers in the simulation
   if(ROUTER_COUNT > 2)
     {
-      cout << "More than two routers." << endl;
+        m_Name.setBaseName(name());
+        SC_REPORT_INFO(g_ReportID, m_Name.newReportString("More than two routers."));
+     
 
       ///connect each router to the next one
-      for(int i = 1; i < ROUTER_COUNT-1; i++)
+        for(int i = 1; i < ROUTER_COUNT-1; i++)
 	{
 
 	  m_Router[i]->port_ForwardingInterface[1]->bind(*(m_Router[i+1]->export_ReceivingInterface[0]));

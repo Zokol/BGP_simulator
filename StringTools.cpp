@@ -1,5 +1,6 @@
 #include "StringTools.hpp"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 
 StringTools::StringTools():m_BaseName("--"), m_Separator("_"), m_Identifier(0), m_StampTime(true), m_Reset(true)
@@ -106,6 +107,21 @@ const char* StringTools::appendReportString(const char* p_ReportString)
 
     appendString(p_ReportString);
     return getReportString();
+}
+
+const char* StringTools::newReportString(int p_ReportInt)
+{
+
+    ostringstream l_Temp;
+    l_Temp << p_ReportInt;
+    return newReportString(l_Temp.str().c_str());
+}
+
+const char* StringTools::appendReportString(int p_ReportInt)
+{
+    ostringstream l_Temp;
+    l_Temp << p_ReportInt;
+    return appendReportString(l_Temp.str().c_str());
 }
 
 void StringTools::resetReportString(void)

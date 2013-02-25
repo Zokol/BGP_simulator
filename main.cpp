@@ -27,20 +27,24 @@ using namespace sc_dt;
  * \details Initiates the Simulation module, which builds up the Router modules and starts the simulation.
  */
 
-const char* g_MessageId = "PP_G2_simulation/";
-const char* g_SimulationVersion = "Test";
+const char* g_DebugID = "Level_debug:";
+const char* g_ReportID = "Level_info:";
+const char* g_SimulationVersion = "Test run";
 int sc_main(int argc, char * argv [])
 {
     
     sc_report rp;
     sc_report_handler::set_log_file_name("test_simu.log");
-    sc_report_handler::set_actions(g_MessageId, SC_INFO, SC_DISPLAY);
-    SC_REPORT_INFO(g_MessageId, g_SimulationVersion);
+    sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
+    SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
   ///initiate the simulation
   Simulation test("Test");
 
-  cout << "Simulation starts for " << SIMULATION_DURATION << " s" << endl; 
+  SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation starts"));
+
+
   ///run the simulation	
   sc_start(SIMULATION_DURATION, SC_SEC);
 

@@ -9,8 +9,8 @@
 
 #include "DataPlane.hpp"
 #include "StringTools.hpp"
+#include "ReportGlobals.hpp"
 
-extern char* g_MessageId;
 
 DataPlane::DataPlane(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount)
 {
@@ -32,7 +32,7 @@ void DataPlane::main(void)
 
     StringTools *l_Report = new StringTools(name());
 
-    SC_REPORT_INFO(g_MessageId, l_Report->newReportString("Main of IP plane starts "));
+    SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting "));
 
     //EXAMPLE OF HOW TO USE STRINGTOOLS FOR REPORTING.
 
