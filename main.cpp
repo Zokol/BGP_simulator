@@ -30,9 +30,42 @@ using namespace sc_dt;
 const char* g_DebugID = "Level_debug:";
 const char* g_ReportID = "Level_info:";
 const char* g_SimulationVersion = "Test run";
+
 int sc_main(int argc, char * argv [])
 {
-    
+    /// Establish a socket connection with GUI
+
+    ServerSocket SimulationServer ( 30000 ); 
+    ServerSocket GUISocket; 
+    cout << "Waiting the GUI to connect..." << endl;
+    SimulationServer.accept ( GUISocket ); 
+    string DataWord;
+    bool setupLoop = true;
+    cout << "Receiving from the GUI..." << endl;
+    try
+        {
+            while(setupLoop)
+                {
+                    GUISocket >> DataWord;
+                    
+                    if(DataWord.compare("SETUP") == 0)
+                        cout << "Set-up received" << endl;
+                    else if(DataWord.compare("START") == 0)
+                        {
+                            cout << "Start received" << endl;
+                            DataWord = "Simulation starts";
+                            setupLoop = false;
+                        }
+                    else
+                        cout << "Unknown GUI command" << endl;
+                    GUISocket << DataWord;
+                }
+        }
+    catch(SocketException& e)
+        {
+            std::cout << "got exeption " << e.description() << " in " << sc_get_curr_process_handle()->name() << "\n"; 
+        }
+
     sc_report rp;
     sc_report_handler::set_log_file_name("test_simu.log");
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
@@ -40,7 +73,7 @@ int sc_main(int argc, char * argv [])
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
   ///initiate the simulation
-  Simulation test("Test");
+    Simulation test("Test", GUISocket);
 
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation starts"));
 
