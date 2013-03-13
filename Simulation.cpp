@@ -11,10 +11,9 @@
 #include "ReportGlobals.hpp"
 
 
-Simulation::Simulation(sc_module_name p_ModuleName):sc_module(p_ModuleName)
+Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket):sc_module(p_ModuleName), m_GUISocket(p_GUISocket)
 {
 ///Constructor briefly: 
-
 
     m_BGPSessionParam.m_HoldDownTime = 180;
     m_BGPSessionParam.m_KeepaliveFraction = 3;

@@ -26,6 +26,9 @@
 #include "Router.hpp"
 #include "BGPSessionParameters.hpp"
 #include "StringTools.hpp"
+#include "ServerSocket.h"
+#include "SocketException.h"
+#include <string>
 
 using namespace std;
 using namespace sc_core;
@@ -59,9 +62,10 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Simulation(sc_module_name p_Name);
+    Simulation(sc_module_name p_Name, ServerSocket& p_Socket);
 
     ~Simulation();
+
     /*
       void before_end_of_elaboration()
       {
@@ -73,8 +77,24 @@ public:
       cout << "Pata Pata" << endl;
       }
     */
+
 private:
 
+    /*!
+     * \property ServerSocket m_GUISocket
+     * \brief Socket to allow communication with GUI software
+     * \details 
+     * \private
+     */
+    ServerSocket m_GUISocket;
+
+
+    /*!
+     * \property Packet m_Packet
+     * \brief 
+     * \details 
+     * \private
+     */
     Packet m_Packet;
 
 
