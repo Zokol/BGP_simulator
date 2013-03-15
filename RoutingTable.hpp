@@ -1,6 +1,6 @@
 /*! \file  RoutingTable.hpp
  *  \brief     Header file of RoutingTable module
- *  \details   
+ *  \details
  *  \author    Antti Siirilä, 501449
  *  \version   1.0
  *  \date      Tue Feb 19 09:27:44 2013
@@ -27,25 +27,35 @@ using namespace sc_dt;
 #ifndef _ROUTINGTABLE_H_
 #define _ROUTINGTABLE_H_
 
+struct Route
+{
+    string prefix;
+    int mask;
+    string ASes;
+    int OutputPort;
+    Route * next;
+    Route * prev;
+};
+
 class RoutingTable: public sc_module, public RoutingTable_If
 {
 
 public:
 
-    
+
     /*! \brief System clock signal
      * \details The router's internal clock
      * \public
      */
     sc_in_clk port_Clk;
-        
+
     /*! \brief Input interface
      * \details Allows data plane to write received BGP messages into
      *  m_ReceivingBuffer-fifo
      * \public
      */
     sc_export<sc_fifo_out_if<BGPMessage> > export_ToRoutingTable;
-   
+
 
 
     //    void before_end_of_elaboration()
@@ -55,7 +65,7 @@ public:
 
 
     /*! \brief Elaborates the RoutingTable module
-     * \details 
+     * \details
      * \public
      */
     RoutingTable(sc_module_name p_ModuleName);
@@ -63,11 +73,11 @@ public:
 
 
     /*! \brief Destructor of the RoutingTable module
-     * \details Free's all the dynamically allocated memory 
+     * \details Free's all the dynamically allocated memory
      * \public
      */
     ~RoutingTable();
-  
+
 
 
     /*! \brief The main process of Control Plane module
@@ -79,11 +89,11 @@ public:
      */
     void routingTableMain(void);
 
-    /*! \brief 
-     * \details 
+    /*! \brief
+     * \details
      * \public
      */
-    virtual int resolveRoute(sc_int<32> p_IPAddress);
+    virtual int resolveRoute(string p_IPAddress);
 
 
 
@@ -96,8 +106,10 @@ public:
 
 
 
+
+
 private:
-  
+
 
 
     /*! \brief Receiving buffer
@@ -106,25 +118,51 @@ private:
      * \private
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
-    
-    
+
+    void addNewRoute(string p_msg, int OutputPort);
+    void createRoute(string p_msg,int p_outputPort, Route * p_route);
+    void handleNotification (BGPMessage NOTIFICATION_message);
+    Route * findRoute(string p_IPAddress);
+    int matchLength(Route * p_route, string p_IP);
+    void updateRoutingTable();
+    void addPreferredRoute(Route p_route1, Route p_route2);
+    void setRoute(Route p_route);
+    void removeFromRawTable(Route p_route);
+
+
+    void printRoutingTable();
+    void printRawRoutingTable();
+    void printOneRoute(Route p_route);
+
+    int tableLength();
+    void fillRoutingTable();
+
+
+
     /*! \brief BGP message
-     * \details 
+     * \details
      * \private
      */
     BGPMessage m_BGPMsg;
 
+    Route * m_headOfRawTable;
+    Route * m_endOfRawTable;
+    Route * m_iterator;  // TODO change name;
+
+    Route * m_headOfRoutingTable;
+    Route * m_endOfRoutingTable;
+
 
     // //TODO Find out what parameters we need for this function.
     // /*! \brief Set new route to the Routing Table
-    //  * \details 
+    //  * \details
     //  * \public
     //  */
     // bool setRoute(void);
 
-    // //TODO 
+    // //TODO
     // /*! \brief Set new route to the Routing Table
-    //  * \details 
+    //  * \details
     //  * \public
     //  */
     // bool updateRoute(void);

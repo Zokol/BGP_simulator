@@ -1,6 +1,6 @@
 /*! \file DataPlane.cpp
- *  \brief     
- *  \details   
+ *  \brief
+ *  \details
  *  \author    Antti Siirilä, 501449
  *  \version   1.0
  *  \date      Tue Feb 12 12:14:35 2013
@@ -41,7 +41,7 @@ void DataPlane::main(void)
     // SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
     //l_Report->resetReportString();
     // SC_REPORT_INFO(g_MessageId, l_Report->getReportString());
-    
+
   int i = 0;
 
   m_Packet.setProtocolType(0);
@@ -51,7 +51,7 @@ void DataPlane::main(void)
     while(true)
     {
       wait();
-      
+
       if(port_FromInterface[i]->num_available() > 0)
           {
               port_FromInterface[i]->read(m_Packet);
@@ -65,14 +65,14 @@ void DataPlane::main(void)
               port_ToInterface[0]->write(m_Packet);
               //              cout << name() << " forwarding out from interface 1" << endl;
               port_ToInterface[1]->write(m_Packet);
-              
+
           }
       i++;
       if(i == m_InterfaceCount-1)
 	i = 0;
 
       //Example how to resolve a route
-      port_ToRoutingTable->resolveRoute(1);
+      //port_ToRoutingTable->resolveRoute(1);
 
     }
     delete l_Report;

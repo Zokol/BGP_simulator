@@ -1,6 +1,6 @@
 /*! \file  RoutingTable_If.hpp
- *  \brief   
- *  \details   
+ *  \brief
+ *  \details
  *  \author    Antti Siirilä, 501449
  *  \version   1.0
  *  \date      Tue Feb 12 13:01:27 2013
@@ -31,12 +31,12 @@ class RoutingTable_If: virtual public sc_interface
 public:
 
 
-    //TODO 
+    //TODO
     /*! \brief Set new route to the Routing Table
-     * \details 
+     * \details
      * \public
      */
-    virtual int resolveRoute(sc_int<32> p_IPAddress) = 0;
+    virtual int resolveRoute(string p_IPAddress) = 0;
 
 
 

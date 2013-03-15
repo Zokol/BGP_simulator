@@ -1,14 +1,14 @@
 /*! \file BGPMessage.hpp
  *  \brief     Header file of BGP message class
  *  \details   defines the BGPMessage class.
- *  \author    Antti Siiril√§, 501449
+ *  \author    Antti Siiril‰, 501449
  *  \version   1.0
  *  \date      11.2.2013
  */
 
 /*! \class BGPMessage
- *  \brief     
- *  \details   
+ *  \brief
+ *  \details
  */
 
 
@@ -59,30 +59,34 @@ public:
 
 
     /*! \brief Holds the BGP message type value
-     * \details 
+     * \details
      * \private
      */
     int m_Type;
 
     /*! \brief The originator's BGP identifier
-     * \details 
+     * \details
      * \private
      */
     sc_int<32> m_BGPIdentifier;
 
     /*! \brief The originator's BGP identifier
-     * \details 
+     * \details
      * \private
      */
     int m_OutboundInterface;
 
     BGPMessage():m_Type(0){};
-    
+
     ~BGPMessage(){};
-    
+
     BGPMessage(BGPMessage& p_Msg);
-    
-    
+
+    string m_Message;
+
+
+
+
 
     /*! \relates sc_signal
      * \brief Overload stream operator
@@ -93,7 +97,7 @@ public:
      */
 
     inline friend ostream& operator << (ostream& os,  BGPMessage const & p_Msg )
-    {   
+    {
 
 os  << " BGP type: " << p_Msg.m_Type;
         return os;
@@ -106,7 +110,7 @@ os  << " BGP type: " << p_Msg.m_Type;
      * @param[out] sc_trace_file p_TraceFilePointer Pointer to sc_trace_file-object
      * @param[in] BGPMessage p_Msg Reference to BGPMessage-object to be traced
      * @param[in] string p_TraceObjectName Name of the Packet-object
-     * 
+     *
      */
     inline friend void sc_trace(sc_trace_file *p_TraceFilePointer, const BGPMessage& p_Msg, const string & p_TraceObjectName )
     {
