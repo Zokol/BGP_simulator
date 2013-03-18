@@ -22,6 +22,8 @@ using namespace sc_dt;
 
 #define SIMULATION_DURATION 200
 
+//#define _GUI
+
 /*!
  * \brief sc_main
  * \details Initiates the Simulation module, which builds up the Router modules and starts the simulation.
@@ -37,6 +39,8 @@ int sc_main(int argc, char * argv [])
 
     ServerSocket SimulationServer ( 30000 ); 
     ServerSocket GUISocket; 
+
+#ifdef _GUI
     cout << "Waiting the GUI to connect..." << endl;
     SimulationServer.accept ( GUISocket ); 
     string DataWord;
@@ -65,6 +69,16 @@ int sc_main(int argc, char * argv [])
         {
             std::cout << "got exeption " << e.description() << " in " << sc_get_curr_process_handle()->name() << "\n"; 
         }
+#endif
+
+  /* Clock period intialization.
+   * The clock period is 10 ns.
+   */
+  const sc_time clk_Period(1, SC_SEC);
+  /* System clock.
+   * The clock signal is specified in clk_Period.
+   */
+  sc_clock clk("clk", clk_Period);
 
     sc_report rp;
     sc_report_handler::set_log_file_name("test_simu.log");
@@ -75,6 +89,8 @@ int sc_main(int argc, char * argv [])
   ///initiate the simulation
     Simulation test("Test", GUISocket);
 
+    ///connect the clock
+    test.port_Clk(clk);
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation starts"));
 
 

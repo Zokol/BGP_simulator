@@ -13,6 +13,7 @@
 
 Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket):sc_module(p_ModuleName), m_GUISocket(p_GUISocket)
 {
+
 ///Constructor briefly: 
 
     m_BGPSessionParam.m_HoldDownTime = 180;
@@ -78,9 +79,13 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket):s
 	  m_Router[ROUTER_COUNT-1]->interfaceUp(1);
         SC_REPORT_INFO(g_DebugID, m_Name.newReportString("The last and the first router connected."));
 
+
+
     }
 
 
+    SC_THREAD(simulationMain);
+    sensitive << port_Clk.pos();
 
 
 }
@@ -93,4 +98,11 @@ Simulation::~Simulation()
     delete m_Router[i];
 
   delete m_Router;
+}
+
+
+void Simulation::simulationMain(void)
+{
+
+
 }

@@ -56,6 +56,8 @@ class Simulation: public sc_module
 
 public:
 
+    sc_in_clk port_Clk;
+
     /*!
      * \brief Constructor
      * \details Builds the simulation
@@ -66,6 +68,8 @@ public:
 
     ~Simulation();
 
+
+    void simulationMain(void);
     /*
       void before_end_of_elaboration()
       {
@@ -77,8 +81,11 @@ public:
       cout << "Pata Pata" << endl;
       }
     */
+    SC_HAS_PROCESS(Simulation);
 
 private:
+
+
 
     /*!
      * \property ServerSocket m_GUISocket
