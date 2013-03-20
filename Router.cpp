@@ -10,8 +10,7 @@
 #include "Router.hpp"
 #include "ReportGlobals.hpp"
 
-
-Router::Router(sc_module_name p_ModuleName, int p_InterfaceCount, RouterConfig *p_RouterConfiguration):sc_module(p_ModuleName), m_Bgp("BGP", p_InterfaceCount, p_RouterConfiguration->m_BGPSessionConfig), m_IP("IP", p_InterfaceCount), m_RoutingTable("RoutingTable"), m_InterfaceCount(p_InterfaceCount), m_Name("Interface"),m_RouterConfiguration(p_RouterConfiguration)
+Router::Router(sc_module_name p_ModuleName, RouterConfig *p_RouterConfiguration):sc_module(p_ModuleName), m_Bgp("BGP", p_RouterConfiguration->m_BGPConfig), m_IP("IP", p_RouterConfiguration->m_NumberOfInterfaces), m_RoutingTable("RoutingTable"), m_InterfaceCount(p_RouterConfiguration->m_NumberOfInterfaces), m_Name("Interface"),m_RouterConfiguration(p_RouterConfiguration)
 {
     ///StringTools instance for reporting
     StringTools *l_Report = new StringTools(name());  

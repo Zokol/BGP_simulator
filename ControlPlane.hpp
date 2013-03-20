@@ -15,7 +15,7 @@
 
 #include "systemc"
 #include "BGPMessage.hpp"
-//#include "BGPSessionParameters.hpp"
+#include "Configuration.hpp"
 #include "BGPSession.hpp"
 #include "RoutingTable_If.hpp"
 #include "StringTools.hpp"
@@ -90,7 +90,7 @@ void before_end_of_elaboration()
    * \details 
    * \public
    */
-    ControlPlane(sc_module_name p_ModuleName, int p_Sessions, BGPSessionParameters p_BGPParameters);
+    ControlPlane(sc_module_name p_ModName, ControlPlaneConfig p_BGPConfig);
 
 
 
@@ -149,8 +149,12 @@ private:
    */
     BGPMessage m_BGPMsg;
 
+  /*! \property StringTools m_Name  
+   * \brief Dynamic module naming
+   * \details 
+   * \private
+   */
     StringTools m_Name;
-
 
 };
 

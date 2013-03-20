@@ -24,7 +24,6 @@
 
 #include "systemc"
 #include "Router.hpp"
-#include "BGPSessionParameters.hpp"
 #include "Configuration.hpp"
 #include "StringTools.hpp"
 #include "ServerSocket.h"
@@ -34,22 +33,6 @@
 using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
-
-
-
-//Simulation parameters
-
-
-/*! \def ROUTER_COUNT
- *  Defines the number of rotuers in the simulation
- */
-#define ROUTER_COUNT 3
-
-
-/*! \def IF_COUNT
- *  Defines the number of interfaces in each router
- */
-#define INTERFACE_COUNT 4
 
 
 
@@ -144,7 +127,7 @@ private:
      */
     int m_NumberOfRouters;
 
-    BGPSessionParameters m_BGPSessionParam;
-    SimulationConfig *m_SimuConfiguration;
+
+
 };
 

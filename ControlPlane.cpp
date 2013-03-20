@@ -9,8 +9,9 @@
 
 #include "ControlPlane.hpp"
 #include "ReportGlobals.hpp"
+#include "Configuration.hpp"
 
-ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionParameters p_BGPParameters):sc_module(p_ModName), m_Name("BGP_Session")
+ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig p_BGPConfig):sc_module(p_ModName), m_SessionCount(p_BGPConfig.m_NumberOfInterfaces), m_Name("BGP_Session")
 {
 
   //make the inner bindings
@@ -19,8 +20,6 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionP
                                              //interface for the data plane
 
 
-    //set the session count
-    m_SessionCount = p_Sessions;
 
     //initiate the BGPSession pointer arrays
     m_BGPSessions = new BGPSession*[m_SessionCount];
@@ -29,7 +28,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, int p_Sessions, BGPSessionP
     for (int i = 0; i < m_SessionCount; ++i)
         {
             //create a session
-            m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), p_BGPParameters);
+            m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), p_BGPConfig.m_BGPSessionConfig);
         }
 
     SC_THREAD(controlPlaneMain);

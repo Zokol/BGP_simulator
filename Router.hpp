@@ -19,7 +19,6 @@
 #include "Interface.hpp"
 #include "DataPlane.hpp"
 #include "ControlPlane.hpp"
-#include "BGPSessionParameters.hpp"
 #include "RoutingTable.hpp"
 #include "StringTools.hpp"
 #include "Configuration.hpp"
@@ -51,7 +50,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Router(sc_module_name p_ModuleName, int p_InterfaceCount, RouterConfig *p_RouterConfiguration);
+    Router(sc_module_name p_ModuleName, RouterConfig *p_RouterConfiguration);
 
     ~Router();
 
