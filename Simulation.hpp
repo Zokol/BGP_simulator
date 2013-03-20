@@ -25,6 +25,7 @@
 #include "systemc"
 #include "Router.hpp"
 #include "BGPSessionParameters.hpp"
+#include "Configuration.hpp"
 #include "StringTools.hpp"
 #include "ServerSocket.h"
 #include "SocketException.h"
@@ -48,7 +49,8 @@ using namespace sc_dt;
 /*! \def IF_COUNT
  *  Defines the number of interfaces in each router
  */
-#define INTERFACE_COUNT 2
+#define INTERFACE_COUNT 4
+
 
 
 class Simulation: public sc_module
@@ -64,7 +66,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Simulation(sc_module_name p_Name, ServerSocket& p_Socket);
+Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig& p_SimuConfiguration);
 
     ~Simulation();
 
@@ -130,10 +132,18 @@ private:
      * \details  Used in dynamic allocation of Router Modules
      * \private
      */
-
     Router **m_Router;
 
-    BGPSessionParameters m_BGPSessionParam;
 
+
+    /*!
+     * \property  int m_NumberOfRouters
+     * \brief Holds the value that defines the number of routers to be
+     * allocated in this simulations
+     * \private
+     */
+    int m_NumberOfRouters;
+
+BGPSessionParameters m_BGPSessionParam;
 };
 
