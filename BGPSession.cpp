@@ -128,9 +128,6 @@ void BGPSession::setSessionParameters(BGPSessionParameters p_SessionParam)
     m_KeepaliveTime = p_SessionParam.m_KeepaliveTime;
     m_HoldDownTimeFactor = p_SessionParam.m_HoldDownTimeFactor;
     m_HoldDownTime = m_KeepaliveTime * m_HoldDownTimeFactor;
-
-
-    
 }
 
 bool BGPSession::isSessionValid(void)

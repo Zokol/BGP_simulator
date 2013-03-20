@@ -34,7 +34,7 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
   for(int i = 0; i < ROUTER_COUNT; i++)
     {
       /// \li Generate the routers
-      m_Router[i] = new Router(m_Name.getNextName(), INTERFACE_COUNT, m_SimuConfiguration->m_RouterConfiguration[i]->m_BGPSessionConfig);
+      m_Router[i] = new Router(m_Name.getNextName(), INTERFACE_COUNT, m_SimuConfiguration->m_RouterConfiguration[i]);
 
     }
   

@@ -22,6 +22,7 @@
 #include "BGPSessionParameters.hpp"
 #include "RoutingTable.hpp"
 #include "StringTools.hpp"
+#include "Configuration.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -50,7 +51,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Router(sc_module_name p_ModuleName, int p_InterfaceCount, BGPSessionParameters p_BGPSessionParam);
+    Router(sc_module_name p_ModuleName, int p_InterfaceCount, RouterConfig *p_RouterConfiguration);
 
     ~Router();
 
@@ -119,11 +120,19 @@ private:
 
     /*!
      * \property  StringTools m_Name
-     * \brief Name string
+     * \brief 
      * \details  Used in dynamic module naming.
      * \private
      */
     StringTools m_Name;
+
+    /*!
+     * \property  RouterConfig m_RouterConfiguration
+     * \brief Hold the configuration for this router
+     * \details  
+     * \private
+     */
+    RouterConfig *m_RouterConfiguration;
 
 };
 
