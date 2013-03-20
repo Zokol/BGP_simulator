@@ -33,6 +33,21 @@ public:
   
 
     
+
+    /*! \brief HoldDown time for this session
+     * \details Defines the keepalive time for this session. The default
+     * value needs to be set in the elaboration phase. After that the
+     * BGP session may negotiated a new value between the session peers
+     * \private
+     */
+    int m_KeepaliveTime;
+
+    /*! \brief HoldDown time factor
+     * \details Defines the multiplier that determines the holdDown
+     * time by m_KeepaliveTime X m_HoldDownTimeFactor
+     * \private
+     */
+    int m_HoldDownTimeFactor;
     
     /*! \brief HoldDown time for this session
      * \details Defines the holdDown time for this session. The default
