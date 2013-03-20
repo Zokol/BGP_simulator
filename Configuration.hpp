@@ -20,76 +20,53 @@
 #define _CONFIGURATION_H_
 
 
-/*!
- * \class Connection
- * \brief Holds the connection parameters for local interface
- *  \details   
- */
-class Connection
+class BGPSessionParameters
 {
+
 public:
+  
 
-    /*! \brief The id of the neighbor interface to where this router connects
-     * \public
+    
+
+    /*! \brief HoldDown time for this session
+     * \details Defines the keepalive time for this session. The default
+     * value needs to be set in the elaboration phase. After that the
+     * BGP session may negotiated a new value between the session peers
+     * \private
      */
-    int m_NeighborInterfaceId;
+    int m_KeepaliveTime;
 
-    /*! \brief The id of the neighbor router on which the neighbor
-     * interface is located
-     * \details
-     * \public
+    /*! \brief HoldDown time factor
+     * \details Defines the multiplier that determines the holdDown
+     * time by m_KeepaliveTime X m_HoldDownTimeFactor
+     * \private
      */
-    int m_NeighborRouterId;    
-
+    int m_HoldDownTimeFactor;
+    
 };
 
 
-
-/*!
- * \class RouterConfig
- * \brief Holds the parameters for a router including interface
- * connection parameters
- *  \details   
- */
-class RouterConfig
+class ControlPlaneConfig
 {
 
 public:
-
-    inline RouterConfig(int p_NumberOfInterfaces):m_NumberOfInterfaces(p_NumberOfInterfaces)
-    {
-        m_NeighborConnections = new Connection*[p_NumberOfInterfaces];
-    };
-
-    inline virtual ~RouterConfig()
-    {
-        for (int i = 0; i < m_NumberOfInterfaces; ++i)
-            delete m_NeighborConnections[i];
-        delete m_NeighborConnections;
-    };
-
-    inline void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId)
-    {
-        m_NeighborConnections[p_LocalInterfaceId] = new Connection;
-        m_NeighborConnections[p_LocalInterfaceId]->m_NeighborRouterId = p_NeighborRouterId;
-        m_NeighborConnections[p_LocalInterfaceId]->m_NeighborInterfaceId = p_NeighborInterfaceId;
-
-
-    };    
     
-    /*! \brief Number of network interfaces that this router should allocate
+    inline ControlPlaneConfig(){};
+    inline virtual ~ControlPlaneConfig(){};
+
+    inline void setBGPSessionParam(int p_KeepaliveTime, int p_HoldDownTimeFactor)
+    {
+        m_BGPSessionConfig.m_KeepaliveTime = p_KeepaliveTime;
+        m_BGPSessionConfig.m_HoldDownTimeFactor = p_HoldDownTimeFactor;
+    };
+
+    
+    /*! \property int m_NumberOfInterfaces
+     * \brief Number of network interfaces that this router should allocate
      * \details
      * \public
      */
     int m_NumberOfInterfaces;
-    
-    /*! \brief Linked list that holds the connection information for
-     * each interface of the router
-     * \details
-     * 
-     * \public
-     */
-    Connection **m_NeighborConnections;
 
     /*! \brief The prefix of the AS connecting this router
      * \details 
@@ -121,11 +98,99 @@ public:
      */
     int m_LocalPref;
 
-    /*! \brief BGP session parameter for this router
+    /*! \property BGPSessionParameters m_BGPSessionConfig
+     * \brief parameters for BGP sessions
+     * \details 
      * \public
      */
     BGPSessionParameters m_BGPSessionConfig;
+};
 
+/*!
+ * \class Connection
+ * \brief Holds the connection parameters for local interface
+ *  \details   
+ */
+class Connection
+{
+
+public:
+
+    /*! \brief The id of the neighbor interface to where this router connects
+     * \public
+     */
+    int m_NeighborInterfaceId;
+
+    /*! \brief The id of the neighbor router on which the neighbor
+     * interface is located
+     * \details
+     * \public
+     */
+    int m_NeighborRouterId;    
+
+};
+
+/*!
+ * \class RouterConfig
+ * \brief Holds the parameters for a router including interface
+ * connection parameters
+ *  \details   
+ */
+class RouterConfig
+{
+
+public:
+
+    inline RouterConfig(int p_NumberOfInterfaces):m_NumberOfInterfaces(p_NumberOfInterfaces)
+    {
+        m_NeighborConnections = new Connection*[p_NumberOfInterfaces];
+        m_BGPConfig.m_NumberOfInterfaces = p_NumberOfInterfaces;
+    };
+
+    inline virtual ~RouterConfig()
+    {
+        for (int i = 0; i < m_NumberOfInterfaces; ++i)
+            delete m_NeighborConnections[i];
+        delete m_NeighborConnections;
+    };
+
+    inline void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId)
+    {
+        m_NeighborConnections[p_LocalInterfaceId] = new Connection;
+        m_NeighborConnections[p_LocalInterfaceId]->m_NeighborRouterId = p_NeighborRouterId;
+        m_NeighborConnections[p_LocalInterfaceId]->m_NeighborInterfaceId = p_NeighborInterfaceId;
+
+
+    };    
+
+    inline void setSessionParameters(int p_KeepaliveTime, int p_HoldDownTimeFactor)
+    {
+        m_BGPConfig.setBGPSessionParam(p_KeepaliveTime, p_HoldDownTimeFactor);        
+    };
+    
+    /*! \property int m_NumberOfInterfaces
+     * \brief Number of network interfaces that this router should allocate
+     * \details
+     * \public
+     */
+    int m_NumberOfInterfaces;
+    
+    /*! \brief Linked list that holds the connection information for
+     * each interface of the router
+     * \details
+     * 
+     * \public
+     */
+    Connection **m_NeighborConnections;
+
+
+    /*! \property ControlPlaneConfig m_BGPConfig 
+     *  \brief BGP parameters for this router configuration
+     *  \details
+     * 
+     * \public
+     */
+    ControlPlaneConfig m_BGPConfig;
 
 };
 
@@ -170,12 +235,9 @@ public:
 
     inline void addBGPSessionParameters(int p_LocalRouterId, int p_KeepaliveTime, int p_HoldDownTimeFactor)
     {
-
-        m_RouterConfiguration[p_LocalRouterId]->m_BGPSessionConfig.m_KeepaliveTime = p_KeepaliveTime;
-        m_RouterConfiguration[p_LocalRouterId]->m_BGPSessionConfig.m_HoldDownTimeFactor = p_HoldDownTimeFactor;
+        m_RouterConfiguration[p_LocalRouterId]->setSessionParameters(p_KeepaliveTime, p_HoldDownTimeFactor);
       
     };
-
 
     /*! \brief Number of routers that this simulation should allocate
      * \details
