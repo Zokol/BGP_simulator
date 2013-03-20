@@ -77,9 +77,9 @@ SimulationConfig l_Config(3);
 l_Config.addRouterConfig(0, 4);
 l_Config.addRouterConfig(1, 4);
 l_Config.addRouterConfig(2, 4);
-// l_Config.addBGPSessionParameters(0, 60, 3);
-// l_Config.addBGPSessionParameters(1, 60, 3);
-// l_Config.addBGPSessionParameters(2, 60, 3);
+l_Config.addBGPSessionParameters(0, 60, 3);
+l_Config.addBGPSessionParameters(1, 60, 3);
+l_Config.addBGPSessionParameters(2, 60, 3);
 
   /* Clock period intialization.
    * The clock period is 10 ns.
@@ -97,7 +97,7 @@ l_Config.addRouterConfig(2, 4);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
   ///initiate the simulation
-Simulation test("Test", GUISocket, l_Config);
+Simulation test("Test", GUISocket, &l_Config);
 
     ///connect the clock
     test.port_Clk(clk);
