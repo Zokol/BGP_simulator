@@ -9,12 +9,12 @@
 
 #include "Simulation.hpp"
 #include "ReportGlobals.hpp"
-#include "Configuration.hpp"
 
-Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig& p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket)
+
+Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig *p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket)
 {
 
-    //SimulationConfig m_SimuConfiguration = p_SimuConfiguration;
+    m_SimuConfiguration = p_SimuConfiguration;
 //  //Throws segmentation fault
 
 //  m_NumberOfRouters = m_SimuConfiguration.m_NumberOfRouters;
@@ -110,5 +110,10 @@ Simulation::~Simulation()
 void Simulation::simulationMain(void)
 {
 
+    while(true)
+        {
+            wait();
+            
+        }
 
 }

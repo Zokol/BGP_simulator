@@ -66,7 +66,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig& p_SimuConfiguration);
+Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig *p_SimuConfiguration);
 
     ~Simulation();
 
@@ -144,6 +144,7 @@ private:
      */
     int m_NumberOfRouters;
 
-BGPSessionParameters m_BGPSessionParam;
+    BGPSessionParameters m_BGPSessionParam;
+    SimulationConfig *m_SimuConfiguration;
 };
 
