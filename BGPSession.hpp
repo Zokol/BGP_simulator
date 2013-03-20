@@ -35,7 +35,7 @@
 
 #include "systemc"
 #include "BGPMessage.hpp"
-#include "BGPSessionParameters.hpp"
+#include "Configuration.hpp"
 #include "DataPlane_In_If.hpp"
 
 
