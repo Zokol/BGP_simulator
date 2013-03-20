@@ -55,12 +55,15 @@ void ControlPlane::controlPlaneMain(void)
 
   //The main thread of the control plane starts
     while(true)
-    {
+        {    
         wait();
 
 
         //Check if there's messages in the input buffer
-      if(m_ReceivingBuffer.num_available() == 0)     // IIRO testi, if lause vaihdettu ">" --> "=="
+      if(m_ReceivingBuffer.num_available() > 0)     //Antti: laitto
+                                                    //takas >, kun
+                                                    //simu hetti
+                                                    //segmentation faultia19.3.2013. IIRO testi, if lause vaihdettu ">" --> "=="
           {
 
               //m_ReceivingBuffer.read(m_BGPMsg);    IIRO kommentoin pois koska lukeminen ei futaa viel
@@ -74,6 +77,8 @@ void ControlPlane::controlPlaneMain(void)
               //check whether the session is valid
               if (m_BGPSessions[m_BGPMsg.m_OutboundInterface]->isThisSession(m_BGPMsg.m_BGPIdentifier))
                   {
+                      SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("receiving"));
+
                       // determine which type of message this is
                       switch(m_BGPMsg.m_Type)
                       {
@@ -91,7 +96,9 @@ void ControlPlane::controlPlaneMain(void)
                               // Forward to routingtable, ...
                               break;
                           case OPEN:
-                              // Session is already open, what to do if OPEN-message is received?
+                              // Session is already open, what to do
+                              // if OPEN-message is received? Antti: The session is closed and
+                              // the message is dropped. 
                               break;
                       }
 
@@ -121,16 +128,13 @@ void ControlPlane::controlPlaneMain(void)
               port_ToDataPlane->write(m_BGPMsg);
 
               m_BGPMsg.m_OutboundInterface = 5;
-              //port_ToRoutingTable->write(m_BGPMsg);
+              port_ToRoutingTable->write(m_BGPMsg);
 
               SC_REPORT_INFO(g_DebugID, l_Temp->newReportString("wrote to RT"));
                //Handle the message here
 
-
-
-
-
     }
-    delete l_Temp;
+
+    // delete l_Temp;
 }
 

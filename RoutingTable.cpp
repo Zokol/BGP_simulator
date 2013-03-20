@@ -67,13 +67,13 @@ void RoutingTable::routingTableMain(void)
                 // IIRO testailuu kui hommat skulaa
                 addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
-                updateRoutingTable();
-                //cout << "Table length: " << tableLength() << endl;
-                //cout << "Raw table: " << endl;
-                //printRawRoutingTable();
+                // updateRoutingTable();
+                // cout << "Table length: " << tableLength() << endl;
+                // cout << "Raw table: " << endl;
+                // printRawRoutingTable();
 
-                //cout << "Main table: " << endl;
-                //printRoutingTable();
+                // cout << "Main table: " << endl;
+                // printRoutingTable();
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
