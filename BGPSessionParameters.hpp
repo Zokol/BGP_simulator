@@ -49,28 +49,6 @@ public:
      */
     int m_HoldDownTimeFactor;
     
-    /*! \brief HoldDown time for this session
-     * \details Defines the holdDown time for this session. The default
-     * value needs to be set in the elaboration phase. After that the
-     * BGP session may negotiated a new value between the session peers
-     * \private
-     */
-    int m_HoldDownTime;
-    
-    /*! \brief Keepalive time for this session
-     * \details Defines interval for sending keepalive messages between
-     * the peers of this session.
-     * \private
-     */
-    //    int m_KeepaliveTime;
-
-
-    /*! \brief Keepalive fraction
-     * \details Defines the divider that is used while determining the
-     * keepalive interval 
-     * \private
-     */
-    int m_KeepaliveFraction;
 };
 
 

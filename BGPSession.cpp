@@ -125,10 +125,12 @@ void BGPSession::resetHoldDown(void)
 
 void BGPSession::setSessionParameters(BGPSessionParameters p_SessionParam)
 {
-    m_HoldDownTime = p_SessionParam.m_HoldDownTime;
-    m_KeepaliveFraction = p_SessionParam.m_KeepaliveFraction;
+    m_KeepaliveTime = p_SessionParam.m_KeepaliveTime;
+    m_HoldDownTimeFactor = p_SessionParam.m_HoldDownTimeFactor;
+    m_HoldDownTime = m_KeepaliveTime * m_HoldDownTimeFactor;
 
-    m_KeepaliveTime = m_HoldDownTime/m_KeepaliveFraction;
+
+    
 }
 
 bool BGPSession::isSessionValid(void)

@@ -121,28 +121,15 @@ public:
      */
     int m_LocalPref;
 
-    /*! \brief HoldDown time for this session
-     * \details Defines the keepalive time for this session. The default
-     * value needs to be set in the elaboration phase. After that the
-     * BGP session may negotiated a new value between the session peers
-     * \private
+    /*! \brief BGP session parameter for this router
+     * \public
      */
-    int m_KeepaliveTime;
-
-    /*! \brief HoldDown time factor
-     * \details Defines the multiplier that determines the holdDown
-     * time by m_KeepaliveTime X m_HoldDownTimeFactor
-     * \private
-     */
-    int m_HoldDownTimeFactor;
-
-
-
+    BGPSessionParameters m_BGPSessionConfig;
 
 
 };
 
-/*! \class SimulationConfig
+/*! \Class SimulationConfig
  *  \brief Holds all the simulation parameters received from GUI
  *  \details Used to build up the simulatin environment
  *
@@ -152,7 +139,7 @@ class SimulationConfig
 
 public:
 
-    
+    inline SimulationConfig(){};    
 
     inline SimulationConfig(int p_NumberOfRouters):m_NumberOfRouters(p_NumberOfRouters)
     {
@@ -181,13 +168,14 @@ public:
         m_RouterConfiguration[p_LocalRouterId]->addConnectionConfig(p_LocalInterfaceId, p_NeighborInterfaceId, p_NeighborRouterId);
     };
 
-    // inline void addBGPSessionParameters(int p_LocalRouterId, int p_KeepaliveTime, int p_HoldDownTimeFactor)
-    // {
+    inline void addBGPSessionParameters(int p_LocalRouterId, int p_KeepaliveTime, int p_HoldDownTimeFactor)
+    {
 
-    //     m_RouterConfiguration[p_LocalRouterId]->m_KeepaliveTime = p_KeepaliveTime;
-    //     m_RouterConfiguration[p_LocalRouterId]->m_HoldDownTimeFactor = p_HoldDownTimeFactor;
+        m_RouterConfiguration[p_LocalRouterId]->m_BGPSessionConfig.m_KeepaliveTime = p_KeepaliveTime;
+        m_RouterConfiguration[p_LocalRouterId]->m_BGPSessionConfig.m_HoldDownTimeFactor = p_HoldDownTimeFactor;
       
-    // };
+    };
+
 
     /*! \brief Number of routers that this simulation should allocate
      * \details

@@ -236,12 +236,12 @@ private:
     int m_KeepaliveTime;
 
 
-    /*! \brief Keepalive fraction
-     * \details Defines the divider that is used while determining the
-     * keepalive interval 
+    /*! \brief HoldDown time factor
+     * \details Defines the multiplier that is used while determining the
+     * holddown time 
      * \private
      */
-    int m_KeepaliveFraction;
+    int m_HoldDownTimeFactor;
 
     /*! \brief Indicates whether this session is valid or not
      * \details Is set to True when the session start. When ever the

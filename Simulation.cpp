@@ -20,11 +20,6 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
 //  m_NumberOfRouters = m_SimuConfiguration.m_NumberOfRouters;
 
 
-///Constructor briefly: 
-
-    m_BGPSessionParam.m_HoldDownTime = 180;
-    m_BGPSessionParam.m_KeepaliveFraction = 3;
-
 
   /// \li Allocate Router pointer array
   m_Router = new Router*[ROUTER_COUNT];
@@ -39,7 +34,7 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
   for(int i = 0; i < ROUTER_COUNT; i++)
     {
       /// \li Generate the routers
-      m_Router[i] = new Router(m_Name.getNextName(), INTERFACE_COUNT, m_BGPSessionParam);
+      m_Router[i] = new Router(m_Name.getNextName(), INTERFACE_COUNT, m_SimuConfiguration->m_RouterConfiguration[i]->m_BGPSessionConfig);
 
     }
   
