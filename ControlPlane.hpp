@@ -15,7 +15,7 @@
 
 #include "systemc"
 #include "BGPMessage.hpp"
-//#include "BGPSessionParameters.hpp"
+#include "Configuration.hpp"
 #include "BGPSession.hpp"
 #include "RoutingTable_If.hpp"
 #include "StringTools.hpp"
@@ -75,7 +75,7 @@ void before_end_of_elaboration()
         {
 
             //inititate the session events
-            for (int i = 0; i < m_SessionCount; ++i)
+for (int i = 0; i < m_BGPConfig.getNumberOfInterfaces(); ++i)
                 {
                     //connect the session to the data plane
                     m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
@@ -90,7 +90,7 @@ void before_end_of_elaboration()
    * \details 
    * \public
    */
-    ControlPlane(sc_module_name p_ModuleName, int p_Sessions, BGPSessionParameters p_BGPParameters);
+    ControlPlane(sc_module_name p_ModName, ControlPlaneConfig& p_BGPConfig);
 
 
 
@@ -131,11 +131,11 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
-  /*! \brief Number of BGP sessions
-   * \details This defines how many BGP sessions there are in this router
-   * \private
-   */
-    int  m_SessionCount;
+  // /*! \brief Number of BGP sessions
+  //  * \details This defines how many BGP sessions there are in this router
+  //  * \private
+  //  */
+  //   int  m_SessionCount;
     
   /*! \brief The BGP session modules
    * \details 
@@ -149,6 +149,14 @@ private:
    */
     BGPMessage m_BGPMsg;
 
+ControlPlaneConfig m_BGPConfig;
+
+
+  /*! \property StringTools m_Name  
+   * \brief Dynamic module naming
+   * \details 
+   * \private
+   */
     StringTools m_Name;
 
 

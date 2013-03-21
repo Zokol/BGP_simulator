@@ -35,7 +35,7 @@
 
 #include "systemc"
 #include "BGPMessage.hpp"
-#include "BGPSessionParameters.hpp"
+#include "Configuration.hpp"
 #include "DataPlane_In_If.hpp"
 
 
@@ -78,7 +78,7 @@ public:
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
-    BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters p_SessionParam);
+    BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters& p_SessionParam);
 
     /*! \brief Elaborates the BGPSession module
      * \details 
@@ -88,7 +88,7 @@ public:
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
-    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters p_SessionParam);
+    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters& p_SessionParam);
 
 
 
@@ -115,13 +115,13 @@ public:
 
 
 
-    /*! \brief Sets the BGP session parameters for this session
-     * \details 
-     * @param[in] BGPSessionParameters p_SessionParameters Holds the
-     * keepalive fraction, holddown time, etc. values
-     * \public
-     */
-    void setSessionParameters(BGPSessionParameters p_SessionParam);
+    // /*! \brief Determines the hold-down time from BGP session config object
+    //  * \details 
+    //  * @param[in] BGPSessionParameters p_SessionParameters Holds the
+    //  * keepalive fraction, holddown time, etc. values
+    //  * \public
+    //  */
+    // void setHoldDownTime(void);
 
     /*! \brief Resets the HoldDown timer
      * \details Allows the control plane to reset the HoldDown timer
@@ -220,28 +220,28 @@ private:
      */
     int m_PeeringInterface;
     
-    /*! \brief HoldDown time for this session
-     * \details Defines the holdDown time for this session. The default
-     * value needs to be set in the elaboration phase. After that the
-     * BGP session may negotiated a new value between the session peers
-     * \private
-     */
-    int m_HoldDownTime;
+    // /*! \brief HoldDown time for this session
+    //  * \details Defines the holdDown time for this session. The default
+    //  * value needs to be set in the elaboration phase. After that the
+    //  * BGP session may negotiated a new value between the session peers
+    //  * \private
+    //  */
+    // int m_HoldDownTime;
      
-    /*! \brief Keepalive time for this session
-     * \details Defines interval for sending keepalive messages between
-     * the peers of this session.
-     * \private
-     */
-    int m_KeepaliveTime;
+    // /*! \brief Keepalive time for this session
+    //  * \details Defines interval for sending keepalive messages between
+    //  * the peers of this session.
+    //  * \private
+    //  */
+    // int m_KeepaliveTime;
 
 
-    /*! \brief Keepalive fraction
-     * \details Defines the divider that is used while determining the
-     * keepalive interval 
-     * \private
-     */
-    int m_KeepaliveFraction;
+    // /*! \brief HoldDown time factor
+    //  * \details Defines the multiplier that is used while determining the
+    //  * holddown time 
+    //  * \private
+    //  */
+    // int m_HoldDownTimeFactor;
 
     /*! \brief Indicates whether this session is valid or not
      * \details Is set to True when the session start. When ever the
@@ -260,6 +260,7 @@ private:
 
     sc_int<32> m_BGPIdentifierPeer;
 
+    BGPSessionParameters m_Config;
     /***************************Private functions*****************/
 
 

@@ -24,8 +24,11 @@
 
 #include "systemc"
 #include "Router.hpp"
-#include "BGPSessionParameters.hpp"
+//#include "Configuration.hpp"
 #include "StringTools.hpp"
+#include "ServerSocket.h"
+#include "SocketException.h"
+#include <string>
 
 using namespace std;
 using namespace sc_core;
@@ -33,25 +36,12 @@ using namespace sc_dt;
 
 
 
-//Simulation parameters
-
-
-/*! \def ROUTER_COUNT
- *  Defines the number of rotuers in the simulation
- */
-#define ROUTER_COUNT 3
-
-
-/*! \def IF_COUNT
- *  Defines the number of interfaces in each router
- */
-#define INTERFACE_COUNT 2
-
-
 class Simulation: public sc_module
 {
 
 public:
+
+    sc_in_clk port_Clk;
 
     /*!
      * \brief Constructor
@@ -59,9 +49,12 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Simulation(sc_module_name p_Name);
+Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig& p_SimuConfiguration);
 
     ~Simulation();
+
+
+    void simulationMain(void);
     /*
       void before_end_of_elaboration()
       {
@@ -73,8 +66,27 @@ public:
       cout << "Pata Pata" << endl;
       }
     */
+    SC_HAS_PROCESS(Simulation);
+
 private:
 
+
+
+    /*!
+     * \property ServerSocket m_GUISocket
+     * \brief Socket to allow communication with GUI software
+     * \details 
+     * \private
+     */
+    ServerSocket m_GUISocket;
+
+
+    /*!
+     * \property Packet m_Packet
+     * \brief 
+     * \details 
+     * \private
+     */
     Packet m_Packet;
 
 
@@ -103,10 +115,19 @@ private:
      * \details  Used in dynamic allocation of Router Modules
      * \private
      */
-
     Router **m_Router;
 
-    BGPSessionParameters m_BGPSessionParam;
+
+
+    /*!
+     * \property  int m_NumberOfRouters
+     * \brief Holds the value that defines the number of routers to be
+     * allocated in this simulations
+     * \private
+     */
+    SimulationConfig m_SimuConfiguration;
+
+
 
 };
 
