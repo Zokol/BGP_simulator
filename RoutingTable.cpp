@@ -50,7 +50,7 @@ void RoutingTable::routingTableMain(void)
     //debugging
     SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting") );
 
-
+    int count = 0;
     //The main thread of routing table module starts
     while(true)
         {
@@ -58,9 +58,12 @@ void RoutingTable::routingTableMain(void)
 
             wait();
             m_ReceivingBuffer.read(m_BGPMsg);
-            l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
-            SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_BGPMsg.m_OutboundInterface) );
-
+            if(!(count%20))
+                {
+                    l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
+                    SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_BGPMsg.m_OutboundInterface) );
+                }
+            count++;
             if((m_BGPMsg.m_Type = UPDATE))
             {
 

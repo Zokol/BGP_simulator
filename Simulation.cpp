@@ -11,17 +11,21 @@
 #include "ReportGlobals.hpp"
 
 
-Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig *p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_NumberOfRouters(p_SimuConfiguration->m_NumberOfRouters)
+Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig& p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_SimuConfiguration(p_SimuConfiguration)
 {
 
 //  //Throws segmentation fault
 
-//  m_NumberOfRouters = m_SimuConfiguration.m_NumberOfRouters;
+//  DEBUGGING
+m_Name.appendReportString("Router count: ");
+SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.getNumberOfRouters()));
 
+m_Name.appendReportString("Interface count: ");
+SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.m_RouterConfiguration[0]->getNumberOfInterfaces()));
 
 
   /// \li Allocate Router pointer array
-  m_Router = new Router*[m_NumberOfRouters];
+  m_Router = new Router*[m_SimuConfiguration.getNumberOfRouters()];
 
   /// \li Set the base name for the StringTools object
   m_Name.setBaseName("Router");
@@ -30,10 +34,10 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
 
 
   /// \li Initiate the Router modules as m_Router
-  for(int i = 0; i < m_NumberOfRouters; i++)
+  for(int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); i++)
     {
       /// \li Generate the routers
-      m_Router[i] = new Router(m_Name.getNextName(), p_SimuConfiguration->m_RouterConfiguration[i]);
+m_Router[i] = new Router(m_Name.getNextName(), *(m_SimuConfiguration.m_RouterConfiguration[i]));
 
     }
   
@@ -53,14 +57,14 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
 
  
   ///build a ring if there is more than two routers in the simulation
-  if(m_NumberOfRouters > 2)
+  if(m_SimuConfiguration.getNumberOfRouters() > 2)
     {
         m_Name.setBaseName(name());
         SC_REPORT_INFO(g_DebugID, m_Name.newReportString("More than two routers."));
      
 
       ///connect each router to the next one
-        for(int i = 1; i < m_NumberOfRouters-1; i++)
+        for(int i = 1; i < m_SimuConfiguration.getNumberOfRouters()-1; i++)
 	{
 
 	  m_Router[i]->port_ForwardingInterface[1]->bind(*(m_Router[i+1]->export_ReceivingInterface[0]));
@@ -72,11 +76,11 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
         SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Intermediate routers connected."));
 
       ///close the ring by connecting the last router to the first
-      m_Router[m_NumberOfRouters-1]->port_ForwardingInterface[1]->bind(*(m_Router[0]->export_ReceivingInterface[1]));
-      m_Router[0]->port_ForwardingInterface[1]->bind(*(m_Router[m_NumberOfRouters-1]->export_ReceivingInterface[1]));
+      m_Router[m_SimuConfiguration.getNumberOfRouters()-1]->port_ForwardingInterface[1]->bind(*(m_Router[0]->export_ReceivingInterface[1]));
+      m_Router[0]->port_ForwardingInterface[1]->bind(*(m_Router[m_SimuConfiguration.getNumberOfRouters()-1]->export_ReceivingInterface[1]));
 
 	  m_Router[0]->interfaceUp(1);
-	  m_Router[m_NumberOfRouters-1]->interfaceUp(1);
+	  m_Router[m_SimuConfiguration.getNumberOfRouters()-1]->interfaceUp(1);
         SC_REPORT_INFO(g_DebugID, m_Name.newReportString("The last and the first router connected."));
 
 
@@ -94,7 +98,7 @@ Simulation::~Simulation()
 {
 
   /// \li Free all the memory
-  for(int i = 0; i < m_NumberOfRouters; i++)
+  for(int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); i++)
     delete m_Router[i];
 
   delete m_Router;

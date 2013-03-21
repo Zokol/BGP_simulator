@@ -74,9 +74,9 @@ int sc_main(int argc, char * argv [])
 
 //testing the simulation configuration
 SimulationConfig l_Config(3);
-l_Config.addRouterConfig(0, 4);
-l_Config.addRouterConfig(1, 4);
-l_Config.addRouterConfig(2, 4);
+l_Config.addRouterConfig(0, 2);
+l_Config.addRouterConfig(1, 2);
+l_Config.addRouterConfig(2, 2);
 l_Config.addBGPSessionParameters(0, 60, 3);
 l_Config.addBGPSessionParameters(1, 60, 3);
 l_Config.addBGPSessionParameters(2, 60, 3);
@@ -97,7 +97,7 @@ l_Config.addBGPSessionParameters(2, 60, 3);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
   ///initiate the simulation
-Simulation test("Test", GUISocket, &l_Config);
+Simulation test("Test", GUISocket, l_Config);
 
     ///connect the clock
     test.port_Clk(clk);
@@ -106,6 +106,7 @@ Simulation test("Test", GUISocket, &l_Config);
 
   ///run the simulation	
   sc_start(SIMULATION_DURATION, SC_SEC);
+  SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
 
 return 0;
 }//end of main

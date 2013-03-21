@@ -10,11 +10,20 @@
 #include "Router.hpp"
 #include "ReportGlobals.hpp"
 
-Router::Router(sc_module_name p_ModuleName, RouterConfig *p_RouterConfiguration):sc_module(p_ModuleName), m_Bgp("BGP", p_RouterConfiguration->m_BGPConfig), m_IP("IP", p_RouterConfiguration->m_NumberOfInterfaces), m_RoutingTable("RoutingTable"), m_InterfaceCount(p_RouterConfiguration->m_NumberOfInterfaces), m_Name("Interface"),m_RouterConfiguration(p_RouterConfiguration)
+Router::Router(sc_module_name p_ModuleName, RouterConfig& p_RouterConfiguration):sc_module(p_ModuleName), m_Bgp("BGP", p_RouterConfiguration), m_IP("IP", p_RouterConfiguration.getNumberOfInterfaces()), m_RoutingTable("RoutingTable"), m_Name("Interface"),m_RouterConfiguration(p_RouterConfiguration)
 {
+
     ///StringTools instance for reporting
     StringTools *l_Report = new StringTools(name());  
     l_Report->resetReportString();
+
+
+
+    //DEBUGGING
+    SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Router starts"));
+    l_Report->newReportString("Interface count: ");
+    SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_RouterConfiguration.getNumberOfInterfaces()));
+
     /// \li define clock period for Router
     m_ClkPeriod = new const sc_time(1, SC_SEC);
 
@@ -51,16 +60,16 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig *p_RouterConfiguration)
     SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Building the network interfaces"));
 
     //allocate reference array for network interface modules
-    m_NetworkInterface = new Interface*[m_InterfaceCount];
+    m_NetworkInterface = new Interface*[m_RouterConfiguration.getNumberOfInterfaces()];
 
     //allocate reference array for receiving exports
-    export_ReceivingInterface = new sc_export<Interface_If>*[m_InterfaceCount];
+    export_ReceivingInterface = new sc_export<Interface_If>*[m_RouterConfiguration.getNumberOfInterfaces()];
 
     //allocate reference array for fowarding ports
-    port_ForwardingInterface = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>*[m_InterfaceCount];
+    port_ForwardingInterface = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>*[m_RouterConfiguration.getNumberOfInterfaces()];
 
     //instantiate the network interface modules
-    for(int i = 0; i < m_InterfaceCount; i++)
+    for(int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); i++)
         {
       
             //instantiate an interface
@@ -91,7 +100,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig *p_RouterConfiguration)
 Router::~Router()
 {
 
-    for(int i = 0; i < m_InterfaceCount; i++)
+    for(int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); i++)
         {
             delete export_ReceivingInterface[i];
             delete port_ForwardingInterface[i];

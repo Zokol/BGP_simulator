@@ -10,12 +10,11 @@
 #include "BGPSession.hpp"
 
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters p_SessionParam):sc_module(p_ModuleName)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters& p_SessionParam):sc_module(p_ModuleName)
 {
 
-    //assign the session parameters
-    setSessionParameters(p_SessionParam);
-    
+    m_Config = p_SessionParam;
+
     
     //Register sendKeepalive method to the SystemC kernel
     SC_METHOD(sendKeepalive);
@@ -30,12 +29,13 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters p_Sessi
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters p_SessionParam):sc_module(p_ModuleName)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters& p_SessionParam):sc_module(p_ModuleName)
 {
-
-    //assign the session parameters
-    setSessionParameters(p_SessionParam);
     
+
+    m_Config = p_SessionParam;
+
+
     //set the local interface index behind which the peer locates
     m_PeeringInterface = p_PeeringInterface;
     
@@ -113,21 +113,14 @@ void BGPSession::resetKeepalive(void)
 {
     m_KeepaliveMutex.lock();
     m_BGPKeepalive.cancel();
-    m_BGPKeepalive.notify(m_KeepaliveTime, SC_SEC);
+    m_BGPKeepalive.notify(m_Config.getKeepaliveTime(), SC_SEC);
     m_KeepaliveMutex.unlock();
 }
 
 void BGPSession::resetHoldDown(void)
 {
     m_BGPHoldDown.cancel();
-    m_BGPHoldDown.notify(m_HoldDownTime, SC_SEC);
-}
-
-void BGPSession::setSessionParameters(BGPSessionParameters p_SessionParam)
-{
-    m_KeepaliveTime = p_SessionParam.m_KeepaliveTime;
-    m_HoldDownTimeFactor = p_SessionParam.m_HoldDownTimeFactor;
-    m_HoldDownTime = m_KeepaliveTime * m_HoldDownTimeFactor;
+    m_BGPHoldDown.notify(m_Config.getHoldDownTime(), SC_SEC);
 }
 
 bool BGPSession::isSessionValid(void)

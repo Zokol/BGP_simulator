@@ -9,9 +9,9 @@
 
 #include "ControlPlane.hpp"
 #include "ReportGlobals.hpp"
-#include "Configuration.hpp"
 
-ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig p_BGPConfig):sc_module(p_ModName), m_SessionCount(p_BGPConfig.m_NumberOfInterfaces), m_Name("BGP_Session")
+
+ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig& p_BGPConfig):sc_module(p_ModName),m_BGPConfig(p_BGPConfig), m_Name("BGP_Session")
 {
 
   //make the inner bindings
@@ -22,13 +22,13 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig p_BGPCon
 
 
     //initiate the BGPSession pointer arrays
-    m_BGPSessions = new BGPSession*[m_SessionCount];
+    m_BGPSessions = new BGPSession*[m_BGPConfig.getNumberOfInterfaces()];
 
     //inititate the sessions
-    for (int i = 0; i < m_SessionCount; ++i)
+    for (int i = 0; i < m_BGPConfig.getNumberOfInterfaces(); ++i)
         {
             //create a session
-            m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), p_BGPConfig.m_BGPSessionConfig);
+            m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), m_BGPConfig);
         }
 
     SC_THREAD(controlPlaneMain);
@@ -38,7 +38,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig p_BGPCon
 ControlPlane::~ControlPlane()
 {
 
-    for (int i = 0; i < m_SessionCount; ++i)
+    for (int i = 0; i < m_BGPConfig.getNumberOfInterfaces(); ++i)
         delete m_BGPSessions[i];
     delete m_BGPSessions;
 }
@@ -49,7 +49,7 @@ void ControlPlane::controlPlaneMain(void)
     StringTools *l_Temp = new StringTools(name());
     SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("starting"));
 
-
+    int count = 0;
 
 
   //The main thread of the control plane starts
@@ -126,12 +126,16 @@ void ControlPlane::controlPlaneMain(void)
               //To send a message to data plane
               port_ToDataPlane->write(m_BGPMsg);
 
-              m_BGPMsg.m_OutboundInterface = 5;
+              m_BGPMsg.m_OutboundInterface = 15;
               port_ToRoutingTable->write(m_BGPMsg);
 
-              SC_REPORT_INFO(g_DebugID, l_Temp->newReportString("wrote to RT"));
-               //Handle the message here
+              if(!(count%20))
+                  {
+                      l_Temp->newReportString("wrote to RT: ");
+                      SC_REPORT_INFO(g_DebugID, l_Temp->appendReportString(m_BGPMsg.m_OutboundInterface));
 
+                  }               //Handle the message here
+              count++;
     }
 
     // delete l_Temp;

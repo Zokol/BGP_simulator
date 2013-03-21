@@ -24,7 +24,7 @@
 
 #include "systemc"
 #include "Router.hpp"
-#include "Configuration.hpp"
+//#include "Configuration.hpp"
 #include "StringTools.hpp"
 #include "ServerSocket.h"
 #include "SocketException.h"
@@ -49,7 +49,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig *p_SimuConfiguration);
+Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig& p_SimuConfiguration);
 
     ~Simulation();
 
@@ -125,7 +125,7 @@ private:
      * allocated in this simulations
      * \private
      */
-    int m_NumberOfRouters;
+    SimulationConfig m_SimuConfiguration;
 
 
 
