@@ -2,6 +2,7 @@ import os, sys, time
 import pygame
 from pygame.locals import *
 from UI import *
+from selectdialog import *
 
 if not pygame.font:
 	print "Warning: Fonts not enabled"
@@ -9,59 +10,10 @@ if not pygame.mixer:
 	print "Warning: Audio not enabled"
 
 
-###
-# Name: RouterList
-#
-# Description:
-# Class for router listing
-#
-# Parameters:
-# - routermodel, RouterModel-object that shows the selected router in UI
-# - routers[], array of routers available at init
-###
-class RouterList:
-	def __init__(self, parent, pos, surface, routermodel, routers = []):
-		self.routers = routers
-		self.parent = parent
-		self.pos = pos
-		self.surface = surface
+class NameList(TextList):
+	def format_item(self, item):
+		return item.name
 
-		self.routermodel = routermodel
-
-		self.container = UIContainer(self.parent, self.pos, (200, 280), self.surface, False)
-		if len(self.routers) > 0:
-			self.update_list()
-
-		self.buttons = []
-		self.router_buttons = []
-		btn = FuncButton(self.container, self.container.x + 10, self.container.y + self.container.height - 30, 150, 20, [["New router", None]], None, ICON_FONTSIZE, self.surface, 1, (self.add_router, None), True, False, True)
-		self.buttons.append(btn)
-		self.container.spritegroup.add(btn)
-
-	def draw(self):
-		self.container.draw()
-
-	def add_router(self, router):
-		if router == None:
-			self.routers.append(Router("testrouter", [Interface(Fifo(8), Fifo(8))]*4))
-		else:
-			self.routers.append(router)
-		self.update_list()
-
-	def update_list(self):
-		self.router_buttons = []
-		x = 25
-		y = 25
-		for i in range(len(self.routers)):
-			r = self.routers[i]
-			btn_txt = r.name
-			btn = FuncButton(self.container, x, y, 150, 20, [[btn_txt, None]], None, ICON_FONTSIZE, self.surface, 1, (self.select_router, i), True, False, True)
-			self.router_buttons.append(btn)
-			self.container.spritegroup.add(btn)
-			y += 30
-
-	def select_router(self, index):
-		self.routermodel.select_router(self.routers[index])
 
 ###
 # Name: RouterModel
@@ -75,14 +27,12 @@ class RouterList:
 # - router, router-object that is shown in model
 ###
 class RouterModel(UIObject):
-	def __init__(self, parent, surface, pos, ports = 4, router = None, in_fifomodel = None, out_fifomodel = None):
+	def __init__(self, parent, surface, pos, ports = 4, router = None):
 		self.pos = pos
 		self.parent = parent
 		self.surface = surface
 		self.router = router
 		self.selected_port = None
-		self.in_fifomodel = in_fifomodel
-		self.out_fifomodel = out_fifomodel
 		self.router_logicblock = UIContainer(parent, (self.pos[0] + 150, self.pos[1]), (200, 300), self.surface, False)
 		self.ports = ports
 
@@ -92,11 +42,11 @@ class RouterModel(UIObject):
 		self.port_blocks = []
 
 		for i in range(int(ports / 2)):
-			self.port_blocks.append(FuncButton(parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["Port" + str(i * 2), None]], None, ICON_FONTSIZE, self.surface, 1, (self.select_port, i), True, False, True))
-			self.port_blocks.append(FuncButton(parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["Port" + str((i * 2) + 1), None]], None, ICON_FONTSIZE, self.surface, 1, (self.select_port, i), True, False, True))
+			self.port_blocks.append(FuncButton(parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P" + str(i * 2) + " AS: " + "None", None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+			self.port_blocks.append(FuncButton(parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P" + str((i * 2) + 1) + " AS: " + "None", None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 			y += 150
 		if (ports % 2):
-			self.port_blocks.append(FuncButton(parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["Port" + str(i + 1), None]], None, ICON_FONTSIZE, self.surface, 1, (self.select_port, i), True, False, True))
+			self.port_blocks.append(FuncButton(parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P" + str(i + 1) + " AS: " + "None", None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.add(b)
 
@@ -104,64 +54,7 @@ class RouterModel(UIObject):
 		self.router_logicblock.draw()
 
 	def select_router(self, router):
-		print "Selected ", router.name
 		self.router = router
-		if len(self.router.interfaces) > self.ports:
-			print "Error - Not enough ports!"
-
-	def select_port(self, index):
-		if self.in_fifomodel != None and self.out_fifomodel != None:
-			port = self.router.interfaces[index]
-			self.selected_port = port
-			self.in_fifomodel.update(port.in_fifo)
-			self.out_fifomodel.update(port.in_fifo)
-
-###
-# Name: FifoModel
-#
-# Description:
-# Class to represent network interface FIFOs
-#
-# Parameters:
-# - fifo_length, integer lenght of fifo-buffer determines the UI-block size
-# - output buffer, boolean value that determines if buffer is input or output buffer. If buffer is on input-mode, it has packet-field add feed packets to the buffer
-###
-class FifoModel:
-	def __init__(self, parent, pos, surface, fifo_length = 8, input_buffer = False):
-		self.length = fifo_length
-		self.mode = input_buffer
-		self.parent = parent
-		self.pos = pos
-		self.surface = surface
-		self.fifo_length = fifo_length
-
-		self.packets = [None] * self.length
-
-		self.container = UIContainer(self.parent, self.pos, (200, 280), self.surface, False)
-
-	def draw(self):
-		self.container.draw()
-
-	def update(self, fifo):
-		self.packet_btn = []
-		x = 25
-		y = 25
-		for i in range(self.fifo_length):
-			p = fifo.packets[i]
-			if p != None:
-				btn_txt = p.header
-			else:
-				btn_txt = "Empty"
-			btn = FuncButton(self.container, x, y, 150, 20, [[btn_txt, None]], None, ICON_FONTSIZE, self.surface, 1, (self.show_packet, i), True, False, True)
-			self.packet_btn.append(btn)
-			self.container.spritegroup.add(btn)
-			y += 30
-
-	def show_packet(index):
-		if self.packets[index] != None:
-			p = self.packets[index]
-			print p.header, p.payload
-
 
 #XXX
 ##
@@ -180,27 +73,20 @@ class Router:
 		self.interfaces = interfaces
 
 class Interface:
-	def __init__(self, in_fifo, out_fifo):
-		self.in_fifo = in_fifo
-		self.out_fifo = out_fifo
+	def __init__(self, client):
+		self.client = client
 
-class Fifo:
-	def __init__(self, length):
-		self.packets = [Packet("None", "None")]*length
+class Console:
+	def __init__(self):
+		self.log = []
+		self.prompt = '> '
 
-	def write(self, packet):
-		for p in self.buf:
-			if p == None:
-				p = packet
-				break
-		else:
-			print "Error - FIFO Full!"
+	def send(self, cmd):
+		self.log.append(self.prompt + cmd)
 
-	def read(self):
-		packet = self.buf[0]
-		for i in range(0, len(self.buf) - 1):
-			self.buf[i] = self.buf[i + 1]
-		return packet
+class RoutingTable:
+	def __init__(self):
+		self.table = []
 
 class SimulationUI:
 	def __init__(self, screen):
@@ -215,48 +101,89 @@ class SimulationUI:
 		self.fps = 30
 		self.clock = pygame.time.Clock()
 
-		routers = []
-		self.init_routerobject = Router("testrouter", [Interface(Fifo(8), Fifo(8))]*4)
-		self.in_fifomodel = FifoModel(None, (10, 400), self.screen, 8, True)
-		self.out_fifomodel = FifoModel(None, (300, 400), self.screen, 8, False)
-		self.routermodel = RouterModel(None, self.screen, (300, 10), 4, None, self.in_fifomodel, self.out_fifomodel)
-		self.routerlist = RouterList(None, (10, 10), self.screen, self.routermodel)
-		self.routerlist.add_router(self.init_routerobject)
+		self.selectdialogs = []
+
+		self.selected_router = None
+		self.routers = []
+		self.console = Console()
+		self.routing_table_main = RoutingTable()
+		self.routing_table_all = RoutingTable()
+		self.init_routerobject = Router("Router: No local AS", [Interface(None)]*4)
+		
+		##UI Elements
+		self.buttons = []
+		self.routerlist_con = UIContainer(None, (5,5), (210, 310), self.screen, False)
+		self.routerlist_dialog = NameList(self.routerlist_con, (15,15), (183, 250), self.routers, selected = self.select_router)
+		self.console_dialog = NameList(None, (15,350), (300, 300), self.console.log)
+		
+		self.routing_table_main_dialog = NameList(None, (450,350), (300, 300), self.routing_table_main.table)
+		self.routing_table_all_dialog = NameList(None, (800,350), (300, 300), self.routing_table_all.table)
+
+		self.sprites = pygame.sprite.LayeredDirty(_time_threshold = 1000.0)
+		self.sprites.set_clip()
+		self.sprites.add(self.routerlist_dialog)
+		self.sprites.add(self.console_dialog)
+		self.sprites.add(self.routing_table_main_dialog)
+		self.sprites.add(self.routing_table_all_dialog)
+		self.routers.append(self.init_routerobject)
+		
+		btn = FuncButton(self.routerlist_con, self.routerlist_con.x + 10, self.routerlist_con.y + self.routerlist_con.height - 50, 180, 30, [["New router", None]], None, ICON_FONTSIZE, self.screen, 1, (self.add_router, None), True, False, True)
+		self.buttons.append(btn)
+		self.routerlist_con.spritegroup.add(btn)
+
+		self.routermodel = RouterModel(None, self.screen, (300, 10), 4, None)
+
+	def add_router(self, router):
+		print "New router added"
+		print self.routers
+		if router == None:
+			self.routers.append(self.init_routerobject)
+		else:
+			self.routers.append(router)
+
+	def select_router(self, namelist, event):
+		print "select"
+		sel = namelist.get_selected()
+		if sel is not None:
+			router = namelist.items[sel]
+			self.routermodel.select_router(router)
+		else:
+			# Unselect
+			self.routermodel.select_router(None)
+
+	def draw_selectdialogs(self):
+		self.sprites.update()
+		self.sprites._spritelist.sort(key = lambda sprite: sprite._layer)
+		self.sprites.draw(self.screen)
+		pygame.display.flip()
 
 	def draw(self):
-		self.screen.blit(self.background, (0,0))
-		self.routerlist.draw()
 		if self.routermodel.router != None:
 			self.routermodel.draw()
-			if self.routermodel.selected_port != None:
-				self.in_fifomodel.draw()
-				self.out_fifomodel.draw()
 		pygame.display.flip()
 
 	def click(self, event):
-		for b in self.routerlist.router_buttons:
-			if b.contains(*event.pos):
-				f = b.function[0]
-				f(b.function[1])
-		for b in self.routerlist.buttons:
-			if b.contains(*event.pos):
-				f = b.function[0]
-				f(b.function[1])
-		for b in self.routermodel.port_blocks:
+		for b in self.buttons:
 			if b.contains(*event.pos):
 				f = b.function[0]
 				f(b.function[1])
 
 	def loop(self):
 		self.done = False
+		self.screen.blit(self.background, (0,0))
+		self.routerlist_con.draw()
 		while not self.done:
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					if event.button == 1:
 						self.click(event)
+				for sprite in self.sprites:
+					if hasattr(sprite, 'event'):
+						sprite.event(event)
 				if event.type == pygame.QUIT:
 					self.done = True
 			self.draw()
+			self.draw_selectdialogs()
 
 if __name__ == "__main__":
 	screen = init_pygame((1200, 700))

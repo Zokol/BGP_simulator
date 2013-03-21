@@ -64,6 +64,23 @@ class Resources:
 			surf.set_alpha(120)
 			self.selections[name] = surf
 
+INPUTFOCUS = 1
+
+_focus = None
+def grab_inputfocus(widget):
+	global _focus
+	_focus = widget
+	pygame.event.post(pygame.event.Event(pygame.USEREVENT, dict(kind = INPUTFOCUS, widget = widget)))
+
+def ungrab_inputfocus(widget):
+	global _focus
+	if widget == _focus:
+		grab_inputfocus(None)
+
+def get_inputfocus():
+	global _focus
+	return _focus
+
 def blitteds(dst, srcs, copy = True):
 	"""Blit multiple images on top of dst resizing it if needed"""
 	left = top = right = bottom = 0

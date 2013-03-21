@@ -2,7 +2,7 @@ import os
 
 TRACK_USAGE = False
 
-PROTOCOL_VERSION = '0.4'
+PROTOCOL_VERSION = '0.5'
 
 BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if BASEDIR.endswith('.zip'): # Because py2exe, that's why (and deadlines)
@@ -11,6 +11,7 @@ GFXDIR = os.path.join(BASEDIR, 'gfx')
 SNDDIR = os.path.join(BASEDIR, 'snd')
 MAPDIR = os.path.join(BASEDIR, 'map')
 FONTDIR = os.path.join(BASEDIR, 'font')
+SAVEDIR = os.path.join(BASEDIR, 'save')
 
 FONT = os.path.join(FONTDIR, 'FreeSansBold.ttf')
 FONTSCALE = 0.6875
