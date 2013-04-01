@@ -55,10 +55,10 @@ class RouterModel(UIObject):
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.remove(b)
 		self.port_blocks = []
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P1| AS: " + self.router.get_client_id(0), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P2| AS: " + self.router.get_client_id(1), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P0| AS: " + self.router.get_client_id(0), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P1| AS: " + self.router.get_client_id(1), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 		y += 150
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P3| AS: " + self.router.get_client_id(2), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P2| AS: " + self.router.get_client_id(2), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["Local AS: " + self.router.as_id, None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.add(b)
@@ -78,10 +78,28 @@ class Interface:
 	def __init__(self, client = None):
 		self.client = client
 
+class Route:
+	def __init__(self, target_as = None, prefix = None, path = None):
+		self.target_as = target_as
+		self.prefix = prefix
+		self.path = path
+		
+		@property
+		def name(self):
+			return self.target_as + " | " + self.prefix + " | " + self.path
+
 class Router:
-	def __init__(self, as_id = "No ID", prefix = "No Prefix", interfaces = None):
+	def __init__(self, as_id = "No ID", prefix = "No Prefix", interfaces = None, routing_table = None, preferred_routes = None):
 		self.as_id = as_id
 		self.prefix = prefix
+		if routing_table != None:
+			self.routing_table = routing_table
+		else:
+			self.routing_table = []
+		if preferred_routes != None:
+			self.preferred_routes = preferred_routes
+		else:
+			self.preferred_routes = []
 		if interfaces != None:
 			self.interfaces = interfaces
 		else:
@@ -149,6 +167,7 @@ class SimulationUI:
 		self.routing_table_all = RoutingTable()
 		self.init_routerobject = Router()
 		self.routers.append(self.init_routerobject)
+		self.selected_router = self.routers[0]
 		self.routermodel = RouterModel(None, self.screen, (300, 10), self.routers[0])
 
 		##Socket
@@ -171,8 +190,8 @@ class SimulationUI:
 		self.routerlist_dialog = NameList(self.routerlist_con, (15,15), (183, 250), self.routers, selected = self.select_router)
 		self.console_dialog = TextList(None, (15,350), (300, 300), self.console.log)
 		
-		self.routing_table_main_dialog = TextList(None, (450,350), (300, 300), self.routing_table_main.table)
-		self.routing_table_all_dialog = TextList(None, (800,350), (300, 300), self.routing_table_all.table)
+		self.routing_table_main_dialog = TextList(None, (450,350), (300, 300), self.selected_router.preferred_routes)
+		self.routing_table_all_dialog = TextList(None, (800,350), (300, 300), self.selected_router.routing_table)
 		
 		self.ezfont = pygame.font.Font(FONT, int(15*FONTSCALE))
 
@@ -209,21 +228,22 @@ class SimulationUI:
 		else:
 			params = cmd.split(' ')
 			print params
-			if params[0] == "connect":
+			if params[0] == "connect" and len(params) == 3:
 				r1 = params[1].split(':')
 				r2 = params[2].split(':')
 				self.log(self.connect((self.get_router(r1[0]), int(r1[1])), (self.get_router(r2[0]), int(r2[1]))))
-			elif params[0] == "disconnect":
-				self.log
-			elif params[0] == "shutdown":
+			elif params[0] == "disconnect" and len(params) == 2:
+				tmp = params[1].split(':')
+				self.log(self.disconnect(tmp[0], tmp[1]))
+			elif params[0] == "shutdown" and len(params) == 2:
 				self.log("No shutdown method created")
-			elif params[0] == "revive":
+			elif params[0] == "revive" and len(params) == 2:
 				self.log("No revive method created")
-			elif params[0] == "start":
+			elif params[0] == "start" and len(params) == 1:
 				self.log(self.start_sim())
-			elif params[0] == "set_id":
+			elif params[0] == "set_id" and len(params) == 2:
 				self.log(self.selected_router.set_id(str(params[1])))
-			elif params[0] == "set_prefix":
+			elif params[0] == "set_prefix" and len(params) == 2:
 				self.log(self.selected_router.set_prefix(str(params[1])))
 			elif params[0] == "test":
 				print self.routers
@@ -233,7 +253,7 @@ class SimulationUI:
 				self.routers[int(params[1])].as_id = "testing"
 				self.log(self.routers[int(params[1])].as_id)
 			else:
-				self.log(str(params[0]) + ": command not found")
+				self.log(str(params[0]) + ": command not found or invalid parameters")
 				self.print_help()
 
 	def log(self, msg):
@@ -261,6 +281,54 @@ class SimulationUI:
 				i.client = None
 		router.interfaces[port] = None
 
+	def add_route(self, router, route):
+		router.routing_table.add(route)
+
+	def remove_route(self, router, route):
+		router.routing_table.remove(route)
+
+	def prefer_route(self, router, route):
+		router.preferred_route.add(route)
+
+	def prefer_route_id(self, router, route_id):
+		router.preferred_route.add(router.routing_table[route_id])
+
+	def deprefer_route(self, router, route):
+		router.preferred_route.remove(route)
+
+	def prefer_route_list(self, namelist, event):
+		sel = namelist.get_selected()
+		if sel is not None:
+			route = namelist.items[sel]
+			self.log("Preferring: " + route.name)
+			self.prefer_route(self.selected_router, route)
+
+	def deprefer_route_list(self, namelist, event):
+		sel = namelist.get_selected()
+		if sel is not None:
+			route = namelist.items[sel]
+			self.log("Depreferring: " + route.name)
+			self.depefer_route(self.selected_router, route)
+
+	def start_sim(self):
+		sim_conf = "<SIM_CONFIG>"
+		conf = []
+		for r in self.routers:
+			router_params = [r.as_id, r.prefix]
+			for i in range(0,3):
+				port = r.interfaces[i]
+				if port.client != None:
+					router_params.append(port.client.as_id)
+			conf.append(router_params)
+		string = []
+		for c in conf:
+			string.append(",".join(c))
+		sim_conf += ";".join(string)
+		sim_conf += "</SIM_CONFIG>"
+		print sim_conf
+		self.socket.send(sim_conf)
+		resp = self.socket.recv(self.size)
+
 	def select_router(self, namelist, event):
 		sel = namelist.get_selected()
 		if sel is not None:
@@ -268,7 +336,7 @@ class SimulationUI:
 			self.log("Selected: " + router.name)
 			self.routermodel.select_router(router)
 			self.selected_router = router
-			print router, router.name, router.as_id, router.prefix, router.interfaces
+			print router, router.name, router.as_id, router.prefix, router.interfaces, router.routing_table, router.preferred_routes
 		else:
 			# Unselect
 			self.routermodel.select_router(None)
