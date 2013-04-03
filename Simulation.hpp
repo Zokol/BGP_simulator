@@ -82,6 +82,14 @@ private:
 
 
     /*!
+     * \property string word
+     * \brief holds the commands received from the UI
+     * \details 
+     * \private
+     */
+    string m_Word;
+
+    /*!
      * \property Packet m_Packet
      * \brief 
      * \details 

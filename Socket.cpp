@@ -132,7 +132,7 @@ int Socket::recv ( std::string& s ) const
 
   if ( status == -1 )
     {
-        std::cout << "status == -1   errno == " << errno << "  in Socket::recv\n";
+        //        std::cout << "status == -1   errno == " << errno << "  in Socket::recv\n";
       return 0;
     }
   else if ( status == 0 )

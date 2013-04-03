@@ -123,17 +123,12 @@ RouterConfig::RouterConfig(int p_NumberOfInterfaces)
         m_NeighborConnections = new Connection*[p_NumberOfInterfaces];
         
         setNumberOfInterfaces(p_NumberOfInterfaces);
-        cout << getNumberOfInterfaces() << endl;
+
     }
 
 RouterConfig::~RouterConfig()
 {
-        // for (int i = 0; i < m_NumberOfInterfaces; ++i)
-        //     {
-        //         if(m_NeighborConnections[i] != NULL)
-                    delete [] m_NeighborConnections;
-            // }
-                    //        delete m_NeighborConnections;
+    delete [] m_NeighborConnections;
 }
 
 ///Setters
@@ -183,13 +178,8 @@ SimulationConfig::SimulationConfig(int p_NumberOfRouters):m_NumberOfRouters(p_Nu
 
 SimulationConfig::~SimulationConfig()
     {
-        cout << "SimulationConfig deletes RouterConfigs" << endl << "Number of routers is " << m_NumberOfRouters << endl;
-        // for (int i = 0; i < m_NumberOfRouters; ++i)
-        //     {
-        //         if(m_RouterConfiguration[i] != NULL)
-                    delete [] m_RouterConfiguration;
-            // }
-        // delete m_RouterConfiguration;
+
+        delete [] m_RouterConfiguration;
     }
 
 void SimulationConfig::addRouterConfig(int p_RouterId, int p_NumberOfInterfaces)
@@ -225,7 +215,6 @@ RouterConfig& SimulationConfig::getRouterConfiguration(int p_RouterId)
 }
 
 ///Operators
-
 
 SimulationConfig& SimulationConfig::operator = (const SimulationConfig& p_Original) {
 

@@ -21,7 +21,7 @@ m_Name.appendReportString("Router count: ");
 SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.getNumberOfRouters()));
 
 m_Name.appendReportString("Interface count: ");
-SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.m_RouterConfiguration[0]->getNumberOfInterfaces()));
+ SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.getRouterConfiguration(0).getNumberOfInterfaces()));
 
 
   /// \li Allocate Router pointer array
@@ -37,7 +37,7 @@ SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.m_Router
   for(int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); i++)
     {
       /// \li Generate the routers
-m_Router[i] = new Router(m_Name.getNextName(), *(m_SimuConfiguration.m_RouterConfiguration[i]));
+        m_Router[i] = new Router(m_Name.getNextName(), m_SimuConfiguration.getRouterConfiguration(i));
 
     }
   
@@ -107,11 +107,28 @@ Simulation::~Simulation()
 
 void Simulation::simulationMain(void)
 {
-
+    // m_GUISocket.set_non_blocking(true);
     while(true)
         {
             wait();
-            
+            m_Word = "";
+            try
+                {
+                    m_GUISocket >> m_Word;
+                }
+            catch(SocketException e)
+                {
+                    //cout << e.description() << endl;
+                }
+                    if(m_Word != "")
+                        //cout << "nothing received" << endl;
+                    
+                        {
+                            cout << "Received: " << m_Word << endl;
+
+                        }
+                    if(!(m_GUISocket.is_valid()))
+                        cout << "socket not valid" << endl;
         }
 
 }

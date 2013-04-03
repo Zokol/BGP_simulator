@@ -377,6 +377,8 @@ public:
     SimulationConfig& operator = (const SimulationConfig& p_Original);
 
 
+private:
+
     /*! \brief Number of routers that this simulation should allocate
      * \details
      * \public

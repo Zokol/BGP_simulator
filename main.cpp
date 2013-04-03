@@ -22,7 +22,7 @@ using namespace sc_dt;
 
 #define SIMULATION_DURATION 200
 
-//#define _GUI
+#define _GUI
 
 /*!
  * \brief sc_main
@@ -43,31 +43,40 @@ int sc_main(int argc, char * argv [])
 #ifdef _GUI
     cout << "Waiting the GUI to connect..." << endl;
     SimulationServer.accept ( GUISocket ); 
+    GUISocket.set_non_blocking(true);
     string DataWord;
     bool setupLoop = true;
     cout << "Receiving from the GUI..." << endl;
-    try
+
+    while(setupLoop)
         {
-            while(setupLoop)
+            try
                 {
                     GUISocket >> DataWord;
+                }
+            catch(SocketException e)
+                {
+                    std::cout << "got exeption in main: " << e.description() << "\n"; 
+                }
                     
-                    if(DataWord.compare("SETUP") == 0)
-                        cout << "Set-up received" << endl;
-                    else if(DataWord.compare("START") == 0)
-                        {
-                            cout << "Start received" << endl;
-                            DataWord = "Simulation starts";
-                            setupLoop = false;
-                        }
-                    else
-                        cout << "Unknown GUI command" << endl;
+            if(DataWord.compare("SETUP") == 0)
+                cout << "Set-up received" << endl;
+            else if(DataWord.compare("STAR") == 0)
+                {
+                    cout << "Start received" << endl;
+                    DataWord = "Simulation starts";
+                    setupLoop = false;
+                }
+            else
+                cout << "Unknown GUI command: " << DataWord <<endl;
+            try
+                { 
                     GUISocket << DataWord;
                 }
-        }
-    catch(SocketException& e)
-        {
-            std::cout << "got exeption " << e.description() << " in " << sc_get_curr_process_handle()->name() << "\n"; 
+            catch(SocketException e)
+                {
+                    cout << e.description() << endl;
+                }
         }
 #endif
 
@@ -107,6 +116,7 @@ Simulation test("Test", GUISocket, l_Config);
   ///run the simulation	
   sc_start(SIMULATION_DURATION, SC_SEC);
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
+  GUISocket << "END";
 
 return 0;
 }//end of main
