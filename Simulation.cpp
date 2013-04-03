@@ -107,28 +107,36 @@ Simulation::~Simulation()
 
 void Simulation::simulationMain(void)
 {
+    bool state = true;
     // m_GUISocket.set_non_blocking(true);
     while(true)
         {
             wait();
             m_Word = "";
-            try
+
+            if(state)
                 {
-                    m_GUISocket >> m_Word;
-                }
-            catch(SocketException e)
-                {
-                    //cout << e.description() << endl;
-                }
-                    if(m_Word != "")
-                        //cout << "nothing received" << endl;
+                    try
+                        {
+                            m_GUISocket >> m_Word;
+                        }
+                    catch(SocketException e)
+                        {
+                            //cout << e.description() << endl;
+                        }
                     
+                    if(m_Word != "")
                         {
                             cout << "Received: " << m_Word << endl;
-
+                            if(m_Word.compare("Request") == 0)
+                                {
+                                    m_GUISocket << "Response";
+                                }
                         }
-                    if(!(m_GUISocket.is_valid()))
-                        cout << "socket not valid" << endl;
+                }
+            
+            if(!(m_GUISocket.is_valid()))
+                cout << "socket not valid" << endl;
         }
 
 }

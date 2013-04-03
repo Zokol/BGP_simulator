@@ -20,7 +20,7 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#define SIMULATION_DURATION 200
+#define SIMULATION_DURATION 20
 
 #define _GUI
 
@@ -64,7 +64,7 @@ int sc_main(int argc, char * argv [])
             else if(DataWord.compare("STAR") == 0)
                 {
                     cout << "Start received" << endl;
-                    DataWord = "Simulation starts";
+                    DataWord = "Simu";
                     setupLoop = false;
                 }
             else
