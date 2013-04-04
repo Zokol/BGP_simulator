@@ -48,6 +48,16 @@ using namespace sc_dt;
 #define END_TAG_LENGTH START_TAG_LENGTH+1
 
 /*!
+ * Router field separator
+ */
+#define ROUTER_SEPARATOR ";"
+
+/*!
+ * Field separator
+ */
+#define FIELD_SEPARATOR ","
+
+/*!
  * Positive acknowledgement
  */
 #define ACK "ack"
@@ -75,6 +85,9 @@ const char* g_SimulationVersion = "Test run";
 
 int sc_main(int argc, char * argv [])
 {
+    ///field parsing states
+    enum fieldStates {AS_ID, PREFIX, PORT_ID};
+
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT ); 
     ///Declare a Server socket for the GUI connection
@@ -89,7 +102,7 @@ int sc_main(int argc, char * argv [])
     GUISocket.set_non_blocking(true);
     ///String buffer for received data
     string DataWord, temp;
-    bool setupLoop = true;
+    bool setupLoop = true, retrans = false;
     cout << "Receiving from the GUI..." << endl;
     
     ///Start receiving from the GUI
@@ -108,7 +121,7 @@ int sc_main(int argc, char * argv [])
 
             ///Find the start tag
             
-            if(DataWord.find(START_TAG, 0) == 0)
+            if(DataWord.compare(0, START_TAG_LENGTH, START_TAG) == 0)
                 {
                     ///start tag found. Continue to parse the
                     ///configuration string
@@ -120,7 +133,7 @@ int sc_main(int argc, char * argv [])
                     i_End = DataWord.find(END_TAG, i_Start);
 
                     ///check that end tag was found
-                    if(i_End == npos)
+                    if(i_End == string::npos)
                         {
                             ///If end tag was not found, send NACK to
                             ///GUI and continue receiving
@@ -134,10 +147,65 @@ int sc_main(int argc, char * argv [])
                             ///declare and set the end and start
                             ///indeices for router parameters
                             int j_Start = i_Start, j_End;
-                            
-                            
-                        }
 
+                    
+                            ///find the router field separator
+                            j_End = DataWord.find(ROUTER_SEPARATOR, j_Start);
+
+                            ///check that the router field end was found
+                            if(j_End == string::npos)
+                                {
+                                    ///If the router field separator was not found, send NACK to
+                                    ///GUI and continue receiving
+                                    GUISocket << NACK;
+                                    retrans = true;
+                                    break;
+                                }
+
+                            ///set the state to AS_ID
+                            fieldStates state = AS_ID;
+                            ///parse until all the fields are extracted
+                            while(j_Start < j_End)
+                                {
+                                    int k_End, length;
+                                    char buffer[50];
+                                    ///parse the fields one by one
+                                    k_End = DataWord.find(FIELD_SEPARATOR, j_Start);
+                                    length = DataWord.copy(buffer, j_Start, k_End);
+                                    buffer[length] = '\0';
+
+                                    switch (state)
+                                        {
+                                        case AS_ID:
+                                            
+                                            state = PREFIX;
+                                            break;
+                                        case PREFIX:
+
+                                            state = PORT_ID;
+                                            break;
+                                        case PORT_ID:
+
+                                            break;
+                                        default:
+                                            retrans = true;                  
+                                        }
+                                    if(retrans)
+                                        break;
+                                }//end of while
+                            if(retrans)
+                                break;
+                          
+                                
+                            
+                            
+                        } //end of while
+
+                    if(retrans)
+                        {
+                            retrans = false;
+                            continue;
+                        }
                 }
             else
                 {
@@ -146,25 +214,7 @@ int sc_main(int argc, char * argv [])
                     ///Continue receiving
                     continue;   
                 }
-                    
-            if(DataWord.compare("SETUP") == 0)
-                cout << "Set-up received" << endl;
-            else if(DataWord.compare("STAR") == 0)
-                {
-                    cout << "Start received" << endl;
-                    DataWord = "Simu";
-                    setupLoop = false;
-                }
-            else
-                cout << "Unknown GUI command: " << DataWord <<endl;
-            try
-                { 
-                    GUISocket << DataWord;
-                }
-            catch(SocketException e)
-                {
-                    cout << e.description() << endl;
-                }
+
         }
 #endif
 
