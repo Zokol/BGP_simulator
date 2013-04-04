@@ -22,11 +22,51 @@ using namespace sc_dt;
 
 #define SIMULATION_DURATION 20
 
+/*!
+ * TCP port of the GUI socket
+ */
+#define PORT 50000
+
+/*!
+ * Start tag of the configuration string
+ */
+#define START_TAG "<SIM_CONFIG>"
+
+/*!
+ * Length of the start tag
+ */
+#define START_TAG_LENGTH 12
+
+/*!
+ * End tag of the configuration string
+ */
+#define END_TAG "</SIM_CONFIG>"
+
+/*!
+ * Length of the end tag
+ */
+#define END_TAG_LENGTH START_TAG_LENGTH+1
+
+/*!
+ * Positive acknowledgement
+ */
+#define ACK "ack"
+
+/*!
+ * Negative acknowledgement
+ */
+#define NACK "nack"
+
+
+
 #define _GUI
 
 /*!
- * \brief sc_main
- * \details Initiates the Simulation module, which builds up the Router modules and starts the simulation.
+ * \brief SystemC main function
+ * \details \li Establishes a TCP connection with the GUI program
+ * \li Reads the simulation configuration from the GUI
+ * \li Initiates the Simulation module
+ * \li Starts the simulation
  */
 
 const char* g_DebugID = "Level_debug:";
@@ -35,28 +75,76 @@ const char* g_SimulationVersion = "Test run";
 
 int sc_main(int argc, char * argv [])
 {
-    /// Establish a socket connection with GUI
-
-    ServerSocket SimulationServer ( 30000 ); 
+    ///Initiate a Server socket and bind it to port
+    ServerSocket SimulationServer ( PORT ); 
+    ///Declare a Server socket for the GUI connection
     ServerSocket GUISocket; 
 
 #ifdef _GUI
+   
+    ///Accept the GUI connection
     cout << "Waiting the GUI to connect..." << endl;
     SimulationServer.accept ( GUISocket ); 
+    ///Set the socket API to non-blocking mode
     GUISocket.set_non_blocking(true);
-    string DataWord;
+    ///String buffer for received data
+    string DataWord, temp;
     bool setupLoop = true;
     cout << "Receiving from the GUI..." << endl;
-
+    
+    ///Start receiving from the GUI
     while(setupLoop)
         {
             try
                 {
+                    ///Try to receive
                     GUISocket >> DataWord;
                 }
             catch(SocketException e)
                 {
-                    std::cout << "got exeption in main: " << e.description() << "\n"; 
+                    ///If the socket was empty continue receiving
+                    continue;
+                }
+
+            ///Find the start tag
+            
+            if(DataWord.find(START_TAG, 0) == 0)
+                {
+                    ///start tag found. Continue to parse the
+                    ///configuration string
+
+                    ///Set the string index
+                    int i_End, i_Start = START_TAG_LENGTH;
+                    
+                    ///find the end tag
+                    i_End = DataWord.find(END_TAG, i_Start);
+
+                    ///check that end tag was found
+                    if(i_End == npos)
+                        {
+                            ///If end tag was not found, send NACK to
+                            ///GUI and continue receiving
+                            GUISocket << NACK;
+                            continue;
+                        }
+
+                    ///Parse until the end tag is reached
+                    while(i_Start < i_End)
+                        {
+                            ///declare and set the end and start
+                            ///indeices for router parameters
+                            int j_Start = i_Start, j_End;
+                            
+                            
+                        }
+
+                }
+            else
+                {
+                    ///Report error to the GUI
+                    GUISocket << NACK;
+                    ///Continue receiving
+                    continue;   
                 }
                     
             if(DataWord.compare("SETUP") == 0)
