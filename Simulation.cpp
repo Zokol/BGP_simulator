@@ -112,6 +112,9 @@ void Simulation::simulationMain(void)
     while(true)
         {
             wait();
+
+#ifdef _GUI
+
             m_Word = "";
 
             if(state)
@@ -137,6 +140,7 @@ void Simulation::simulationMain(void)
             
             if(!(m_GUISocket.is_valid()))
                 cout << "socket not valid" << endl;
+#endif
         }
 
 }

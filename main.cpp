@@ -69,7 +69,7 @@ using namespace sc_dt;
 
 
 
-#define _GUI
+//#define _GUI
 
 /*!
  * \brief SystemC main function
@@ -254,7 +254,10 @@ Simulation test("Test", GUISocket, l_Config);
   ///run the simulation	
   sc_start(SIMULATION_DURATION, SC_SEC);
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
+
+#ifdef _GUI  
   GUISocket << "END";
+#endif
 
 return 0;
 }//end of main

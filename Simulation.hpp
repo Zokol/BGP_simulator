@@ -21,6 +21,7 @@
  */
 
 
+//#define _GUI
 
 #include "systemc"
 #include "Router.hpp"
