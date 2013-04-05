@@ -205,7 +205,7 @@ void RoutingTable::printOneRoute(Route p_route)
     string message = ss.str();
     ss.str("");
 
-    for(int i =0;i<p_route.ASes.size();i++)
+    for(unsigned i =0;i<p_route.ASes.size();i++)
     {
         ss << p_route.ASes.at(i);
     }
