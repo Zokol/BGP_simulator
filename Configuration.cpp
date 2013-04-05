@@ -176,11 +176,20 @@ SimulationConfig::SimulationConfig(int p_NumberOfRouters):m_NumberOfRouters(p_Nu
 
     }
 
+
 SimulationConfig::~SimulationConfig()
     {
 
         delete [] m_RouterConfiguration;
     }
+
+void SimulationConfig::init(int p_NumberOfRouters)
+{
+    m_NumberOfRouters = p_NumberOfRouters;
+    m_RouterConfiguration = new RouterConfig*[m_NumberOfRouters];
+
+}
+
 
 void SimulationConfig::addRouterConfig(int p_RouterId, int p_NumberOfInterfaces)
     {

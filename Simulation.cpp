@@ -107,7 +107,12 @@ Simulation::~Simulation()
 
 void Simulation::simulationMain(void)
 {
+
+#ifdef _GUI
+
     bool state = true;
+
+#endif
     // m_GUISocket.set_non_blocking(true);
     while(true)
         {

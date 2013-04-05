@@ -22,6 +22,8 @@ using namespace sc_dt;
 
 #define SIMULATION_DURATION 20
 
+#define IF_COUNT 4
+
 /*!
  * TCP port of the GUI socket
  */
@@ -85,13 +87,23 @@ const char* g_SimulationVersion = "Test run";
 
 int sc_main(int argc, char * argv [])
 {
+
+
     ///field parsing states
-    enum fieldStates {AS_ID, PREFIX, PORT_ID};
+    enum fieldStates{S_AS_ID, S_PREFIX, S_MED, S_LOCAL_PREF, S_KEEPALIVE, S_HOLDDOWNMUL, S_PORT_ID};
 
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT ); 
     ///Declare a Server socket for the GUI connection
     ServerSocket GUISocket; 
+    ///Instantiate a SimulationConfig object to store simulation
+    ///configuration received from the GUI
+    SimulationConfig l_Config;
+
+    StringTools converter;
+    cout << converter.convertIPToBinary("192.168.1.0/24") << endl;
+    cout << converter.convertMaskToBinary("192.168.1.0/24") << endl;
+    cout << converter.convertIPToString(converter.convertIPToBinary("192.168.1.0/24"),converter.convertMaskToBinary("192.168.1.0/24")) << endl;
 
 #ifdef _GUI
    
@@ -127,7 +139,7 @@ int sc_main(int argc, char * argv [])
                     ///configuration string
 
                     ///Set the string index
-                    int i_End, i_Start = START_TAG_LENGTH;
+                    unsigned i_End, i_Start = START_TAG_LENGTH;
                     
                     ///find the end tag
                     i_End = DataWord.find(END_TAG, i_Start);
@@ -141,50 +153,114 @@ int sc_main(int argc, char * argv [])
                             continue;
                         }
 
-                    ///Parse until the end tag is reached
+                    ///Determine the number of routers
+                    unsigned count = 1;
                     while(i_Start < i_End)
+                        {
+                            i_Start = DataWord.find(ROUTER_SEPARATOR, i_Start+1);
+                            if (i_Start != string::npos)
+                                {
+                                    count++;
+                                }
+                            else
+                                break;
+                        }
+
+                    ///set the number of routers
+                    l_Config.init(count);
+
+                    ///reset the i_Start
+                    i_Start = START_TAG_LENGTH;
+
+                    ///define an index and initiate it to zero
+                    unsigned l_Idx = 0;
+
+                    ///Parse the fields of all the routers
+                    while(l_Idx < count)
                         {
                             ///declare and set the end and start
                             ///indeices for router parameters
-                            int j_Start = i_Start, j_End;
+                            unsigned j_Start = i_Start, j_End;
 
                     
-                            ///find the router field separator
-                            j_End = DataWord.find(ROUTER_SEPARATOR, j_Start);
+                            ///find the end of the router field
+                            if(l_Idx == count-1) //the last router
+                                j_End = DataWord.find(END_TAG, j_Start);
+                            else //other than the last router
+                                j_End = DataWord.find(ROUTER_SEPARATOR, j_Start);
 
-                            ///check that the router field end was found
-                            if(j_End == string::npos)
-                                {
-                                    ///If the router field separator was not found, send NACK to
-                                    ///GUI and continue receiving
-                                    GUISocket << NACK;
-                                    retrans = true;
-                                    break;
-                                }
+                            // ///check that the router field end was found
+                            // if(j_End == string::npos)
+                            //     {
+                            //         ///If the router field separator was not found, send NACK to
+                            //         ///GUI and continue receiving
+                            //         GUISocket << NACK;
+                            //         retrans = true;
+                            //         break;
+                            //     }
 
                             ///set the state to AS_ID
-                            fieldStates state = AS_ID;
+                            fieldStates state = S_AS_ID;
+                            unsigned k_End = j_End;
+
+                            ///Init router configuration object for
+                            ///this 
+                            l_Config.addRouterConfig(l_Idx, IF_COUNT);
+
+                            ///refer to the previous
+                            RouterConfig l_Router = l_Config.getRouterConfiguration(l_Idx);
+
+                            bool parse = true;
+
                             ///parse until all the fields are extracted
-                            while(j_Start < j_End)
+                            while(parse)
                                 {
-                                    int k_End, length;
-                                    char buffer[50];
+
+                                    string field;
+
                                     ///parse the fields one by one
                                     k_End = DataWord.find(FIELD_SEPARATOR, j_Start);
-                                    length = DataWord.copy(buffer, j_Start, k_End);
-                                    buffer[length] = '\0';
 
+                                    ///check the exception cases
+                                    if (k_End > j_End || k_End == string::npos)
+                                        {
+                                            ///this is the end of the router field
+                                            k_End = j_End; //set the end index accordingly
+                                            parse = false;  //this is the final iteration in the while loop
+                                        }
+
+                                    ///get the field
+                                    field = DataWord.substr(j_Start, k_End-j_Start);
+                                    int l_IntField = 0;
+                                    ///store the field
                                     switch (state)
                                         {
-                                        case AS_ID:
-                                            
-                                            state = PREFIX;
+                                        case S_AS_ID:
+                                        	istringstream(field) >> l_IntField;
+                                            l_Router.setASNumber(l_IntField);
+                                            state = S_PREFIX;
                                             break;
-                                        case PREFIX:
+                                        case S_PREFIX:
 
-                                            state = PORT_ID;
+                                            state = S_MED;
                                             break;
-                                        case PORT_ID:
+                                        case S_MED:
+
+                                            state = S_LOCAL_PREF;
+                                            break;
+                                        case S_LOCAL_PREF:
+
+                                            state = S_KEEPALIVE;
+                                            break;
+                                        case S_KEEPALIVE:
+
+                                            state = S_HOLDDOWNMUL;
+                                            break;
+                                        case S_HOLDDOWNMUL:
+
+                                            state = S_PORT_ID;
+                                            break;
+                                        case S_PORT_ID:
 
                                             break;
                                         default:
@@ -216,18 +292,20 @@ int sc_main(int argc, char * argv [])
                 }
 
         }
-#endif
+#else
 
 
 //testing the simulation configuration
-SimulationConfig l_Config(3);
-l_Config.addRouterConfig(0, 2);
-l_Config.addRouterConfig(1, 2);
-l_Config.addRouterConfig(2, 2);
-l_Config.addBGPSessionParameters(0, 60, 3);
-l_Config.addBGPSessionParameters(1, 60, 3);
-l_Config.addBGPSessionParameters(2, 60, 3);
+    ///set the number of routers
+    l_Config.init(3);
 
+    l_Config.addRouterConfig(0, 2);
+    l_Config.addRouterConfig(1, 2);
+    l_Config.addRouterConfig(2, 2);
+    l_Config.addBGPSessionParameters(0, 60, 3);
+    l_Config.addBGPSessionParameters(1, 60, 3);
+    l_Config.addBGPSessionParameters(2, 60, 3);
+#endif
   /* Clock period intialization.
    * The clock period is 10 ns.
    */

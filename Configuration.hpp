@@ -164,6 +164,7 @@ public:
      */
     void setASNumber(int p_ASNumber);
 
+
     /*! \fn void setMED(int p_MED);
      *  \brief Sets the Multi-exit discriminator(MED) attribute of BGP
      *  @param[in] int m_MED The Multi-exit discriminator value
@@ -346,11 +347,14 @@ public:
 
     virtual ~SimulationConfig();
 
+    void init(int p_NumberOfRouters);
+
     void addRouterConfig(int p_RouterId, int p_NumberOfInterfaces);
     
     void addConnectionConfig(int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId);
 
     void addBGPSessionParameters(int p_LocalRouterId, int p_KeepaliveTime, int p_HoldDownTimeFactor);
+
 
     /*! \fn void setNumberOfRouters(int p_NumberOfRouters);
      *  \brief Sets the number of routers used in this simulation
