@@ -101,9 +101,9 @@ int sc_main(int argc, char * argv [])
     SimulationConfig l_Config;
 
     StringTools converter;
-    cout << converter.convertIPToBinary("192.168.1.0/24") << endl;
-    cout << converter.convertMaskToBinary("192.168.1.0/24") << endl;
-    cout << converter.convertIPToString(converter.convertIPToBinary("192.168.1.0/24"),converter.convertMaskToBinary("192.168.1.0/24")) << endl;
+//    cout << converter.convertIPToBinary("192.168.1.0/24") << endl;
+//    cout << converter.convertMaskToBinary("192.168.1.0/24") << endl;
+//    cout << converter.convertIPToString(converter.convertIPToBinary("192.168.1.0/24"),converter.convertMaskToBinary("192.168.1.0/24")) << endl;
 
 #ifdef _GUI
    
@@ -241,27 +241,32 @@ int sc_main(int argc, char * argv [])
                                             state = S_PREFIX;
                                             break;
                                         case S_PREFIX:
-
+                                        	l_Router.setPrefix(converter.convertIPToBinary(field));
+                                        	l_Router.setPrefixMask(converter.convertMaskToBinary(field));
                                             state = S_MED;
                                             break;
                                         case S_MED:
-
+                                           	istringstream(field) >> l_IntField;
+                                            l_Router.setMED(l_IntField);
                                             state = S_LOCAL_PREF;
                                             break;
                                         case S_LOCAL_PREF:
-
+                                           	istringstream(field) >> l_IntField;
+                                            l_Router.setLocalPref(l_IntField);
                                             state = S_KEEPALIVE;
                                             break;
                                         case S_KEEPALIVE:
-
+                                           	istringstream(field) >> l_IntField;
+                                            l_Router.setKeepaliveTime(l_IntField);
                                             state = S_HOLDDOWNMUL;
                                             break;
                                         case S_HOLDDOWNMUL:
-
+                                           	istringstream(field) >> l_IntField;
+                                            l_Router.setHoldDownTimeFactor(l_IntField);
                                             state = S_PORT_ID;
                                             break;
                                         case S_PORT_ID:
-
+                                        	//TODO: Parsing the connection configurations
                                             break;
                                         default:
                                             retrans = true;                  
