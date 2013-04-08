@@ -23,15 +23,16 @@ using namespace sc_core;
 using namespace sc_dt;
 
 
-
 #ifndef _ROUTINGTABLE_H_
 #define _ROUTINGTABLE_H_
 
 struct Route
 {
+    int id;
     string prefix;
     int mask;
     string ASes;
+    vector<int> routers;    // this is the sequence of routers in one path
     int OutputPort;
     Route * next;
     Route * prev;
@@ -103,6 +104,17 @@ public:
      */
     SC_HAS_PROCESS(RoutingTable);
 
+    void addNewRoute(string p_msg, int p_outputPort);
+    //void setMED(int p_routeId,)
+
+    // Give preferred AS and some preference value to it.
+    void setLocalPreference(int p_AS, int p_preferenceValue);
+    // Delete route from the RawRoutingTable. Parameters are router IDs.
+    void deleteRoute(int p_router1, int p_router2);
+
+
+    vector<int> preferredASes;
+
 
 
 
@@ -119,7 +131,6 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
-    void addNewRoute(string p_msg, int OutputPort);
     void createRoute(string p_msg,int p_outputPort, Route * p_route);
     void handleNotification (BGPMessage NOTIFICATION_message);
     Route * findRoute(string p_IPAddress);
@@ -127,7 +138,10 @@ private:
     void updateRoutingTable();
     void addPreferredRoute(Route p_route1, Route p_route2);
     void setRoute(Route p_route);
-    void removeFromRawTable(Route p_route);
+    void removeFromRawTable(int p_routerId);
+    void removeFromRoutingTable(int p_routerId);
+    bool sameRoutes(Route p_route1, Route p_route2);
+    int ASpathLength(Route p_route);
 
 
     void printRoutingTable();
@@ -147,10 +161,12 @@ private:
 
     Route * m_headOfRawTable;
     Route * m_endOfRawTable;
-    Route * m_iterator;  // TODO change name;
+    Route * m_iterator;
 
     Route * m_headOfRoutingTable;
     Route * m_endOfRoutingTable;
+
+
 
 
     // //TODO Find out what parameters we need for this function.
