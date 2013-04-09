@@ -136,9 +136,10 @@ void Simulation::simulationMain(void)
                     if(m_Word != "")
                         {
                             cout << "Received: " << m_Word << endl;
-                            if(m_Word.compare("Request") == 0)
+                            if(m_Word.compare("STOP") == 0)
                                 {
-                                    m_GUISocket << "Response";
+                                    m_GUISocket << "STOP";
+                                    sc_stop();
                                 }
                         }
                 }
