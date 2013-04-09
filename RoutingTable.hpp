@@ -143,6 +143,8 @@ private:
     bool sameRoutes(Route p_route1, Route p_route2);
     int ASpathLength(Route p_route);
 
+    string routeToString(Route p_route);
+
 
     void printRoutingTable();
     void printRawRoutingTable();

@@ -72,7 +72,7 @@ void RoutingTable::routingTableMain(void)
 
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
-
+/*
                 cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
@@ -80,7 +80,7 @@ void RoutingTable::routingTableMain(void)
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-
+*/
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
@@ -402,6 +402,7 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string Routers = p_msg.substr((Mask_end+1),(Routers_end-Mask_end-1));
     string ASes = p_msg.substr((Routers_end+1),(ASes_end-Routers_end-1));
 
+    // TODO : Add own router_id and AS to "Routers" and "ASes". Read from Configuration somehow?
 
     // Create vector<int> from "Routers"
     unsigned newPosition = 0;
@@ -428,7 +429,7 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 }
 
 /*
-    Remove given route from raw routing table.
+    Remove given route from RawRoutingTable
 */
 void RoutingTable::removeFromRawTable(int p_routerId)
 {
@@ -450,6 +451,9 @@ void RoutingTable::removeFromRawTable(int p_routerId)
 
 }
 
+/*
+    Remove given route from MainRoutingTable
+*/
 void RoutingTable::removeFromRoutingTable(int p_routerId)
 {
     Route * deleteRoute = new Route();
@@ -491,8 +495,6 @@ void RoutingTable::deleteRoute(int p_router1, int p_router2)
                     removeFromRawTable(m_iterator->id);
         }
     }
-
-
 
 }
 
@@ -541,6 +543,28 @@ int RoutingTable::resolveRoute(sc_int<32> p_IPAddress)
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
     Route * foundRoute = findRoute(p_IPAddress);
     return foundRoute->OutputPort;
+}
+
+/*
+    Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
+    Syntax: Prefix;Mask;Routers;ASes (e.g. 100100200050;8;2-4-6-7;100-4212-231-22)
+*/
+string RoutingTable::routeToString(Route p_route)
+{
+    stringstream ss;
+    ss.str("");
+    ss << p_route.prefix << ";" << p_route.mask << ";";
+
+    // "-1" to avoid unnecessary "-" after last router-id
+    for(unsigned i = 0;i < p_route.routers.size()-1;i++)
+    {
+        ss << p_route.routers.at(i) << "-";
+    }
+    ss << p_route.routers.at(p_route.routers.size()-1);
+    ss << ";";
+    ss << p_route.ASes;
+
+    return ss.str();
 }
 
 /*
