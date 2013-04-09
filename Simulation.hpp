@@ -21,7 +21,7 @@
  */
 
 
-#define _GUI
+
 
 #include "systemc"
 #include "Router.hpp"
@@ -135,7 +135,10 @@ private:
      */
     SimulationConfig m_SimuConfiguration;
 
+    enum ServerStates{RECEIVE, SEND} enum_State;
 
+
+    void socketRoutine(void);
 
 };
 

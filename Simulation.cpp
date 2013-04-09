@@ -9,7 +9,7 @@
 
 #include "Simulation.hpp"
 #include "ReportGlobals.hpp"
-
+#include "GUIProtocolTags.hpp"
 
 Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig& p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_SimuConfiguration(p_SimuConfiguration)
 {
@@ -108,9 +108,14 @@ Simulation::~Simulation()
 void Simulation::simulationMain(void)
 {
 
-#ifdef _GUI
+#ifdef _GUI_TEST
 
     bool state = true;
+#elif defined (_GUI)
+    enum_State = RECEIVE;
+
+
+#else
 
 #endif
     // m_GUISocket.set_non_blocking(true);
@@ -118,7 +123,7 @@ void Simulation::simulationMain(void)
         {
             wait();
 
-#ifdef _GUI
+#ifdef _GUI_TEST
 
             m_Word = "";
 
@@ -131,22 +136,106 @@ void Simulation::simulationMain(void)
                     catch(SocketException e)
                         {
                             //cout << e.description() << endl;
+                            continue;
                         }
                     
                     if(m_Word != "")
                         {
                             cout << "Received: " << m_Word << endl;
+                            m_GUISocket << m_Word;
                             if(m_Word.compare("STOP") == 0)
-                                {
-                                    m_GUISocket << "STOP";
-                                    sc_stop();
-                                }
+                                sc_stop();
                         }
                 }
             
             if(!(m_GUISocket.is_valid()))
                 cout << "socket not valid" << endl;
+#elif defined (_GUI)
+
+            ///START:FSM of the simulation server
+            switch(enum_State)
+                {
+
+                case RECEIVE:
+
+                    try
+                        {
+                            m_GUISocket >> m_Word;
+                            socketRoutine();
+                        }
+                    catch(SocketException e)
+                        {
+                            if(m_GUISocket.is_valid())
+                                break;
+                            else
+                                {
+                                    sc_stop();
+                                    //cout << e.description() << endl;
+                                    SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server receiving failure.\nSimulation ends."));
+                                }
+                            break;
+                        }
+
+
+                    break;
+
+                case SEND:
+
+                    try
+                        {
+                            m_GUISocket << m_Word;
+                        }
+                    catch(SocketException e)
+                        {
+                            cout << e.description() << endl;
+                            //TODO: implement proper retransmission
+                            //mechanism here
+                            if(m_GUISocket.is_valid())
+                                break;
+                            else
+                                {
+                                    SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server sending failure.\nSimulation ends."));
+
+                                    sc_stop();
+                                }
+                        }
+
+                    enum_State = RECEIVE;
+                    break;
+
+                default:
+                    SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server state failure.\nSimulation ends."));
+
+                    sc_stop();
+                    break;
+                }
+            ///END:FSM of the simulation server
+
+#else
+
 #endif
         }
 
+}
+
+
+void Simulation::socketRoutine(void)
+{
+
+    if(m_Word.compare(STOP)== 0)
+        {
+            
+        }
+    else if (m_Word.compare(READ_TABLE)== 0)
+        {
+            
+        }
+    else if (m_Word.compare(READ_ROUTER)== 0)
+        {
+            
+        }
+    else
+        {
+
+        }
 }
