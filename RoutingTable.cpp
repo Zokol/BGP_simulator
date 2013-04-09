@@ -72,15 +72,18 @@ void RoutingTable::routingTableMain(void)
 
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
-/*
+
                 cout << "Raw table: " << endl;
                 printRawRoutingTable();
+
+                preferredASes.push_back(5432);
+                preferredASes.push_back(100);
 
                 updateRoutingTable();
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-*/
+
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
@@ -222,15 +225,26 @@ void RoutingTable::setRoute(Route p_route)
 }
 
 /*
-    Take two routes as a parameter, check which one preferred and
+    Take two routes as a parameter, check which one is preferred and
     if the one from RawTable is preferred, replace the other one with that.
     Which route is preferred is decided by policies.
-    p_route1 is already in MainRoutingTable. So do nothing if that route is preferred over p_route2.
+    p_route1 is already in MainRoutingTable, so do nothing if that route is preferred over p_route2.
 
 */
 void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
 {
-    // TODO doesn't work properly yet
+    /*
+        Add preferred route to routing table according to policies. Policies:
+        1. Check if which route has higher preferredAS
+        2. Check AS-path length
+        3. MED
+        4. Origin type
+
+    */
+
+    /*  1. TODO: only picks up the highes value. What if p_route1 and p_route2 have same highest value but different 2. highest value?
+        Solution: calculate sum instead of the highest value?
+    */
     int route1_highest_pref = 0;
     int route2_highest_pref = 0;
     int AS;
@@ -270,21 +284,27 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
                     route2_highest_pref = preferredASes.at(i+1);
             }
         }
-        if(route1_highest_pref  == 0 && route2_highest_pref  == 0)
-            continue;
-
-        //cout << "Route1 preferenssi: " << route1_highest_pref << "Route2 preferenssi: " << route2_highest_pref << endl;
     }
 
-    // Add preferred route to routing table
-    if(route1_highest_pref == route2_highest_pref)
-        string something; // Equal values. Find other way to find out which route is preferred
-    else if(route2_highest_pref > route1_highest_pref)
+
+
+    if(route2_highest_pref > route1_highest_pref)
     {
         // p_route2 was preferred over p_route1. So remove p_route1 from MainRoutingTable and replace it by p_route2
         removeFromRoutingTable(p_route1.id);
         setRoute(p_route2);
+        return;
     }
+
+    // 2. AS-path length
+    if(ASpathLength(p_route1) < ASpathLength(p_route2))
+    {
+        // p_route2 had shorter AS-path, so replace p_route1
+        removeFromRoutingTable(p_route1.id);
+        setRoute(p_route2);
+        return;
+    }
+
 
 }
 
@@ -442,6 +462,10 @@ void RoutingTable::removeFromRawTable(int p_routerId)
         deleteRoute = deleteRoute->next;
         if(deleteRoute->id == p_routerId)
         {
+            if(deleteRoute == m_endOfRoutingTable)
+            {
+                m_endOfRoutingTable = tempRoute;
+            }
             tempRoute->next = deleteRoute->next;
             return;
             // TODO: free memory
@@ -466,6 +490,10 @@ void RoutingTable::removeFromRoutingTable(int p_routerId)
         if(deleteRoute->id == p_routerId)
         {
             tempRoute->next = deleteRoute->next;
+            if(deleteRoute == m_endOfRoutingTable)
+            {
+                m_endOfRoutingTable = tempRoute;
+            }
             return;
             // TODO: free memory
         }
@@ -573,11 +601,12 @@ string RoutingTable::routeToString(Route p_route)
 int RoutingTable::tableLength()
 {
     int length = 0;
-    m_iterator = m_headOfRoutingTable;
-    while(m_iterator->next!=0)
+    Route * l_iterator = new Route;
+    l_iterator = m_headOfRoutingTable;
+    while(l_iterator->next!=0)
     {
         length++;
-        m_iterator= m_iterator->next;
+        l_iterator = l_iterator->next;
     }
     return length;
 }
@@ -608,20 +637,16 @@ void RoutingTable::fillRoutingTable()
     string l_message;
     srand(time(NULL));
 
-    for(int i=0;i<3;i++)
+    for(int i=0;i<4;i++)
     {
         ss.str("");
         prefix1 = 1+(rand()%255);
         prefix2 = 1+(rand()%255);
         prefix3 = 1+(rand()%255);
-        prefix4 = 1+(rand()%255);
+        prefix4 = 0;//1+(rand()%255);
         ss << prefix1 << prefix2 << prefix3 << prefix4;
         prefix = ss.str();
         ss.str("");
-
-        // to test routeFind()
-        if(i==2)
-            prefix = "50.40.200.0";
 
         AS1 = 1+(rand()%5000);
         AS2 = 1+(rand()%5000);
@@ -630,19 +655,21 @@ void RoutingTable::fillRoutingTable()
         ASes = ss.str();
         ss.str("");
 
-        //preferredASes.push_back(AS2);
-        //preferredASes.push_back(432);
+        mask = 1+(rand()%8);
+        OutputPort = 1+(rand()%20);
 
-        //preferredASes.push_back(200);
-        //preferredASes.push_back(99);
-
-
+        // to test stuff
         string routers = "1-2-3-4-5-6";
         if(i == 2)
             routers = "4-3-5-1";
 
-        mask = 1+(rand()%8);
-        OutputPort = 1+(rand()%20);
+        if(i==1)
+        {
+            prefix = "50402000";
+            ASes = "50-70-100";
+            OutputPort = 0;
+        }
+
         ss << prefix << ";" << mask << ";" << routers << ";" << ASes;
         l_message = ss.str();
 
@@ -653,8 +680,21 @@ void RoutingTable::fillRoutingTable()
         //cout << l_message << endl;
 
 
-        addNewRoute(l_message,OutputPort);
-        addNewRoute(l_message,OutputPort);
+        if(i == 2)
+        {
+            addNewRoute(l_message,OutputPort);
+            ss.str("");
+            ss << prefix << ";" << mask << ";" << routers << ";99-5432-4343-4444";
+            addNewRoute(ss.str(),1);
+
+        }
+        else
+        {
+            addNewRoute(l_message,OutputPort);
+            addNewRoute(l_message,OutputPort);
+
+        }
+
 
 
     }
