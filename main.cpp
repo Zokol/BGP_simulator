@@ -55,6 +55,11 @@ using namespace sc_dt;
 #define ROUTER_SEPARATOR ";"
 
 /*!
+ * Connection field separator
+ */
+#define CONNECTION_SEPARATOR "_"
+
+/*!
  * Field separator
  */
 #define FIELD_SEPARATOR ","
@@ -71,7 +76,7 @@ using namespace sc_dt;
 
 
 
-//#define _GUI
+#define _GUI
 
 /*!
  * \brief SystemC main function
@@ -81,6 +86,7 @@ using namespace sc_dt;
  * \li Starts the simulation
  */
 
+const char* g_DebugMainID = "Level_debug_main:";
 const char* g_DebugID = "Level_debug:";
 const char* g_ReportID = "Level_info:";
 const char* g_SimulationVersion = "Test run";
@@ -92,6 +98,7 @@ int sc_main(int argc, char * argv [])
     ///field parsing states
     enum fieldStates{S_AS_ID, S_PREFIX, S_MED, S_LOCAL_PREF, S_KEEPALIVE, S_HOLDDOWNMUL, S_PORT_ID};
 
+
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT ); 
     ///Declare a Server socket for the GUI connection
@@ -99,12 +106,22 @@ int sc_main(int argc, char * argv [])
     ///Instantiate a SimulationConfig object to store simulation
     ///configuration received from the GUI
     SimulationConfig l_Config;
+    RouterConfig *ptr_Router;
 
     StringTools converter;
 //    cout << converter.convertIPToBinary("192.168.1.0/24") << endl;
 //    cout << converter.convertMaskToBinary("192.168.1.0/24") << endl;
 //    cout << converter.convertIPToString(converter.convertIPToBinary("192.168.1.0/24"),converter.convertMaskToBinary("192.168.1.0/24")) << endl;
 
+
+    sc_report rp;
+    sc_report_handler::set_log_file_name("test_simu.log");
+    sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
+    sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DISPLAY);
+    SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
+
+    StringTools l_DebugReport("Main");
 #ifdef _GUI
    
     ///Accept the GUI connection
@@ -135,6 +152,8 @@ int sc_main(int argc, char * argv [])
             
             if(DataWord.compare(0, START_TAG_LENGTH, START_TAG) == 0)
                 {
+                    SC_REPORT_INFO(g_DebugMainID, l_DebugReport.newReportString("Start tag found"));
+
                     ///start tag found. Continue to parse the
                     ///configuration string
 
@@ -166,6 +185,9 @@ int sc_main(int argc, char * argv [])
                                 break;
                         }
 
+                    l_DebugReport.newReportString("Count: ");
+                    SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(count));
+
                     ///set the number of routers
                     l_Config.init(count);
 
@@ -176,8 +198,12 @@ int sc_main(int argc, char * argv [])
                     unsigned l_Idx = 0;
 
                     ///Parse the fields of all the routers
-                    while(l_Idx < count)
+                    while(l_Idx < count) //Start of router field loop
                         {
+
+                            l_DebugReport.newReportString("Router field #");
+                            SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(l_Idx));
+
                             ///declare and set the end and start
                             ///indeices for router parameters
                             unsigned j_Start = i_Start, j_End;
@@ -185,9 +211,12 @@ int sc_main(int argc, char * argv [])
                     
                             ///find the end of the router field
                             if(l_Idx == count-1) //the last router
-                                j_End = DataWord.find(END_TAG, j_Start);
+                                {
+                                    j_End = DataWord.find(END_TAG, i_Start);
+                                    setupLoop = false;
+                                }
                             else //other than the last router
-                                j_End = DataWord.find(ROUTER_SEPARATOR, j_Start);
+                                j_End = DataWord.find(ROUTER_SEPARATOR, i_Start);
 
                             // ///check that the router field end was found
                             // if(j_End == string::npos)
@@ -208,12 +237,12 @@ int sc_main(int argc, char * argv [])
                             l_Config.addRouterConfig(l_Idx, IF_COUNT);
 
                             ///refer to the previous
-                            RouterConfig l_Router = l_Config.getRouterConfiguration(l_Idx);
+                            ptr_Router = l_Config.getRouterConfigurationPtr(l_Idx);
 
                             bool parse = true;
 
                             ///parse until all the fields are extracted
-                            while(parse)
+                            while(parse) //Start of field loop
                                 {
 
                                     string field;
@@ -227,60 +256,118 @@ int sc_main(int argc, char * argv [])
                                             ///this is the end of the router field
                                             k_End = j_End; //set the end index accordingly
                                             parse = false;  //this is the final iteration in the while loop
+                                            SC_REPORT_INFO(g_DebugMainID, l_DebugReport.newReportString("End of router field."));
+
                                         }
+                                    l_DebugReport.newReportString("j_Start: ");
+                                    SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(j_Start));
+                                    l_DebugReport.newReportString("k_End: ");
+                                    SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(k_End));
+
 
                                     ///get the field
                                     field = DataWord.substr(j_Start, k_End-j_Start);
+
+                                    l_DebugReport.newReportString("Field: ");
+                                    SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(field.c_str()));
+
+
+
                                     int l_IntField = 0;
+
+                                    string subField = "";
+                                    int m_Start = 0, m_End, tempFields[3];
+
                                     ///store the field
                                     switch (state)
                                         {
                                         case S_AS_ID:
                                         	istringstream(field) >> l_IntField;
-                                            l_Router.setASNumber(l_IntField);
+                                            ptr_Router->setASNumber(l_IntField);
                                             state = S_PREFIX;
                                             break;
                                         case S_PREFIX:
-                                        	l_Router.setPrefix(converter.convertIPToBinary(field));
-                                        	l_Router.setPrefixMask(converter.convertMaskToBinary(field));
+                                        	ptr_Router->setPrefix(converter.convertIPToBinary(field));
+                                        	ptr_Router->setPrefixMask(converter.convertMaskToBinary(field));
                                             state = S_MED;
                                             break;
                                         case S_MED:
                                            	istringstream(field) >> l_IntField;
-                                            l_Router.setMED(l_IntField);
+                                            ptr_Router->setMED(l_IntField);
                                             state = S_LOCAL_PREF;
                                             break;
                                         case S_LOCAL_PREF:
                                            	istringstream(field) >> l_IntField;
-                                            l_Router.setLocalPref(l_IntField);
+                                            ptr_Router->setLocalPref(l_IntField);
                                             state = S_KEEPALIVE;
                                             break;
                                         case S_KEEPALIVE:
                                            	istringstream(field) >> l_IntField;
-                                            l_Router.setKeepaliveTime(l_IntField);
+                                            ptr_Router->setKeepaliveTime(l_IntField);
                                             state = S_HOLDDOWNMUL;
                                             break;
                                         case S_HOLDDOWNMUL:
                                            	istringstream(field) >> l_IntField;
-                                            l_Router.setHoldDownTimeFactor(l_IntField);
+                                            ptr_Router->setHoldDownTimeFactor(l_IntField);
                                             state = S_PORT_ID;
                                             break;
                                         case S_PORT_ID:
                                         	//TODO: Parsing the connection configurations
+                                            
+
+                                            for(int i = 0; i < 3; i++)
+                                                {
+                                                    //parse each
+                                                    //connecion field:
+                                                    //local port id,
+                                                    //client port id,
+                                                    //client id
+                                                    m_End = field.find(CONNECTION_SEPARATOR, m_Start);
+
+                                                    ///store the sub field
+                                                    subField = field.substr(m_Start, m_End-m_Start);
+
+
+                                                    l_DebugReport.newReportString("subField: ");
+                                                    SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(subField.c_str()));
+
+ 
+                                                    ///Store each
+                                                    ///sub field into a
+                                                    ///temporary array
+                                                    istringstream(subField) >> tempFields[i];
+
+                                                    ///update the
+                                                    ///index for the
+                                                    ///next iteration
+                                                    m_Start = m_End + 1;
+                                                }
+
+                                            ///Store the connection
+                                            ///parameters to the
+                                            ///connection confi object
+                                            ptr_Router->addConnectionConfig(tempFields[0], tempFields[2], tempFields[1]);
+
                                             break;
                                         default:
                                             retrans = true;                  
                                         }
+
+                                    j_Start = k_End + 1; 
+
                                     if(retrans)
                                         break;
-                                }//end of while
+
+                                    i_Start = k_End + 1;
+                                }//end of field loop
+
                             if(retrans)
                                 break;
                           
                                 
+                            l_Idx++;                            
                             
-                            
-                        } //end of while
+                        } //End of router field loop
 
                     if(retrans)
                         {
@@ -296,7 +383,17 @@ int sc_main(int argc, char * argv [])
                     continue;   
                 }
 
-        }
+        }//End of receiving loop
+
+
+    //Sync with the test client
+    GUISocket << "Simu";
+
+
+    SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
+
+    cout << l_Config.toString().c_str() << endl;
+    
 #else
 
 
@@ -320,12 +417,6 @@ int sc_main(int argc, char * argv [])
    */
   sc_clock clk("clk", clk_Period);
 
-    sc_report rp;
-    sc_report_handler::set_log_file_name("test_simu.log");
-    sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
-    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
-    SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
-
   ///initiate the simulation
 Simulation test("Test", GUISocket, l_Config);
 
@@ -336,11 +427,13 @@ Simulation test("Test", GUISocket, l_Config);
 
   ///run the simulation	
   sc_start(SIMULATION_DURATION, SC_SEC);
-  SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
 
 #ifdef _GUI  
   GUISocket << "END";
 #endif
+
+  SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
+  ptr_Router = NULL;
 
 return 0;
 }//end of main
