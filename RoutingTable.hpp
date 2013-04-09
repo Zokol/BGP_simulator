@@ -138,7 +138,7 @@ private:
     void updateRoutingTable();
     void addPreferredRoute(Route p_route1, Route p_route2);
     void setRoute(Route p_route);
-    void removeFromRawTable(Route p_route);
+    void removeFromRawTable(int p_route);
     void removeFromRoutingTable(int p_routerId);
     bool sameRoutes(Route p_route1, Route p_route2);
     int ASpathLength(Route p_route);
