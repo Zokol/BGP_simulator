@@ -10,7 +10,7 @@
 
 #include "Simulation.hpp"
 #include "Configuration.hpp"
-
+#include "GUIProtocolTags.hpp"
 
 //!Defines the file name for the VCD output.
 //#define VCD_FILE_NAME "anjosi_ex3_vcd"
@@ -23,60 +23,6 @@ using namespace sc_dt;
 #define SIMULATION_DURATION 20
 
 #define IF_COUNT 4
-
-/*!
- * TCP port of the GUI socket
- */
-#define PORT 50000
-
-/*!
- * Start tag of the configuration string
- */
-#define START_TAG "<SIM_CONFIG>"
-
-/*!
- * Length of the start tag
- */
-#define START_TAG_LENGTH 12
-
-/*!
- * End tag of the configuration string
- */
-#define END_TAG "</SIM_CONFIG>"
-
-/*!
- * Length of the end tag
- */
-#define END_TAG_LENGTH START_TAG_LENGTH+1
-
-/*!
- * Router field separator
- */
-#define ROUTER_SEPARATOR ";"
-
-/*!
- * Connection field separator
- */
-#define CONNECTION_SEPARATOR "_"
-
-/*!
- * Field separator
- */
-#define FIELD_SEPARATOR ","
-
-/*!
- * Positive acknowledgement
- */
-#define ACK "ack"
-
-/*!
- * Negative acknowledgement
- */
-#define NACK "nack"
-
-
-
-#define _GUI
 
 /*!
  * \brief SystemC main function
@@ -122,7 +68,7 @@ int sc_main(int argc, char * argv [])
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
     StringTools l_DebugReport("Main");
-#ifdef _GUI
+#if defined (_GUI) || defined(_GUI_TEST)
    
     ///Accept the GUI connection
     cout << "Waiting the GUI to connect..." << endl;
@@ -448,7 +394,7 @@ int sc_main(int argc, char * argv [])
   // sc_start(SIMULATION_DURATION, SC_SEC);
   sc_start();
 
-#ifdef _GUI  
+#if defined (_GUI) || defined(_GUI_TEST)
   GUISocket << "END";
 #endif
 
