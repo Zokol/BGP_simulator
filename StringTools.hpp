@@ -69,6 +69,8 @@ public:
 
     void resetReportString(void);
 
+    string iToS(int p_Value);
+
     sc_uint<32> convertIPToBinary(string p_Prefix);
 
     sc_uint<32> convertMaskToBinary(string p_Prefix);

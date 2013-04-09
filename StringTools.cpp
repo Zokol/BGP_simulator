@@ -131,6 +131,12 @@ void StringTools::resetReportString(void)
 
 }
 
+string StringTools::iToS(int p_Value)
+{
+    ostringstream l_Temp;
+    l_Temp << p_Value;
+    return l_Temp.str();
+}
 
 
 sc_uint<32> StringTools::convertIPToBinary(string p_Prefix)
