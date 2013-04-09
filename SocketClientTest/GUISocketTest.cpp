@@ -3,6 +3,11 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
+#define CONF_STR "<SIM_CONFIG>1,192.168.1.0/24,80,90,60,3,0_0_1;2,192.168.2.0/24,80,90,60,3,0_0_0</SIM_CONFIG>" 
+
+
 int main ( int argc, char **argv )
 {
 
@@ -10,13 +15,15 @@ int main ( int argc, char **argv )
 
       ClientSocket client_socket ( "localhost", 50000 );
       // client_socket.set_non_blocking(true);
+      cout << "Client sends the following configuration to the simulation:" << endl << CONF_STR << endl;
+
       std::string reply = "";
       while(flag){
       try
           {
               if(state)
                   {
-                      client_socket << "<SIM_CONFIG>1,192.168.1.0/24,80,90,60,3,0_0_1;2,192.168.2.0/24,80,90,60,3,0_0_0</SIM_CONFIG>";
+                      client_socket << CONF_STR;
                       state = false;
                   }
 
@@ -54,7 +61,10 @@ int main ( int argc, char **argv )
               {
                   if(state)
                       {
-                          client_socket << "Request";
+                          string l_Cmd;
+                          std::cout << "Promt@ ";
+                          cin >> l_Cmd;
+                          client_socket << l_Cmd;
                           state = false;
                       }
 
@@ -69,8 +79,12 @@ int main ( int argc, char **argv )
                                   std::cout << "Received: " << reply << std::endl;
                                   if(reply.compare("END") == 0)
                                       flag = false;
-                                  else if(reply.compare("Response") == 0)
-                                      state = true;
+                                  if(reply.compare("STOP") == 0)
+                                      cout << "Simulation terminates." << endl;
+                                  else 
+                                      {
+                                          state = true;
+                                      }
                               }
 
                       }
