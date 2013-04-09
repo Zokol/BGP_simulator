@@ -312,9 +312,7 @@ int sc_main(int argc, char * argv [])
                                             state = S_PORT_ID;
                                             break;
                                         case S_PORT_ID:
-                                        	//TODO: Parsing the connection configurations
-                                            
-
+                
                                             for(int i = 0; i < 3; i++)
                                                 {
                                                     //parse each
@@ -389,9 +387,28 @@ int sc_main(int argc, char * argv [])
     //Sync with the test client
     GUISocket << "Simu";
 
+    setupLoop = true;
+
+    while(setupLoop)
+        {
+            try
+                {
+                    GUISocket >> DataWord;
+                    if(DataWord.compare("START") == 0)
+                        {
+                            setupLoop = false;
+                            GUISocket << "Simulation starts";
+                        }
+                }
+            catch(SocketException e)
+                {
+
+                }
+        } 
 
     SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
 
+    ///Output received configuration
     cout << l_Config.toString().c_str() << endl;
     
 #else
@@ -408,25 +425,28 @@ int sc_main(int argc, char * argv [])
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
 #endif
+
+    
   /* Clock period intialization.
    * The clock period is 10 ns.
    */
-  const sc_time clk_Period(1, SC_SEC);
+    const sc_time clk_Period(1, SC_SEC);
   /* System clock.
    * The clock signal is specified in clk_Period.
    */
   sc_clock clk("clk", clk_Period);
 
   ///initiate the simulation
-Simulation test("Test", GUISocket, l_Config);
+  Simulation test("Test", GUISocket, l_Config);
 
-    ///connect the clock
-    test.port_Clk(clk);
+  ///connect the clock
+  test.port_Clk(clk);
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation starts"));
 
 
   ///run the simulation	
-  sc_start(SIMULATION_DURATION, SC_SEC);
+  // sc_start(SIMULATION_DURATION, SC_SEC);
+  sc_start();
 
 #ifdef _GUI  
   GUISocket << "END";
