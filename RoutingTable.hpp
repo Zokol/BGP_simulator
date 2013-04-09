@@ -29,7 +29,7 @@ using namespace sc_dt;
 struct Route
 {
     int id;
-    string prefix;
+    sc_int<32> prefix;
     int mask;
     string ASes;
     vector<int> routers;    // this is the sequence of routers in one path
@@ -94,7 +94,7 @@ public:
      * \details
      * \public
      */
-    virtual int resolveRoute(string p_IPAddress);
+    virtual int resolveRoute(sc_int<32> p_IPAddress);
 
 
 
@@ -133,8 +133,8 @@ private:
 
     void createRoute(string p_msg,int p_outputPort, Route * p_route);
     void handleNotification (BGPMessage NOTIFICATION_message);
-    Route * findRoute(string p_IPAddress);
-    int matchLength(Route * p_route, string p_IP);
+    Route * findRoute(sc_int<32> p_IPAddress);
+    int matchLength(Route * p_route, sc_int<32> p_IP);
     void updateRoutingTable();
     void addPreferredRoute(Route p_route1, Route p_route2);
     void setRoute(Route p_route);
@@ -142,6 +142,8 @@ private:
     void removeFromRoutingTable(int p_routerId);
     bool sameRoutes(Route p_route1, Route p_route2);
     int ASpathLength(Route p_route);
+
+    string routeToString(Route p_route);
 
 
     void printRoutingTable();
