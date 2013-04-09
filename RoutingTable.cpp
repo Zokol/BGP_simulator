@@ -73,7 +73,7 @@ void RoutingTable::routingTableMain(void)
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
-                cout << "Raw table: " << endl;
+/*                cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
                 preferredASes.push_back(5432);
@@ -83,7 +83,7 @@ void RoutingTable::routingTableMain(void)
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-
+*/
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
