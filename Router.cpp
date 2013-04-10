@@ -120,8 +120,21 @@ Router::~Router()
 void Router::interfaceUp(int p_InterfaceId)
 {
     m_NetworkInterface[p_InterfaceId]->interfaceUp();
+
     m_Name.setBaseName(m_NetworkInterface[p_InterfaceId]->name());
     SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Network interface up."));
+}
 
+void Router::interfaceDown(int p_InterfaceId)
+{
+    m_NetworkInterface[p_InterfaceId]->interfaceDown();
+
+    m_Name.setBaseName(m_NetworkInterface[p_InterfaceId]->name());
+    SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Network interface Down."));
+}
+
+bool Router::interfaceIsUp(int p_InterfaceId)
+{
+    return m_NetworkInterface[p_InterfaceId]->isUp();
 }
 
