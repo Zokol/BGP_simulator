@@ -42,52 +42,30 @@ m_Name.appendReportString("Interface count: ");
     }
   
 
-  ///Build the network TO-DO: clean up the binding process -> make a connection method in the router
+  ///Build the network 
+  RouterConfig *l_Handle;
+  ///connect all the routers
+  for (int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); ++i)
+      {
+          ///get handle to the routers configuration object
+          l_Handle = m_SimuConfiguration.getRouterConfigurationPtr(i);
 
+          ///connect all the interfaces
+          for (int j = 0; j < l_Handle->getNumberOfInterfaces(); ++j)
+              {
+                  ///Connect only those interfaces that have been configured
+                  if (l_Handle->isConnection(j))
+                      {
+                          ///Connect the interfaces
+                          if(m_Router[i]->connectInterface(m_Router[l_Handle->getNeighborRouterId(j)], j, l_Handle->getNeighborInterfaceId(j)))
+                              {
+                                  cout << "Router_" << i << "'s interface_" << j << " connected with the interface_" << l_Handle->getNeighborInterfaceId(j) <<" of router_" << l_Handle->getNeighborRouterId(j) << endl;
+                              }
+                      }
+              }
 
-  m_Router[0]->connectInterface(m_Router[1],0,0);
-  ///connect the 0-interfaces of router 0 and router 1
-  // m_Router[0]->port_ForwardingInterface[0]->bind(*(m_Router[1]->export_ReceivingInterface[0]));
-
-  // m_Router[1]->port_ForwardingInterface[0]->bind(*(m_Router[0]->export_ReceivingInterface[0]));
-  //       SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Two first routers connected."));
-
-  // ///set the those interfaces up
-  // m_Router[0]->interfaceUp(0);
-  // m_Router[1]->interfaceUp(0);
-
-
- 
-  ///build a ring if there is more than two routers in the simulation
-  if(m_SimuConfiguration.getNumberOfRouters() > 2)
-    {
-        m_Name.setBaseName(name());
-        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("More than two routers."));
-     
-
-      ///connect each router to the next one
-        for(int i = 1; i < m_SimuConfiguration.getNumberOfRouters()-1; i++)
-	{
-
-	  m_Router[i]->port_ForwardingInterface[1]->bind(*(m_Router[i+1]->export_ReceivingInterface[0]));
-	  m_Router[i+1]->port_ForwardingInterface[0]->bind(*(m_Router[i]->export_ReceivingInterface[1]));
-	  m_Router[i]->interfaceUp(1);
-	  m_Router[i+1]->interfaceUp(0);
-
-	}
-        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Intermediate routers connected."));
-
-      ///close the ring by connecting the last router to the first
-      m_Router[m_SimuConfiguration.getNumberOfRouters()-1]->port_ForwardingInterface[1]->bind(*(m_Router[0]->export_ReceivingInterface[1]));
-      m_Router[0]->port_ForwardingInterface[1]->bind(*(m_Router[m_SimuConfiguration.getNumberOfRouters()-1]->export_ReceivingInterface[1]));
-
-	  m_Router[0]->interfaceUp(1);
-	  m_Router[m_SimuConfiguration.getNumberOfRouters()-1]->interfaceUp(1);
-        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("The last and the first router connected."));
-
-
-
-    }
+          
+      }
 
 
     SC_THREAD(simulationMain);
