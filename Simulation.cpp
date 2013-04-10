@@ -133,21 +133,25 @@ void Simulation::simulationMain(void)
                 cout << "socket not valid" << endl;
 #elif defined (_GUI)
 
-            ///START:FSM of the simulation server
+            ///START:FSM of the socket server
             switch(enum_State)
                 {
 
                 case RECEIVE:
 
-                    
-                    enum_State = receiveRoutine()? PROCESS:TERMINATE;
-
+                    if(m_GUISocket.is_valid())
+                        enum_State = receiveRoutine()?PROCESS:RECEIVE;
+                    else
+                        enum_State = TERMINATE;
                     break;
                 case PROCESS:
                     socketRoutine();
                     break;
                 case SEND:
-                    enum_State = sendRoutine()?RECEIVE:TERMINATE;
+                    if(m_GUISocket.is_valid())
+                        enum_State = sendRoutine()?RECEIVE:SEND;
+                    else
+                        enum_State = TERMINATE;
                     break;
                 case TERMINATE:
                     sendRoutine();
@@ -160,14 +164,14 @@ void Simulation::simulationMain(void)
                     run = false;
                     break;
                 }
-            ///END:FSM of the simulation server
+            ///END:FSM of the socket server
 
 #else
 
 #endif
         }
 
-#ifdef _GUI
+#if defined (_GUI) || defined (_GUI_TEST)
 
     sc_stop();
 
@@ -177,29 +181,74 @@ void Simulation::simulationMain(void)
 
 void Simulation::socketRoutine(void)
 {
-    //TODO: the whole shit
+    //TODO: Implement the methods
 
     ///default next state is SEND
     enum_State = SEND;
 
-    if(m_Word.compare(STOP)== 0)
+    ///The command cases
+    if(m_Word.compare(STOP) == 0)
         {
             m_Word = ACK;
             sendRoutine();
             enum_State = TERMINATE;
         }
-    else if (m_Word.compare(READ_TABLE) == 0)
+    else if (m_Word.compare(RESET_ROUTER) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(KILL_ROUTER) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(REVIVE_ROUTER) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(READ_PACKET) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(CLEAR_PACKET) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(SEND_PACKET) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(CONNECT) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(DISCONNECT) == 0)
         {
             
         }
     else if (m_Word.compare(READ_TABLE) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(READ_RAW_TABLE) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(SET_LOCAL_PREF) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(SET_KEEPALIVE) == 0)
+        {
+            
+        }
+    else if (m_Word.compare(SET_HOLDDOWN_MULT) == 0)
         {
             
         }
     else
         {
             m_Word = NACK;
-            enum_State = RECEIVE;            
+            enum_State = RECEIVE;    
         }
 }
 
@@ -213,14 +262,7 @@ bool Simulation::sendRoutine(void)
         }
     catch(SocketException e)
         {
-                            
-            //TODO: implement proper retransmission
-            //mechanism here
-
-            SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server sending failure.\nSimulation ends."));
-            return false;
-
-
+            return  false;
         }
 
 }
@@ -235,10 +277,24 @@ bool Simulation::receiveRoutine()
         }
     catch(SocketException e)
         {
-
-            SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server receiving failure.\nSimulation ends."));
-            
             return  false;
         }
 
+}
+
+bool Simulation::fieldRoutine(int p_NumOfFields)
+{
+    bool read = true;
+    int i = 0;
+    while ((i < p_NumOfFields) && read)
+        {
+            if(receiveRoutine())
+                {
+                    istringstream(m_Word) >> m_FieldBuffer[i++];
+                }
+            else
+                read = false;
+                
+        }
+    return read;
 }
