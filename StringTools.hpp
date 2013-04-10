@@ -15,6 +15,7 @@
 #include "systemc"
 
 using namespace std;
+using namespace sc_dt;
 
 #ifndef _STRINGTOOLS_H_
 #define _STRINGTOOLS_H_
@@ -67,6 +68,15 @@ public:
     const char* appendReportString(int p_ReportInt);
 
     void resetReportString(void);
+
+    string iToS(int p_Value);
+
+    sc_uint<32> convertIPToBinary(string p_Prefix);
+
+    sc_uint<32> convertMaskToBinary(string p_Prefix);
+
+    string convertIPToString(sc_uint<32> p_IP, sc_uint<32> p_Mask);
+
 
 private:
 

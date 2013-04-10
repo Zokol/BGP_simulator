@@ -76,6 +76,8 @@ public:
 
   virtual void interfaceUp(void);
 
+  virtual bool isUp(void);
+
   /*! \brief Indicate the systemC producer that this module has a process.
    * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
    * \public
@@ -89,19 +91,19 @@ private:
   
 
 
-  /*! \brief Receiving buffer
-   * \details 
-   * \private
-   */
-  sc_fifo<Packet> m_ReceivingBuffer;
+    /*! \brief Receiving buffer
+     * \details 
+     * \private
+     */
+    sc_fifo<Packet> m_ReceivingBuffer;
 
-  /*! \brief Forwardig buffer
-   * \details 
-   * \private
-   */
-  sc_fifo<Packet> m_ForwardingBuffer;
+    /*! \brief Forwardig buffer
+     * \details 
+     * \private
+     */
+    sc_fifo<Packet> m_ForwardingBuffer;
 
-  bool m_InterfaceState;
+    bool m_InterfaceState;
 
     StringTools m_Report;
 };

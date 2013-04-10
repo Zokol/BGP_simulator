@@ -65,3 +65,9 @@ void Interface::interfaceUp(void)
 {
   m_InterfaceState = UP;
 }
+
+bool Interface::isUp(void)
+{
+  return m_InterfaceState;
+}
+

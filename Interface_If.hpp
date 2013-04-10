@@ -32,14 +32,17 @@ class Interface_If: virtual public sc_interface
 
 public:
 
-  /*! \brief forward a packet to the connected router from the forwarding buffer
-   * \public
-   */
-  virtual bool forward(Packet p_Packet) = 0;
+    /*! \brief forward a packet to the connected router from the forwarding buffer
+     * \public
+     */
+    virtual bool forward(Packet p_Packet) = 0;
+    
+    virtual void interfaceDown(void) = 0;
+    
+    virtual void interfaceUp(void) = 0;
+    
+    virtual bool isUp(void) = 0;
 
-  virtual void interfaceDown(void) = 0;
-
-  virtual void interfaceUp(void) = 0;
 };
 
 

@@ -1,5 +1,5 @@
 #include "Configuration.hpp"
-
+#include "StringTools.hpp"
 
 /************* Implementation of BGPSessionParameters *****************/
 BGPSessionParameters::BGPSessionParameters():m_KeepaliveTime(60), m_HoldDownTimeFactor(3)
@@ -57,12 +57,12 @@ void ControlPlaneConfig::setNumberOfInterfaces(int p_NumberOfInterfaces)
     m_NumberOfInterfaces = p_NumberOfInterfaces;
 }
 
-void ControlPlaneConfig::setPrefix(sc_int<32> p_Prefix)
+void ControlPlaneConfig::setPrefix(sc_uint<32> p_Prefix)
 {
     m_Prefix = p_Prefix;
 }
 
-void ControlPlaneConfig::setPrefixMask(sc_int<32> p_PrefixMask)
+void ControlPlaneConfig::setPrefixMask(sc_uint<32> p_PrefixMask)
 {
     m_PrefixMask = p_PrefixMask;
 }
@@ -85,9 +85,9 @@ void ControlPlaneConfig::setLocalPref(int p_LocalPref)
 ///Getters
 int ControlPlaneConfig::getNumberOfInterfaces(void){return m_NumberOfInterfaces;}
 
-sc_int<32> ControlPlaneConfig::getPrefix(void){return m_Prefix;}
+sc_uint<32> ControlPlaneConfig::getPrefix(void){return m_Prefix;}
 
-sc_int<32> ControlPlaneConfig::getPrefixMask(void){return m_PrefixMask;}
+sc_uint<32> ControlPlaneConfig::getPrefixMask(void){return m_PrefixMask;}
 
 int ControlPlaneConfig::getASNumber(void){return m_ASNumber;}
 
@@ -111,8 +111,41 @@ ControlPlaneConfig& ControlPlaneConfig::operator = (const ControlPlaneConfig& p_
 
 /************* Implementation of Connection *****************/
 
+Connection::Connection():m_NeighborInterfaceId(-1), m_NeighborRouterId(-1){}
 
 
+Connection::Connection(int p_NeighborInterfaceId, int p_NeighborRouterId):m_NeighborInterfaceId(p_NeighborInterfaceId), m_NeighborRouterId(p_NeighborRouterId)
+{
+
+    
+
+}
+
+void Connection::setNeighborRouterId(int p_NeighborRouterId)
+{
+    m_NeighborRouterId = p_NeighborRouterId;
+}
+
+void Connection::setNeighborInterfaceId(int p_NeighborInterfaceId)
+{
+    m_NeighborInterfaceId = p_NeighborInterfaceId;
+}
+
+int Connection::getNeighborRouterId(void)
+{
+    return m_NeighborRouterId;
+}
+
+int Connection::getNeighborInterfaceId(void)
+{
+    return m_NeighborInterfaceId;
+}
+
+string Connection::toString(void)
+{
+    StringTools cvr;
+    return "Neighbor router ID: " + cvr.iToS(m_NeighborRouterId) + "\nNeighbor interface ID: " + cvr.iToS(m_NeighborInterfaceId) + "\n----------------------\n";
+}
 
 /************* Implementation of RouterConfig *****************/
 
@@ -121,28 +154,24 @@ ControlPlaneConfig& ControlPlaneConfig::operator = (const ControlPlaneConfig& p_
 RouterConfig::RouterConfig(int p_NumberOfInterfaces)
     {
         m_NeighborConnections = new Connection*[p_NumberOfInterfaces];
-        
+        for(int i = 0; i < p_NumberOfInterfaces; i++)
+            m_NeighborConnections[i] = new Connection();
         setNumberOfInterfaces(p_NumberOfInterfaces);
-        cout << getNumberOfInterfaces() << endl;
+
     }
 
 RouterConfig::~RouterConfig()
 {
-        // for (int i = 0; i < m_NumberOfInterfaces; ++i)
-        //     {
-        //         if(m_NeighborConnections[i] != NULL)
-                    delete [] m_NeighborConnections;
-            // }
-                    //        delete m_NeighborConnections;
+    delete [] m_NeighborConnections;
 }
 
 ///Setters
 
 void RouterConfig::addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId)
     {
-        m_NeighborConnections[p_LocalInterfaceId] = new Connection;
-        m_NeighborConnections[p_LocalInterfaceId]->m_NeighborRouterId = p_NeighborRouterId;
-        m_NeighborConnections[p_LocalInterfaceId]->m_NeighborInterfaceId = p_NeighborInterfaceId;
+        // m_NeighborConnections[p_LocalInterfaceId] = new Connection(p_NeighborInterfaceId, p_NeighborRouterId);
+        m_NeighborConnections[p_LocalInterfaceId]->setNeighborRouterId(p_NeighborRouterId);
+        m_NeighborConnections[p_LocalInterfaceId]->setNeighborInterfaceId(p_NeighborInterfaceId);
 
 
     }    
@@ -171,6 +200,49 @@ RouterConfig& RouterConfig::operator = (const RouterConfig& p_Original) {
 }
 
 
+
+bool RouterConfig::isConnection(int p_InterfaceId)
+{
+    if(m_NeighborConnections[p_InterfaceId]->getNeighborRouterId() < 0 || m_NeighborConnections[p_InterfaceId]->getNeighborInterfaceId() < 0)
+        return false;
+    else
+        return true;
+}
+
+
+int RouterConfig::getNeighborRouterId(int p_LocalInterface)
+{
+    return m_NeighborConnections[p_LocalInterface]->getNeighborRouterId();
+}
+
+int RouterConfig::getNeighborInterfaceId(int p_LocalInterface)
+{
+    return m_NeighborConnections[p_LocalInterface]->getNeighborInterfaceId();
+}
+
+
+string RouterConfig::toString(void)
+{
+
+    StringTools cvr;
+
+    //build the connection string
+
+    string l_ConnectionString = "";
+
+    for(int i = 0; i < m_NumberOfInterfaces; i++)
+        {
+
+            l_ConnectionString += "\nInterface " + cvr.iToS(i) + " connection config\n-------------------------------\n" + m_NeighborConnections[i]->toString();
+        }
+
+
+    return "BGP Session Param\n-------------------------\nKeepalive time: " + cvr.iToS(m_KeepaliveTime) + "\nHold-Down time: " + cvr.iToS(m_HoldDownTime) + "\nHold-Down multiplier: " + cvr.iToS(m_HoldDownTimeFactor) + "\n-------------------------\nControl Plane Param\n-------------------------\nNumber of Interfaces: " + cvr.iToS(m_NumberOfInterfaces) + "\nPrefix: " + cvr.convertIPToString(m_Prefix, m_PrefixMask) + "\nAS number: " + cvr.iToS(m_ASNumber) + "\nMED: " + cvr.iToS(m_MED) + "\nLocal preference: " + cvr.iToS(m_LocalPref) + "\n-------------------------\nConnection params\n-------------------------" + l_ConnectionString;
+}
+
+
+
+
 /************* Implementation of SimulationConfig *****************/
 
 
@@ -181,16 +253,20 @@ SimulationConfig::SimulationConfig(int p_NumberOfRouters):m_NumberOfRouters(p_Nu
 
     }
 
+
 SimulationConfig::~SimulationConfig()
     {
-        cout << "SimulationConfig deletes RouterConfigs" << endl << "Number of routers is " << m_NumberOfRouters << endl;
-        // for (int i = 0; i < m_NumberOfRouters; ++i)
-        //     {
-        //         if(m_RouterConfiguration[i] != NULL)
-                    delete [] m_RouterConfiguration;
-            // }
-        // delete m_RouterConfiguration;
+
+        delete [] m_RouterConfiguration;
     }
+
+void SimulationConfig::init(int p_NumberOfRouters)
+{
+    m_NumberOfRouters = p_NumberOfRouters;
+    m_RouterConfiguration = new RouterConfig*[m_NumberOfRouters];
+
+}
+
 
 void SimulationConfig::addRouterConfig(int p_RouterId, int p_NumberOfInterfaces)
     {
@@ -224,8 +300,12 @@ RouterConfig& SimulationConfig::getRouterConfiguration(int p_RouterId)
     return *(m_RouterConfiguration[p_RouterId]);
 }
 
-///Operators
+RouterConfig* SimulationConfig::getRouterConfigurationPtr(int p_RouterId)
+{
+    return m_RouterConfiguration[p_RouterId];
+}
 
+///Operators
 
 SimulationConfig& SimulationConfig::operator = (const SimulationConfig& p_Original) {
 
@@ -236,4 +316,23 @@ SimulationConfig& SimulationConfig::operator = (const SimulationConfig& p_Origin
             m_RouterConfiguration[i] = p_Original.m_RouterConfiguration[i];
         }
     return *this;
+}
+
+string SimulationConfig::toString(void)
+{
+
+    StringTools cvr;
+
+    //build the connection string
+
+    string l_RouterString = "\n***********************************************";
+
+    for(int i = 0; i < m_NumberOfRouters; i++)
+        {
+            if(m_RouterConfiguration[i] != NULL)
+                l_RouterString += "\n***********************************************\nRouter " + cvr.iToS(i) + " config\n-------------------------------\n" + m_RouterConfiguration[i]->toString();
+        }
+    l_RouterString += "\n***********************************************\n";
+
+        return "\n;;;;;\nSimulation Param\n-------------------------\nNumber of Routers: " + cvr.iToS(m_NumberOfRouters) + l_RouterString + "\n;;;;;\n";
 }

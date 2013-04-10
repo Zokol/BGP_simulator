@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 
+
 StringTools::StringTools():m_BaseName("--"), m_Separator("_"), m_Identifier(0), m_StampTime(true), m_Reset(true)
 {
 }
@@ -129,3 +130,97 @@ void StringTools::resetReportString(void)
     m_CurrentName = "";
 
 }
+
+string StringTools::iToS(int p_Value)
+{
+    ostringstream l_Temp;
+    l_Temp << p_Value;
+    return l_Temp.str();
+}
+
+
+sc_uint<32> StringTools::convertIPToBinary(string p_Prefix)
+{
+	string l_Prefix = p_Prefix, l_Octet;
+	int l_IntOctet = 0;
+	sc_uint<8> l_BinOctet[4];
+
+	unsigned l_Start = 0, l_End;
+
+	for(int i = 0; i < 4; i++ )
+	{
+		if(i < 3)
+			l_End = l_Prefix.find(".", l_Start);
+		else
+			l_End = l_Prefix.find("/", l_Start);
+
+		l_Octet = l_Prefix.substr(l_Start,l_End-l_Start);
+		l_Start = l_End+1;
+		istringstream(l_Octet) >> l_IntOctet;
+
+		if(l_IntOctet > 255)
+		{
+			return -1;
+		}
+
+		l_BinOctet[i] = l_IntOctet;
+	}
+
+	return (l_BinOctet[0], l_BinOctet[1], l_BinOctet[2], l_BinOctet[3]);
+
+
+}
+
+sc_uint<32> StringTools::convertMaskToBinary(string p_Prefix)
+{
+	sc_uint<32> l_Mask = 0;
+	unsigned i, j;
+	i = p_Prefix.find("/",0);
+	string l_MaskLength = p_Prefix.substr(++i);
+	istringstream(l_MaskLength) >> i;
+	j = (32 - i);
+	while(j < 32)
+		l_Mask[j++] = 1;
+	return l_Mask;
+}
+
+string StringTools::convertIPToString(sc_uint<32> p_IP, sc_uint<32> p_Mask)
+{
+	int i = 0;
+	while(i < 32)
+	{
+		if(p_Mask[i])
+			break;
+		i++;
+	}
+
+
+
+
+	string l_Prefix = "";
+
+	ostringstream convert;   // stream used for the conversion
+
+
+	for(int j = 0; j < 32; j += 8)
+	{
+		convert.str("");
+		convert << p_IP.range((31-j), (24-j));
+		l_Prefix += convert.str();
+		if(j == 24)
+			l_Prefix += "/";
+		else
+			l_Prefix += ".";
+
+	}
+
+	convert.str("");
+	convert << 32-i;      // insert the textual representation of 'Number' in the characters in the stream
+
+	l_Prefix += convert.str(); // set 'Result' to the contents of the stream
+
+	return l_Prefix;
+
+
+}
+

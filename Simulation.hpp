@@ -22,13 +22,13 @@
 
 
 
+
 #include "systemc"
 #include "Router.hpp"
-//#include "Configuration.hpp"
 #include "StringTools.hpp"
 #include "ServerSocket.h"
 #include "SocketException.h"
-#include <string>
+
 
 using namespace std;
 using namespace sc_core;
@@ -82,6 +82,14 @@ private:
 
 
     /*!
+     * \property string word
+     * \brief holds the commands received from the UI
+     * \details 
+     * \private
+     */
+    string m_Word;
+
+    /*!
      * \property Packet m_Packet
      * \brief 
      * \details 
@@ -127,7 +135,10 @@ private:
      */
     SimulationConfig m_SimuConfiguration;
 
+    enum ServerStates{RECEIVE, SEND} enum_State;
 
+
+    void socketRoutine(void);
 
 };
 

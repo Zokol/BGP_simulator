@@ -92,6 +92,8 @@ public:
      */
     BGPSessionParameters& operator = (const BGPSessionParameters& p_Original);
 
+
+
 protected:
 
     /*! \brief HoldDown time for this session
@@ -143,26 +145,27 @@ public:
      */
     void setNumberOfInterfaces(int p_NumberOfInterfaces);
 
-    /*! \fn void setPrefix(sc_int<32> p_Prefix);
+    /*! \fn void setPrefix(sc_uint<32> p_Prefix);
      *  \brief Sets the prefix IP of the AS
-     *  @param[in] sc_int<32> p_Prefix The IP prefix
+     *  @param[in] sc_uint<32> p_Prefix The IP prefix
      * \public
      */
-    void setPrefix(sc_int<32> p_Prefix);
+    void setPrefix(sc_uint<32> p_Prefix);
 
-    /*! \fn void setPrefixMask(sc_int<32> p_PrefixMask);
+    /*! \fn void setPrefixMask(sc_uint<32> p_PrefixMask);
      *  \brief Sets the mask for the prefix IP
-     *  @param[in] sc_int<32> p_PrefixMask The prefix mask
+     *  @param[in] sc_uint<32> p_PrefixMask The prefix mask
      * \public
      */
-    void setPrefixMask(sc_int<32> p_PrefixMask);
+    void setPrefixMask(sc_uint<32> p_PrefixMask);
 
-    /*! \fn void setPrefixMask(sc_int<32> p_PrefixMask);
+    /*! \fn void setPrefixMask(sc_uint<32> p_PrefixMask);
      *  \brief Sets the AS Identifier to which this router connects
      *  @param[in] int p_ASNumber The AS identifier of the local AS 
      * \public
      */
     void setASNumber(int p_ASNumber);
+
 
     /*! \fn void setMED(int p_MED);
      *  \brief Sets the Multi-exit discriminator(MED) attribute of BGP
@@ -185,19 +188,19 @@ public:
      */
     int getNumberOfInterfaces(void);
 
-    /*! \fn sc_int<32> getPrefix(void);
+    /*! \fn sc_uint<32> getPrefix(void);
      *  \brief Returns the IP prefix
-     *  \return sc_int<32> value
+     *  \return sc_uint<32> value
      * \public
      */
-    sc_int<32> getPrefix(void);
+    sc_uint<32> getPrefix(void);
 
-    /*! \fn sc_int<32> getPrefixMask(void);
+    /*! \fn sc_uint<32> getPrefixMask(void);
      *  \brief Returns the prefix mask
-     *  \return sc_int<32> value
+     *  \return sc_uint<32> value
      * \public
      */
-    sc_int<32> getPrefixMask(void);
+    sc_uint<32> getPrefixMask(void);
 
     /*! \fn int getASNumber(void);
      *  \brief Returns the AS number
@@ -240,13 +243,13 @@ protected:
      * \details 
      * \public
      */
-    sc_int<32> m_Prefix;
+    sc_uint<32> m_Prefix;
 
     /*! \brief The mask defined by prefix /-notation
      * \details 
      * \public
      */
-    sc_int<32> m_PrefixMask;
+    sc_uint<32> m_PrefixMask;
 
     /*! \brief The AS number of this router
      * \details 
@@ -276,6 +279,22 @@ class Connection
 {
 
 public:
+
+    Connection();
+    Connection(int p_NeighborInterfaceId, int p_NeighborRouterId);
+
+    void setNeighborRouterId(int p_NeighborRouterId);
+
+    void setNeighborInterfaceId(int p_NeighborInterfaceId);
+
+    int getNeighborRouterId(void);
+
+    int getNeighborInterfaceId(void);
+
+    string toString(void);
+
+
+private:
 
     /*! \brief The id of the neighbor interface to where this router connects
      * \public
@@ -309,6 +328,13 @@ public:
 
     void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId);
 
+    bool isConnection(int p_InterfaceId);
+
+    int getNeighborRouterId(int p_LocalInterface);
+
+    int getNeighborInterfaceId(int p_LocalInterface);
+
+    string toString(void);
 
     
 private:    
@@ -346,11 +372,14 @@ public:
 
     virtual ~SimulationConfig();
 
+    void init(int p_NumberOfRouters);
+
     void addRouterConfig(int p_RouterId, int p_NumberOfInterfaces);
     
     void addConnectionConfig(int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId);
 
     void addBGPSessionParameters(int p_LocalRouterId, int p_KeepaliveTime, int p_HoldDownTimeFactor);
+
 
     /*! \fn void setNumberOfRouters(int p_NumberOfRouters);
      *  \brief Sets the number of routers used in this simulation
@@ -374,8 +403,15 @@ public:
      */
     RouterConfig& getRouterConfiguration(int p_RouterId);
 
+    RouterConfig* getRouterConfigurationPtr(int p_RouterId);
+
+
     SimulationConfig& operator = (const SimulationConfig& p_Original);
 
+    string toString(void);
+
+
+private:
 
     /*! \brief Number of routers that this simulation should allocate
      * \details
@@ -389,6 +425,7 @@ public:
      * \public
      */
     RouterConfig **m_RouterConfiguration;
+
 
 
 };

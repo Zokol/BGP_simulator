@@ -120,8 +120,46 @@ Router::~Router()
 void Router::interfaceUp(int p_InterfaceId)
 {
     m_NetworkInterface[p_InterfaceId]->interfaceUp();
+
     m_Name.setBaseName(m_NetworkInterface[p_InterfaceId]->name());
     SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Network interface up."));
-
 }
 
+void Router::interfaceDown(int p_InterfaceId)
+{
+    m_NetworkInterface[p_InterfaceId]->interfaceDown();
+
+    m_Name.setBaseName(m_NetworkInterface[p_InterfaceId]->name());
+    SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Network interface Down."));
+}
+
+bool Router::interfaceIsUp(int p_InterfaceId)
+{
+    return m_NetworkInterface[p_InterfaceId]->isUp();
+}
+
+
+bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p_TargetInterface)
+{
+
+    if(interfaceIsUp(p_LocalInterface) && p_TargetRouter->interfaceIsUp(p_TargetInterface))
+        return true;
+    else if (interfaceIsUp(p_LocalInterface) && !(p_TargetRouter->interfaceIsUp(p_TargetInterface)))
+        {
+            return false;
+        }
+    else if (!(interfaceIsUp(p_LocalInterface)) && p_TargetRouter->interfaceIsUp(p_TargetInterface))
+        {
+            return false;
+        }
+    else
+        {
+            port_ForwardingInterface[p_LocalInterface]->bind(*(p_TargetRouter->export_ReceivingInterface[p_TargetInterface]));
+
+            p_TargetRouter->port_ForwardingInterface[p_TargetInterface]->bind(*(export_ReceivingInterface[p_LocalInterface]));
+
+            interfaceUp(p_LocalInterface);
+            p_TargetRouter->interfaceUp(p_TargetInterface);
+            return true;
+        }
+}
