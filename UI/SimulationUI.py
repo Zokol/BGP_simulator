@@ -262,6 +262,8 @@ class SimulationUI:
 				self.log("No revive method created")
 			elif params[0] == "start" and len(params) == 1:
 				self.log(self.start_sim())
+			elif params[0] == "stop" and len(params) == 1:
+				self.log(self.stop_sim())
 			elif params[0] == "set_id" and len(params) == 2:
 				self.log(self.selected_router.set_id(str(params[1])))
 			elif params[0] == "set_prefix" and len(params) == 2:
@@ -274,6 +276,8 @@ class SimulationUI:
 				self.log(self.selected_router.set_kt(str(params[1])))
 			elif params[0] == "set_hdm" and len(params) == 2:
 				self.log(self.selected_router.set_hdm(str(params[1])))
+			elif params[0] == "debug" and len(params) == 2:
+				self.log(self.send_socket_cmd(str(params[1])))
 			elif params[0] == "test":
 				print self.routers
 				print self.selected_router
@@ -300,6 +304,8 @@ class SimulationUI:
 		self.log("Shutdown router: shutdown AS_id")
 		self.log("Revive router: revive AS_id")
 		self.log("Start simulation: start")
+		self.log("Stop simulation: stop")
+		self.log("Send command to socket server: debug CMD")
 
 	def connect(self, router1, router2):
 		port_a = router1[0].interfaces[router1[1]]
@@ -353,7 +359,14 @@ class SimulationUI:
 			for i in range(0,3):
 				port = r.interfaces[i]
 				if port.client != None:
-					router_params.append(str(i) + '_' + str(port.client_port) + '_' + str(port.client.as_id))
+					client_router_id = None
+					for c_r in range(len(self.routers)):
+						if self.routers[c_r].as_id == port.client.as_id:
+							client_router_id = c_r
+					if client_router_id == None:
+						self.log("Error: Could not find given router")
+					else:
+						router_params.append(str(i) + '_' + str(port.client_port) + '_' + str(client_router_id))
 			conf.append(router_params)
 		string = []
 		for c in conf:
@@ -362,6 +375,14 @@ class SimulationUI:
 		sim_conf += "</SIM_CONFIG>"
 		print sim_conf
 		self.socket.send(sim_conf)
+		resp = self.socket.recv(self.size)
+
+	def stop_sim(self):
+		self.socket.send("STOP")
+		resp = self.socket.recv(self.size)
+
+	def send_socket_cmd(self, cmd):
+		self.socket.send(cmd)
 		resp = self.socket.recv(self.size)
 
 	def select_router(self, namelist, event):
