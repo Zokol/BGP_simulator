@@ -87,6 +87,7 @@ int sc_main(int argc, char * argv [])
                 {
                     ///Try to receive
                     GUISocket >> DataWord;
+                    cout << DataWord << endl;
                 }
             catch(SocketException e)
                 {
@@ -323,6 +324,7 @@ int sc_main(int argc, char * argv [])
                 {
                     ///Report error to the GUI
                     GUISocket << NACK;
+                    cout << "Unknown messge" << endl;
                     ///Continue receiving
                     continue;   
                 }
@@ -335,22 +337,22 @@ int sc_main(int argc, char * argv [])
 
     setupLoop = true;
 
-    while(setupLoop)
-        {
-            try
-                {
-                    GUISocket >> DataWord;
-                    if(DataWord.compare("START") == 0)
-                        {
-                            setupLoop = false;
-                            GUISocket << "Simulation starts";
-                        }
-                }
-            catch(SocketException e)
-                {
+    // while(setupLoop)
+    //     {
+    //         try
+    //             {
+    //                 GUISocket >> DataWord;
+    //                 if(DataWord.compare("START") == 0)
+    //                     {
+    //                         setupLoop = false;
+    //                         GUISocket << "Simulation starts";
+    //                     }
+    //             }
+    //         catch(SocketException e)
+    //             {
 
-                }
-        } 
+    //             }
+    //     } 
 
     SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
 

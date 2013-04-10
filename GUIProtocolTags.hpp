@@ -47,6 +47,7 @@
 /*!
  * Positive acknowledgement
  */
+#define ACK "ACK"
 
 /*!
  * Negative acknowledgement

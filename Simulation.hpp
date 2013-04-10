@@ -142,5 +142,6 @@ private:
 
     bool sendRoutine(void);
 
+    bool receiveRoutine(void);
 };
 

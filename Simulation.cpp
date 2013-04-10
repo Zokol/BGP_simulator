@@ -90,7 +90,7 @@ void Simulation::simulationMain(void)
 
 #ifdef _GUI_TEST
 
-    bool state = true, run = true, terminate = false;
+    bool state = true, run = true;
 #elif defined (_GUI)
     enum_State = RECEIVE;
 
@@ -191,7 +191,7 @@ void Simulation::socketRoutine(void)
         {
             
         }
-    else if (m_Word.compare(READ_ROUTER) == 0)
+    else if (m_Word.compare(READ_TABLE) == 0)
         {
             
         }
@@ -200,12 +200,10 @@ void Simulation::socketRoutine(void)
             m_Word = NACK;
             enum_State = RECEIVE;            
         }
-    return returnFlag;
 }
 
 bool Simulation::sendRoutine(void)
 {
-
 
     try
         {
