@@ -57,6 +57,7 @@ public:
     void interfaceUp(int p_InterfaceId);  
     void interfaceDown(int p_InterfaceId);  
     bool interfaceIsUp(int p_InterfaceId);  
+    bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface);
 
 
 
