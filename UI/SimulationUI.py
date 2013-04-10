@@ -75,8 +75,9 @@ class Packet:
 		self.payload = payload
 
 class Interface:
-	def __init__(self, client = None):
+	def __init__(self, client = None, port = None):
 		self.client = client
+		self.client_port = port
 
 class Route:
 	def __init__(self, target_as = None, prefix = None, path = None):
@@ -271,8 +272,10 @@ class SimulationUI:
 	def connect(self, router1, router2):
 		port_a = router1[0].interfaces[router1[1]]
 		port_a.client = router2[0]
+		port_a.client_port = router2[1]
 		port_b = router2[0].interfaces[router2[1]]
 		port_b.client = router1[0]
+		port_b.client_port = router1[1]
 
 	def disconnect(self, router, port):
 		client = router.interfaces[port]
@@ -318,7 +321,7 @@ class SimulationUI:
 			for i in range(0,3):
 				port = r.interfaces[i]
 				if port.client != None:
-					router_params.append(port.client.as_id)
+					router_params.append(str(i) + '_' + str(port.client_port) + '_' + str(port.client.as_id))
 			conf.append(router_params)
 		string = []
 		for c in conf:
