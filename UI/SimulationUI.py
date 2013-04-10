@@ -90,9 +90,13 @@ class Route:
 			return self.target_as + " | " + self.prefix + " | " + self.path
 
 class Router:
-	def __init__(self, as_id = "No ID", prefix = "No Prefix", interfaces = None, routing_table = None, preferred_routes = None):
+	def __init__(self, as_id = '0', prefix = '0.0.0.0/32', med = '0', localpref = '100', keepalivetime = '60', holddown_multiplier = '3', interfaces = None, routing_table = None, preferred_routes = None):
 		self.as_id = as_id
 		self.prefix = prefix
+		self.med = med
+		self.localpref = localpref
+		self.keepalivetime = keepalivetime
+		self.holddown_multiplier = holddown_multiplier
 		if routing_table != None:
 			self.routing_table = routing_table
 		else:
@@ -119,6 +123,22 @@ class Router:
 	def set_prefix(self, prefix):
 		self.prefix = prefix
 		return "AS prefix set to " + str(self.prefix)
+
+	def set_med(self, med):
+		self.med = med
+		return "AS MED set to " + str(self.med)
+
+	def set_lp(self, lp):
+		self.localpref = lp
+		return "AS Local Pref set to " + str(self.localpref)
+
+	def set_kt(self, kt):
+		self.keepalivetime = kt
+		return "AS Keepalive Timer set to " + str(self.keepalivetime)
+
+	def set_hdm(self, hdm):
+		self.holddown_multiplier = hdm
+		return "AS Hold Down Multiplier set to " + str(self.holddown_multiplier)
 
 	def get_client(self, port):
 		if self.interfaces[port].client == None:
@@ -246,6 +266,14 @@ class SimulationUI:
 				self.log(self.selected_router.set_id(str(params[1])))
 			elif params[0] == "set_prefix" and len(params) == 2:
 				self.log(self.selected_router.set_prefix(str(params[1])))
+			elif params[0] == "set_med" and len(params) == 2:
+				self.log(self.selected_router.set_med(str(params[1])))
+			elif params[0] == "set_lp" and len(params) == 2:
+				self.log(self.selected_router.set_lp(str(params[1])))
+			elif params[0] == "set_kt" and len(params) == 2:
+				self.log(self.selected_router.set_kt(str(params[1])))
+			elif params[0] == "set_hdm" and len(params) == 2:
+				self.log(self.selected_router.set_hdm(str(params[1])))
 			elif params[0] == "test":
 				print self.routers
 				print self.selected_router
@@ -261,8 +289,12 @@ class SimulationUI:
 		self.console.add_log(msg)
 
 	def print_help(self):
-		self.log("Set AS-id: set_id id")
-		self.log("Set prefix: set_prefix 0.0.0.0/255")
+		self.log("Set AS-id: set_id 123")
+		self.log("Set prefix: set_prefix 0.0.0.0/32")
+		self.log("Set MED: set_med 10")
+		self.log("Set Local Pref: set_lp 25")
+		self.log("Set Keepalive Time: set_kt 60")
+		self.log("Set Hold Down Multiplier: set_hdm 3")
 		self.log("Connect routers: connect AS_id1:port_num AS_id2:port_num")
 		self.log("Disconnect routers: disconnect AS_id port_num")
 		self.log("Shutdown router: shutdown AS_id")
@@ -317,7 +349,7 @@ class SimulationUI:
 		sim_conf = "<SIM_CONFIG>"
 		conf = []
 		for r in self.routers:
-			router_params = [r.as_id, r.prefix]
+			router_params = [r.as_id, r.prefix, r.med, r.localpref, r.keepalivetime, r.holddown_multiplier]
 			for i in range(0,3):
 				port = r.interfaces[i]
 				if port.client != None:
