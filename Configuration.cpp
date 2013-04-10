@@ -199,6 +199,28 @@ RouterConfig& RouterConfig::operator = (const RouterConfig& p_Original) {
     return *this;
 }
 
+
+
+bool RouterConfig::isConnection(int p_InterfaceId)
+{
+    if(m_NeighborConnections[p_InterfaceId]->getNeighborRouterId() < 0 || m_NeighborConnections[p_InterfaceId]->getNeighborInterfaceId() < 0)
+        return false;
+    else
+        return true;
+}
+
+
+int RouterConfig::getNeighborRouterId(int p_LocalInterface)
+{
+    return m_NeighborConnections[p_LocalInterface]->getNeighborRouterId();
+}
+
+int RouterConfig::getNeighborInterfaceId(int p_LocalInterface)
+{
+    return m_NeighborConnections[p_LocalInterface]->getNeighborInterfaceId();
+}
+
+
 string RouterConfig::toString(void)
 {
 
@@ -217,6 +239,9 @@ string RouterConfig::toString(void)
 
     return "BGP Session Param\n-------------------------\nKeepalive time: " + cvr.iToS(m_KeepaliveTime) + "\nHold-Down time: " + cvr.iToS(m_HoldDownTime) + "\nHold-Down multiplier: " + cvr.iToS(m_HoldDownTimeFactor) + "\n-------------------------\nControl Plane Param\n-------------------------\nNumber of Interfaces: " + cvr.iToS(m_NumberOfInterfaces) + "\nPrefix: " + cvr.convertIPToString(m_Prefix, m_PrefixMask) + "\nAS number: " + cvr.iToS(m_ASNumber) + "\nMED: " + cvr.iToS(m_MED) + "\nLocal preference: " + cvr.iToS(m_LocalPref) + "\n-------------------------\nConnection params\n-------------------------" + l_ConnectionString;
 }
+
+
+
 
 /************* Implementation of SimulationConfig *****************/
 

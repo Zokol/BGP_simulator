@@ -328,7 +328,14 @@ public:
 
     void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId);
 
+    bool isConnection(int p_InterfaceId);
+
+    int getNeighborRouterId(int p_LocalInterface);
+
+    int getNeighborInterfaceId(int p_LocalInterface);
+
     string toString(void);
+
     
 private:    
     /*! \brief Linked list that holds the connection information for
