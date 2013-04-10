@@ -135,10 +135,12 @@ private:
      */
     SimulationConfig m_SimuConfiguration;
 
-    enum ServerStates{RECEIVE, SEND} enum_State;
+    enum ServerStates{RECEIVE, PROCESS, SEND, TERMINATE} enum_State;
 
 
     void socketRoutine(void);
+
+    bool sendRoutine(void);
 
 };
 

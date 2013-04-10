@@ -90,7 +90,7 @@ void Simulation::simulationMain(void)
 
 #ifdef _GUI_TEST
 
-    bool state = true;
+    bool state = true, run = true, terminate = false;
 #elif defined (_GUI)
     enum_State = RECEIVE;
 
@@ -99,7 +99,7 @@ void Simulation::simulationMain(void)
 
 #endif
     // m_GUISocket.set_non_blocking(true);
-    while(true)
+    while(run)
         {
             wait();
 
@@ -138,55 +138,25 @@ void Simulation::simulationMain(void)
 
                 case RECEIVE:
 
-                    try
-                        {
-                            m_GUISocket >> m_Word;
-                            socketRoutine();
-                        }
-                    catch(SocketException e)
-                        {
-                            if(m_GUISocket.is_valid())
-                                break;
-                            else
-                                {
-                                    sc_stop();
-                                    //cout << e.description() << endl;
-                                    SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server receiving failure.\nSimulation ends."));
-                                }
-                            break;
-                        }
-
+                    
+                    enum_State = receiveRoutine()? PROCESS:TERMINATE;
 
                     break;
-
+                case PROCESS:
+                    socketRoutine();
+                    break;
                 case SEND:
-
-                    try
-                        {
-                            m_GUISocket << m_Word;
-                        }
-                    catch(SocketException e)
-                        {
-                            cout << e.description() << endl;
-                            //TODO: implement proper retransmission
-                            //mechanism here
-                            if(m_GUISocket.is_valid())
-                                break;
-                            else
-                                {
-                                    SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server sending failure.\nSimulation ends."));
-
-                                    sc_stop();
-                                }
-                        }
-
-                    enum_State = RECEIVE;
+                    enum_State = sendRoutine()?RECEIVE:TERMINATE;
+                    break;
+                case TERMINATE:
+                    sendRoutine();
+                    run = false;
                     break;
 
                 default:
                     SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server state failure.\nSimulation ends."));
 
-                    sc_stop();
+                    run = false;
                     break;
                 }
             ///END:FSM of the simulation server
@@ -196,26 +166,80 @@ void Simulation::simulationMain(void)
 #endif
         }
 
+#ifdef _GUI
+
+    sc_stop();
+
+#endif
 }
 
 
 void Simulation::socketRoutine(void)
 {
+    //TODO: the whole shit
+
+    ///default next state is SEND
+    enum_State = SEND;
 
     if(m_Word.compare(STOP)== 0)
         {
-            
+            m_Word = ACK;
+            sendRoutine();
+            enum_State = TERMINATE;
         }
-    else if (m_Word.compare(READ_TABLE)== 0)
+    else if (m_Word.compare(READ_TABLE) == 0)
         {
             
         }
-    else if (m_Word.compare(READ_ROUTER)== 0)
+    else if (m_Word.compare(READ_ROUTER) == 0)
         {
             
         }
     else
         {
+            m_Word = NACK;
+            enum_State = RECEIVE;            
+        }
+    return returnFlag;
+}
+
+bool Simulation::sendRoutine(void)
+{
+
+
+    try
+        {
+            m_GUISocket << m_Word;
+            return true;
+        }
+    catch(SocketException e)
+        {
+                            
+            //TODO: implement proper retransmission
+            //mechanism here
+
+            SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server sending failure.\nSimulation ends."));
+            return false;
+
 
         }
+
+}
+
+bool Simulation::receiveRoutine()
+{
+
+    try
+        {
+            m_GUISocket >> m_Word;
+            return true;
+        }
+    catch(SocketException e)
+        {
+
+            SC_REPORT_INFO(g_ReportID, m_Name.newReportString("Server receiving failure.\nSimulation ends."));
+            
+            return  false;
+        }
+
 }
