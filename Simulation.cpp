@@ -44,15 +44,17 @@ m_Name.appendReportString("Interface count: ");
 
   ///Build the network TO-DO: clean up the binding process -> make a connection method in the router
 
+
+  m_Router[0]->connectInterface(m_Router[1],0,0);
   ///connect the 0-interfaces of router 0 and router 1
-  m_Router[0]->port_ForwardingInterface[0]->bind(*(m_Router[1]->export_ReceivingInterface[0]));
+  // m_Router[0]->port_ForwardingInterface[0]->bind(*(m_Router[1]->export_ReceivingInterface[0]));
 
-  m_Router[1]->port_ForwardingInterface[0]->bind(*(m_Router[0]->export_ReceivingInterface[0]));
-        SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Two first routers connected."));
+  // m_Router[1]->port_ForwardingInterface[0]->bind(*(m_Router[0]->export_ReceivingInterface[0]));
+  //       SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Two first routers connected."));
 
-  ///set the those interfaces up
-  m_Router[0]->interfaceUp(0);
-  m_Router[1]->interfaceUp(0);
+  // ///set the those interfaces up
+  // m_Router[0]->interfaceUp(0);
+  // m_Router[1]->interfaceUp(0);
 
 
  
