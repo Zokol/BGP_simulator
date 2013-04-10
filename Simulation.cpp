@@ -90,7 +90,7 @@ void Simulation::simulationMain(void)
 
 #ifdef _GUI_TEST
 
-    bool state = true, run = true;
+    bool state = true;
 #elif defined (_GUI)
     enum_State = RECEIVE;
 
@@ -98,6 +98,7 @@ void Simulation::simulationMain(void)
 #else
 
 #endif
+    bool run = true;
     // m_GUISocket.set_non_blocking(true);
     while(run)
         {

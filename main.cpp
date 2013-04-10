@@ -52,7 +52,7 @@ int sc_main(int argc, char * argv [])
     ///Instantiate a SimulationConfig object to store simulation
     ///configuration received from the GUI
     SimulationConfig l_Config;
-    RouterConfig *ptr_Router;
+
 
     StringTools converter;
 //    cout << converter.convertIPToBinary("192.168.1.0/24") << endl;
@@ -69,6 +69,7 @@ int sc_main(int argc, char * argv [])
 
     StringTools l_DebugReport("Main");
 #if defined (_GUI) || defined(_GUI_TEST)
+    RouterConfig *ptr_Router;
    
     ///Accept the GUI connection
     cout << "Waiting the GUI to connect..." << endl;
@@ -393,15 +394,18 @@ int sc_main(int argc, char * argv [])
 
 
   ///run the simulation	
-  // sc_start(SIMULATION_DURATION, SC_SEC);
-  sc_start();
+
 
 #if defined (_GUI) || defined(_GUI_TEST)
+  sc_start();
   GUISocket << "END";
+  ptr_Router = NULL;
+#else
+  sc_start(SIMULATION_DURATION, SC_SEC);
 #endif
 
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
-  ptr_Router = NULL;
+
 
 return 0;
 }//end of main
