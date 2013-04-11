@@ -326,7 +326,7 @@ public:
 
     ~RouterConfig();
 
-    void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId);
+    void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId);
 
     bool isConnection(int p_InterfaceId);
 

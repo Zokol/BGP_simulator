@@ -167,7 +167,7 @@ RouterConfig::~RouterConfig()
 
 ///Setters
 
-void RouterConfig::addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId)
+    void RouterConfig::addConnectionConfig( int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId)
     {
         // m_NeighborConnections[p_LocalInterfaceId] = new Connection(p_NeighborInterfaceId, p_NeighborRouterId);
         m_NeighborConnections[p_LocalInterfaceId]->setNeighborRouterId(p_NeighborRouterId);
