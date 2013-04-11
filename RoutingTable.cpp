@@ -72,6 +72,7 @@ void RoutingTable::routingTableMain(void)
 
 
 
+
             m_ReceivingBuffer.read(m_BGPMsg);
             if(!(count%20))
                 {
@@ -79,6 +80,10 @@ void RoutingTable::routingTableMain(void)
                     SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_BGPMsg.m_OutboundInterface) );
                 }
             count++;
+
+            ///BGP notification and update output port
+            port_Output->write(m_BGPMsg);
+
             if((m_BGPMsg.m_Type = UPDATE))
             {
 

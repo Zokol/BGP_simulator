@@ -19,6 +19,7 @@
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
 #include "Interface_If.hpp"
+#include "DataPlane_In_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -65,6 +66,15 @@ public:
      * \public
      */
     sc_port<Interface_If, 0, SC_ZERO_OR_MORE_BOUND> port_Control;
+
+    /*! \brief Output port for BGP messages
+     * \details The RoutingTable writes all the BGP messages to be send
+     * to its neighbors into
+     * this port. The port should be bind to the Data Plane's.
+     * receiving FIFO
+     * \public
+     */
+    sc_port<DataPlane_In_If> port_Output;
 
 
     //    void before_end_of_elaboration()

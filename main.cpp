@@ -63,7 +63,7 @@ int sc_main(int argc, char * argv [])
     sc_report rp;
     sc_report_handler::set_log_file_name("test_simu.log");
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
-    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
@@ -367,9 +367,9 @@ int sc_main(int argc, char * argv [])
     ///set the number of routers
     l_Config.init(3);
 
-    l_Config.addRouterConfig(0, 3);
-    l_Config.addRouterConfig(1, 3);
-    l_Config.addRouterConfig(2, 3);
+    l_Config.addRouterConfig(0, 2);
+    l_Config.addRouterConfig(1, 2);
+    l_Config.addRouterConfig(2, 2);
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
