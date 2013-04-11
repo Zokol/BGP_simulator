@@ -17,6 +17,8 @@
 #include "systemc"
 #include "RoutingTable_If.hpp"
 #include "BGPMessage.hpp"
+#include "Configuration.hpp"
+#include "Interface_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -57,6 +59,12 @@ public:
      */
     sc_export<sc_fifo_out_if<BGPMessage> > export_ToRoutingTable;
 
+    /*! \brief Control port
+     * \details Routing table can check through this port whether the
+     * network interfaces are up or not.
+     * \public
+     */
+    sc_port<Interface_If, 0, SC_ZERO_OR_MORE_BOUND> port_Control;
 
 
     //    void before_end_of_elaboration()
@@ -69,7 +77,7 @@ public:
      * \details
      * \public
      */
-    RoutingTable(sc_module_name p_ModuleName);
+    RoutingTable(sc_module_name p_ModuleName, ControlPlaneConfig& p_RTConfig);
 
 
 
@@ -153,7 +161,7 @@ private:
     int tableLength();
     void fillRoutingTable();
 
-
+    ControlPlaneConfig m_RTConfig;
 
     /*! \brief BGP message
      * \details

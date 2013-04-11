@@ -17,14 +17,12 @@
 
 
 
-RoutingTable::RoutingTable(sc_module_name p_ModName):sc_module(p_ModName)
+RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig& p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
 {
 
     //make the inner bindings
     export_ToRoutingTable(m_ReceivingBuffer); //export the receiving
     //buffer's input
-    //interface for the data plane
-
 
     SC_THREAD(routingTableMain);
     sensitive << port_Clk.pos();
@@ -32,6 +30,7 @@ RoutingTable::RoutingTable(sc_module_name p_ModName):sc_module(p_ModName)
 
 RoutingTable::~RoutingTable()
 {
+
 }
 
 
@@ -60,6 +59,19 @@ void RoutingTable::routingTableMain(void)
         {
 
             wait();
+
+            ///Check the Interface states
+            for (int i = 0; i < m_RTConfig.getNumberOfInterfaces(); ++i)
+                {
+                    if((port_Control[i]->isUp()));
+                    {
+                        // cout << "Interface " << i << " is down." << endl;
+                    }
+                }
+
+
+
+
             m_ReceivingBuffer.read(m_BGPMsg);
             if(!(count%20))
                 {

@@ -10,7 +10,7 @@
 #include "Router.hpp"
 #include "ReportGlobals.hpp"
 
-Router::Router(sc_module_name p_ModuleName, RouterConfig& p_RouterConfiguration):sc_module(p_ModuleName), m_Bgp("BGP", p_RouterConfiguration), m_IP("IP", p_RouterConfiguration.getNumberOfInterfaces()), m_RoutingTable("RoutingTable"), m_Name("Interface"),m_RouterConfiguration(p_RouterConfiguration)
+Router::Router(sc_module_name p_ModuleName, RouterConfig& p_RouterConfiguration):sc_module(p_ModuleName), m_Bgp("BGP", p_RouterConfiguration), m_IP("IP", p_RouterConfiguration.getNumberOfInterfaces()), m_RoutingTable("RoutingTable", p_RouterConfiguration), m_Name("Interface"),m_RouterConfiguration(p_RouterConfiguration)
 {
 
     ///StringTools instance for reporting
@@ -71,6 +71,8 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig& p_RouterConfiguration)
     //instantiate the network interface modules
     for(int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); i++)
         {
+
+
       
             //instantiate an interface
             m_NetworkInterface[i] = new Interface(m_Name.getNextName());
@@ -91,6 +93,9 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig& p_RouterConfiguration)
             //bind the interfaces to the data plane
             m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
             m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
+
+            //bind the interface to the Routing Table
+            m_RoutingTable.port_Control(*m_NetworkInterface[i]);
 
         }
     //delete the StringTools object
