@@ -292,7 +292,7 @@ int sc_main(int argc, char * argv [])
                                             ///Store the connection
                                             ///parameters to the
                                             ///connection confi object
-                                            ptr_Router->addConnectionConfig(tempFields[0], tempFields[2], tempFields[1]);
+                                            ptr_Router->addConnectionConfig(tempFields[0], tempFields[1], tempFields[2]);
 
                                             break;
                                         default:
@@ -367,12 +367,20 @@ int sc_main(int argc, char * argv [])
     ///set the number of routers
     l_Config.init(3);
 
-    l_Config.addRouterConfig(0, 2);
-    l_Config.addRouterConfig(1, 2);
-    l_Config.addRouterConfig(2, 2);
+    l_Config.addRouterConfig(0, 3);
+    l_Config.addRouterConfig(1, 3);
+    l_Config.addRouterConfig(2, 3);
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
+
+
+
+    //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
+    l_Config.addConnectionConfig(0, 0, 0, 1 );
+    l_Config.addConnectionConfig(1, 1, 0, 2 );
+    l_Config.addConnectionConfig(2, 1, 1, 0 );
+
 #endif
 
     
