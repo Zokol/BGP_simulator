@@ -63,9 +63,9 @@ void RoutingTable::routingTableMain(void)
             ///Check the Interface states
             for (int i = 0; i < m_RTConfig.getNumberOfInterfaces(); ++i)
                 {
-                    if((port_Control[i]->isUp()));
+                    if(!(port_Control[i]->isUp()))
                     {
-                        // cout << "Interface " << i << " is down." << endl;
+                        cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
                     }
                 }
 
