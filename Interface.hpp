@@ -41,48 +41,62 @@ class Interface: public sc_module, public Interface_If
 public:
 
 
-  /*! \brief Clock signal
-   * \details 
-   * \public
-   */
-  sc_in_clk port_Clk;
+    /*! \brief Clock signal
+     * \details 
+     * \public
+     */
+    sc_in_clk port_Clk;
 
-  sc_port<Interface_If,1, SC_ZERO_OR_MORE_BOUND> port_Output;
+    sc_port<Interface_If,1, SC_ZERO_OR_MORE_BOUND> port_Output;
 
-  
+    sc_export<sc_fifo_out_if<Packet> > export_FromDataPlane;
 
+    sc_export<sc_fifo_in_if<Packet> > export_ToDataPlane;
 
-  sc_export<sc_fifo_out_if<Packet> > export_FromDataPlane;
-  sc_export<sc_fifo_in_if<Packet> > export_ToDataPlane;
+    /*! \brief Network interface constructor
+     * \details 
+     * \public
+     */
+    Interface(sc_module_name p_ModuleName);
 
+    ~Interface();
 
+    /*!
+     * \sa Interface_If
+     */  
+    virtual bool forward(Packet p_Packet);
 
-  /*! \brief Network interface constructor
-   * \details 
-   * \public
-   */
-  Interface(sc_module_name p_ModuleName);
+    /*! \fn void interfaceMain(void)
+     *  \brief The SystemC process of the Interface module
+     * \public
+     */
+    void interfaceMain(void);
 
-  ~Interface();
-  
-  /*! \brief send a packet from the forwarding buffer
-   * \public
-   */
-  virtual bool forward(Packet p_Packet);
+    /*!
+     * \sa Interface_If
+     */  
+    virtual void interfaceDown(void);
 
-  void interfaceMain(void);
+    /*!
+     * \sa Interface_If
+     */  
+    virtual void interfaceUp(void);
 
-  virtual void interfaceDown(void);
+    /*!
+     * \sa Interface_If
+     */  
+    virtual bool isUp(void);
 
-  virtual void interfaceUp(void);
+    /*!
+     * \sa Interface_If
+     */  
+    virtual void emptyBuffers(void);
 
-  virtual bool isUp(void);
-
-  /*! \brief Indicate the systemC producer that this module has a process.
-   * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
-   * \public
-   */
-  SC_HAS_PROCESS(Interface);
+    /*! \brief Indicate the systemC producer that this module has a process.
+     * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
+     * \public
+     */
+    SC_HAS_PROCESS(Interface);
 
 
 

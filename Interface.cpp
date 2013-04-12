@@ -45,20 +45,26 @@ void Interface::interfaceMain(void)
 
 bool Interface::forward(Packet p_Packet)
 {
-
-  
-  if(m_InterfaceState) //only if interface is up
-    {
-      m_ReceivingBuffer.write(p_Packet);
-      return true;
-    }
-  else
-    return false;
+    //allow writing only if the interface is up
+    if(m_InterfaceState)
+        {
+            //check that the buffer is not full
+            if(m_ReceivingBuffer.num_free() > 0)
+                {
+                    m_ReceivingBuffer.write(p_Packet);
+                    return true;
+                }
+            else
+                return false;
+        }
+    else
+        return false;
 }
 
 void Interface::interfaceDown(void)
 {
-  m_InterfaceState = DOWN;
+    //set interface down
+    m_InterfaceState = DOWN;
 }
 
 void Interface::interfaceUp(void)
@@ -71,3 +77,13 @@ bool Interface::isUp(void)
   return m_InterfaceState;
 }
 
+void Interface::emptyBuffers(void)
+{
+    //empty the receiving buffer
+    while(m_ReceivingBuffer.num_available() > 0)
+        m_ReceivingBuffer.read();
+    //empty the forwarding buffer
+    while(m_ForwardingBuffer.num_available() > 0)
+        m_ForwardingBuffer.read();
+
+}

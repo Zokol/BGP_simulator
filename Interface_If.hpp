@@ -32,16 +32,40 @@ class Interface_If: virtual public sc_interface
 
 public:
 
-    /*! \brief forward a packet to the connected router from the forwarding buffer
+    /*! \fn virtual bool forward(Packet p_Packet) = 0
+     *  \brief Writes the p_Packet to the receiving buffer of NIC that
+     *  implements this IF
+     *  @param[in] Packet p_Packet The network frame carring BGP msg
+     *  or IP packet
+     * \return bool true: success false: NIC down or the buffer is full
      * \public
      */
     virtual bool forward(Packet p_Packet) = 0;
     
+    /*! \fn virtual void interfaceDown(void) = 0
+     *  \brief Sets the NIC down
+     * \public
+     */
     virtual void interfaceDown(void) = 0;
-    
+
+    /*! \fn virtual void interfaceUp(void) = 0
+     *  \brief Sets the NIC up
+     * \public
+     */
     virtual void interfaceUp(void) = 0;
     
+    /*! \fn virtual bool isUp(void) = 0
+     *  \brief Checks if the NIC is up or down
+     *  \return bool true: NIC is up - false: NIC is down
+     * \public
+     */
     virtual bool isUp(void) = 0;
+
+    /*! \fn virtual void emptyBuffers(void) = 0
+     *  \brief Empties the receiving and forwarding buffers
+     * \public
+     */
+    virtual void emptyBuffers(void) = 0;
 
 };
 
