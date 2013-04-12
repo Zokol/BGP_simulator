@@ -36,7 +36,7 @@ public:
      * \details
      * \public
      */
-    virtual int resolveRoute(sc_int<32> p_IPAddress) = 0;
+    virtual int resolveRoute(sc_uint<32> p_IPAddress) = 0;
 
 
 

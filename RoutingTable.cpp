@@ -552,7 +552,7 @@ void RoutingTable::handleNotification(BGPMessage p_msg)
     Iterate through the RoutingTable and find the longest match with the given IPAddress.
     Then return pointer to the Route object that had the longest match
 */
-Route * RoutingTable::findRoute(sc_int<32> p_IPAddress)
+Route * RoutingTable::findRoute(sc_uint<32> p_IPAddress)
 {
     Route * l_route = new Route();
     int l_longestMatch = 0;
@@ -574,7 +574,7 @@ Route * RoutingTable::findRoute(sc_int<32> p_IPAddress)
 }
 
 // Return how many "bits" from prefix match with IP address.
-int RoutingTable::matchLength(Route * p_route, sc_int<32> p_IP)
+int RoutingTable::matchLength(Route * p_route, sc_uint<32> p_IP)
 {
     return 0;
 }
@@ -583,7 +583,7 @@ int RoutingTable::matchLength(Route * p_route, sc_int<32> p_IP)
     Take ip address as a parameter and return the outputport.
     DataPlane uses this function to find out where to forward its packets.
 */
-int RoutingTable::resolveRoute(sc_int<32> p_IPAddress)
+int RoutingTable::resolveRoute(sc_uint<32> p_IPAddress)
 {
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
     Route * foundRoute = findRoute(p_IPAddress);
