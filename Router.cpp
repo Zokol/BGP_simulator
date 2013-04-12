@@ -141,6 +141,11 @@ void Router::interfaceDown(int p_InterfaceId)
     SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Network interface Down."));
 }
 
+void Router::emptyInterface(int p_InterfaceId)
+{
+    m_NetworkInterface[p_InterfaceId]->emptyBuffers();
+}
+
 bool Router::interfaceIsUp(int p_InterfaceId)
 {
     return m_NetworkInterface[p_InterfaceId]->isUp();
@@ -179,3 +184,12 @@ void Router::killInterfaces(void)
         interfaceDown(i);
     }
 }
+
+void Router::emptyInterfaces(void)
+{
+    for (int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); ++i)
+    {
+        emptyInterface(i);
+    }
+}
+

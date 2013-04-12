@@ -81,6 +81,14 @@ public:
      */
     bool interfaceIsUp(int p_InterfaceId);  
 
+    /*! \fn void emptyInterface(int p_InterfaceId)
+     *  \brief Clears the buffers in the given interface
+     *  @param[in] int p_InterfaceId The id of the interface to be
+     *  emptied
+     * \public
+     */
+    void emptyInterface(int p_InterfaceId);  
+
 
     /*! \fn bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface)
      *  \brief Connects the given interface of this router to the
@@ -99,6 +107,12 @@ public:
      * \public
      */
     void killInterfaces(void);
+
+    /*! \fn void emptyInterfaces(void)
+     *  \brief Clears the buffers in all the interfaces
+     * \public
+     */
+    void emptyInterfaces(void);
 
 
 
