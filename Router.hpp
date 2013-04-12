@@ -54,10 +54,51 @@ public:
 
     ~Router();
 
+
+    /*! \fn void interfaceUp(int p_InterfaceId)
+     *  \brief Sets the given interface up
+     *  @param[in] int p_InterfaceId The id of the interface to be
+     *  set up
+     * \public
+     */
     void interfaceUp(int p_InterfaceId);  
+
+    /*! \fn void interfaceDown(int p_InterfaceId)
+     *  \brief Sets the given interface down
+     *  @param[in] int p_NumberOfRouters The id of the interface to be
+     *  set down
+     * \public
+     */
     void interfaceDown(int p_InterfaceId);  
+
+
+    /*! \fn bool interfaceIsUp(int p_InterfaceId)
+     *  \brief Checks whether the given interface is up or not
+     *  @param[in] int p_InterfaceId The id of the interface to be
+     *  set checked
+     *  \return bool true: if up - false: if down
+     * \public
+     */
     bool interfaceIsUp(int p_InterfaceId);  
+
+
+    /*! \fn bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface)
+     *  \brief Connects the given interface of this router to the
+     *  given interface of the given router
+     *  @param[in] Router *p_TargetRouter
+     *  @param[in] int p_LocalInterface
+     *  @param[in] int p_TargetInterface
+     *  \return bool true: if success or alredy connected - false: if
+     *  one of the interfaces is conected and the other is not
+     * \public
+     */
     bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface);
+
+    /*! \fn void killInterfaces(void)
+     *  \brief Sets all the interfaces of this router down
+     * \public
+     */
+    void killInterfaces(void);
 
 
 
