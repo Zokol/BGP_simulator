@@ -171,3 +171,11 @@ bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p
             return true;
         }
 }
+
+void Router::killInterfaces(void)
+{
+    for (int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); ++i)
+    {
+        interfaceDown(i);
+    }
+}
