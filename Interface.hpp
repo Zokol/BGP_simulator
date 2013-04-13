@@ -90,7 +90,12 @@ public:
     /*!
      * \sa Interface_If
      */  
-    virtual void emptyBuffers(void);
+    virtual void killInterface(void);
+
+    /*!
+     * \sa Interface_If
+     */  
+    virtual void resetInterface(void);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
@@ -105,21 +110,40 @@ private:
   
 
 
-    /*! \brief Receiving buffer
+    /*! \property sc_fifo<Packet> m_ReceivingBuffer
+     *  \brief Receiving buffer
      * \details 
      * \private
      */
     sc_fifo<Packet> m_ReceivingBuffer;
 
-    /*! \brief Forwardig buffer
+    /*! \property sc_fifo<Packet> m_ForwardingBuffer
+     * \brief Forwardig buffer
      * \details 
      * \private
      */
     sc_fifo<Packet> m_ForwardingBuffer;
 
+    /*! \property bool m_InterfaceState 
+     *  \brief The current state of the interface
+     *  \details Possible values UP or DOWN
+     *  \private
+     */
     bool m_InterfaceState;
 
+    /*! \property StringTools m_Report
+     *  \brief Internal reporting tool of the simulation
+     *  \details
+     *  \private
+     */
     StringTools m_Report;
+
+    /*! \fn void emptyBuffers(void)
+     *  \brief empties both the receiving and forwarding buffers
+     * \public
+     */
+    void emptyBuffers(void);
+
 };
 
 

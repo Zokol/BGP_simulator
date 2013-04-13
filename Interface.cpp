@@ -87,3 +87,17 @@ void Interface::emptyBuffers(void)
         m_ForwardingBuffer.read();
 
 }
+
+
+
+void Interface::killInterface(void)
+{
+    interfaceDown();
+    emptyBuffers();
+}
+
+void Interface::resetInterface(void)
+{
+    killInterface();
+    interfaceUp();
+}

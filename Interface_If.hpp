@@ -61,11 +61,18 @@ public:
      */
     virtual bool isUp(void) = 0;
 
-    /*! \fn virtual void emptyBuffers(void) = 0
-     *  \brief Empties the receiving and forwarding buffers
+    /*! \fn virtual void killInterface(void) = 0
+     *  \brief Sets the interface down and empties the receiving and forwarding buffers
      * \public
      */
-    virtual void emptyBuffers(void) = 0;
+    virtual void killInterface(void) = 0;
+
+    /*! \fn virtual void resetInterface(void) = 0
+     *  \brief Kills the interface and reconnects it
+     * \public
+     */
+    virtual void resetInterface(void) = 0;
+
 
 };
 
