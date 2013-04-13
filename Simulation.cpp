@@ -92,7 +92,7 @@ void Simulation::simulationMain(void)
 
     bool state = true;
 #elif defined (_GUI)
-    enum_State = RECEIVE;
+    enum_State = ACTIVE;
 
 
 #else
@@ -100,10 +100,12 @@ void Simulation::simulationMain(void)
 #endif
     bool run = true;
     // m_GUISocket.set_non_blocking(true);
+    //    RouterConfig testC = m_SimuConfiguration.getRouterConfiguration(0);
+    //    int t = 20;
     while(run)
         {
             wait();
-
+            //      testC.setMED(t++);
 #ifdef _GUI_TEST
 
             m_Word = "";
@@ -137,10 +139,10 @@ void Simulation::simulationMain(void)
             switch(enum_State)
                 {
 
-                case RECEIVE:
+                case ACTIVE:
 
                     if(m_GUISocket.is_valid())
-                        enum_State = receiveRoutine()?PROCESS:RECEIVE;
+                        enum_State = receiveRoutine()?PROCESS:ACTIVE;
                     else
                         enum_State = TERMINATE;
                     break;
@@ -149,11 +151,12 @@ void Simulation::simulationMain(void)
                     break;
                 case SEND:
                     if(m_GUISocket.is_valid())
-                        enum_State = sendRoutine()?RECEIVE:SEND;
+                        enum_State = sendRoutine()?ACTIVE:SEND;
                     else
                         enum_State = TERMINATE;
                     break;
                 case TERMINATE:
+                    m_Word = STOP;
                     sendRoutine();
                     run = false;
                     break;
@@ -187,69 +190,120 @@ void Simulation::socketRoutine(void)
     enum_State = SEND;
 
     ///The command cases
-    if(m_Word.compare(STOP) == 0)
+    if(m_Word.compare(STOP) == 0) ///STOP
         {
+            //acknowledge
             m_Word = ACK;
-            sendRoutine();
+            //set the next server state to TERMINATE
             enum_State = TERMINATE;
         }
-    else if (m_Word.compare(RESET_ROUTER) == 0)
+    else if (m_Word.compare(RESET_ROUTER) == 0) ///RESET_ROUTER
+        {
+
+            //get the router ID
+            fieldRoutine(1);
+            //reset router
+            m_Router[m_FieldBuffer[0]]->resetRouter();
+            //send acknowledgement
+            m_Word = ACK;
+            //set next server state to ACTIVE
+            enum_State = ACTIVE;
+        }
+    else if (m_Word.compare(KILL_ROUTER) == 0) ///KILL_ROUTER
+        {
+
+            //get the router ID
+            fieldRoutine(1);
+            //kill the router
+            m_Router[m_FieldBuffer[0]]->killRouter();
+            //send acknowledgement
+            m_Word = ACK;
+            //set next server state to ACTIVE
+            enum_State = ACTIVE;
+            
+        }
+    else if (m_Word.compare(REVIVE_ROUTER) == 0) ///REVIVE_ROUTER
+        {
+
+            //get the router ID
+            fieldRoutine(1);
+            //kill the router
+            m_Router[m_FieldBuffer[0]]->reviveRouter();
+            //send acknowledgement
+            m_Word = ACK;
+            //set next server state to ACTIVE
+            enum_State = ACTIVE;
+        }
+    else if (m_Word.compare(READ_PACKET) == 0) ///READ_PACKET
         {
             
         }
-    else if (m_Word.compare(KILL_ROUTER) == 0)
+    else if (m_Word.compare(CLEAR_PACKET) == 0) ///CLEAR_PACKET
         {
             
         }
-    else if (m_Word.compare(REVIVE_ROUTER) == 0)
+    else if (m_Word.compare(SEND_PACKET) == 0) ///SEND_PACKET
         {
             
         }
-    else if (m_Word.compare(READ_PACKET) == 0)
+    else if (m_Word.compare(CONNECT) == 0) ///CONNECT
+        {
+            //get the router ID
+            fieldRoutine(2);
+            //kill the router
+            m_Router[m_FieldBuffer[0]]->connectInterface(m_FieldBuffer[1]);
+            //send acknowledgement
+            m_Word = ACK;
+            //set next server state to ACTIVE
+            enum_State = ACTIVE;
+            
+        }
+    else if (m_Word.compare(DISCONNECT) == 0) ///DISCONNECT
+        {
+            //get the router ID
+            fieldRoutine(2);
+            //kill the router
+            m_Router[m_FieldBuffer[0]]->disconnectInterface(m_FieldBuffer[1]);
+            //send acknowledgement
+            m_Word = ACK;
+            //set next server state to ACTIVE
+            enum_State = ACTIVE;
+            
+        }
+    else if (m_Word.compare(READ_TABLE) == 0) ///READ_TABLE
         {
             
         }
-    else if (m_Word.compare(CLEAR_PACKET) == 0)
+    else if (m_Word.compare(READ_RAW_TABLE) == 0) ///READ_RAW_TABLE
         {
             
         }
-    else if (m_Word.compare(SEND_PACKET) == 0)
+    else if (m_Word.compare(SET_LOCAL_PREF) == 0) ///SET_LOCAL_PREF
         {
             
         }
-    else if (m_Word.compare(CONNECT) == 0)
+    else if (m_Word.compare(SET_KEEPALIVE) == 0) ///SET_KEEPALIVE
         {
             
         }
-    else if (m_Word.compare(DISCONNECT) == 0)
+    else if (m_Word.compare(SET_HOLDDOWN_MULT) == 0) ///SET_HOLDDOWN_MULT
         {
             
         }
-    else if (m_Word.compare(READ_TABLE) == 0)
-        {
-            
-        }
-    else if (m_Word.compare(READ_RAW_TABLE) == 0)
-        {
-            
-        }
-    else if (m_Word.compare(SET_LOCAL_PREF) == 0)
-        {
-            
-        }
-    else if (m_Word.compare(SET_KEEPALIVE) == 0)
-        {
-            
-        }
-    else if (m_Word.compare(SET_HOLDDOWN_MULT) == 0)
+    else if (m_Word.compare(SHOW_IF) == 0) /// SHOW_IF
         {
             
         }
     else
         {
             m_Word = NACK;
-            enum_State = RECEIVE;    
+            enum_State = ACTIVE;    
         }
+
+    //send the response
+    sendRoutine();
+
+
 }
 
 bool Simulation::sendRoutine(void)

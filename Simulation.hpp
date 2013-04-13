@@ -134,7 +134,7 @@ private:
      * \brief Defines the socket server states
      * \private
      */
-    enum ServerStates{RECEIVE, PROCESS, SEND, TERMINATE} enum_State;
+    enum ServerStates{ACTIVE, PROCESS, SEND, TERMINATE} enum_State;
 
     /*!
      * \fn void socketRoutine(void) 
