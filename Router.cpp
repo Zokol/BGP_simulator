@@ -141,11 +141,6 @@ void Router::interfaceDown(int p_InterfaceId)
     SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Network interface Down."));
 }
 
-void Router::emptyInterface(int p_InterfaceId)
-{
-    m_NetworkInterface[p_InterfaceId]->emptyBuffers();
-}
-
 bool Router::interfaceIsUp(int p_InterfaceId)
 {
     return m_NetworkInterface[p_InterfaceId]->isUp();
@@ -177,19 +172,81 @@ bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p
         }
 }
 
+void Router::killRouter(void)
+{
+    //TODO: kill RT
+
+    //TODO: kill ControlPlane
+
+    //TODO: kill DataPlane
+
+    //TODO: kill BGP
+
+    //kill interfaces
+    killInterfaces();
+}
+
+void Router::resetRouter(void)
+{
+    //kill router
+    killRouter();
+    //revive router
+    reviveRouter();
+}
+
+void Router::reviveRouter(void)
+{
+    //TODO: start RT
+
+    //TODO: start ControlPlane
+
+    //TODO: start DataPane
+
+    //connect interfaces()
+    connectInterfaces();
+}
+
+
+
 void Router::killInterfaces(void)
 {
+
     for (int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); ++i)
     {
-        interfaceDown(i);
+        killInterface(i);
+
     }
+
 }
 
-void Router::emptyInterfaces(void)
+void Router::connectInterface(int p_InterfaceId)
+{
+    interfaceUp(p_InterfaceId);
+}
+
+void Router::connectInterfaces(void)
 {
     for (int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); ++i)
-    {
-        emptyInterface(i);
-    }
+        interfaceUp(i);
 }
 
+void Router::disconnectInterface(int p_InterfaceId)
+{
+    interfaceDown(p_InterfaceId);
+}
+
+void Router::disconnectInterfaces(void)
+{
+    for (int i = 0; i < m_RouterConfiguration.getNumberOfInterfaces(); ++i)
+        interfaceDown(i);
+}
+
+void Router::killInterface(int p_InterfaceId)
+{
+    m_NetworkInterface[p_InterfaceId]->killInterface();
+}
+
+void Router::resetInterface(int p_InterfaceId)
+{
+    m_NetworkInterface[p_InterfaceId]->resetInterface();
+}

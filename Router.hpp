@@ -81,15 +81,6 @@ public:
      */
     bool interfaceIsUp(int p_InterfaceId);  
 
-    /*! \fn void emptyInterface(int p_InterfaceId)
-     *  \brief Clears the buffers in the given interface
-     *  @param[in] int p_InterfaceId The id of the interface to be
-     *  emptied
-     * \public
-     */
-    void emptyInterface(int p_InterfaceId);  
-
-
     /*! \fn bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface)
      *  \brief Connects the given interface of this router to the
      *  given interface of the given router
@@ -102,23 +93,74 @@ public:
      */
     bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface);
 
-    /*! \fn void killInterfaces(void)
-     *  \brief Sets all the interfaces of this router down
+    /*! \fn void killRouter(void)
+     *  \brief Sets all the interfaces of this router down, clears all
+     *  the buffers, clears all BGP sessions, resets the BGP
      * \public
      */
-    void killInterfaces(void);
+    void killRouter(void);
 
-    /*! \fn void emptyInterfaces(void)
-     *  \brief Clears the buffers in all the interfaces
+    /*! \fn void killRouter(void)
+     *  \brief Sets all the interfaces of this router down, clears all
+     *  the buffers, clears all BGP sessions, resets the BGP
      * \public
      */
-    void emptyInterfaces(void);
+    void resetRouter(void);
+
+    /*! \fn void killRouter(void)
+     *  \brief Sets all the interfaces of this router down, clears all
+     *  the buffers, clears all BGP sessions, resets the BGP
+     * \public
+     */
+    void reviveRouter(void);
+
+    /*! \fn void killInterface(p_InterfaceId)
+     *  \brief kills the given interface
+     *  \sa Interface_If
+     *  @param[in] int p_InterfaceId The id of the interface to be disconnected
+     * \public
+     */
+    void killInterface(int p_InterfaceId);
+
+    /*! \fn void resetInterface(p_InterfaceId)
+     *  \brief reset the given interface
+     *  \sa Interface_If
+     *  @param[in] int p_InterfaceId The id of the interface to be connected
+     * \public
+     */
+    void resetInterface(int p_InterfaceId);
+
+    /*! \fn void disconnectInterface(p_InterfaceId)
+     *  \brief disconnects the given interface
+     *  @param[in] int p_InterfaceId The id of the interface to be disconnected
+     * \public
+     */
+    void disconnectInterface(int p_InterfaceId);
+
+    /*! \fn void disconnectInterface(p_InterfaceId)
+     *  \brief connects the given interface
+     *  @param[in] int p_InterfaceId The id of the interface to be connected
+     * \public
+     */
+    void connectInterface(int p_InterfaceId);
+
+    /*! \fn void disconnectInterfaces(void)
+     *  \brief disconnects all the interfaces
+     * \public
+     */
+    void disconnectInterfaces(void);
+
+    /*! \fn void disconnectInterface(void)
+     *  \brief connects all the interfaces
+     * \public
+     */
+    void connectInterfaces(void);
 
 
 
 private:
 
-
+    /************* Private members **************************/
 
     /*!
      * \property   const sc_time *clk_Periods
@@ -127,7 +169,6 @@ private:
      * \private
      */
     const sc_time *m_ClkPeriod;
-
 
     /*!
      * \property sc_clock *clk_Router
@@ -193,7 +234,21 @@ private:
      */
     RouterConfig m_RouterConfiguration;
 
+    /************* Private functions **************************/
 
+    /*! \fn void killInterfaces(void)
+     *  \brief Sets all the interfaces of this router down
+     * \public
+     */
+    void killInterfaces(void);
+
+    /*! \fn void emptyInterfaces(void)
+     *  \brief Clears the buffers in all the interfaces
+     * \public
+     */
+    void emptyInterfaces(void);
+
+    
 };
 
 #endif
