@@ -125,6 +125,12 @@
  */
 #define SET_HOLDDOWN_MULT "SET_HOLDDOWN_MULT" // SET_HOLDDOWN_MULT [ROUTER_ID] [VALUE]
 
+/*!
+ * return the interface status information as a string:
+ * receivingbuf_available_slot_count, forwardingbuf_available_slot_count, interface_state
+ */
+#define SHOW_IF "SHOW_IF" // SHOW_IF [ROUTER_ID] [IF_ID]
+
 
 
 ///************************ Program modes *******************************
