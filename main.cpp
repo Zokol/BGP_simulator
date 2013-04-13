@@ -155,7 +155,6 @@ int sc_main(int argc, char * argv [])
                             ///declare and set the end and start
                             ///indeices for router parameters
                             unsigned j_Start = i_Start, j_End;
-
                     
                             ///find the end of the router field
                             if(l_Idx == count-1) //the last router
@@ -165,16 +164,6 @@ int sc_main(int argc, char * argv [])
                                 }
                             else //other than the last router
                                 j_End = DataWord.find(ROUTER_SEPARATOR, i_Start);
-
-                            // ///check that the router field end was found
-                            // if(j_End == string::npos)
-                            //     {
-                            //         ///If the router field separator was not found, send NACK to
-                            //         ///GUI and continue receiving
-                            //         GUISocket << NACK;
-                            //         retrans = true;
-                            //         break;
-                            //     }
 
                             ///set the state to AS_ID
                             fieldStates state = S_AS_ID;
@@ -336,24 +325,6 @@ int sc_main(int argc, char * argv [])
     //Sync with the test client
     GUISocket << "Simu";
 
-    setupLoop = true;
-
-    // while(setupLoop)
-    //     {
-    //         try
-    //             {
-    //                 GUISocket >> DataWord;
-    //                 if(DataWord.compare("START") == 0)
-    //                     {
-    //                         setupLoop = false;
-    //                         GUISocket << "Simulation starts";
-    //                     }
-    //             }
-    //         catch(SocketException e)
-    //             {
-
-    //             }
-    //     } 
 
     SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
 
@@ -373,7 +344,7 @@ int sc_main(int argc, char * argv [])
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
-
+    l_Config.getRouterConfiguration(0).setMED(10);
 
 
     //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
