@@ -52,7 +52,11 @@ void DataPlane::main(void)
     {
       wait();
 
-      if(port_FromInterface[i]->num_available() > 0)
+      //To check that data is written in this buffer. Seems to work
+      // cout << "DataPlane: BGP forwarding buffer has " << m_BGPForwardingBuffer.num_free() << " elements free." << endl;
+ 
+
+     if(port_FromInterface[i]->num_available() > 0)
           {
               port_FromInterface[i]->read(m_Packet);
               // cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;

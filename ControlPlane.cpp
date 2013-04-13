@@ -56,7 +56,7 @@ void ControlPlane::controlPlaneMain(void)
     while(true)
         {    
         wait();
-
+        cout << "MED is now: " << m_BGPConfig.getMED() << endl;
 
         //Check if there's messages in the input buffer
       if(m_ReceivingBuffer.num_available() > 0)     //Antti: laitto
