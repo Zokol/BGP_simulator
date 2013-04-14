@@ -49,7 +49,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig& p_SimuConfiguration);
+    Simulation(sc_module_name p_Name, ServerSocket& p_Socket, SimulationConfig * const p_SimuConfiguration);
 
     ~Simulation();
 
@@ -120,7 +120,7 @@ private:
      * \brief Holds the configuration of the whole simulation
      * \private
      */
-    SimulationConfig m_SimuConfiguration;
+    SimulationConfig *m_SimuConfiguration;
 
     /*!
      * \property  int m_FieldBuffer

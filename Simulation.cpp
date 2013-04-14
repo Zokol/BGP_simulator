@@ -11,21 +11,21 @@
 #include "ReportGlobals.hpp"
 #include "GUIProtocolTags.hpp"
 
-Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig& p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_SimuConfiguration(p_SimuConfiguration)
+Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig * const p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_SimuConfiguration(p_SimuConfiguration)
 {
 
 //  //Throws segmentation fault
 
 //  DEBUGGING
 m_Name.appendReportString("Router count: ");
-SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.getNumberOfRouters()));
+SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration->getNumberOfRouters()));
 
 m_Name.appendReportString("Interface count: ");
- SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration.getRouterConfiguration(0).getNumberOfInterfaces()));
+ SC_REPORT_INFO(g_DebugID, m_Name.appendReportString(m_SimuConfiguration->getRouterConfiguration(0).getNumberOfInterfaces()));
 
 
   /// \li Allocate Router pointer array
-  m_Router = new Router*[m_SimuConfiguration.getNumberOfRouters()];
+  m_Router = new Router*[m_SimuConfiguration->getNumberOfRouters()];
 
   /// \li Set the base name for the StringTools object
   m_Name.setBaseName("Router");
@@ -34,10 +34,10 @@ m_Name.appendReportString("Interface count: ");
 
 
   /// \li Initiate the Router modules as m_Router
-  for(int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); i++)
+  for(int i = 0; i < m_SimuConfiguration->getNumberOfRouters(); i++)
     {
       /// \li Generate the routers
-        m_Router[i] = new Router(m_Name.getNextName(), m_SimuConfiguration.getRouterConfiguration(i));
+        m_Router[i] = new Router(m_Name.getNextName(), m_SimuConfiguration->getRouterConfigurationPtr(i));
 
     }
   
@@ -45,10 +45,10 @@ m_Name.appendReportString("Interface count: ");
   ///Build the network 
   RouterConfig *l_Handle;
   ///connect all the routers
-  for (int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); ++i)
+  for (int i = 0; i < m_SimuConfiguration->getNumberOfRouters(); ++i)
       {
           ///get handle to the routers configuration object
-          l_Handle = m_SimuConfiguration.getRouterConfigurationPtr(i);
+          l_Handle = m_SimuConfiguration->getRouterConfigurationPtr(i);
 
           ///connect all the interfaces
           for (int j = 0; j < l_Handle->getNumberOfInterfaces(); ++j)
@@ -78,7 +78,7 @@ Simulation::~Simulation()
 {
 
   /// \li Free all the memory
-  for(int i = 0; i < m_SimuConfiguration.getNumberOfRouters(); i++)
+  for(int i = 0; i < m_SimuConfiguration->getNumberOfRouters(); i++)
     delete m_Router[i];
 
   delete m_Router;
@@ -100,12 +100,12 @@ void Simulation::simulationMain(void)
 #endif
     bool run = true;
     // m_GUISocket.set_non_blocking(true);
-    //    RouterConfig testC = m_SimuConfiguration.getRouterConfiguration(0);
-    //    int t = 20;
+       RouterConfig *testC = m_SimuConfiguration->getRouterConfigurationPtr(0);
+		int t = 20;
     while(run)
         {
             wait();
-            //      testC.setMED(t++);
+                testC->setMED(t++);
 #ifdef _GUI_TEST
 
             m_Word = "";
