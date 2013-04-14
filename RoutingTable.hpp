@@ -87,7 +87,7 @@ public:
      * \details
      * \public
      */
-    RoutingTable(sc_module_name p_ModuleName, ControlPlaneConfig& p_RTConfig);
+    RoutingTable(sc_module_name p_ModuleName, ControlPlaneConfig * const p_RTConfig);
 
 
 
@@ -171,7 +171,7 @@ private:
     int tableLength();
     void fillRoutingTable();
 
-    ControlPlaneConfig m_RTConfig;
+    ControlPlaneConfig *m_RTConfig;
 
     /*! \brief BGP message
      * \details

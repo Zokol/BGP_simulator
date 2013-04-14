@@ -17,7 +17,7 @@
 
 
 
-RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig& p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
+RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
 {
 
     //make the inner bindings
@@ -61,7 +61,7 @@ void RoutingTable::routingTableMain(void)
             wait();
 
             ///Check the Interface states
-            for (int i = 0; i < m_RTConfig.getNumberOfInterfaces(); ++i)
+            for (int i = 0; i < m_RTConfig->getNumberOfInterfaces(); ++i)
                 {
                     if(!(port_Control[i]->isUp()))
                     {
