@@ -336,6 +336,13 @@ public:
 
     string toString(void);
 
+    /*! \fn RouterConfig& operator = (const RouterConfig& p_Original);
+     *  \brief clones the passed RouterConfig object to this object
+     *  \return reference RouterConfig& 
+     * \public
+     */
+    RouterConfig& operator = (const RouterConfig& p_Original);
+
     
 private:    
     /*! \brief Linked list that holds the connection information for
@@ -345,13 +352,6 @@ private:
      * \public
      */
     Connection **m_NeighborConnections;
-
-    /*! \fn RouterConfig& operator = (const RouterConfig& p_Original);
-     *  \brief clones the passed RouterConfig object to this object
-     *  \return reference RouterConfig& 
-     * \public
-     */
-    RouterConfig& operator = (const RouterConfig& p_Original);
 
 
 };
