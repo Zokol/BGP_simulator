@@ -50,7 +50,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    Router(sc_module_name p_ModuleName, RouterConfig& p_RouterConfiguration);
+    Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfiguration);
 
     ~Router();
 
@@ -232,7 +232,7 @@ private:
      * \details  
      * \private
      */
-    RouterConfig m_RouterConfiguration;
+    RouterConfig *m_RouterConfiguration;
 
     /************* Private functions **************************/
 
