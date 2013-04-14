@@ -14,6 +14,8 @@
 
 using namespace sc_dt;
 using namespace std;
+using namespace sc_core;
+
 /*!
  * \class BGPSessionParameters
  * \brief Holds the parameters for BGP session
@@ -100,7 +102,7 @@ protected:
      * \details Defines the keepalive time for this session. The default
      * value needs to be set in the elaboration phase. After that the
      * BGP session may negotiated a new value between the session peers
-     * \private
+     * \protected
      */
     int m_KeepaliveTime;
     
@@ -108,20 +110,39 @@ protected:
      * \details Defines the holdDown time for this session. The default
      * value needs to be set in the elaboration phase. After that the
      * BGP session may negotiated a new value between the session peers
-     * \private
+     * \protected
      */
     int m_HoldDownTime;
 
     /*! \brief HoldDown time factor
      * \details Defines the multiplier that determines the holdDown
      * time by m_KeepaliveTime X m_HoldDownTimeFactor
-     * \private
+     * \protected
      */
     int m_HoldDownTimeFactor;
 
 private:
 
+    /*! \fn void setHoldDownTime(void)
+	 * \brief Calculates and set the Hold-down time
+     * \details The hold-down time is the product of hold-down multiplier and keepalive time
+     * \private
+     */
     void setHoldDownTime(void);    
+
+    /*! \property sc_mutex mtx_Keepalive
+	 * \brief Arbitrates the setting of Keepalive time
+     * \details
+     * \private
+     */
+	sc_mutex mtx_Keepalive;
+
+    /*! \property sc_mutex mtx_HoldDownFactor
+	 * \brief Arbitrates the setting of hold-down factor
+     * \details
+     * \private
+     */
+	sc_mutex mtx_HoldDownFactor;
 };
 
 

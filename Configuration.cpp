@@ -17,14 +17,18 @@ BGPSessionParameters::~BGPSessionParameters(){}
     
 void BGPSessionParameters::setKeepaliveTime(int p_KeepaliveTime)
 {
+	mtx_Keepalive.lock();
     m_KeepaliveTime = p_KeepaliveTime;
     setHoldDownTime();
+	mtx_Keepalive.unlock();
 }
 
 void BGPSessionParameters::setHoldDownTimeFactor(int p_HoldDownTimeFactor)
 {
+	mtx_HoldDownFactor.lock();
     m_HoldDownTimeFactor = p_HoldDownTimeFactor;
     setHoldDownTime();
+	mtx_HoldDownFactor.unlock();
 }
 
 int BGPSessionParameters::getKeepaliveTime(void){return m_KeepaliveTime;}
