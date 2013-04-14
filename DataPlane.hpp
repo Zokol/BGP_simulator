@@ -20,6 +20,7 @@
 #include "BGPMessage.hpp"
 #include "DataPlane_In_If.hpp"
 #include "RoutingTable_If.hpp"
+#include "Configuration.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -77,7 +78,7 @@ public:
      * @param[in] p_Name The name of the module
      * \public
      */
-    DataPlane(sc_module_name p_ModuleName, int p_InterfaceCount);
+    DataPlane(sc_module_name p_ModuleName, ControlPlaneConfig * const p_Config );
 
     ~DataPlane();
 
@@ -101,6 +102,8 @@ private:
     int m_InterfaceCount;
   
     Packet m_Packet;
+	
+	ControlPlaneConfig *m_Config;
 
 };
 

@@ -12,11 +12,14 @@
 #include "ReportGlobals.hpp"
 
 
-DataPlane::DataPlane(sc_module_name p_ModuleName, int p_InterfaceCount):sc_module(p_ModuleName), m_InterfaceCount(p_InterfaceCount)
+
+DataPlane::DataPlane(sc_module_name p_ModuleName, ControlPlaneConfig * const p_Config):sc_module(p_ModuleName), m_Config(p_Config)
 {
     // Export the BGP message buffer interface
     //    export_ToDataPlane(m_BGPForwardingBuffer);
 
+
+	m_InterfaceCount = m_Config->getNumberOfInterfaces();
     SC_THREAD(main);
     sensitive << port_Clk.pos();
 }
