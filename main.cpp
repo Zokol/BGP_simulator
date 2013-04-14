@@ -365,7 +365,7 @@ int sc_main(int argc, char * argv [])
   sc_clock clk("clk", clk_Period);
 
   ///initiate the simulation
-  Simulation test("Test", GUISocket, l_Config);
+  Simulation test("Test", GUISocket, &l_Config);
 
   ///connect the clock
   test.port_Clk(clk);
