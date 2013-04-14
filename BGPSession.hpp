@@ -78,7 +78,7 @@ public:
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
-    BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters& p_SessionParam);
+    BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam);
 
     /*! \brief Elaborates the BGPSession module
      * \details 
@@ -88,7 +88,7 @@ public:
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
-    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters& p_SessionParam);
+    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam);
 
 
 
@@ -260,7 +260,7 @@ private:
 
     sc_int<32> m_BGPIdentifierPeer;
 
-    BGPSessionParameters m_Config;
+    BGPSessionParameters *m_Config;
     /***************************Private functions*****************/
 
 
