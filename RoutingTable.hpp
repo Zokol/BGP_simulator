@@ -133,6 +133,9 @@ public:
 
     vector<int> preferredASes;
 
+    string getRoutingTable();
+    string getRawRoutingTable();
+
 
 
 
@@ -162,6 +165,8 @@ private:
     int ASpathLength(Route p_route);
 
     string routeToString(Route p_route);
+
+    string routingTableToString(Route * p_route);
 
 
     void printRoutingTable();

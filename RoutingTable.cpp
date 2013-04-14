@@ -325,6 +325,35 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
 
 }
 
+/*
+    Return MainRoutingTable
+*/
+string RoutingTable::getRoutingTable()
+{
+    return routingTableToString(m_headOfRoutingTable);
+}
+
+/*
+    Return RawRoutingTable
+*/
+string RoutingTable::getRawRoutingTable()
+{
+    return routingTableToString(m_headOfRawTable);
+}
+
+string RoutingTable::routingTableToString(Route * p_route)
+{
+    string table;
+    while(p_route->next != 0)
+    {
+        p_route = p_route->next;
+        table.append(routeToString(*p_route));
+    }
+
+    return "";
+}
+
+
 // Print the RoutingTable
 void RoutingTable::printRoutingTable()
 {
@@ -417,9 +446,9 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
     // Use these to collect data separetad by semicolon
     int position = 0;
-    int IP_end,Mask_end,Routers_end, ASes_end;
+    int IP_end,Mask_end,Routers_end, ASes_end,ownRouterId_end,ownAsId_end;
 
-    for(int i=0;i<4;i++)
+    for(int i=0;i<6;i++)
     {
         position = p_msg.find(";",position+1);
 
@@ -431,13 +460,18 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
             Routers_end = position;
         else if(i==3)
             ASes_end = position;
+        else if(i==4)
+            ownRouterId_end = position;
+        else if(i==5)
+            ownAsId_end = position;
     }
-
 
     string IPAddress = p_msg.substr(0,IP_end);
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string Routers = p_msg.substr((Mask_end+1),(Routers_end-Mask_end-1));
     string ASes = p_msg.substr((Routers_end+1),(ASes_end-Routers_end-1));
+    string ownRouter = p_msg.substr((ASes_end+1),(ownRouterId_end-ASes_end-1));
+    string ownAS = p_msg.substr((ownRouterId_end+1),(ownAsId_end-ownRouterId_end-1));
 
     // TODO : Add own router_id and AS to "Routers" and "ASes". Read from Configuration somehow?
 
@@ -455,6 +489,9 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
         oldPosition = newPosition+1;
         listOfRouters.push_back(routerId);
     }
+    listOfRouters.push_back(atoi(ownRouter.c_str()));
+    ASes.append("-");
+    ASes.append(ownAS);
 
 
     // Set the values to Route pointer
