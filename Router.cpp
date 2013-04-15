@@ -267,6 +267,11 @@ void Router::setPreferredAS(int p_AS, int p_pref_value)
 
 }
 
+void Router::removeLocalPref(int p_AS)
+{
+    m_RoutingTable.removeLocalPref(p_AS);
+}
+
 
 
 

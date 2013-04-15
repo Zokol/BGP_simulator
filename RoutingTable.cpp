@@ -672,13 +672,27 @@ int RoutingTable::resolveRoute(string p_IPAddress)
     return foundRoute->OutputPort;
 }
 
+// Add new AS to the preferred ASes vector
 void RoutingTable::setLocalPreference(int p_AS, int p_preferenceValue)
 {
     preferredASes.push_back(p_AS);
     preferredASes.push_back(p_preferenceValue);
-
 }
 
+void RoutingTable::removeLocalPref(int p_AS)
+{
+    // Find given AS
+    for(unsigned i = 0; i < preferredASes.size();i++)
+    {
+        if(p_AS == preferredASes.at(i))
+        {
+            // AS found, remove that and its preference value
+            preferredASes.erase(preferredASes.begin() + i);
+            preferredASes.erase(preferredASes.begin()+ i+1);
+        }
+
+    }
+}
 
 
 /*

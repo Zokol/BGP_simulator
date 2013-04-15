@@ -174,6 +174,11 @@ public:
      */
     void setPreferredAS(int p_AS, int p_pref_value);
 
+    /*! \fn void removeLocalPref(int p_AS)
+     *  \brief remove given AS from the list of preferred ASes
+     * \public
+     */
+    void removeLocalPref(int p_AS);
 
 private:
 

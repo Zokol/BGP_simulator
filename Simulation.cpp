@@ -1,6 +1,6 @@
-/*! \file Simulation.cpp 
+/*! \file Simulation.cpp
  *  \brief     Implementation of Simulation module.
- *  \details   
+ *  \details
  *  \author    Antti Siirilä, 501449
  *  \version   1.0
  *  \date      28.1.2013
@@ -40,9 +40,9 @@ m_Name.appendReportString("Interface count: ");
         m_Router[i] = new Router(m_Name.getNextName(), m_SimuConfiguration->getRouterConfigurationPtr(i));
 
     }
-  
 
-  ///Build the network 
+
+  ///Build the network
   RouterConfig *l_Handle;
   ///connect all the routers
   for (int i = 0; i < m_SimuConfiguration->getNumberOfRouters(); ++i)
@@ -64,7 +64,7 @@ m_Name.appendReportString("Interface count: ");
                       }
               }
 
-          
+
       }
 
 
@@ -121,7 +121,7 @@ void Simulation::simulationMain(void)
                             //cout << e.description() << endl;
                             continue;
                         }
-                    
+
                     if(m_Word != "")
                         {
                             cout << "Received: " << m_Word << endl;
@@ -130,7 +130,7 @@ void Simulation::simulationMain(void)
                                 sc_stop();
                         }
                 }
-            
+
             if(!(m_GUISocket.is_valid()))
                 cout << "socket not valid" << endl;
 #elif defined (_GUI)
@@ -220,7 +220,7 @@ void Simulation::socketRoutine(void)
             m_Word = ACK;
             //set next server state to ACTIVE
             enum_State = ACTIVE;
-            
+
         }
     else if (m_Word.compare(REVIVE_ROUTER) == 0) ///REVIVE_ROUTER
         {
@@ -236,15 +236,15 @@ void Simulation::socketRoutine(void)
         }
     else if (m_Word.compare(READ_PACKET) == 0) ///READ_PACKET
         {
-            
+
         }
     else if (m_Word.compare(CLEAR_PACKET) == 0) ///CLEAR_PACKET
         {
-            
+
         }
     else if (m_Word.compare(SEND_PACKET) == 0) ///SEND_PACKET
         {
-            
+
         }
     else if (m_Word.compare(CONNECT) == 0) ///CONNECT
         {
@@ -256,7 +256,7 @@ void Simulation::socketRoutine(void)
             m_Word = ACK;
             //set next server state to ACTIVE
             enum_State = ACTIVE;
-            
+
         }
     else if (m_Word.compare(DISCONNECT) == 0) ///DISCONNECT
         {
@@ -268,36 +268,36 @@ void Simulation::socketRoutine(void)
             m_Word = ACK;
             //set next server state to ACTIVE
             enum_State = ACTIVE;
-            
+
         }
     else if (m_Word.compare(READ_TABLE) == 0) ///READ_TABLE
         {
-            
+
         }
     else if (m_Word.compare(READ_RAW_TABLE) == 0) ///READ_RAW_TABLE
         {
-            
+
         }
     else if (m_Word.compare(SET_LOCAL_PREF) == 0) ///SET_LOCAL_PREF
         {
-            
+
         }
     else if (m_Word.compare(SET_KEEPALIVE) == 0) ///SET_KEEPALIVE
         {
-            
+
         }
     else if (m_Word.compare(SET_HOLDDOWN_MULT) == 0) ///SET_HOLDDOWN_MULT
         {
-            
+
         }
     else if (m_Word.compare(SHOW_IF) == 0) /// SHOW_IF
         {
-            
+
         }
     else
         {
             m_Word = NACK;
-            enum_State = ACTIVE;    
+            enum_State = ACTIVE;
         }
 
     //send the response
@@ -348,7 +348,7 @@ bool Simulation::fieldRoutine(int p_NumOfFields)
                 }
             else
                 read = false;
-                
+
         }
     return read;
 }

@@ -128,6 +128,9 @@ public:
     // Give preferred AS and some preference value to it.
     void setLocalPreference(int p_AS, int p_preferenceValue);
 
+    // Remove some as from the list of preferred ASes
+    void removeLocalPref(int p_AS);
+
     // Delete route from the RawRoutingTable. Parameters are router IDs.
     void deleteRoute(int p_router1, int p_router2);
 
