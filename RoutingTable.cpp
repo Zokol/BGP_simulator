@@ -87,16 +87,19 @@ void RoutingTable::routingTableMain(void)
             if((m_BGPMsg.m_Type = UPDATE))
             {
 
+
+/*
+                updateRoutingTable();
+
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
-/*                cout << "Raw table: " << endl;
+                cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
                 preferredASes.push_back(5432);
                 preferredASes.push_back(100);
 
-                updateRoutingTable();
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
@@ -221,6 +224,7 @@ void RoutingTable::setRoute(Route p_route)
     newRoute->mask = p_route.mask;
     newRoute->OutputPort = p_route.OutputPort;
     newRoute->ASes = p_route.ASes;
+    newRoute->routers = p_route.routers;
 
 
     if(m_headOfRoutingTable->next == 0)
@@ -341,16 +345,50 @@ string RoutingTable::getRawRoutingTable()
     return routingTableToString(m_headOfRawTable);
 }
 
+
+/*
+    Iterate through the routing table, beginning from p_route.
+    Create a string from the routes and return that string.
+*/
 string RoutingTable::routingTableToString(Route * p_route)
 {
+    m_iterator = p_route;
     string table;
-    while(p_route->next != 0)
-    {
-        p_route = p_route->next;
-        table.append(routeToString(*p_route));
-    }
+    table.append("<TABLE>");
 
-    return "";
+    while(m_iterator->next != 0)
+    {
+        m_iterator = m_iterator->next;
+        table.append(routeToString(*m_iterator));
+        table.append(";");
+    }
+    table.append("</TABLE>");
+
+    return table;
+}
+
+/*
+    Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
+    Syntax: ID,Prefix,Mask,Routers,ASes (e.g. 5,100100200050,8,2-4-6-7,100-4212-231-22)
+*/
+string RoutingTable::routeToString(Route p_route)
+{
+    stringstream ss;
+    ss.str("");
+    ss << p_route.id  << "," << p_route.prefix << "," << p_route.mask << ",";
+
+
+    for(unsigned i = 0;i < p_route.routers.size();i++)
+    {
+        if(i < p_route.routers.size()-1)
+            ss << p_route.routers.at(i) << "-";
+        else
+            ss << p_route.routers.at(i);
+    }
+    ss << ",";
+    ss << p_route.ASes;
+
+    return ss.str();
 }
 
 
@@ -439,7 +477,7 @@ void RoutingTable::addNewRoute(string p_msg,int OutputPort)
 
 /*
     Create a Route object from p_msg. p_msg must be constructed as follows:
-    IP;Mask;Routers;ASes (e.g. 102550100;8;2-5-10-1;550-7564-4)
+    IP;Mask;Routers;ASes;ownRouterId;ownAS (e.g. 102550100;8;2-5-10-1;550-7564-4;9;555)
     Parse message and collect IP,Mask, Routers and ASes which are separated by ";"-mark
 */
 void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
@@ -627,27 +665,7 @@ int RoutingTable::resolveRoute(sc_uint<32> p_IPAddress)
     return foundRoute->OutputPort;
 }
 
-/*
-    Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
-    Syntax: Prefix;Mask;Routers;ASes (e.g. 100100200050;8;2-4-6-7;100-4212-231-22)
-*/
-string RoutingTable::routeToString(Route p_route)
-{
-    stringstream ss;
-    ss.str("");
-    ss << p_route.prefix << ";" << p_route.mask << ";";
 
-    // "-1" to avoid unnecessary "-" after last router-id
-    for(unsigned i = 0;i < p_route.routers.size()-1;i++)
-    {
-        ss << p_route.routers.at(i) << "-";
-    }
-    ss << p_route.routers.at(p_route.routers.size()-1);
-    ss << ";";
-    ss << p_route.ASes;
-
-    return ss.str();
-}
 
 /*
     only for testing?
@@ -724,32 +742,11 @@ void RoutingTable::fillRoutingTable()
             OutputPort = 0;
         }
 
-        ss << prefix << ";" << mask << ";" << routers << ";" << ASes;
+        ss << prefix << ";" << mask << ";" << routers << ";" << ASes << ";" << "9" << ";" << "5555";
         l_message = ss.str();
 
-
-
-        //cout << "filled data before added to routing table: " << l_message << endl;
-
-        //cout << l_message << endl;
-
-
-        if(i == 2)
-        {
-            addNewRoute(l_message,OutputPort);
-            ss.str("");
-            ss << prefix << ";" << mask << ";" << routers << ";99-5432-4343-4444";
-            addNewRoute(ss.str(),1);
-
-        }
-        else
-        {
-            addNewRoute(l_message,OutputPort);
-            addNewRoute(l_message,OutputPort);
-
-        }
-
-
+        addNewRoute(l_message,OutputPort);
+        addNewRoute(l_message,OutputPort);
 
     }
 
