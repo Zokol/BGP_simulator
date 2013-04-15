@@ -88,8 +88,8 @@ void RoutingTable::routingTableMain(void)
             {
 
 
-/*
-                updateRoutingTable();
+
+/*                updateRoutingTable();
 
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
@@ -258,8 +258,7 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
         Add preferred route to routing table according to policies. Policies:
         1. Check if which route has higher preferredAS
         2. Check AS-path length
-        3. MED
-        4. Origin type
+        3. Origin type, not used?
 
     */
 
@@ -651,7 +650,18 @@ Route * RoutingTable::findRoute(string p_IPAddress)
 // Return how many "bits" from prefix match with IP address.
 int RoutingTable::matchLength(Route * p_route, string p_IP)
 {
-    return 0;
+    int matchLength = 0;
+    string routePrefix = p_route->prefix;
+    for(unsigned i = 0; i < p_IP.size();i++)
+    {
+
+        if(p_IP.at(i) == routePrefix.at(i))
+            matchLength++;
+        else
+            break;
+    }
+    return matchLength;
+
 }
 
 /*
@@ -739,7 +749,7 @@ void RoutingTable::fillRoutingTable()
         {
             prefix = "50.40.200.0";
             ASes = "50-70-100";
-            OutputPort = 0;
+            OutputPort = 10;
         }
 
         ss << prefix << ";" << mask << ";" << routers << ";" << ASes << ";" << "9" << ";" << "5555";
