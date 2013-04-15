@@ -1,6 +1,6 @@
 /*! \file Router.cpp
- *  \brief     
- *  \details   
+ *  \brief
+ *  \details
  *  \author    Antti Siirilä, 501449
  *  \version   1.0
  *  \date      27.1.2013
@@ -14,7 +14,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 {
 
     ///StringTools instance for reporting
-    StringTools *l_Report = new StringTools(name());  
+    StringTools *l_Report = new StringTools(name());
     l_Report->resetReportString();
 
 
@@ -30,9 +30,9 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
     /// \li Allocate clock for the Routers using the previously allocated period
     m_ClkRouter = new sc_clock("CLK", *m_ClkPeriod);
 
- 
+
     SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Binding the clock signal to submodules."));
- 
+
     //set the clock for the planes
     m_Bgp.port_Clk(*m_ClkRouter);
     m_IP.port_Clk(*m_ClkRouter);
@@ -45,7 +45,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
     //Control plane output to data plane
     m_IP.port_ToControlPlane(m_Bgp.export_ToControlPlane);
     //control plane output to data plane
-    m_Bgp.port_ToDataPlane(m_IP); 
+    m_Bgp.port_ToDataPlane(m_IP);
     //sessions output to data plane
     m_Bgp.export_ToDataPlane(m_IP);
 
@@ -76,22 +76,22 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
         {
 
 
-      
+
             //instantiate an interface
             m_NetworkInterface[i] = new Interface(m_Name.getNextName());
 
             //instantiate hierarchial forwarding port
             port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
-      
+
             //bind network interface port to router's hierarchial port
             m_NetworkInterface[i]->port_Output.bind(*port_ForwardingInterface[i]);
-      
+
             //make the hierarchial binding for receiving exports
             export_ReceivingInterface[i] = new sc_export<Interface_If>;
             export_ReceivingInterface[i]->bind(*m_NetworkInterface[i]);
 
             //bind the clock to the network interface
-            m_NetworkInterface[i]->port_Clk(*m_ClkRouter);      
+            m_NetworkInterface[i]->port_Clk(*m_ClkRouter);
 
             //bind the interfaces to the data plane
             m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
@@ -115,7 +115,7 @@ Router::~Router()
             delete m_NetworkInterface[i];
         }
 
-  
+
     delete export_ReceivingInterface;
     delete port_ForwardingInterface;
     delete m_NetworkInterface;
@@ -250,3 +250,39 @@ void Router::resetInterface(int p_InterfaceId)
 {
     m_NetworkInterface[p_InterfaceId]->resetInterface();
 }
+
+string Router::getRoutingTable(void)
+{
+    return m_RoutingTable.getRoutingTable();
+}
+
+string Router::getRawRoutingTable(void)
+{
+    return m_RoutingTable.getRawRoutingTable();
+}
+
+void Router::setPreferredAS(int p_AS, int p_pref_value)
+{
+    m_RoutingTable.setLocalPreference(p_AS,p_pref_value);
+
+}
+
+void Router::removeLocalPref(int p_AS)
+{
+    m_RoutingTable.removeLocalPref(p_AS);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

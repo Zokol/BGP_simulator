@@ -138,6 +138,6 @@
 ///************************ Program modes *******************************
 
 
-#define _GUI
+//#define _GUI
 
 //#define _GUI_TEST
