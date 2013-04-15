@@ -533,7 +533,7 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 
 
     // Set the values to Route pointer
-    p_route->prefix = atoi(IPAddress.c_str());
+    p_route->prefix = IPAddress;
     p_route->mask = atoi(Mask.c_str());
     p_route->ASes = ASes;
     p_route->routers = listOfRouters;
@@ -627,7 +627,7 @@ void RoutingTable::handleNotification(BGPMessage p_msg)
     Iterate through the RoutingTable and find the longest match with the given IPAddress.
     Then return pointer to the Route object that had the longest match
 */
-Route * RoutingTable::findRoute(sc_uint<32> p_IPAddress)
+Route * RoutingTable::findRoute(string p_IPAddress)
 {
     Route * l_route = new Route();
     int l_longestMatch = 0;
@@ -649,7 +649,7 @@ Route * RoutingTable::findRoute(sc_uint<32> p_IPAddress)
 }
 
 // Return how many "bits" from prefix match with IP address.
-int RoutingTable::matchLength(Route * p_route, sc_uint<32> p_IP)
+int RoutingTable::matchLength(Route * p_route, string p_IP)
 {
     return 0;
 }
@@ -658,7 +658,7 @@ int RoutingTable::matchLength(Route * p_route, sc_uint<32> p_IP)
     Take ip address as a parameter and return the outputport.
     DataPlane uses this function to find out where to forward its packets.
 */
-int RoutingTable::resolveRoute(sc_uint<32> p_IPAddress)
+int RoutingTable::resolveRoute(string p_IPAddress)
 {
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
     Route * foundRoute = findRoute(p_IPAddress);
@@ -716,7 +716,7 @@ void RoutingTable::fillRoutingTable()
         prefix2 = 1+(rand()%255);
         prefix3 = 1+(rand()%255);
         prefix4 = 0;//1+(rand()%255);
-        ss << prefix1 << prefix2 << prefix3 << prefix4;
+        ss << prefix1 << "." << prefix2 << "." << prefix3 << "." << prefix4;
         prefix = ss.str();
         ss.str("");
 
@@ -737,7 +737,7 @@ void RoutingTable::fillRoutingTable()
 
         if(i==1)
         {
-            prefix = "50402000";
+            prefix = "50.40.200.0";
             ASes = "50-70-100";
             OutputPort = 0;
         }
