@@ -53,14 +53,11 @@ public:
 
     ~Simulation();
 
-
     void simulationMain(void);
 
     SC_HAS_PROCESS(Simulation);
 
 private:
-
-
 
     /*!
      * \property ServerSocket m_GUISocket
@@ -69,7 +66,6 @@ private:
      * \private
      */
     ServerSocket m_GUISocket;
-
 
     /*!
      * \property string word
@@ -87,7 +83,6 @@ private:
      */
     Packet m_Packet;
 
-
     /*!
      * \property sc_trace_file *m_TraceFilePointer
      * \brief Pointer to the VCD trace file
@@ -96,8 +91,6 @@ private:
      */
     sc_trace_file *m_TraceFilePointer;
 
-
-
     /*!
      * \property  StringTools m_Name
      * \brief Name string
@@ -105,7 +98,6 @@ private:
      * \private
      */
     StringTools m_Name;
-
 
     /*!
      * \property  Router **m_router
@@ -134,7 +126,7 @@ private:
      * \brief Defines the socket server states
      * \private
      */
-    enum ServerStates{ACTIVE, PROCESS, SEND, TERMINATE} enum_State;
+    enum ServerStates{ACTIVE, PROCESS, SEND, TERMINATE} enum_State, prev_State;
 
     /*!
      * \fn void socketRoutine(void) 

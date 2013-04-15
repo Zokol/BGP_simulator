@@ -4,6 +4,8 @@
  */
 #define PORT 50000
 
+#define AS_INTERFACE 3
+
 ///************************ Configureation parsing *******************************
 
 /*!
@@ -136,6 +138,6 @@
 ///************************ Program modes *******************************
 
 
-//#define _GUI
+#define _GUI
 
 //#define _GUI_TEST

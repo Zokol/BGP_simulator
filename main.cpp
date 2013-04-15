@@ -378,7 +378,8 @@ int sc_main(int argc, char * argv [])
 #if defined (_GUI) || defined(_GUI_TEST)
   sc_start();
   GUISocket << "END";
-  ptr_Router = NULL;
+
+  //  ptr_Router = NULL;
 #else
   sc_start(SIMULATION_DURATION, SC_SEC);
 #endif
