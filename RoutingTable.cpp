@@ -274,7 +274,6 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
     // 1. Iterate through preferredASes and check if other Route has preferred AS on its ASpath
     for(unsigned i = 0;i<preferredASes.size();i = i+2)
     {
-        // TODO implement better with getPreferenceValue(int AS)
         while(newPosition < p_route1.ASes.size())
         {
             newPosition = p_route1.ASes.find("-",oldPosition+1);
@@ -510,8 +509,6 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string ownRouter = p_msg.substr((ASes_end+1),(ownRouterId_end-ASes_end-1));
     string ownAS = p_msg.substr((ownRouterId_end+1),(ownAsId_end-ownRouterId_end-1));
 
-    // TODO : Add own router_id and AS to "Routers" and "ASes". Read from Configuration somehow?
-
     // Create vector<int> from "Routers"
     unsigned newPosition = 0;
     unsigned oldPosition = 0;
@@ -673,6 +670,13 @@ int RoutingTable::resolveRoute(string p_IPAddress)
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
     Route * foundRoute = findRoute(p_IPAddress);
     return foundRoute->OutputPort;
+}
+
+void RoutingTable::setLocalPreference(int p_AS, int p_preferenceValue)
+{
+    preferredASes.push_back(p_AS);
+    preferredASes.push_back(p_preferenceValue);
+
 }
 
 
