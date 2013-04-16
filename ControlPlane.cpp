@@ -56,7 +56,7 @@ void ControlPlane::controlPlaneMain(void)
     while(true)
         {    
         wait();
-        cout << "MED is now: " << m_BGPConfig->getMED() << endl;
+        // cout << "MED is now: " << m_BGPConfig->getMED() << endl;
 
         //Check if there's messages in the input buffer
       if(m_ReceivingBuffer.num_available() > 0)     //Antti: laitto
@@ -126,7 +126,7 @@ void ControlPlane::controlPlaneMain(void)
               //To send a message to data plane
               port_ToDataPlane->write(m_BGPMsg);
 
-              m_BGPMsg.m_OutboundInterface = 15;
+
               port_ToRoutingTable->write(m_BGPMsg);
 
               if(!(count%20))
