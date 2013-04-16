@@ -164,7 +164,7 @@ void Simulation::simulationMain(void)
                     break;
                 case TERMINATE:
 
-                    m_Word = ACK;
+                    m_Word = STOP;
                     if(m_GUISocket.is_valid())
                         sendRoutine();
                     run = false;
@@ -193,199 +193,205 @@ void Simulation::simulationMain(void)
 
 void Simulation::socketRoutine(void)
 {
-
-
-    ///The command cases
-    if(m_Word.compare(STOP) == 0) ///STOP
+    
+    try
         {
+            ///The command cases
+            if(m_Word.compare(STOP) == 0) ///STOP
+                {
 
 
-            //set the next server state to TERMINATE
-            enum_State = TERMINATE;
-        }
-    else if (m_Word.compare(RESET_ROUTER) == 0) ///RESET_ROUTER
-        {
+                    //set the next server state to TERMINATE
+                    enum_State = TERMINATE;
+                }
+            else if (m_Word.compare(RESET_ROUTER) == 0) ///RESET_ROUTER
+                {
 
-            //get the router ID
-            fieldRoutine(1);
-            //reset router
-            m_Router[m_FieldBuffer[0]]->resetRouter();
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to ACTIVE
-            enum_State = SEND;
-        }
-    else if (m_Word.compare(KILL_ROUTER) == 0) ///KILL_ROUTER
-        {
+                    //get the router ID
+                    fieldRoutine(1);
+                    //reset router
+                    m_Router[m_FieldBuffer[0]]->resetRouter();
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to ACTIVE
+                    enum_State = SEND;
+                }
+            else if (m_Word.compare(KILL_ROUTER) == 0) ///KILL_ROUTER
+                {
 
-            //get the router ID
-            fieldRoutine(1);
-            //kill the router
-            m_Router[m_FieldBuffer[0]]->killRouter();
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                    //get the router ID
+                    fieldRoutine(1);
+                    //kill the router
+                    m_Router[m_FieldBuffer[0]]->killRouter();
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(REVIVE_ROUTER) == 0) ///REVIVE_ROUTER
-        {
+                }
+            else if (m_Word.compare(REVIVE_ROUTER) == 0) ///REVIVE_ROUTER
+                {
 
-            //get the router ID
-            fieldRoutine(1);
-            //kill the router
-            m_Router[m_FieldBuffer[0]]->reviveRouter();
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
-        }
-    else if (m_Word.compare(READ_PACKET) == 0) ///READ_PACKET
-        {
-            //get the router ID
-            fieldRoutine(1);
+                    //get the router ID
+                    fieldRoutine(1);
+                    //kill the router
+                    m_Router[m_FieldBuffer[0]]->reviveRouter();
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
+                }
+            else if (m_Word.compare(READ_PACKET) == 0) ///READ_PACKET
+                {
+                    //get the router ID
+                    fieldRoutine(1);
 
-            //TODO: add readMessages() method into Router module
-            // m_Word = m_Router[m_FieldBuffer[0]]->readMessage()
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                    //TODO: add readMessages() method into Router module
+                    // m_Word = m_Router[m_FieldBuffer[0]]->readMessage()
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
 
-        }
-    else if (m_Word.compare(CLEAR_PACKET) == 0) ///CLEAR_PACKET
-        {
-            //get the router ID
-            fieldRoutine(1);
+                }
+            else if (m_Word.compare(CLEAR_PACKET) == 0) ///CLEAR_PACKET
+                {
+                    //get the router ID
+                    fieldRoutine(1);
 
-            //TODO: add clearMessages() method into Router module
-            //m_Router[m_FieldBuffer[0]]->clearMessage()
+                    //TODO: add clearMessages() method into Router module
+                    //m_Router[m_FieldBuffer[0]]->clearMessage()
             
-            //send acknowledgement
-            m_Word = ACK;
+                    //send acknowledgement
+                    m_Word = ACK;
 
 
-            //set next server state to SEND
-            enum_State = SEND;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(SEND_PACKET) == 0) ///SEND_PACKET
-        {
-            //get the router ID
-            fieldRoutine(3);
+                }
+            else if (m_Word.compare(SEND_PACKET) == 0) ///SEND_PACKET
+                {
+                    //get the router ID
+                    fieldRoutine(3);
 
-            //TODO: add sendMessage() method into Router module
-            // if(m_Router[m_FieldBuffer[0]]->sendMessage(m_FieldBuffer[1], m_FieldBuffer[2]))
-            //     //send acknowledgement
-            //     m_Word = ACK;
-            // else
-            //     //send negative acknowledgement
-                m_Word = NACK;
+                    //TODO: add sendMessage() method into Router module
+                    // if(m_Router[m_FieldBuffer[0]]->sendMessage(m_FieldBuffer[1], m_FieldBuffer[2]))
+                    //     //send acknowledgement
+                    //     m_Word = ACK;
+                    // else
+                    //     //send negative acknowledgement
+                    m_Word = NACK;
 
-            //set next server state to SEND
-            enum_State = SEND;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(CONNECT) == 0) ///CONNECT
-        {
-            //get the router ID
-            fieldRoutine(2);
-            //kill the router
-            m_Router[m_FieldBuffer[0]]->connectInterface(m_FieldBuffer[1]);
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                }
+            else if (m_Word.compare(CONNECT) == 0) ///CONNECT
+                {
+                    //get the router ID
+                    fieldRoutine(2);
+                    //kill the router
+                    m_Router[m_FieldBuffer[0]]->connectInterface(m_FieldBuffer[1]);
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(DISCONNECT) == 0) ///DISCONNECT
-        {
-            //get the router ID
-            fieldRoutine(2);
-            //kill the router
-            m_Router[m_FieldBuffer[0]]->disconnectInterface(m_FieldBuffer[1]);
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                }
+            else if (m_Word.compare(DISCONNECT) == 0) ///DISCONNECT
+                {
+                    //get the router ID
+                    fieldRoutine(2);
+                    //kill the router
+                    m_Router[m_FieldBuffer[0]]->disconnectInterface(m_FieldBuffer[1]);
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(READ_TABLE) == 0) ///READ_TABLE
-        {
-            //get the router ID
-            fieldRoutine(1);
+                }
+            else if (m_Word.compare(READ_TABLE) == 0) ///READ_TABLE
+                {
+                    //get the router ID
+                    fieldRoutine(1);
 
-            //TODO: call the mehtod that returns the routing table
-            // m_Word = m_Router[m_FieldBuffer[0]]->
-
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                    //call the mehtod that returns the routing table
+                    m_Word = m_Router[m_FieldBuffer[0]]->getRoutingTable();
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(READ_RAW_TABLE) == 0) ///READ_RAW_TABLE
-        {
-            //get the router ID
-            fieldRoutine(1);
+                }
+            else if (m_Word.compare(READ_RAW_TABLE) == 0) ///READ_RAW_TABLE
+                {
+                    //get the router ID
+                    fieldRoutine(1);
 
-            //TODO: call the mehtod that returns the raw routing table
-            // m_Word = m_Router[m_FieldBuffer[0]]->
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                    //call the mehtod that returns the raw routing table
+                    m_Word = m_Router[m_FieldBuffer[0]]->getRawRoutingTable();
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(SET_LOCAL_PREF) == 0) ///SET_LOCAL_PREF
-        {
-            //get the router ID
-            fieldRoutine(2);
+                }
+            else if (m_Word.compare(SET_LOCAL_PREF) == 0) ///SET_LOCAL_PREF
+                {
+                    //get the router ID
+                    fieldRoutine(3);
 
 
-            //TODO:call method that set the local pref for a given AS ID
-            // m_Word = m_Router[m_FieldBuffer[0]]->
+                    //call method that set the local pref for a given AS ID
+                    m_Router[m_FieldBuffer[0]]->setPreferredAS(m_FieldBuffer[1], m_FieldBuffer[2]);
 
-            //send acknowledgement
-            m_Word = ACK;
+                    //send acknowledgement
+                    m_Word = ACK;
 
-            //set next server state to SEND
-            enum_State = SEND;
+                    //set next server state to SEND
+                    enum_State = SEND;
 
-        }
-    else if (m_Word.compare(SET_KEEPALIVE) == 0) ///SET_KEEPALIVE
-        {
-            //get the router ID
-            fieldRoutine(2);
-            //get pointer to the correct configuration object
-            RouterConfig *l_RConfig = m_SimuConfiguration->getRouterConfigurationPtr(m_FieldBuffer[0]);
-            l_RConfig->setKeepaliveTime(m_FieldBuffer[1]);
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                }
+            else if (m_Word.compare(SET_KEEPALIVE) == 0) ///SET_KEEPALIVE
+                {
+                    //get the router ID
+                    fieldRoutine(2);
+                    //get pointer to the correct configuration object
+                    cout << "0: " << m_FieldBuffer[0] << "\n1: " << m_FieldBuffer[1] << endl;
+
+                    RouterConfig *l_RConfig = m_SimuConfiguration->getRouterConfigurationPtr(m_FieldBuffer[0]);
+                    l_RConfig->setKeepaliveTime(m_FieldBuffer[1]);
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
-        }
-    else if (m_Word.compare(SET_HOLDDOWN_MULT) == 0) ///SET_HOLDDOWN_MULT
-        {
-            //get the router ID
-            fieldRoutine(2);
-            //get pointer to the correct configuration object
-            RouterConfig *l_RConfig = m_SimuConfiguration->getRouterConfigurationPtr(m_FieldBuffer[0]);
-            l_RConfig->setHoldDownTimeFactor(m_FieldBuffer[1]);
-            //send acknowledgement
-            m_Word = ACK;
-            //set next server state to SEND
-            enum_State = SEND;
+                }
+            else if (m_Word.compare(SET_HOLDDOWN_MULT) == 0) ///SET_HOLDDOWN_MULT
+                {
+                    //get the router ID
+                    fieldRoutine(2);
+                    //get pointer to the correct configuration object
+                    RouterConfig *l_RConfig = m_SimuConfiguration->getRouterConfigurationPtr(m_FieldBuffer[0]);
+                    l_RConfig->setHoldDownTimeFactor(m_FieldBuffer[1]);
+                    //send acknowledgement
+                    m_Word = ACK;
+                    //set next server state to SEND
+                    enum_State = SEND;
             
+                }
+            else if (m_Word.compare(SHOW_IF) == 0) /// SHOW_IF
+                {
+                    //TODO: to be implemented if extra time is left            
+                }
+            else
+                {
+                    // cout << m_Word << endl;
+                    // m_Word = NACK;
+                    enum_State = SEND;    
+                }
         }
-    else if (m_Word.compare(SHOW_IF) == 0) /// SHOW_IF
-        {
-            //TODO: to be implemented if extra time is left            
-        }
-    else
+    catch(...)
         {
             m_Word = NACK;
-            enum_State = SEND;    
+            enum_State = SEND;
         }
-
 
 
 }
@@ -422,20 +428,31 @@ bool Simulation::receiveRoutine()
 
 bool Simulation::fieldRoutine(int p_NumOfFields)
 {
-    bool read = true;
-    int i = 0;
-    while ((i < p_NumOfFields) && read)
+    bool l_Send = true;
+    int i = 0, l_MaxTrilas = 0;
+
+    while (i < p_NumOfFields && l_MaxTrilas < 10)
         {
+            if(l_Send)
+                m_Word = ACK;
+            if(sendRoutine() && l_Send)
+                l_Send = false;
+            else
+                return false;
+            
             if(receiveRoutine())
                 {
+                    l_Send = true;
+                    cout << "Word: " << m_Word << endl;
                     istringstream(m_Word) >> m_FieldBuffer[i];
                     cout << "Value: " << m_FieldBuffer[i] << endl;
+                 
                     i++;
                 }
             else
-                read = false;
-                           
+                l_MaxTrilas++;
+
         }
     cout << i << " field(s) was(were) read." << endl;
-    return read;
+    return l_Send;
 }
