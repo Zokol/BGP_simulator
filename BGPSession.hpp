@@ -112,9 +112,6 @@ public:
      */
     void sessionInvalidation(void);
 
-
-
-
     // /*! \brief Determines the hold-down time from BGP session config object
     //  * \details 
     //  * @param[in] BGPSessionParameters p_SessionParameters Holds the
@@ -181,12 +178,7 @@ public:
      */
     SC_HAS_PROCESS(BGPSession);
 
-
-
-
 private:
-  
-
 
     /*! \brief Handles the arbitration for Keepalive reset
      * \details Keepalive can be reset either internally by the
@@ -220,29 +212,6 @@ private:
      */
     int m_PeeringInterface;
     
-    // /*! \brief HoldDown time for this session
-    //  * \details Defines the holdDown time for this session. The default
-    //  * value needs to be set in the elaboration phase. After that the
-    //  * BGP session may negotiated a new value between the session peers
-    //  * \private
-    //  */
-    // int m_HoldDownTime;
-     
-    // /*! \brief Keepalive time for this session
-    //  * \details Defines interval for sending keepalive messages between
-    //  * the peers of this session.
-    //  * \private
-    //  */
-    // int m_KeepaliveTime;
-
-
-    // /*! \brief HoldDown time factor
-    //  * \details Defines the multiplier that is used while determining the
-    //  * holddown time 
-    //  * \private
-    //  */
-    // int m_HoldDownTimeFactor;
-
     /*! \brief Indicates whether this session is valid or not
      * \details Is set to True when the session start. When ever the
      * HoldDown timer expires the value of m_SessionValidity shall be
