@@ -10,7 +10,7 @@
 #include "BGPSession.hpp"
 
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_Config(p_SessionParam)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeeringInterface(0), m_Config(p_SessionParam)
 {
 
 
@@ -68,7 +68,7 @@ void BGPSession::sendKeepalive(void)
     
 
             //TODO build the message
-            
+            m_KeepaliveMsg.m_OutboundInterface = m_PeeringInterface;            
 
             cout << name() << " sending keepalive at time " << sc_time_stamp() << endl;
             //write the message to the control plane
