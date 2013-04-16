@@ -21,6 +21,7 @@
 #include "DataPlane_In_If.hpp"
 #include "RoutingTable_If.hpp"
 #include "Configuration.hpp"
+#include "StringTools.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -52,7 +53,7 @@ public:
      * receiving FIFO
      * \public
      */
-    sc_port<sc_fifo_in_if<BGPMessage>,1, SC_ZERO_OR_MORE_BOUND> port_ToControlPlane;
+    sc_port<sc_fifo_out_if<BGPMessage>,1, SC_ZERO_OR_MORE_BOUND> port_ToControlPlane;
 
     /*! \brief Neighbor writes to the receiving buffer
      * \details
@@ -102,8 +103,12 @@ private:
     int m_InterfaceCount;
   
     Packet m_Packet;
+
+    BGPMessage m_BGPMsg;
 	
 	ControlPlaneConfig *m_Config;
+
+    StringTools m_Rpt;
 
 };
 
