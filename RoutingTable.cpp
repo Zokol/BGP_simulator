@@ -65,7 +65,7 @@ void RoutingTable::routingTableMain(void)
                 {
                     if(!(port_Control[i]->isUp()))
                     {
-                        cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
+                        // cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
                     }
                 }
 
