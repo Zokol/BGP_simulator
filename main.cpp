@@ -224,8 +224,7 @@ int sc_main(int argc, char * argv [])
                                             state = S_PREFIX;
                                             break;
                                         case S_PREFIX:
-                                        	ptr_Router->setPrefix(converter.convertIPToBinary(field));
-                                        	ptr_Router->setPrefixMask(converter.convertMaskToBinary(field));
+                                        	ptr_Router->setPrefix(field);
                                             state = S_MED;
                                             break;
                                         case S_MED:
