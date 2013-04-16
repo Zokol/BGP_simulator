@@ -11,6 +11,7 @@
 #define _CONFIGURATION_H_
 
 #include "systemc"
+#include "StringTools.hpp"
 
 using namespace sc_dt;
 using namespace std;
@@ -166,6 +167,13 @@ public:
      */
     void setNumberOfInterfaces(int p_NumberOfInterfaces);
 
+    /*! \fn void setPrefix(string p_Prefix);
+     *  \brief Sets the prefix IP of the AS as string
+     *  @param[in] string p_Prefix The IP prefix
+     * \public
+     */
+    void setPrefix(string p_Prefix);
+
     /*! \fn void setPrefix(sc_uint<32> p_Prefix);
      *  \brief Sets the prefix IP of the AS
      *  @param[in] sc_uint<32> p_Prefix The IP prefix
@@ -208,6 +216,21 @@ public:
      * \public
      */
     int getNumberOfInterfaces(void);
+
+    /*! \fn string getIPAsString(void)
+     *  \brief Returns the IP prefix as string
+     *  \return string value
+     * \public
+     */
+    string getIPAsString(void);
+
+    /*! \fn string getIPMaskAsString(void);
+     *  \brief Returns the prefix mask value: the number of bits set
+     *  to one starting from the 31st bit
+     *  \return string value
+     * \public
+     */
+    string getIPMaskAsString(void);
 
     /*! \fn sc_uint<32> getPrefix(void);
      *  \brief Returns the IP prefix
@@ -256,13 +279,13 @@ protected:
     /*! \property int m_NumberOfInterfaces
      * \brief Number of network interfaces that this router should allocate
      * \details
-     * \private
+     * \protected
      */
     int m_NumberOfInterfaces;
 
     /*! \brief The prefix of the AS connecting this router
      * \details 
-     * \public
+     * \protected
      */
     sc_uint<32> m_Prefix;
 
@@ -274,21 +297,33 @@ protected:
 
     /*! \brief The AS number of this router
      * \details 
-     * \public
+     * \protected
      */
     int m_ASNumber;
 
     /*! \brief BGP MED variable
      * \details 
-     * \public
+     * \protected
      */
     int m_MED;
 
     /*! \brief BGP Local Preference variable
      * \details 
-     * \public
+     * \protected
      */
     int m_LocalPref;
+
+private:
+
+    /*! \property StringTools m_IPConverter
+     *  \brief BGP Local Preference variable
+     * \details 
+     * \private
+     */
+    StringTools m_IPConverter;
+
+
+
 };
 
 /*!
@@ -311,6 +346,8 @@ public:
     int getNeighborRouterId(void);
 
     int getNeighborInterfaceId(void);
+
+    bool hasConnection(void);
 
     string toString(void);
 
@@ -354,6 +391,9 @@ public:
     int getNeighborRouterId(int p_LocalInterface);
 
     int getNeighborInterfaceId(int p_LocalInterface);
+
+    Connection *getConnection(int p_ConnectionId);
+
 
     string toString(void);
 
