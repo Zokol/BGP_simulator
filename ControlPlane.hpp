@@ -61,7 +61,7 @@ public:
      *  m_ReceivingBuffer-fifo
      * \public
      */
-    sc_export<sc_fifo_in_if<BGPMessage> > export_ToControlPlane;
+    sc_export<sc_fifo_out_if<BGPMessage> > export_ToControlPlane;
    
    
     /*! \brief This provides the DataPlane_In_If for BGP sessions
