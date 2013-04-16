@@ -23,8 +23,7 @@ StringTools::StringTools(const char *p_BaseName):m_Separator("_"), m_Identifier(
 
 StringTools::StringTools(const char *p_BaseName, bool p_StampTime):m_Separator("_"), m_Identifier(0), m_StampTime(p_StampTime), m_Reset(true)
 {
-    m_ResportString << p_BaseName << ": ";
-    
+    m_ResportString << p_BaseName << ": ";    
 
 }
 
@@ -36,6 +35,7 @@ StringTools::~StringTools()
 void StringTools::setBaseName(string p_BaseName)
 {
     m_BaseName = p_BaseName;
+
 }
 
 void StringTools::resetIdentifier(void)
@@ -87,6 +87,7 @@ void StringTools::appendString(const char *p_ReportString)
 
 const char* StringTools::getReportString(void)
 {
+
     m_ResportString << m_BaseName << ": " << m_CurrentName;
     if(m_StampTime)
         m_ResportString << ": @ " << sc_core::sc_time_stamp();
