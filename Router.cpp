@@ -78,7 +78,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
 
             //instantiate an interface
-            m_NetworkInterface[i] = new Interface(m_Name.getNextName());
+            m_NetworkInterface[i] = new Interface(m_Name.getNextName(), m_RouterConfiguration->getConnection(i));
 
             //instantiate hierarchial forwarding port
             port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
