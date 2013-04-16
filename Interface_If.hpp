@@ -52,7 +52,7 @@ public:
      *  \brief Sets the NIC up
      * \public
      */
-    virtual void interfaceUp(void) = 0;
+    virtual bool interfaceUp(void) = 0;
     
     /*! \fn virtual bool isUp(void) = 0
      *  \brief Checks if the NIC is up or down
