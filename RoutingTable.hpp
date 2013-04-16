@@ -173,6 +173,9 @@ private:
 
     string routingTableToString(Route * p_route);
 
+    // Delete routes from RawRoutingTable with given output port
+    void deleteRoutes(int p_outputPort);
+
 
     void printRoutingTable();
     void printRawRoutingTable();

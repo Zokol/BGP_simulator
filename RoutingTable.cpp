@@ -65,7 +65,8 @@ void RoutingTable::routingTableMain(void)
                 {
                     if(!(port_Control[i]->isUp()))
                     {
-                        // cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
+                        deleteRoutes(i);
+                        cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
                     }
                 }
 
@@ -559,8 +560,6 @@ void RoutingTable::removeFromRawTable(int p_routerId)
             // TODO: free memory
         }
     }
-
-
 }
 
 /*
@@ -612,6 +611,30 @@ void RoutingTable::deleteRoute(int p_router1, int p_router2)
         }
     }
 
+}
+
+/*
+    Delete all the routes from RawRoutingTable that have p_outputPort as output port.
+    Then update MainRoutingTable if changes were made
+*/
+void RoutingTable::deleteRoutes(int p_outputPort)
+{
+    m_iterator = m_headOfRawTable;
+    bool routesDeleted = false;
+    while(m_iterator->next != 0)
+    {
+        m_iterator = m_iterator->next;
+        if(m_iterator->OutputPort == p_outputPort)
+        {
+
+            // Same output port so delete the route from RawTable
+            removeFromRawTable(m_iterator->id);
+            routesDeleted = true;
+        }
+    }
+    // If RawTable was modified update MainRoutingTable
+    if(routesDeleted)
+        updateRoutingTable();
 }
 
 void RoutingTable::handleNotification(BGPMessage p_msg)
