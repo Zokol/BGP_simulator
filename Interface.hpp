@@ -17,7 +17,7 @@
 #include "Packet.hpp"
 #include "Interface_If.hpp"
 #include "StringTools.hpp"
-
+#include "Configuration.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -57,7 +57,7 @@ public:
      * \details 
      * \public
      */
-    Interface(sc_module_name p_ModuleName);
+    Interface(sc_module_name p_ModuleName, Connection *p_IfConfig);
 
     ~Interface();
 
@@ -80,7 +80,7 @@ public:
     /*!
      * \sa Interface_If
      */  
-    virtual void interfaceUp(void);
+    virtual bool interfaceUp(void);
 
     /*!
      * \sa Interface_If
@@ -138,11 +138,19 @@ private:
      */
     StringTools m_Report;
 
+    /*! \property Connection *m_IfConfig
+     *  \brief Holds the connection parameters of this interface
+     *  \details
+     *  \private
+     */
+    Connection *m_IfConfig;
+
     /*! \fn void emptyBuffers(void)
      *  \brief empties both the receiving and forwarding buffers
      * \public
      */
     void emptyBuffers(void);
+
 
 };
 
