@@ -47,10 +47,11 @@ void DataPlane::main(void)
 
     int i = 0;
 
-    m_Packet.setProtocolType(0);
+    m_Packet.setProtocolType(TYPE_IP);
     m_Packet.setIPPayload("1");
   
     port_ToInterface[0]->write(m_Packet);
+
     while(true)
         {
             wait();
@@ -58,7 +59,7 @@ void DataPlane::main(void)
             //To check that data is written in this buffer. Seems to work
             // cout << "DataPlane: BGP forwarding buffer has " << m_BGPForwardingBuffer.num_free() << " elements free." << endl;
  
-
+            cout << "Num of avail: " << port_FromInterface[i]->num_available() << endl;
             if(port_FromInterface[i]->num_available() > 0)
                 {
 
@@ -66,7 +67,7 @@ void DataPlane::main(void)
 
                     if(m_Packet.getProtocolType() == TYPE_IP)
                         {
-                            // cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
+                            cout << name() << " received: " << m_Packet << ". At time: " << sc_time_stamp() << endl;
                             // cout << name() << " resolved route in interface " << port_ToRoutingTable->resolveRoute(9) << endl;
 
 
@@ -82,6 +83,7 @@ void DataPlane::main(void)
                     else if (m_Packet.getProtocolType() == TYPE_BGP)
                         {
                             SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("Sending BGP message to CP"));
+                            cout << "Sending BGP to CP" << endl;
                             m_BGPMsg = m_Packet.getBGPPayload();
                             m_BGPMsg.m_OutboundInterface = i;
                             port_ToControlPlane->write(m_BGPMsg);                            
