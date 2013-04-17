@@ -68,7 +68,7 @@ public:
      * \details
      * \private
      */
-    sc_int<32> m_BGPIdentifier;
+    string m_BGPIdentifier;
 
     /*! \brief The originator's BGP identifier
      * \details
