@@ -50,6 +50,15 @@ void ControlPlane::controlPlaneMain(void)
     SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("starting"));
 
     int count = 0;
+    ///build and send the OPEN messages to all local interfaces except
+    ///the last one. The last local interface is the AS interface.
+    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
+        {
+            m_BGPMsg.m_BGPIdentifier = m_BGPConfig->getIPAsString();
+            m_BGPMsg.m_Type = OPEN;
+            m_BGPMsg.m_OutboundInterface = i;
+            port_ToDataPlane->write(m_BGPMsg);
+        }
 
 
   //The main thread of the control plane starts
@@ -66,7 +75,7 @@ void ControlPlane::controlPlaneMain(void)
           {
 
               m_ReceivingBuffer.read(m_BGPMsg);  
-              m_BGPMsg.m_Type = UPDATE;
+
 
               // IIRO testailuu - message structure: prefix;mask;ASes
               // TODO from where is OutputPort coming? vs. create Route class and pass them? NOT bcoz BGPmessages differ so much

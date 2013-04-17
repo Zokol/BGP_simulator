@@ -36,6 +36,7 @@ const char* g_DebugMainID = "Level_debug_main:";
 const char* g_DebugID = "Level_debug:";
 const char* g_ReportID = "Level_info:";
 const char *g_DebugCPID = "Level_debug_CP";
+const char *g_DebugBSID = "Level_debug_BS";
 
 const char* g_SimulationVersion = "Test run";
 
@@ -67,6 +68,7 @@ int sc_main(int argc, char * argv [])
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
     sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
     sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DISPLAY);
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 

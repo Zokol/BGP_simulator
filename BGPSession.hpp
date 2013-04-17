@@ -37,7 +37,7 @@
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
 #include "DataPlane_In_If.hpp"
-
+#include "StringTools.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -230,6 +230,8 @@ private:
     string m_BGPIdentifierPeer;
 
     BGPSessionParameters *m_Config;
+
+    StringTools m_RTool;
     /***************************Private functions*****************/
 
 
