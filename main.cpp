@@ -348,8 +348,11 @@ int sc_main(int argc, char * argv [])
 
     //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
     l_Config.addConnectionConfig(0, 0, 0, 1 );
+    l_Config.addConnectionConfig(1, 0, 0, 0 );
     l_Config.addConnectionConfig(1, 1, 0, 2 );
+    l_Config.addConnectionConfig(2, 0, 1, 1 );
     l_Config.addConnectionConfig(2, 1, 1, 0 );
+    l_Config.addConnectionConfig(0, 1, 1, 2 );
 
 #endif
 
