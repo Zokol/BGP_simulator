@@ -53,10 +53,12 @@ m_Name.appendReportString("Interface count: ");
           ///connect all the interfaces
           for (int j = 0; j < l_Handle->getNumberOfInterfaces(); ++j)
               {
+
                   ///Connect only those interfaces that have been configured
                   if (l_Handle->isConnection(j))
                       {
                           ///Connect the interfaces
+                          cout << "local: " << i << " || neighbour: " << l_Handle->getNeighborRouterId(j) << endl;
                           if(m_Router[i]->connectInterface(m_Router[l_Handle->getNeighborRouterId(j)], j, l_Handle->getNeighborInterfaceId(j)))
                               {
                                   cout << "Router_" << i << "'s interface_" << j << " connected with the interface_" << l_Handle->getNeighborInterfaceId(j) <<" of router_" << l_Handle->getNeighborRouterId(j) << endl;
@@ -88,6 +90,10 @@ Simulation::~Simulation()
 void Simulation::simulationMain(void)
 {
 
+    m_Name.resetReportString();
+    m_Name.setBaseName(name());
+    SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Starts"));
+
 #ifdef _GUI_TEST
 
     bool state = true;
@@ -106,7 +112,7 @@ void Simulation::simulationMain(void)
     while(run)
         {
             wait();
-                // testC->setMED(t++);
+
 #ifdef _GUI_TEST
 
             m_Word = "";
@@ -144,7 +150,6 @@ void Simulation::simulationMain(void)
             ///START:FSM of the socket server
             switch(enum_State)
                 {
-
                 case ACTIVE:
                     if(m_GUISocket.is_valid())
                         enum_State = receiveRoutine()?PROCESS:ACTIVE;
