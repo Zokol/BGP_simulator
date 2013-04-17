@@ -16,9 +16,6 @@
 Packet::Packet(void)
 {
 
-    m_ProtocolType = 0;
-    m_IPPayload = 0;
-
 }
 
 Packet::~Packet(void)

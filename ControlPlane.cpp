@@ -65,7 +65,7 @@ void ControlPlane::controlPlaneMain(void)
                                                     //segmentation faultia19.3.2013. IIRO testi, if lause vaihdettu ">" --> "=="
           {
 
-              //m_ReceivingBuffer.read(m_BGPMsg);    IIRO kommentoin pois koska lukeminen ei futaa viel
+              m_ReceivingBuffer.read(m_BGPMsg);  
               m_BGPMsg.m_Type = UPDATE;
 
               // IIRO testailuu - message structure: prefix;mask;ASes
@@ -74,9 +74,9 @@ void ControlPlane::controlPlaneMain(void)
 
 
               //check whether the session is valid
-              if (m_BGPSessions[m_BGPMsg.m_OutboundInterface]->isThisSession(m_BGPMsg.m_BGPIdentifier))
+              if (m_BGPSessions[m_BGPMsg.m_OutboundInterface]->isSessionValid())
                   {
-                      SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("receiving"));
+
 
                       // determine which type of message this is
                       switch(m_BGPMsg.m_Type)
@@ -109,7 +109,7 @@ void ControlPlane::controlPlaneMain(void)
                       //start new session for the session index
                       //corresponding the interface index to which the
                       //peer is connected
-                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
+                      // m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
 
                       //start the session
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();

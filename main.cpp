@@ -20,7 +20,7 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#define SIMULATION_DURATION 20
+#define SIMULATION_DURATION 120
 
 #define IF_COUNT 4
 
@@ -35,6 +35,8 @@ using namespace sc_dt;
 const char* g_DebugMainID = "Level_debug_main:";
 const char* g_DebugID = "Level_debug:";
 const char* g_ReportID = "Level_info:";
+const char *g_DebugCPID = "Level_debug_CP";
+
 const char* g_SimulationVersion = "Test run";
 
 int sc_main(int argc, char * argv [])
@@ -64,6 +66,7 @@ int sc_main(int argc, char * argv [])
     sc_report_handler::set_log_file_name("test_simu.log");
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
     sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
+    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DISPLAY);
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
@@ -320,15 +323,35 @@ int sc_main(int argc, char * argv [])
 
         }//End of receiving loop
 
-
+    cout << l_Config.toString().c_str() << endl;
     //Sync with the test client
     GUISocket << "Simu";
+    setupLoop = true;
+    while(setupLoop)
+        {
+
+            try
+                {
+                    ///Try to receive
+                    GUISocket >> DataWord;
+
+                }
+            catch(SocketException e)
+                {
+                    ///If the socket was empty continue receiving
+                    continue;
+                }
+            if (DataWord.compare("START") == 0)
+                {
+                    GUISocket << ACK;
+                    setupLoop = false;
+                }
+        }
 
 
     SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
 
     ///Output received configuration
-    cout << l_Config.toString().c_str() << endl;
     
 #else
 
@@ -337,9 +360,9 @@ int sc_main(int argc, char * argv [])
     ///set the number of routers
     l_Config.init(3);
 
-    l_Config.addRouterConfig(0, 2);
-    l_Config.addRouterConfig(1, 2);
-    l_Config.addRouterConfig(2, 2);
+    l_Config.addRouterConfig(0, 4);
+    l_Config.addRouterConfig(1, 4);
+    l_Config.addRouterConfig(2, 4);
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
@@ -348,9 +371,13 @@ int sc_main(int argc, char * argv [])
 
     //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
     l_Config.addConnectionConfig(0, 0, 0, 1 );
+    l_Config.addConnectionConfig(1, 0, 0, 0 );
     l_Config.addConnectionConfig(1, 1, 0, 2 );
+    l_Config.addConnectionConfig(2, 0, 1, 1 );
     l_Config.addConnectionConfig(2, 1, 1, 0 );
+    l_Config.addConnectionConfig(0, 1, 1, 2 );
 
+    cout << l_Config.toString();
 #endif
 
     
