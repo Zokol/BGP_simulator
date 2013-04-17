@@ -77,7 +77,7 @@ void BGPSession::sendKeepalive(void)
 
                     //TODO build the message
                     m_KeepaliveMsg.m_OutboundInterface = m_PeeringInterface;            
-
+                    m_KeepaliveMsg.m_Type = KEEPALIVE;
                     cout << name() << " sending keepalive at time " << sc_time_stamp() << endl;
                     //write the message to the control plane
                     port_ToDataPlane->write(m_KeepaliveMsg);
@@ -129,7 +129,6 @@ void BGPSession::resetKeepalive(void)
     SC_REPORT_INFO(g_DebugBSID, m_RTool.newReportString("resetting keepalive timer"));
     m_BGPKeepalive.cancel();
     m_BGPKeepalive.notify(m_Config->getKeepaliveTime(), SC_SEC);
-    resetHoldDown();
     m_KeepaliveMutex.unlock();
 }
 
@@ -137,6 +136,7 @@ void BGPSession::resetHoldDown(void)
 {
     m_BGPHoldDown.cancel();
     m_BGPHoldDown.notify(m_Config->getHoldDownTime(), SC_SEC);
+    SC_REPORT_INFO(g_DebugBSID, m_RTool.newReportString("resetting hold-down timer"));
 }
 
 bool BGPSession::isSessionValid(void)

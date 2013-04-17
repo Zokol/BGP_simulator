@@ -82,7 +82,7 @@ void RoutingTable::routingTableMain(void)
             count++;
 
             ///BGP notification and update output port
-            port_Output->write(m_BGPMsg);
+            // port_Output->write(m_BGPMsg);
 
             if((m_BGPMsg.m_Type = UPDATE))
             {

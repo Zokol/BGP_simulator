@@ -20,7 +20,7 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#define SIMULATION_DURATION 120
+#define SIMULATION_DURATION 1000
 
 #define IF_COUNT 4
 

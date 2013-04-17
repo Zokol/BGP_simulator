@@ -46,6 +46,8 @@ ControlPlane::~ControlPlane()
 
 void ControlPlane::controlPlaneMain(void)
 {
+    m_Name.setBaseName(name());
+
     StringTools *l_Temp = new StringTools(name());
     SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("starting"));
 
@@ -89,15 +91,17 @@ void ControlPlane::controlPlaneMain(void)
 
                       // determine which type of message this is
                       switch(m_BGPMsg.m_Type)
-                      {
+                          {
                           case KEEPALIVE:
                               // KEEPALIVE received, reset KeepAlive timer for this session
                               // TODO is OutboudInterface correct way to identify the session's index?
+                              SC_REPORT_INFO(g_DebugCPID,m_Name.newReportString("KEEPALIVE received"));
                               m_BGPSessions[m_BGPMsg.m_OutboundInterface]->resetHoldDown();
+                              m_BGPMsg.m_Type = -1;
                               break;
                           case UPDATE:
                               // Just forward to routingtable?
-                              port_ToRoutingTable->write(m_BGPMsg);
+                              // port_ToRoutingTable->write(m_BGPMsg);
 
                               break;
                           case NOTIFICATION:
@@ -108,7 +112,10 @@ void ControlPlane::controlPlaneMain(void)
                               // if OPEN-message is received? Antti: The session is closed and
                               // the message is dropped. 
                               break;
-                      }
+                          default:
+                              SC_REPORT_INFO(g_DebugCPID,m_Name.newReportString("unknown received"));
+                              break;
+                          }
 
                   }
 
@@ -133,7 +140,7 @@ void ControlPlane::controlPlaneMain(void)
           }
 
               //To send a message to data plane
-              port_ToDataPlane->write(m_BGPMsg);
+              // port_ToDataPlane->write(m_BGPMsg);
 
 
               port_ToRoutingTable->write(m_BGPMsg);
