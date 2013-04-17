@@ -44,6 +44,7 @@ class RouterModel(UIObject):
 	def draw(self):
 		self.update_ports()
 		self.router_logicblock.draw()
+		self.update_text()
 
 	def select_router(self, router):
 		self.router = router
@@ -62,6 +63,39 @@ class RouterModel(UIObject):
 		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["Local AS: " + self.router.as_id, None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.add(b)
+
+	def update_text(self):
+		font = pygame.font.Font(FONT, int(25*FONTSCALE))
+		text = font.render("AS id: " + self.router.as_id, True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = self.pos[0] + 250
+		rect.centery = 50
+		self.router_logicblock.surface.blit(text, rect)
+		text = font.render("Prefix: " + self.router.prefix, True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = self.pos[0] + 250
+		rect.centery = 80
+		self.router_logicblock.surface.blit(text, rect)
+		text = font.render("MED: " + self.router.med, True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = self.pos[0] + 250
+		rect.centery = 110
+		self.router_logicblock.surface.blit(text, rect)
+		text = font.render("Local preference: " + self.router.localpref, True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = self.pos[0] + 250
+		rect.centery = 140
+		self.router_logicblock.surface.blit(text, rect)
+		text = font.render("Keepalive time: " + self.router.keepalivetime, True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = self.pos[0] + 250
+		rect.centery = 170
+		self.router_logicblock.surface.blit(text, rect)
+		text = font.render("Holddown multiplier: " + self.router.holddown_multiplier, True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = self.pos[0] + 250
+		rect.centery = 200
+		self.router_logicblock.surface.blit(text, rect)
 
 #XXX
 ##
@@ -91,12 +125,12 @@ class Route:
 
 class Router:
 	def __init__(self, as_id = '0', prefix = '0.0.0.0/32', med = '0', localpref = '100', keepalivetime = '60', holddown_multiplier = '3', interfaces = None, routing_table = None, preferred_routes = None):
-		self.as_id = as_id
-		self.prefix = prefix
-		self.med = med
-		self.localpref = localpref
-		self.keepalivetime = keepalivetime
-		self.holddown_multiplier = holddown_multiplier
+		self.as_id = str(as_id)
+		self.prefix = str(prefix)
+		self.med = str(med)
+		self.localpref = str(localpref)
+		self.keepalivetime = str(keepalivetime)
+		self.holddown_multiplier = str(holddown_multiplier)
 		if routing_table != None:
 			self.routing_table = routing_table
 		else:
@@ -158,10 +192,10 @@ class Console:
 		self.prompt = '> '
 
 	def send(self, cmd):
-		self.log.append(self.prompt + cmd)
+		self.log.insert(0,self.prompt + cmd)
 
 	def add_log(self, msg):
-		self.log.append(msg)
+		self.log.insert(0,msg)
 
 class RoutingTable:
 	def __init__(self):
@@ -181,13 +215,15 @@ class SimulationUI:
 		self.clock = pygame.time.Clock()
 
 		##Simulation objects
+		self.next_routerID = 0
 		self.selected_router = None
 		self.routers = []
 		self.console = Console()
 		self.routing_table_main = RoutingTable()
 		self.routing_table_all = RoutingTable()
-		self.init_routerobject = Router()
-		self.routers.append(self.init_routerobject)
+		#self.init_routerobject = Router()
+		#self.routers.append(self.init_routerobject)
+		self.add_router(None)
 		self.selected_router = self.routers[0]
 		self.routermodel = RouterModel(None, self.screen, (300, 10), self.routers[0])
 
@@ -234,7 +270,8 @@ class SimulationUI:
 	def add_router(self, router):
 		if router == None:
 			self.log("New router added")
-			self.routers.append(Router())
+			self.routers.append(Router(self.next_routerID))
+			self.next_routerID += 1
 		else:
 			self.log("Router added: " + router.name)
 			self.routers.append(router)
@@ -308,12 +345,15 @@ class SimulationUI:
 		self.log("Send command to socket server: debug CMD")
 
 	def connect(self, router1, router2):
-		port_a = router1[0].interfaces[router1[1]]
-		port_a.client = router2[0]
-		port_a.client_port = router2[1]
-		port_b = router2[0].interfaces[router2[1]]
-		port_b.client = router1[0]
-		port_b.client_port = router1[1]
+		try:
+			port_a = router1[0].interfaces[router1[1]]
+			port_a.client = router2[0]
+			port_a.client_port = router2[1]
+			port_b = router2[0].interfaces[router2[1]]
+			port_b.client = router1[0]
+			port_b.client_port = router1[1]
+		except IndexError:
+			return "Error: Invalid router or port selected"
 
 	def disconnect(self, router, port):
 		client = router.interfaces[port]
