@@ -23,8 +23,7 @@ StringTools::StringTools(const char *p_BaseName):m_Separator("_"), m_Identifier(
 
 StringTools::StringTools(const char *p_BaseName, bool p_StampTime):m_Separator("_"), m_Identifier(0), m_StampTime(p_StampTime), m_Reset(true)
 {
-    m_ResportString << p_BaseName << ": ";
-    
+    m_ResportString << p_BaseName << ": ";    
 
 }
 
@@ -36,6 +35,7 @@ StringTools::~StringTools()
 void StringTools::setBaseName(string p_BaseName)
 {
     m_BaseName = p_BaseName;
+
 }
 
 void StringTools::resetIdentifier(void)
@@ -87,6 +87,7 @@ void StringTools::appendString(const char *p_ReportString)
 
 const char* StringTools::getReportString(void)
 {
+
     m_ResportString << m_BaseName << ": " << m_CurrentName;
     if(m_StampTime)
         m_ResportString << ": @ " << sc_core::sc_time_stamp();
@@ -186,41 +187,45 @@ sc_uint<32> StringTools::convertMaskToBinary(string p_Prefix)
 
 string StringTools::convertIPToString(sc_uint<32> p_IP, sc_uint<32> p_Mask)
 {
-	int i = 0;
-	while(i < 32)
-	{
-		if(p_Mask[i])
-			break;
-		i++;
-	}
+
+	string l_Prefix = convertIPToString(p_IP);
+    l_Prefix += "/";
+    l_Prefix += convertMaskToString(p_Mask);
+	return l_Prefix;
 
 
+}
 
+
+string StringTools::convertIPToString(sc_uint<32> p_IP)
+{
 
 	string l_Prefix = "";
-
 	ostringstream convert;   // stream used for the conversion
-
 
 	for(int j = 0; j < 32; j += 8)
 	{
 		convert.str("");
 		convert << p_IP.range((31-j), (24-j));
 		l_Prefix += convert.str();
-		if(j == 24)
-			l_Prefix += "/";
-		else
+		if(j != 24)
 			l_Prefix += ".";
 
 	}
-
-	convert.str("");
-	convert << 32-i;      // insert the textual representation of 'Number' in the characters in the stream
-
-	l_Prefix += convert.str(); // set 'Result' to the contents of the stream
-
-	return l_Prefix;
-
-
+    return l_Prefix;
 }
 
+string StringTools::convertMaskToString(sc_uint<32> p_Mask)
+{
+	int i = 0;
+	ostringstream convert;   // stream used for the conversion
+
+	while(i < 32)
+	{
+		if(p_Mask[i])
+			break;
+		i++;
+	}
+	convert << 32-i;      // insert the textual representation of 'Number' in the characters in the stream
+    return convert.str();
+}

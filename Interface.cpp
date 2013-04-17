@@ -11,13 +11,14 @@
 #include "ReportGlobals.hpp"
 
 
-Interface::Interface(sc_module_name p_ModName):sc_module(p_ModName)
+Interface::Interface(sc_module_name p_ModName, Connection *p_IfConfig):sc_module(p_ModName), m_IfConfig(p_IfConfig)
 {
   //make the inner bindings
     export_FromDataPlane(m_ForwardingBuffer); //export the forwarding buffer's input interface for the protocol engine
     export_ToDataPlane(m_ReceivingBuffer); // //export the forwarding buffer's input interface for the protocol engine
 
     m_InterfaceState = DOWN;
+    m_Report.setBaseName(name());
 
     SC_THREAD(interfaceMain);
     sensitive << port_Clk.pos();
@@ -30,7 +31,6 @@ Interface::~Interface()
 
 void Interface::interfaceMain(void)
 {
-    m_Report.setBaseName(name());
     SC_REPORT_INFO(g_ReportID, m_Report.newReportString("starting") );
 
     while(true)
@@ -45,29 +45,68 @@ void Interface::interfaceMain(void)
 
 bool Interface::forward(Packet p_Packet)
 {
-
-  
-  if(m_InterfaceState) //only if interface is up
-    {
-      m_ReceivingBuffer.write(p_Packet);
-      return true;
-    }
-  else
-    return false;
+    //allow writing only if the interface is up
+    if(m_InterfaceState)
+        {
+            //check that the buffer is not full
+            if(m_ReceivingBuffer.num_free() > 0)
+                {
+                    m_ReceivingBuffer.write(p_Packet);
+                    return true;
+                }
+            else
+                return false;
+        }
+    else
+        return false;
 }
 
 void Interface::interfaceDown(void)
 {
-  m_InterfaceState = DOWN;
+    //set interface down
+    m_InterfaceState = DOWN;
+    SC_REPORT_INFO(g_ReportID, m_Report.newReportString("DOWN"));
 }
 
-void Interface::interfaceUp(void)
+bool Interface::interfaceUp(void)
 {
-  m_InterfaceState = UP;
+    if(m_IfConfig->hasConnection())
+        {
+            m_InterfaceState = UP;
+            SC_REPORT_INFO(g_ReportID, m_Report.newReportString("UP"));
+
+        }
+    else
+        m_InterfaceState = DOWN;
+    return m_InterfaceState;
 }
 
 bool Interface::isUp(void)
 {
-  return m_InterfaceState;
+    return m_InterfaceState;
 }
 
+void Interface::emptyBuffers(void)
+{
+    //empty the receiving buffer
+    while(m_ReceivingBuffer.num_available() > 0)
+        m_ReceivingBuffer.read();
+    //empty the forwarding buffer
+    while(m_ForwardingBuffer.num_available() > 0)
+        m_ForwardingBuffer.read();
+
+}
+
+
+
+void Interface::killInterface(void)
+{
+    interfaceDown();
+    emptyBuffers();
+}
+
+void Interface::resetInterface(void)
+{
+    killInterface();
+    interfaceUp();
+}

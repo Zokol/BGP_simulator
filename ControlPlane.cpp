@@ -11,7 +11,7 @@
 #include "ReportGlobals.hpp"
 
 
-ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig& p_BGPConfig):sc_module(p_ModName),m_BGPConfig(p_BGPConfig), m_Name("BGP_Session")
+ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const p_BGPConfig):sc_module(p_ModName),m_BGPConfig(p_BGPConfig), m_Name("BGP_Session")
 {
 
   //make the inner bindings
@@ -22,10 +22,10 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig& p_BGPCo
 
 
     //initiate the BGPSession pointer arrays
-    m_BGPSessions = new BGPSession*[m_BGPConfig.getNumberOfInterfaces()];
+    m_BGPSessions = new BGPSession*[m_BGPConfig->getNumberOfInterfaces()];
 
     //inititate the sessions
-    for (int i = 0; i < m_BGPConfig.getNumberOfInterfaces(); ++i)
+    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
         {
             //create a session
             m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), m_BGPConfig);
@@ -38,7 +38,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig& p_BGPCo
 ControlPlane::~ControlPlane()
 {
 
-    for (int i = 0; i < m_BGPConfig.getNumberOfInterfaces(); ++i)
+    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
         delete m_BGPSessions[i];
     delete m_BGPSessions;
 }
@@ -56,7 +56,7 @@ void ControlPlane::controlPlaneMain(void)
     while(true)
         {    
         wait();
-
+        // cout << "MED is now: " << m_BGPConfig->getMED() << endl;
 
         //Check if there's messages in the input buffer
       if(m_ReceivingBuffer.num_available() > 0)     //Antti: laitto
@@ -126,7 +126,7 @@ void ControlPlane::controlPlaneMain(void)
               //To send a message to data plane
               port_ToDataPlane->write(m_BGPMsg);
 
-              m_BGPMsg.m_OutboundInterface = 15;
+
               port_ToRoutingTable->write(m_BGPMsg);
 
               if(!(count%20))

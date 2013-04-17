@@ -28,6 +28,8 @@ using sc_dt::sc_bv;
 #define PACKET_H
 
 #define MTU 192
+#define TYPE_IP 0
+#define TYPE_BGP 1
 
 class Packet
 {

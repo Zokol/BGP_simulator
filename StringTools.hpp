@@ -77,6 +77,9 @@ public:
 
     string convertIPToString(sc_uint<32> p_IP, sc_uint<32> p_Mask);
 
+    string convertIPToString(sc_uint<32> p_IP);
+
+    string convertMaskToString(sc_uint<32> p_Mask);
 
 private:
 

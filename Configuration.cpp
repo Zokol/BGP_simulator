@@ -1,5 +1,5 @@
 #include "Configuration.hpp"
-#include "StringTools.hpp"
+
 
 /************* Implementation of BGPSessionParameters *****************/
 BGPSessionParameters::BGPSessionParameters():m_KeepaliveTime(60), m_HoldDownTimeFactor(3)
@@ -17,14 +17,18 @@ BGPSessionParameters::~BGPSessionParameters(){}
     
 void BGPSessionParameters::setKeepaliveTime(int p_KeepaliveTime)
 {
+	mtx_Keepalive.lock();
     m_KeepaliveTime = p_KeepaliveTime;
     setHoldDownTime();
+	mtx_Keepalive.unlock();
 }
 
 void BGPSessionParameters::setHoldDownTimeFactor(int p_HoldDownTimeFactor)
 {
+	mtx_HoldDownFactor.lock();
     m_HoldDownTimeFactor = p_HoldDownTimeFactor;
     setHoldDownTime();
+	mtx_HoldDownFactor.unlock();
 }
 
 int BGPSessionParameters::getKeepaliveTime(void){return m_KeepaliveTime;}
@@ -57,6 +61,12 @@ void ControlPlaneConfig::setNumberOfInterfaces(int p_NumberOfInterfaces)
     m_NumberOfInterfaces = p_NumberOfInterfaces;
 }
 
+void ControlPlaneConfig::setPrefix(string p_Prefix)
+{
+    m_Prefix = m_IPConverter.convertIPToBinary(p_Prefix);
+    m_PrefixMask = m_IPConverter.convertMaskToBinary(p_Prefix);
+}
+
 void ControlPlaneConfig::setPrefix(sc_uint<32> p_Prefix)
 {
     m_Prefix = p_Prefix;
@@ -84,6 +94,10 @@ void ControlPlaneConfig::setLocalPref(int p_LocalPref)
 
 ///Getters
 int ControlPlaneConfig::getNumberOfInterfaces(void){return m_NumberOfInterfaces;}
+
+string ControlPlaneConfig::getIPAsString(void){return m_IPConverter.convertIPToString(m_Prefix);}
+
+string ControlPlaneConfig::getIPMaskAsString(void){return m_IPConverter.convertMaskToString(m_PrefixMask);}
 
 sc_uint<32> ControlPlaneConfig::getPrefix(void){return m_Prefix;}
 
@@ -140,6 +154,10 @@ int Connection::getNeighborInterfaceId(void)
 {
     return m_NeighborInterfaceId;
 }
+bool Connection::hasConnection(void)
+{
+    return (m_NeighborRouterId < 0 || m_NeighborInterfaceId < 0)?false:true;
+}
 
 string Connection::toString(void)
 {
@@ -167,7 +185,7 @@ RouterConfig::~RouterConfig()
 
 ///Setters
 
-void RouterConfig::addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId)
+    void RouterConfig::addConnectionConfig( int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId)
     {
         // m_NeighborConnections[p_LocalInterfaceId] = new Connection(p_NeighborInterfaceId, p_NeighborRouterId);
         m_NeighborConnections[p_LocalInterfaceId]->setNeighborRouterId(p_NeighborRouterId);
@@ -203,10 +221,8 @@ RouterConfig& RouterConfig::operator = (const RouterConfig& p_Original) {
 
 bool RouterConfig::isConnection(int p_InterfaceId)
 {
-    if(m_NeighborConnections[p_InterfaceId]->getNeighborRouterId() < 0 || m_NeighborConnections[p_InterfaceId]->getNeighborInterfaceId() < 0)
-        return false;
-    else
-        return true;
+    return m_NeighborConnections[p_InterfaceId]->hasConnection();
+
 }
 
 
@@ -218,6 +234,12 @@ int RouterConfig::getNeighborRouterId(int p_LocalInterface)
 int RouterConfig::getNeighborInterfaceId(int p_LocalInterface)
 {
     return m_NeighborConnections[p_LocalInterface]->getNeighborInterfaceId();
+}
+
+
+Connection *RouterConfig::getConnection(int p_ConnectionId)
+{
+    return m_NeighborConnections[p_ConnectionId];
 }
 
 

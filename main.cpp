@@ -52,7 +52,7 @@ int sc_main(int argc, char * argv [])
     ///Instantiate a SimulationConfig object to store simulation
     ///configuration received from the GUI
     SimulationConfig l_Config;
-    RouterConfig *ptr_Router;
+
 
     StringTools converter;
 //    cout << converter.convertIPToBinary("192.168.1.0/24") << endl;
@@ -63,12 +63,13 @@ int sc_main(int argc, char * argv [])
     sc_report rp;
     sc_report_handler::set_log_file_name("test_simu.log");
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
-    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
     StringTools l_DebugReport("Main");
 #if defined (_GUI) || defined(_GUI_TEST)
+    RouterConfig *ptr_Router;
    
     ///Accept the GUI connection
     cout << "Waiting the GUI to connect..." << endl;
@@ -87,6 +88,7 @@ int sc_main(int argc, char * argv [])
                 {
                     ///Try to receive
                     GUISocket >> DataWord;
+                    cout << DataWord << endl;
                 }
             catch(SocketException e)
                 {
@@ -153,7 +155,6 @@ int sc_main(int argc, char * argv [])
                             ///declare and set the end and start
                             ///indeices for router parameters
                             unsigned j_Start = i_Start, j_End;
-
                     
                             ///find the end of the router field
                             if(l_Idx == count-1) //the last router
@@ -163,16 +164,6 @@ int sc_main(int argc, char * argv [])
                                 }
                             else //other than the last router
                                 j_End = DataWord.find(ROUTER_SEPARATOR, i_Start);
-
-                            // ///check that the router field end was found
-                            // if(j_End == string::npos)
-                            //     {
-                            //         ///If the router field separator was not found, send NACK to
-                            //         ///GUI and continue receiving
-                            //         GUISocket << NACK;
-                            //         retrans = true;
-                            //         break;
-                            //     }
 
                             ///set the state to AS_ID
                             fieldStates state = S_AS_ID;
@@ -233,8 +224,7 @@ int sc_main(int argc, char * argv [])
                                             state = S_PREFIX;
                                             break;
                                         case S_PREFIX:
-                                        	ptr_Router->setPrefix(converter.convertIPToBinary(field));
-                                        	ptr_Router->setPrefixMask(converter.convertMaskToBinary(field));
+                                        	ptr_Router->setPrefix(field);
                                             state = S_MED;
                                             break;
                                         case S_MED:
@@ -290,7 +280,7 @@ int sc_main(int argc, char * argv [])
                                             ///Store the connection
                                             ///parameters to the
                                             ///connection confi object
-                                            ptr_Router->addConnectionConfig(tempFields[0], tempFields[2], tempFields[1]);
+                                            ptr_Router->addConnectionConfig(tempFields[0], tempFields[1], tempFields[2]);
 
                                             break;
                                         default:
@@ -323,6 +313,7 @@ int sc_main(int argc, char * argv [])
                 {
                     ///Report error to the GUI
                     GUISocket << NACK;
+                    cout << "Unknown messge" << endl;
                     ///Continue receiving
                     continue;   
                 }
@@ -333,24 +324,6 @@ int sc_main(int argc, char * argv [])
     //Sync with the test client
     GUISocket << "Simu";
 
-    setupLoop = true;
-
-    while(setupLoop)
-        {
-            try
-                {
-                    GUISocket >> DataWord;
-                    if(DataWord.compare("START") == 0)
-                        {
-                            setupLoop = false;
-                            GUISocket << "Simulation starts";
-                        }
-                }
-            catch(SocketException e)
-                {
-
-                }
-        } 
 
     SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
 
@@ -370,6 +343,14 @@ int sc_main(int argc, char * argv [])
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
+    l_Config.getRouterConfiguration(0).setMED(10);
+
+
+    //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
+    l_Config.addConnectionConfig(0, 0, 0, 1 );
+    l_Config.addConnectionConfig(1, 1, 0, 2 );
+    l_Config.addConnectionConfig(2, 1, 1, 0 );
+
 #endif
 
     
@@ -383,7 +364,7 @@ int sc_main(int argc, char * argv [])
   sc_clock clk("clk", clk_Period);
 
   ///initiate the simulation
-  Simulation test("Test", GUISocket, l_Config);
+  Simulation test("Test", GUISocket, &l_Config);
 
   ///connect the clock
   test.port_Clk(clk);
@@ -391,15 +372,19 @@ int sc_main(int argc, char * argv [])
 
 
   ///run the simulation	
-  // sc_start(SIMULATION_DURATION, SC_SEC);
-  sc_start();
+
 
 #if defined (_GUI) || defined(_GUI_TEST)
+  sc_start();
   GUISocket << "END";
+
+  //  ptr_Router = NULL;
+#else
+  sc_start(SIMULATION_DURATION, SC_SEC);
 #endif
 
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
-  ptr_Router = NULL;
+
 
 return 0;
 }//end of main

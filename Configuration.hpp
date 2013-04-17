@@ -11,9 +11,12 @@
 #define _CONFIGURATION_H_
 
 #include "systemc"
+#include "StringTools.hpp"
 
 using namespace sc_dt;
 using namespace std;
+using namespace sc_core;
+
 /*!
  * \class BGPSessionParameters
  * \brief Holds the parameters for BGP session
@@ -100,7 +103,7 @@ protected:
      * \details Defines the keepalive time for this session. The default
      * value needs to be set in the elaboration phase. After that the
      * BGP session may negotiated a new value between the session peers
-     * \private
+     * \protected
      */
     int m_KeepaliveTime;
     
@@ -108,20 +111,39 @@ protected:
      * \details Defines the holdDown time for this session. The default
      * value needs to be set in the elaboration phase. After that the
      * BGP session may negotiated a new value between the session peers
-     * \private
+     * \protected
      */
     int m_HoldDownTime;
 
     /*! \brief HoldDown time factor
      * \details Defines the multiplier that determines the holdDown
      * time by m_KeepaliveTime X m_HoldDownTimeFactor
-     * \private
+     * \protected
      */
     int m_HoldDownTimeFactor;
 
 private:
 
+    /*! \fn void setHoldDownTime(void)
+	 * \brief Calculates and set the Hold-down time
+     * \details The hold-down time is the product of hold-down multiplier and keepalive time
+     * \private
+     */
     void setHoldDownTime(void);    
+
+    /*! \property sc_mutex mtx_Keepalive
+	 * \brief Arbitrates the setting of Keepalive time
+     * \details
+     * \private
+     */
+	sc_mutex mtx_Keepalive;
+
+    /*! \property sc_mutex mtx_HoldDownFactor
+	 * \brief Arbitrates the setting of hold-down factor
+     * \details
+     * \private
+     */
+	sc_mutex mtx_HoldDownFactor;
 };
 
 
@@ -144,6 +166,13 @@ public:
      * \public
      */
     void setNumberOfInterfaces(int p_NumberOfInterfaces);
+
+    /*! \fn void setPrefix(string p_Prefix);
+     *  \brief Sets the prefix IP of the AS as string
+     *  @param[in] string p_Prefix The IP prefix
+     * \public
+     */
+    void setPrefix(string p_Prefix);
 
     /*! \fn void setPrefix(sc_uint<32> p_Prefix);
      *  \brief Sets the prefix IP of the AS
@@ -187,6 +216,21 @@ public:
      * \public
      */
     int getNumberOfInterfaces(void);
+
+    /*! \fn string getIPAsString(void)
+     *  \brief Returns the IP prefix as string
+     *  \return string value
+     * \public
+     */
+    string getIPAsString(void);
+
+    /*! \fn string getIPMaskAsString(void);
+     *  \brief Returns the prefix mask value: the number of bits set
+     *  to one starting from the 31st bit
+     *  \return string value
+     * \public
+     */
+    string getIPMaskAsString(void);
 
     /*! \fn sc_uint<32> getPrefix(void);
      *  \brief Returns the IP prefix
@@ -235,13 +279,13 @@ protected:
     /*! \property int m_NumberOfInterfaces
      * \brief Number of network interfaces that this router should allocate
      * \details
-     * \private
+     * \protected
      */
     int m_NumberOfInterfaces;
 
     /*! \brief The prefix of the AS connecting this router
      * \details 
-     * \public
+     * \protected
      */
     sc_uint<32> m_Prefix;
 
@@ -253,21 +297,33 @@ protected:
 
     /*! \brief The AS number of this router
      * \details 
-     * \public
+     * \protected
      */
     int m_ASNumber;
 
     /*! \brief BGP MED variable
      * \details 
-     * \public
+     * \protected
      */
     int m_MED;
 
     /*! \brief BGP Local Preference variable
      * \details 
-     * \public
+     * \protected
      */
     int m_LocalPref;
+
+private:
+
+    /*! \property StringTools m_IPConverter
+     *  \brief BGP Local Preference variable
+     * \details 
+     * \private
+     */
+    StringTools m_IPConverter;
+
+
+
 };
 
 /*!
@@ -290,6 +346,8 @@ public:
     int getNeighborRouterId(void);
 
     int getNeighborInterfaceId(void);
+
+    bool hasConnection(void);
 
     string toString(void);
 
@@ -326,7 +384,7 @@ public:
 
     ~RouterConfig();
 
-    void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborRouterId, int p_NeighborInterfaceId);
+    void addConnectionConfig( int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId);
 
     bool isConnection(int p_InterfaceId);
 
@@ -334,7 +392,17 @@ public:
 
     int getNeighborInterfaceId(int p_LocalInterface);
 
+    Connection *getConnection(int p_ConnectionId);
+
+
     string toString(void);
+
+    /*! \fn RouterConfig& operator = (const RouterConfig& p_Original);
+     *  \brief clones the passed RouterConfig object to this object
+     *  \return reference RouterConfig& 
+     * \public
+     */
+    RouterConfig& operator = (const RouterConfig& p_Original);
 
     
 private:    
@@ -345,13 +413,6 @@ private:
      * \public
      */
     Connection **m_NeighborConnections;
-
-    /*! \fn RouterConfig& operator = (const RouterConfig& p_Original);
-     *  \brief clones the passed RouterConfig object to this object
-     *  \return reference RouterConfig& 
-     * \public
-     */
-    RouterConfig& operator = (const RouterConfig& p_Original);
 
 
 };

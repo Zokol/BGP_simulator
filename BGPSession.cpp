@@ -10,10 +10,10 @@
 #include "BGPSession.hpp"
 
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters& p_SessionParam):sc_module(p_ModuleName)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeeringInterface(0), m_Config(p_SessionParam)
 {
 
-    m_Config = p_SessionParam;
+
 
     
     //Register sendKeepalive method to the SystemC kernel
@@ -29,7 +29,7 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters& p_Sess
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters& p_SessionParam):sc_module(p_ModuleName)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName)
 {
     
 
@@ -68,7 +68,7 @@ void BGPSession::sendKeepalive(void)
     
 
             //TODO build the message
-            
+            m_KeepaliveMsg.m_OutboundInterface = m_PeeringInterface;            
 
             cout << name() << " sending keepalive at time " << sc_time_stamp() << endl;
             //write the message to the control plane
@@ -113,14 +113,14 @@ void BGPSession::resetKeepalive(void)
 {
     m_KeepaliveMutex.lock();
     m_BGPKeepalive.cancel();
-    m_BGPKeepalive.notify(m_Config.getKeepaliveTime(), SC_SEC);
+    m_BGPKeepalive.notify(m_Config->getKeepaliveTime(), SC_SEC);
     m_KeepaliveMutex.unlock();
 }
 
 void BGPSession::resetHoldDown(void)
 {
     m_BGPHoldDown.cancel();
-    m_BGPHoldDown.notify(m_Config.getHoldDownTime(), SC_SEC);
+    m_BGPHoldDown.notify(m_Config->getHoldDownTime(), SC_SEC);
 }
 
 bool BGPSession::isSessionValid(void)

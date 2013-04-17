@@ -78,7 +78,7 @@ public:
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
-    BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters& p_SessionParam);
+    BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam);
 
     /*! \brief Elaborates the BGPSession module
      * \details 
@@ -88,7 +88,7 @@ public:
      * keepalive fraction, holddown time, etc. values for this session
      * \public
      */
-    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters& p_SessionParam);
+    BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam);
 
 
 
@@ -111,9 +111,6 @@ public:
      * \public
      */
     void sessionInvalidation(void);
-
-
-
 
     // /*! \brief Determines the hold-down time from BGP session config object
     //  * \details 
@@ -181,12 +178,7 @@ public:
      */
     SC_HAS_PROCESS(BGPSession);
 
-
-
-
 private:
-  
-
 
     /*! \brief Handles the arbitration for Keepalive reset
      * \details Keepalive can be reset either internally by the
@@ -220,29 +212,6 @@ private:
      */
     int m_PeeringInterface;
     
-    // /*! \brief HoldDown time for this session
-    //  * \details Defines the holdDown time for this session. The default
-    //  * value needs to be set in the elaboration phase. After that the
-    //  * BGP session may negotiated a new value between the session peers
-    //  * \private
-    //  */
-    // int m_HoldDownTime;
-     
-    // /*! \brief Keepalive time for this session
-    //  * \details Defines interval for sending keepalive messages between
-    //  * the peers of this session.
-    //  * \private
-    //  */
-    // int m_KeepaliveTime;
-
-
-    // /*! \brief HoldDown time factor
-    //  * \details Defines the multiplier that is used while determining the
-    //  * holddown time 
-    //  * \private
-    //  */
-    // int m_HoldDownTimeFactor;
-
     /*! \brief Indicates whether this session is valid or not
      * \details Is set to True when the session start. When ever the
      * HoldDown timer expires the value of m_SessionValidity shall be
@@ -260,7 +229,7 @@ private:
 
     sc_int<32> m_BGPIdentifierPeer;
 
-    BGPSessionParameters m_Config;
+    BGPSessionParameters *m_Config;
     /***************************Private functions*****************/
 
 

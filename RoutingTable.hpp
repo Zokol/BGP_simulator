@@ -17,6 +17,9 @@
 #include "systemc"
 #include "RoutingTable_If.hpp"
 #include "BGPMessage.hpp"
+#include "Configuration.hpp"
+#include "Interface_If.hpp"
+#include "DataPlane_In_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -29,7 +32,7 @@ using namespace sc_dt;
 struct Route
 {
     int id;
-    sc_int<32> prefix;
+    string prefix;
     int mask;
     string ASes;
     vector<int> routers;    // this is the sequence of routers in one path
@@ -57,6 +60,21 @@ public:
      */
     sc_export<sc_fifo_out_if<BGPMessage> > export_ToRoutingTable;
 
+    /*! \brief Control port
+     * \details Routing table can check through this port whether the
+     * network interfaces are up or not.
+     * \public
+     */
+    sc_port<Interface_If, 0, SC_ZERO_OR_MORE_BOUND> port_Control;
+
+    /*! \brief Output port for BGP messages
+     * \details The RoutingTable writes all the BGP messages to be send
+     * to its neighbors into
+     * this port. The port should be bind to the Data Plane's.
+     * receiving FIFO
+     * \public
+     */
+    sc_port<DataPlane_In_If> port_Output;
 
 
     //    void before_end_of_elaboration()
@@ -69,7 +87,7 @@ public:
      * \details
      * \public
      */
-    RoutingTable(sc_module_name p_ModuleName);
+    RoutingTable(sc_module_name p_ModuleName, ControlPlaneConfig * const p_RTConfig);
 
 
 
@@ -94,7 +112,7 @@ public:
      * \details
      * \public
      */
-    virtual int resolveRoute(sc_int<32> p_IPAddress);
+    virtual int resolveRoute(string  p_IPAddress);
 
 
 
@@ -109,11 +127,19 @@ public:
 
     // Give preferred AS and some preference value to it.
     void setLocalPreference(int p_AS, int p_preferenceValue);
+
+    // Remove some as from the list of preferred ASes
+    void removeLocalPref(int p_AS);
+
     // Delete route from the RawRoutingTable. Parameters are router IDs.
     void deleteRoute(int p_router1, int p_router2);
 
 
-    vector<int> preferredASes;
+
+
+
+    string getRoutingTable();
+    string getRawRoutingTable();
 
 
 
@@ -133,8 +159,8 @@ private:
 
     void createRoute(string p_msg,int p_outputPort, Route * p_route);
     void handleNotification (BGPMessage NOTIFICATION_message);
-    Route * findRoute(sc_int<32> p_IPAddress);
-    int matchLength(Route * p_route, sc_int<32> p_IP);
+    Route * findRoute(string p_IPAddress);
+    int matchLength(Route * p_route, string p_IP);
     void updateRoutingTable();
     void addPreferredRoute(Route p_route1, Route p_route2);
     void setRoute(Route p_route);
@@ -145,6 +171,8 @@ private:
 
     string routeToString(Route p_route);
 
+    string routingTableToString(Route * p_route);
+
 
     void printRoutingTable();
     void printRawRoutingTable();
@@ -153,7 +181,7 @@ private:
     int tableLength();
     void fillRoutingTable();
 
-
+    ControlPlaneConfig *m_RTConfig;
 
     /*! \brief BGP message
      * \details
@@ -169,6 +197,10 @@ private:
     Route * m_endOfRoutingTable;
 
 
+
+    // Preferred ASes and their preference values are stored in here
+    // Syntax: [AS][VALUE][AS][VALUE][AS][VALUE]... so even number contain the as and odd numbers their values.
+    vector<int> preferredASes;
 
 
     // //TODO Find out what parameters we need for this function.

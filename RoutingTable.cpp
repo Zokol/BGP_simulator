@@ -17,14 +17,12 @@
 
 
 
-RoutingTable::RoutingTable(sc_module_name p_ModName):sc_module(p_ModName)
+RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
 {
 
     //make the inner bindings
     export_ToRoutingTable(m_ReceivingBuffer); //export the receiving
     //buffer's input
-    //interface for the data plane
-
 
     SC_THREAD(routingTableMain);
     sensitive << port_Clk.pos();
@@ -32,6 +30,7 @@ RoutingTable::RoutingTable(sc_module_name p_ModName):sc_module(p_ModName)
 
 RoutingTable::~RoutingTable()
 {
+
 }
 
 
@@ -60,6 +59,20 @@ void RoutingTable::routingTableMain(void)
         {
 
             wait();
+
+            ///Check the Interface states
+            for (int i = 0; i < m_RTConfig->getNumberOfInterfaces(); ++i)
+                {
+                    if(!(port_Control[i]->isUp()))
+                    {
+                        // cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
+                    }
+                }
+
+
+
+
+
             m_ReceivingBuffer.read(m_BGPMsg);
             if(!(count%20))
                 {
@@ -67,19 +80,26 @@ void RoutingTable::routingTableMain(void)
                     SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_BGPMsg.m_OutboundInterface) );
                 }
             count++;
+
+            ///BGP notification and update output port
+            port_Output->write(m_BGPMsg);
+
             if((m_BGPMsg.m_Type = UPDATE))
             {
+
+
+
+/*                updateRoutingTable();
 
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
-/*                cout << "Raw table: " << endl;
+                cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
                 preferredASes.push_back(5432);
                 preferredASes.push_back(100);
 
-                updateRoutingTable();
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
@@ -204,6 +224,7 @@ void RoutingTable::setRoute(Route p_route)
     newRoute->mask = p_route.mask;
     newRoute->OutputPort = p_route.OutputPort;
     newRoute->ASes = p_route.ASes;
+    newRoute->routers = p_route.routers;
 
 
     if(m_headOfRoutingTable->next == 0)
@@ -237,8 +258,7 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
         Add preferred route to routing table according to policies. Policies:
         1. Check if which route has higher preferredAS
         2. Check AS-path length
-        3. MED
-        4. Origin type
+        3. Origin type, not used?
 
     */
 
@@ -254,7 +274,6 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
     // 1. Iterate through preferredASes and check if other Route has preferred AS on its ASpath
     for(unsigned i = 0;i<preferredASes.size();i = i+2)
     {
-        // TODO implement better with getPreferenceValue(int AS)
         while(newPosition < p_route1.ASes.size())
         {
             newPosition = p_route1.ASes.find("-",oldPosition+1);
@@ -307,6 +326,69 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
 
 
 }
+
+/*
+    Return MainRoutingTable
+*/
+string RoutingTable::getRoutingTable()
+{
+    return routingTableToString(m_headOfRoutingTable);
+}
+
+/*
+    Return RawRoutingTable
+*/
+string RoutingTable::getRawRoutingTable()
+{
+    return routingTableToString(m_headOfRawTable);
+}
+
+
+/*
+    Iterate through the routing table, beginning from p_route.
+    Create a string from the routes and return that string.
+*/
+string RoutingTable::routingTableToString(Route * p_route)
+{
+    m_iterator = p_route;
+    string table;
+    table.append("<TABLE>");
+
+    while(m_iterator->next != 0)
+    {
+        m_iterator = m_iterator->next;
+        table.append(routeToString(*m_iterator));
+        table.append(";");
+    }
+    table.append("</TABLE>");
+
+    return table;
+}
+
+/*
+    Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
+    Syntax: ID,Prefix,Mask,Routers,ASes (e.g. 5,100100200050,8,2-4-6-7,100-4212-231-22)
+*/
+string RoutingTable::routeToString(Route p_route)
+{
+    stringstream ss;
+    ss.str("");
+    ss << p_route.id  << "," << p_route.prefix << "," << p_route.mask << ",";
+
+
+    for(unsigned i = 0;i < p_route.routers.size();i++)
+    {
+        if(i < p_route.routers.size()-1)
+            ss << p_route.routers.at(i) << "-";
+        else
+            ss << p_route.routers.at(i);
+    }
+    ss << ",";
+    ss << p_route.ASes;
+
+    return ss.str();
+}
+
 
 // Print the RoutingTable
 void RoutingTable::printRoutingTable()
@@ -393,16 +475,16 @@ void RoutingTable::addNewRoute(string p_msg,int OutputPort)
 
 /*
     Create a Route object from p_msg. p_msg must be constructed as follows:
-    IP;Mask;Routers;ASes (e.g. 102550100;8;2-5-10-1;550-7564-4)
+    IP;Mask;Routers;ASes;ownRouterId;ownAS (e.g. 102550100;8;2-5-10-1;550-7564-4;9;555)
     Parse message and collect IP,Mask, Routers and ASes which are separated by ";"-mark
 */
 void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
     // Use these to collect data separetad by semicolon
     int position = 0;
-    int IP_end,Mask_end,Routers_end, ASes_end;
+    int IP_end,Mask_end,Routers_end, ASes_end,ownRouterId_end,ownAsId_end;
 
-    for(int i=0;i<4;i++)
+    for(int i=0;i<6;i++)
     {
         position = p_msg.find(";",position+1);
 
@@ -414,15 +496,18 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
             Routers_end = position;
         else if(i==3)
             ASes_end = position;
+        else if(i==4)
+            ownRouterId_end = position;
+        else if(i==5)
+            ownAsId_end = position;
     }
-
 
     string IPAddress = p_msg.substr(0,IP_end);
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string Routers = p_msg.substr((Mask_end+1),(Routers_end-Mask_end-1));
     string ASes = p_msg.substr((Routers_end+1),(ASes_end-Routers_end-1));
-
-    // TODO : Add own router_id and AS to "Routers" and "ASes". Read from Configuration somehow?
+    string ownRouter = p_msg.substr((ASes_end+1),(ownRouterId_end-ASes_end-1));
+    string ownAS = p_msg.substr((ownRouterId_end+1),(ownAsId_end-ownRouterId_end-1));
 
     // Create vector<int> from "Routers"
     unsigned newPosition = 0;
@@ -438,10 +523,13 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
         oldPosition = newPosition+1;
         listOfRouters.push_back(routerId);
     }
+    listOfRouters.push_back(atoi(ownRouter.c_str()));
+    ASes.append("-");
+    ASes.append(ownAS);
 
 
     // Set the values to Route pointer
-    p_route->prefix = atoi(IPAddress.c_str());
+    p_route->prefix = IPAddress;
     p_route->mask = atoi(Mask.c_str());
     p_route->ASes = ASes;
     p_route->routers = listOfRouters;
@@ -535,7 +623,7 @@ void RoutingTable::handleNotification(BGPMessage p_msg)
     Iterate through the RoutingTable and find the longest match with the given IPAddress.
     Then return pointer to the Route object that had the longest match
 */
-Route * RoutingTable::findRoute(sc_int<32> p_IPAddress)
+Route * RoutingTable::findRoute(string p_IPAddress)
 {
     Route * l_route = new Route();
     int l_longestMatch = 0;
@@ -557,43 +645,55 @@ Route * RoutingTable::findRoute(sc_int<32> p_IPAddress)
 }
 
 // Return how many "bits" from prefix match with IP address.
-int RoutingTable::matchLength(Route * p_route, sc_int<32> p_IP)
+int RoutingTable::matchLength(Route * p_route, string p_IP)
 {
-    return 0;
+    int matchLength = 0;
+    string routePrefix = p_route->prefix;
+    for(unsigned i = 0; i < p_IP.size();i++)
+    {
+
+        if(p_IP.at(i) == routePrefix.at(i))
+            matchLength++;
+        else
+            break;
+    }
+    return matchLength;
+
 }
 
 /*
     Take ip address as a parameter and return the outputport.
     DataPlane uses this function to find out where to forward its packets.
 */
-int RoutingTable::resolveRoute(sc_int<32> p_IPAddress)
+int RoutingTable::resolveRoute(string p_IPAddress)
 {
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
     Route * foundRoute = findRoute(p_IPAddress);
     return foundRoute->OutputPort;
 }
 
-/*
-    Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
-    Syntax: Prefix;Mask;Routers;ASes (e.g. 100100200050;8;2-4-6-7;100-4212-231-22)
-*/
-string RoutingTable::routeToString(Route p_route)
+// Add new AS to the preferred ASes vector
+void RoutingTable::setLocalPreference(int p_AS, int p_preferenceValue)
 {
-    stringstream ss;
-    ss.str("");
-    ss << p_route.prefix << ";" << p_route.mask << ";";
-
-    // "-1" to avoid unnecessary "-" after last router-id
-    for(unsigned i = 0;i < p_route.routers.size()-1;i++)
-    {
-        ss << p_route.routers.at(i) << "-";
-    }
-    ss << p_route.routers.at(p_route.routers.size()-1);
-    ss << ";";
-    ss << p_route.ASes;
-
-    return ss.str();
+    preferredASes.push_back(p_AS);
+    preferredASes.push_back(p_preferenceValue);
 }
+
+void RoutingTable::removeLocalPref(int p_AS)
+{
+    // Find given AS
+    for(unsigned i = 0; i < preferredASes.size();i++)
+    {
+        if(p_AS == preferredASes.at(i))
+        {
+            // AS found, remove that and its preference value
+            preferredASes.erase(preferredASes.begin() + i);
+            preferredASes.erase(preferredASes.begin()+ i+1);
+        }
+
+    }
+}
+
 
 /*
     only for testing?
@@ -644,7 +744,7 @@ void RoutingTable::fillRoutingTable()
         prefix2 = 1+(rand()%255);
         prefix3 = 1+(rand()%255);
         prefix4 = 0;//1+(rand()%255);
-        ss << prefix1 << prefix2 << prefix3 << prefix4;
+        ss << prefix1 << "." << prefix2 << "." << prefix3 << "." << prefix4;
         prefix = ss.str();
         ss.str("");
 
@@ -665,37 +765,16 @@ void RoutingTable::fillRoutingTable()
 
         if(i==1)
         {
-            prefix = "50402000";
+            prefix = "50.40.200.0";
             ASes = "50-70-100";
-            OutputPort = 0;
+            OutputPort = 10;
         }
 
-        ss << prefix << ";" << mask << ";" << routers << ";" << ASes;
+        ss << prefix << ";" << mask << ";" << routers << ";" << ASes << ";" << "9" << ";" << "5555";
         l_message = ss.str();
 
-
-
-        //cout << "filled data before added to routing table: " << l_message << endl;
-
-        //cout << l_message << endl;
-
-
-        if(i == 2)
-        {
-            addNewRoute(l_message,OutputPort);
-            ss.str("");
-            ss << prefix << ";" << mask << ";" << routers << ";99-5432-4343-4444";
-            addNewRoute(ss.str(),1);
-
-        }
-        else
-        {
-            addNewRoute(l_message,OutputPort);
-            addNewRoute(l_message,OutputPort);
-
-        }
-
-
+        addNewRoute(l_message,OutputPort);
+        addNewRoute(l_message,OutputPort);
 
     }
 

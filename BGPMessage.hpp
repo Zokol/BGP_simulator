@@ -76,7 +76,7 @@ public:
      */
     int m_OutboundInterface;
 
-    BGPMessage():m_Type(0){};
+    BGPMessage():m_Type(0), m_OutboundInterface(0){};
 
     ~BGPMessage(){};
 
