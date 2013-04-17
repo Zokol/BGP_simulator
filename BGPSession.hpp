@@ -150,21 +150,21 @@ public:
 
     /*! \brief Sets the BGP Identifier of the session peer
      * \details
-     * @param[in] sc_int<32> p_BGPIdentifier of the session peer
+     * @param[in] string p_BGPIdentifier of the session peer
      * received message
      * \public
      */
-    void setPeerIdentifier(sc_int<32> p_BGPIdentifier);
+    void setPeerIdentifier(string p_BGPIdentifier);
 
     /*! \brief Checks whether this session is for the passed BGP Identifier
      * \details
-     * @param[in] sc_int<32> p_BGPIdentifier The BGP Identifier of the
+     * @param[in] string p_BGPIdentifier The BGP Identifier of the
      * received message
      * \return <bool> True: if this session corresponds the received
      * message a identifier. False: in any other case
      * \public
      */
-    bool isThisSession(sc_int<32> p_BGPIdentifier);
+    bool isThisSession(string p_BGPIdentifier);
 
     /*! \brief Resets the Keepalive timer
      * \details 
@@ -227,7 +227,7 @@ private:
      */
     BGPMessage m_KeepaliveMsg;
 
-    sc_int<32> m_BGPIdentifierPeer;
+    string m_BGPIdentifierPeer;
 
     BGPSessionParameters *m_Config;
     /***************************Private functions*****************/

@@ -128,14 +128,14 @@ bool BGPSession::isSessionValid(void)
     return m_SessionValidity;
 }
 
-bool BGPSession::isThisSession(sc_int<32> p_BGPIdentifier)
+bool BGPSession::isThisSession(string p_BGPIdentifier)
 {
 
     
-    return m_BGPIdentifierPeer == p_BGPIdentifier ? true : false;
+    return /* m_BGPIdentifierPeer == p_BGPIdentifier ?*/ true/* : false */;
 }
 
-void BGPSession::setPeerIdentifier(sc_int<32> p_BGPIdentifier)
+void BGPSession::setPeerIdentifier(string p_BGPIdentifier)
 {
     m_BGPIdentifierPeer = p_BGPIdentifier;
 }
