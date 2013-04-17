@@ -30,10 +30,10 @@ DataPlane::~DataPlane()
 void DataPlane::main(void)
 {
 
-    SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("starting "));
-    m_Packet.setProtocolType(TYPE_IP);
-    m_Packet.setIPPayload("1");
-    port_ToInterface[0]->write(m_Packet);
+    // SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("starting "));
+    // m_Packet.setProtocolType(TYPE_IP);
+    // m_Packet.setIPPayload("1");
+    // port_ToInterface[0]->write(m_Packet);
 
     while(true)
         {
@@ -51,17 +51,14 @@ void DataPlane::main(void)
                             if(m_Packet.getProtocolType() == TYPE_IP)
                                 {
 
-                                    // m_Packet.setProtocolType(m_Packet.getProtocolType()+1);
-                                    m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
+                                    // m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
 
-                                    port_ToInterface[0]->write(m_Packet);
+                                    // port_ToInterface[0]->write(m_Packet);
 
-                                    port_ToInterface[1]->write(m_Packet);
+                                    // port_ToInterface[1]->write(m_Packet);
                                 }
                             else if (m_Packet.getProtocolType() == TYPE_BGP)
                                 {
-                                    // SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("Sending BGP message to CP"));
-                   
                                     m_BGPMsg = m_Packet.getBGPPayload();
                                     m_BGPMsg.m_OutboundInterface = i;
                                     port_ToControlPlane->write(m_BGPMsg);                            
