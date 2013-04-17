@@ -58,10 +58,10 @@ m_Name.appendReportString("Interface count: ");
                   if (l_Handle->isConnection(j))
                       {
                           ///Connect the interfaces
-                          cout << "local: " << i << " || neighbour: " << l_Handle->getNeighborRouterId(j) << endl;
+
                           if(m_Router[i]->connectInterface(m_Router[l_Handle->getNeighborRouterId(j)], j, l_Handle->getNeighborInterfaceId(j)))
                               {
-                                  cout << "Router_" << i << "'s interface_" << j << " connected with the interface_" << l_Handle->getNeighborInterfaceId(j) <<" of router_" << l_Handle->getNeighborRouterId(j) << endl;
+
                               }
                       }
               }

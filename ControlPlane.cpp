@@ -109,7 +109,7 @@ void ControlPlane::controlPlaneMain(void)
                       //start new session for the session index
                       //corresponding the interface index to which the
                       //peer is connected
-                      // m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
+                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
 
                       //start the session
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
