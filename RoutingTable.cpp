@@ -90,11 +90,12 @@ void RoutingTable::routingTableMain(void)
 
 
 
-/*                updateRoutingTable();
+                updateRoutingTable();
 
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
+/*
                 cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
@@ -199,9 +200,7 @@ bool RoutingTable::sameRoutes(Route p_route1, Route p_route2)
 {
 
     if(p_route1.prefix == p_route2.prefix && p_route1.mask == p_route2.mask)
-    {
         return true;
-    }
     else
         return false;
 }
@@ -442,7 +441,7 @@ void RoutingTable::printOneRoute(Route p_route)
 /*
     Add new route to RawRoutingTable
 */
-void RoutingTable::addNewRoute(string p_msg,int OutputPort)
+void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 {
     Route * newRoute = new Route();
 
@@ -476,8 +475,8 @@ void RoutingTable::addNewRoute(string p_msg,int OutputPort)
 
 /*
     Create a Route object from p_msg. p_msg must be constructed as follows:
-    IP;Mask;Routers;ASes;ownRouterId;ownAS (e.g. 102550100;8;2-5-10-1;550-7564-4;9;555)
-    Parse message and collect IP,Mask, Routers and ASes which are separated by ";"-mark
+    IP;Mask;Routers;ASes;ownRouterId;ownAS (e.g. 10.255.0.100,8,2-5-10-1,550-7564-4,9,555)
+    Parse message and collect IP,Mask, Routers,ASes, own router id and own AS number which are separated by ","-mark
 */
 void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
@@ -487,7 +486,7 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 
     for(int i=0;i<6;i++)
     {
-        position = p_msg.find(";",position+1);
+        position = p_msg.find(",",position+1);
 
         if(i==0)
             IP_end = position;
@@ -557,7 +556,6 @@ void RoutingTable::removeFromRawTable(int p_routerId)
             }
             tempRoute->next = deleteRoute->next;
             return;
-            // TODO: free memory
         }
     }
 }
@@ -582,7 +580,6 @@ void RoutingTable::removeFromRoutingTable(int p_routerId)
                 m_endOfRoutingTable = tempRoute;
             }
             return;
-            // TODO: free memory
         }
     }
 }
@@ -603,8 +600,9 @@ void RoutingTable::clearRoutingTables()
         m_iterator = m_iterator->next;
         removeFromRawTable(l_deleteRoute->id);
     }
-
-
+    l_deleteRoute = m_iterator;
+    removeFromRawTable(l_deleteRoute->id);
+    updateRoutingTable();
 }
 
 /*
@@ -666,7 +664,7 @@ void RoutingTable::handleNotification(BGPMessage p_msg)
     Iterate through the RoutingTable and find the longest match with the given IPAddress.
     Then return pointer to the Route object that had the longest match
 */
-Route * RoutingTable::findRoute(string p_IPAddress)
+Route * RoutingTable::findRoute(string p_prefix)
 {
     Route * l_route = new Route();
     int l_longestMatch = 0;
@@ -676,7 +674,7 @@ Route * RoutingTable::findRoute(string p_IPAddress)
     while(m_iterator->next != 0)
     {
         m_iterator = m_iterator->next;
-        l_matchLength = matchLength(m_iterator, p_IPAddress);
+        l_matchLength = matchLength(m_iterator, p_prefix);
         // if new match is longer than current longest match, set it as new longest match
         if(l_matchLength >= l_longestMatch)
         {
@@ -813,11 +811,11 @@ void RoutingTable::fillRoutingTable()
             OutputPort = 10;
         }
 
-        ss << prefix << ";" << mask << ";" << routers << ";" << ASes << ";" << "9" << ";" << "5555";
+        ss << prefix << "," << mask << "," << routers << "," << ASes << "," << "9" << "," << "5555";
         l_message = ss.str();
 
-        addNewRoute(l_message,OutputPort);
-        addNewRoute(l_message,OutputPort);
+        addRouteToRawTable(l_message,OutputPort);
+        addRouteToRawTable(l_message,OutputPort);
 
     }
 
