@@ -64,11 +64,22 @@ int sc_main(int argc, char * argv [])
 
 
     sc_report rp;
+    //set log file
     sc_report_handler::set_log_file_name("test_simu.log");
+
+
+    //SC_DO_NOTHING turns off the reportting for the specified flag
+    //SC_DISPLAY turns on the reportting for the specified flag
+
+    //general reporting flag
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
+    //general debugging flag
     sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
+    //debugging flag for ControlPlane
     sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DISPLAY);
+    //debugging flag for BGPSession
     sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DISPLAY);
+    //debuggin flag for this file
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
@@ -379,7 +390,7 @@ int sc_main(int argc, char * argv [])
     l_Config.addConnectionConfig(2, 1, 1, 0 );
     l_Config.addConnectionConfig(0, 1, 1, 2 );
 
-    cout << l_Config.toString();
+
 #endif
 
     
@@ -413,7 +424,6 @@ int sc_main(int argc, char * argv [])
 #endif
 
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
-
 
 return 0;
 }//end of main
