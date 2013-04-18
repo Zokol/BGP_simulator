@@ -122,7 +122,7 @@ public:
      */
     SC_HAS_PROCESS(RoutingTable);
 
-    void addNewRoute(string p_msg, int p_outputPort);
+    void addRouteToRawTable(string p_msg, int p_outputPort);
     //void setMED(int p_routeId,)
 
     // Give preferred AS and some preference value to it.
@@ -137,9 +137,15 @@ public:
 
 
 
-
+    // Return MainRoutingTable
     string getRoutingTable();
+
+    // Return RawRoutingTable
     string getRawRoutingTable();
+
+    // Remove all the routes from raw routing table and update maintable as well after that
+    void clearRoutingTables();
+
 
 
 
@@ -157,28 +163,56 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
+    // Construct new route from p_msg.
     void createRoute(string p_msg,int p_outputPort, Route * p_route);
+
+    // Handle NOTIFICATION message type
     void handleNotification (BGPMessage NOTIFICATION_message);
-    Route * findRoute(string p_IPAddress);
+
+    // Return Route which prefix is p_prefix
+    Route * findRoute(string p_prefix);
+
+    // Return how many bits are the same from p_route and p_IP. Used for deciding which route to use
     int matchLength(Route * p_route, string p_IP);
+
+    // Update MainRoutingTable. Iterate through the RawRoutingTable and pick the preferred routes from there to MainRoutingTable
     void updateRoutingTable();
+
+    // Take two routes as a parameter and add the more preferred one to MainRoutingTable
     void addPreferredRoute(Route p_route1, Route p_route2);
+
+    // Add p_route to MainRoutingTable
     void setRoute(Route p_route);
-    void removeFromRawTable(int p_route);
+
+    // Remove route from RawRoutingTable
+    void removeFromRawTable(int p_routerId);
+
+    // Remove route from MainRoutingTable
     void removeFromRoutingTable(int p_routerId);
+
+    // Return true if p_route1 and p_route2 has the same prefix&mask combination
     bool sameRoutes(Route p_route1, Route p_route2);
+
+    // Return the ASPathLength of p_route
     int ASpathLength(Route p_route);
 
+    // Convert p_route to string. Syntax: ID,Prefix,Mask,Routers,ASes (e.g. 5,100100200050,8,2-4-6-7,100-4212-231-22)
     string routeToString(Route p_route);
 
+    // Convert the hole RoutingTable to string. Start from p_route
     string routingTableToString(Route * p_route);
 
+    // Delete routes from RawRoutingTable with given output port
+    void deleteRoutes(int p_outputPort);
 
+    // Return the length of the table
+    int tableLength();
+
+
+    // Just for testing?
     void printRoutingTable();
     void printRawRoutingTable();
     void printOneRoute(Route p_route);
-
-    int tableLength();
     void fillRoutingTable();
 
     ControlPlaneConfig *m_RTConfig;
@@ -189,6 +223,7 @@ private:
      */
     BGPMessage m_BGPMsg;
 
+    // Pointer to the heads and ends of the tables
     Route * m_headOfRawTable;
     Route * m_endOfRawTable;
     Route * m_iterator;
