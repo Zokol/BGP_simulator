@@ -78,7 +78,7 @@ void BGPSession::sendKeepalive(void)
                     //TODO build the message
                     m_KeepaliveMsg.m_OutboundInterface = m_PeeringInterface;            
                     m_KeepaliveMsg.m_Type = KEEPALIVE;
-                    cout << name() << " sending keepalive at time " << sc_time_stamp() << endl;
+                    SC_REPORT_INFO(g_DebugBSID, m_RTool.newReportString("sending keepalive at time"));
                     //write the message to the control plane
                     port_ToDataPlane->write(m_KeepaliveMsg);
                 }
@@ -101,7 +101,8 @@ void BGPSession::sessionInvalidation(void)
     while(true)
         {
             wait(m_BGPHoldDown);
-            cout << name() << " session invalid at time " << sc_time_stamp()  << endl;
+
+            SC_REPORT_INFO(g_DebugBSID, m_RTool.newReportString("session invalid at time"));
 
             sessionStop();
         }
