@@ -154,14 +154,19 @@ void ControlPlane::controlPlaneMain(void)
               count++;
     }
 
-    // delete l_Temp;
+    delete l_Temp;
 }
 
 bool ControlPlane::write(BGPMessage p_BGPMsg)
 {
 
+    //enter to the critical region
     mutex_Write.lock();
+    //reset the corresponding keepalive timer
+    m_BGPSessions[p_BGPMsg.m_OutboundInterface]->resetKeepalive();
+    //write message to the DataPlane
     port_ToDataPlane->write(p_BGPMsg);
+    //exit from the critical region
     mutex_Write.unlock();
     return true;
 

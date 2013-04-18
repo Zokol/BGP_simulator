@@ -57,8 +57,8 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
     //bind data plane to the routing table
     m_IP.port_ToRoutingTable(m_RoutingTable);
 
-    //bind routing table to the data plane
-    m_RoutingTable.port_Output(m_IP);
+    //bind routing table to the control plane
+    m_RoutingTable.port_Output(m_Bgp);
 
     SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Building the network interfaces"));
 
