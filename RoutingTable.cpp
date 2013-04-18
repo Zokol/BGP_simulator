@@ -66,7 +66,7 @@ void RoutingTable::routingTableMain(void)
                     if(!(port_Control[i]->isUp()))
                     {
                         deleteRoutes(i);
-                        cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
+                        //cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
                     }
                 }
 
@@ -585,6 +585,26 @@ void RoutingTable::removeFromRoutingTable(int p_routerId)
             // TODO: free memory
         }
     }
+}
+
+/*
+    Remove all Routes from RawRoutingTable and then update MainRoutingTable too(i.e. clear it)
+*/
+void RoutingTable::clearRoutingTables()
+{
+    if(m_headOfRawTable->next == 0)
+        return;
+    m_iterator = m_headOfRawTable->next;
+    Route * l_deleteRoute = new Route;
+
+    while(m_iterator->next != 0)
+    {
+        l_deleteRoute = m_iterator;
+        m_iterator = m_iterator->next;
+        removeFromRawTable(l_deleteRoute->id);
+    }
+
+
 }
 
 /*

@@ -141,6 +141,10 @@ public:
     string getRoutingTable();
     string getRawRoutingTable();
 
+    // Remove all the routes from raw routing table and update maintable as well after that
+    void clearRoutingTables();
+
+
 
 
 
@@ -175,6 +179,7 @@ private:
 
     // Delete routes from RawRoutingTable with given output port
     void deleteRoutes(int p_outputPort);
+
 
 
     void printRoutingTable();
