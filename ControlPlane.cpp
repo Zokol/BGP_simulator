@@ -140,7 +140,7 @@ void ControlPlane::controlPlaneMain(void)
           }
 
               //To send a message to data plane
-              // port_ToDataPlane->write(m_BGPMsg);
+              // write(m_BGPMsg);
 
 
               port_ToRoutingTable->write(m_BGPMsg);
@@ -157,3 +157,12 @@ void ControlPlane::controlPlaneMain(void)
     // delete l_Temp;
 }
 
+bool ControlPlane::write(BGPMessage p_BGPMsg)
+{
+
+    mutex_Write.lock();
+    port_ToDataPlane->write(p_BGPMsg);
+    mutex_Write.unlock();
+    return true;
+
+}

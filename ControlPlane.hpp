@@ -33,7 +33,7 @@ using namespace sc_dt;
 
 
 
-class ControlPlane: public sc_module
+class ControlPlane: public sc_module, public Output_If
 {
 
 public:
@@ -71,52 +71,50 @@ public:
      */
     sc_export<Output_If > export_ToDataPlane;
 
+    void before_end_of_elaboration()
+    {
 
-void before_end_of_elaboration()
-        {
-
-            //inititate the session events
-for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
-                {
-                    //connect the session to the data plane
-                    m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
-                }
-
-
-        }
+        //inititate the session events
+        for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
+            {
+                //connect the session to the data plane
+                m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
+            }
 
 
+    }
 
-  /*! \brief Elaborates the ControlPlane module
-   * \details 
-   * \public
-   */
+    /*! \brief Elaborates the ControlPlane module
+     * \details 
+     * \public
+     */
     ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const p_BGPConfig);
 
+    /*! \brief Destructor of the ControlPlane module
+     * \details Free's all the dynamically allocated memory 
+     * \public
+     */
+    ~ControlPlane();
 
+    /*! \brief The main process of Control Plane module
+     * \details \li Reads BGP messages from the m_ReceivingBuffer. \li
+     * performs the route resolution process accoriding to BGP protocol.
+     * \li Generates the required update messages. \li Keeps track on
+     * different BGP sessions.
+     * \public
+     */
+    void controlPlaneMain(void);
 
-  /*! \brief Destructor of the ControlPlane module
-   * \details Free's all the dynamically allocated memory 
-   * \public
-   */
-  ~ControlPlane();
-  
+    /*! \sa Output_If
+     * \public
+     */
+    virtual bool write(BGPMessage p_BGPMsg);
 
-
-  /*! \brief The main process of Control Plane module
-   * \details \li Reads BGP messages from the m_ReceivingBuffer. \li
-   * performs the route resolution process accoriding to BGP protocol.
-   * \li Generates the required update messages. \li Keeps track on
-   * different BGP sessions.
-   * \public
-   */
-  void controlPlaneMain(void);
-
-  /*! \brief Indicate the systemC producer that this module has a process.
-   * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
-   * \public
-   */
-  SC_HAS_PROCESS(ControlPlane);
+    /*! \brief Indicate the systemC producer that this module has a process.
+     * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
+     * \public
+     */
+    SC_HAS_PROCESS(ControlPlane);
 
 
 
@@ -124,6 +122,11 @@ for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
 private:
   
 
+    /*! \property sc_mutex mutex_Write 
+     * \brief Handles the arbitration inside the write method
+     * \private
+     */
+    sc_mutex mutex_Write;
 
     /*! \brief Receiving buffer
      * \details Data plain writes all the received BGP messages into
@@ -132,32 +135,32 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
-  // /*! \brief Number of BGP sessions
-  //  * \details This defines how many BGP sessions there are in this router
-  //  * \private
-  //  */
-  //   int  m_SessionCount;
+    // /*! \brief Number of BGP sessions
+    //  * \details This defines how many BGP sessions there are in this router
+    //  * \private
+    //  */
+    //   int  m_SessionCount;
     
-  /*! \brief The BGP session modules
-   * \details 
-   * \private
-   */
+    /*! \brief The BGP session modules
+     * \details 
+     * \private
+     */
     BGPSession **m_BGPSessions;
     
-  /*! \brief BGP message
-   * \details 
-   * \private
-   */
+    /*! \brief BGP message
+     * \details 
+     * \private
+     */
     BGPMessage m_BGPMsg;
 
-ControlPlaneConfig *m_BGPConfig;
+    ControlPlaneConfig *m_BGPConfig;
 
 
-  /*! \property StringTools m_Name  
-   * \brief Dynamic module naming
-   * \details 
-   * \private
-   */
+    /*! \property StringTools m_Name  
+     * \brief Dynamic module naming
+     * \details 
+     * \private
+     */
     StringTools m_Name;
 
 
