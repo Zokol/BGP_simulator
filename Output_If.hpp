@@ -1,4 +1,4 @@
-/*! \file  DataPlane_In_If.hpp.hpp
+/*! \file  Output_If.hpp
  *  \brief   
  *  \details   
  *  \author    Antti Siirilä, 501449
@@ -7,7 +7,7 @@
  */
 
 /*!
- * \class DataPlane_In_If.hpp
+ * \class Output_If
  * \brief
  *  \details
  */
@@ -20,13 +20,13 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#ifndef _DATAPLANE_IN_IF_H_
-#define _DATAPLANE_IN_IF_H_
+#ifndef _OUTPUT_IF_H_
+#define  _OUTPUT_IF_H_
 
 
 
 
-class DataPlane_In_If: virtual public sc_interface
+class Output_If: virtual public sc_interface
 {
 
 public:
@@ -48,7 +48,7 @@ public:
 };
 
 
-#endif /* _DATAPLANE_IN_IF_H_ */
+#endif /* _OUTPUT_IF_H_ */
 
 
 
