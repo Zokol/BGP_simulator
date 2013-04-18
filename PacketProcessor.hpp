@@ -12,6 +12,10 @@
  *  \details Allows to send, reiceve, and forward IP packets
  */
 
+#include "systemc"
+#include "Packet.hpp"
+
+using namespace std;
 
 #ifndef _PACKETPROCESSOR_H_
 #define _PACKETPROCESSOR_H_
@@ -67,5 +71,5 @@ public:
 };
 
 
-
+#endif /*_PACKETPROCESSOR_H_ */
 

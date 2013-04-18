@@ -6,8 +6,9 @@
  *  \date    Thu Apr 18 09:53:49 2013
  */
 
-
+#include "PacketProcessor.hpp"
 #include "ReportGlobals.hpp"
+
 
 PacketProcessor::PacketProcessor()
 {
