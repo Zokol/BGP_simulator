@@ -20,6 +20,11 @@ using namespace std;
 #ifndef _PACKETPROCESSOR_H_
 #define _PACKETPROCESSOR_H_
 
+/*! \class PacketProcessor
+ * \brief Performs all the tasks related to IP packet processing
+ * \details 
+ * \public
+ */
 class PacketProcessor
 {
 public:
@@ -32,6 +37,9 @@ public:
      * p_SourceIP, string p_Payload) 
      * \brief Sends an IP message to the given destination, from the
      * given source
+     * @param [in] string p_DestinationIP
+     * @param [in] string p_SourceIP
+     * @param [in] string p_Payload
      * \details 
      * \public
      */
@@ -48,7 +56,7 @@ public:
     /*! \fn bool processPacket(Packet& p_Packet); 
      * \brief Validates an IP packet 
      * \details Check whether the passed packet is a valid IP packet. 
-     * @param [in|out] Packet p_Packet IP packet to be processed
+     * @param [in] Packet p_Packet IP packet to be processed
      * \return bool: true == Packet is valid || false == Packet is not valid
      * \public
      */
@@ -61,13 +69,53 @@ public:
      * \public
      */
     string getDestination(void);
+
+    /*! \fn Packet& forward(void); 
+     * \brief Decrement the TTL, re-calculates the checksum, and returns the packet
+     * \details 
+     * \return Packet&: Reference to this packet object 
+     * \public
+     */
+    Packet& forward(void);
+    
+private:
+
+    /*! \property string m_DestinationIP 
+     * \brief The destination IP of the packet
+     * \details 
+     * \private
+     */
+    string m_DestinationIP;
+    
+    /*! \property string m_SourceIP 
+     * \brief The source IP of the packet
+     * \details 
+     * \private
+     */
+    string m_SourceIP;
+    
+    /*! \property string m_Payload 
+     * \brief The payload of the packet
+     * \details 
+     * \private
+     */
+    string m_Payload;
+
+    /*! \property Packet m_Packet 
+     * \brief The packet under processing
+     * \details 
+     * \private
+     */
+    Packet m_Packet;
+
+    /*! \property bool m_Valid 
+     * \brief Indicates whether the packet is valid or not
+     * \details 
+     * \private
+     */
+    bool m_Valid;
     
     
-
-    
-
-
-
 };
 
 
