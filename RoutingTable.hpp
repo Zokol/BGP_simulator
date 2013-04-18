@@ -19,7 +19,7 @@
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
 #include "Interface_If.hpp"
-#include "DataPlane_In_If.hpp"
+#include "Output_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -74,7 +74,7 @@ public:
      * receiving FIFO
      * \public
      */
-    sc_port<DataPlane_In_If> port_Output;
+    sc_port<Output_If> port_Output;
 
 
     //    void before_end_of_elaboration()

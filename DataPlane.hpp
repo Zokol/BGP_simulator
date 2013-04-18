@@ -18,7 +18,7 @@
 #include "systemc"
 #include "Packet.hpp"
 #include "BGPMessage.hpp"
-#include "DataPlane_In_If.hpp"
+#include "Output_If.hpp"
 #include "RoutingTable_If.hpp"
 #include "Configuration.hpp"
 #include "StringTools.hpp"
@@ -33,7 +33,7 @@ using namespace sc_dt;
 
 
 
-class DataPlane: public sc_module, public DataPlane_In_If
+class DataPlane: public sc_module, public Output_If
 {
 
 public:

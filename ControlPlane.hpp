@@ -19,6 +19,7 @@
 #include "BGPSession.hpp"
 #include "RoutingTable_If.hpp"
 #include "StringTools.hpp"
+#include "Output_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -48,7 +49,7 @@ public:
      * \details Used to write BGP messages to the data plane
      * \public
      */
-    sc_port<DataPlane_In_If,0, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
+    sc_port<Output_If,0, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
    
     /*! \brief Routing Table's management port
      * \details Used to manage the routing table. Add, remove, update routes
@@ -68,7 +69,7 @@ public:
      * \details 
      * \public
      */
-    sc_export<DataPlane_In_If > export_ToDataPlane;
+    sc_export<Output_If > export_ToDataPlane;
 
 
 void before_end_of_elaboration()

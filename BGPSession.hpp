@@ -36,7 +36,7 @@
 #include "systemc"
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
-#include "DataPlane_In_If.hpp"
+#include "Output_If.hpp"
 #include "StringTools.hpp"
 
 using namespace std;
@@ -61,7 +61,7 @@ public:
      * receiving FIFO
      * \public
      */
-    sc_port<DataPlane_In_If> port_ToDataPlane;
+    sc_port<Output_If> port_ToDataPlane;
 
     /*! \brief Elaborates the BGPSession module
      * \details 
