@@ -36,8 +36,8 @@
 #include "systemc"
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
-#include "DataPlane_In_If.hpp"
-
+#include "Output_If.hpp"
+#include "StringTools.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -54,10 +54,6 @@ class BGPSession: public sc_module
 
 public:
 
-  
-
-
-
     /*! \brief Output port for BGP messages
      * \details The BGP session writes all the BGP messages to be send
      * to its neighbors into
@@ -65,8 +61,7 @@ public:
      * receiving FIFO
      * \public
      */
-    sc_port<DataPlane_In_If> port_ToDataPlane;
-
+    sc_port<Output_If> port_ToDataPlane;
 
     /*! \brief Elaborates the BGPSession module
      * \details 
@@ -90,83 +85,80 @@ public:
      */
     BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam);
 
-
-
     /*! \brief Destructor of the BGPSession module
      * \details Free's all the dynamically allocated memory 
      * \public
      */
     ~BGPSession();
-  
 
-
-    /*! \brief Send a keepalive message to the peer
+    /*! \fn void sendKeepalive(void)
+     *  \brief Send a keepalive message to the peer
      * \details A SystemC method, which is sensitive to m_BGPKeepalive event
      * \public
      */
     void sendKeepalive(void);
 
-    /*! \brief Invalidates this session
+    /*! \fn void sessionInvalidation(void)
+     *  \brief Invalidates this session
      * \details A SystemC method, which is sensitive to m_BGPHoldDown event
      * \public
      */
     void sessionInvalidation(void);
 
-    // /*! \brief Determines the hold-down time from BGP session config object
-    //  * \details 
-    //  * @param[in] BGPSessionParameters p_SessionParameters Holds the
-    //  * keepalive fraction, holddown time, etc. values
-    //  * \public
-    //  */
-    // void setHoldDownTime(void);
-
-    /*! \brief Resets the HoldDown timer
+    /*! \fn void resetHoldDown(void)
+     *  \brief Resets the HoldDown timer
      * \details Allows the control plane to reset the HoldDown timer
      * whenever a message from the session peer is received
      * \public
      */
     void resetHoldDown(void);
 
-    /*! \brief Checks whether this session is valid or not
+    /*! \fn bool isSessionValid(void)
+     *  \brief Checks whether this session is valid or not
      * \details Allows the control plane to check whether this session
      * is still valid or not. I.e. is the HoldDown timer expired.
      * \public
      */
     bool isSessionValid(void);
 
-    /*! \brief Stops this session
+    /*! \fn void sessionStop(void)
+     *  \brief Stops this session
      * \details HoldDown and Keepalive timers are stopped and no
      * keepalive messages are sent after a call of this function
      * \public
      */
     void sessionStop(void);
 
-    /*! \brief Starts the session
+    /*! \fn void sessionStart(void)
+     *  \brief Starts the session
      * \details HoldDown and Keepalive timers are reset and the
      * sending of keepalive messages starts
      * \public
      */
     void sessionStart(void);
 
-    /*! \brief Sets the BGP Identifier of the session peer
+    /*! \fn void setPeerIdentifier(string p_BGPIdentifier)
+     *  \brief Sets the BGP Identifier of the session peer
      * \details
-     * @param[in] sc_int<32> p_BGPIdentifier of the session peer
+     * @param[in] string p_BGPIdentifier of the session peer
      * received message
      * \public
      */
-    void setPeerIdentifier(sc_int<32> p_BGPIdentifier);
+    void setPeerIdentifier(string p_BGPIdentifier);
 
-    /*! \brief Checks whether this session is for the passed BGP Identifier
+    /*! \fn bool isThisSession(string p_BGPIdentifier)
+     *  \brief Checks whether this session is for the passed BGP Identifier
      * \details
-     * @param[in] sc_int<32> p_BGPIdentifier The BGP Identifier of the
+     * @param[in] string p_BGPIdentifier The BGP Identifier of the
      * received message
      * \return <bool> True: if this session corresponds the received
      * message a identifier. False: in any other case
      * \public
      */
-    bool isThisSession(sc_int<32> p_BGPIdentifier);
+    bool isThisSession(string p_BGPIdentifier);
 
-    /*! \brief Resets the Keepalive timer
+    /*! \fn void resetKeepalive(void)
+     *  \brief Resets the Keepalive timer
      * \details 
      * \public
      */
@@ -180,14 +172,16 @@ public:
 
 private:
 
-    /*! \brief Handles the arbitration for Keepalive reset
+    /*! \property sc_mutex m_KeepaliveMutex
+     *  \brief Handles the arbitration for Keepalive reset
      * \details Keepalive can be reset either internally by the
      * session or externally by the Control Plane.
      * \private
      */
     sc_mutex m_KeepaliveMutex;
 
-    /*! \brief BGP session keepalive timer
+    /*! \property sc_event m_BGPKeepalive
+     *  \brief BGP session keepalive timer
      * \details There is one instance for each session. The keepalive
      * timer defines when the next keepalice message is to be sent to
      * the corresponding session.
@@ -195,9 +189,8 @@ private:
      */
     sc_event m_BGPKeepalive;
 
-
-
-    /*! \brief BGP session hold down timer
+    /*! \property sc_event m_BGPHoldDown
+     *  \brief BGP session hold down timer
      * \details There is one instance of sc_event for each session. If
      * hold down timer expires the link of the corresponding session
      * shall be concidered to be down and the required action need to be taken.
@@ -205,14 +198,16 @@ private:
      */
     sc_event m_BGPHoldDown;
 
-    /*! \brief Interface of the Session Peer
+    /*! \property int m_PeeringInterface
+     *  \brief Interface of the Session Peer
      * \details Index of the Interface of this router to which the
      * peer of this session connects
      * \private
      */
     int m_PeeringInterface;
     
-    /*! \brief Indicates whether this session is valid or not
+    /*! \property bool m_SessionValidity
+     *  \brief Indicates whether this session is valid or not
      * \details Is set to True when the session start. When ever the
      * HoldDown timer expires the value of m_SessionValidity shall be
      * set to Fasle
@@ -220,16 +215,33 @@ private:
      */
     bool m_SessionValidity;
 
-
-    /*! \brief BGP message object
+    /*! \property BGPMessage m_KeepaliveMsg
+     *  \brief BGP message object
      * \details This holds the keepalive messages
      * \private
      */
     BGPMessage m_KeepaliveMsg;
 
-    sc_int<32> m_BGPIdentifierPeer;
+    /*! \property string m_BGPIdentifierPeer
+     *  \brief The BGP identifier of the session peer
+     * \details 
+     * \private
+     */
+    string m_BGPIdentifierPeer;
 
+    /*! \property BGPSessionParameters *m_Config
+     *  \brief Simulation parameters for the session
+     * \details 
+     * \private
+     */
     BGPSessionParameters *m_Config;
+
+    /*! \property StringTools m_RTool
+     *  \brief Used in reporting debug messages
+     * \details 
+     * \private
+     */
+    StringTools m_RTool;
     /***************************Private functions*****************/
 
 

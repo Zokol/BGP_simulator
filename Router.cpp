@@ -57,8 +57,8 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
     //bind data plane to the routing table
     m_IP.port_ToRoutingTable(m_RoutingTable);
 
-    //bind routing table to the data plane
-    m_RoutingTable.port_Output(m_IP);
+    //bind routing table to the control plane
+    m_RoutingTable.port_Output(m_Bgp);
 
     SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Building the network interfaces"));
 
@@ -149,30 +149,25 @@ bool Router::interfaceIsUp(int p_InterfaceId)
 
 bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p_TargetInterface)
 {
-    if ((p_TargetRouter->interfaceIsUp(p_TargetInterface)))
-    {
-        cout << "Neighbor down" << endl;
-    }
-
 
     if(interfaceIsUp(p_LocalInterface) && p_TargetRouter->interfaceIsUp(p_TargetInterface))
         {
-            cout << name() << ": Both IFes already up." << endl;
+            // cout << name() << ": Both IFes already up." << endl;
             return true;
         }
     else if (interfaceIsUp(p_LocalInterface) && !(p_TargetRouter->interfaceIsUp(p_TargetInterface)))
         {
-            cout << name() << ": Local up && Neighbour down." << endl;
+            // cout << name() << ": Local up && Neighbour down." << endl;
             return false;
         }
     else if (!(interfaceIsUp(p_LocalInterface)) && p_TargetRouter->interfaceIsUp(p_TargetInterface))
         {
-            cout << name() << ": Local down && Neighbour up." << endl;
+            // cout << name() << ": Local down && Neighbour up." << endl;
             return false;
         }
     else
         {
-            cout << name() << ": Both IFes down." << endl;
+            // cout << name() << ": Both IFes down." << endl;
             port_ForwardingInterface[p_LocalInterface]->bind(*(p_TargetRouter->export_ReceivingInterface[p_TargetInterface]));
 
             p_TargetRouter->port_ForwardingInterface[p_TargetInterface]->bind(*(export_ReceivingInterface[p_LocalInterface]));

@@ -46,10 +46,21 @@ ControlPlane::~ControlPlane()
 
 void ControlPlane::controlPlaneMain(void)
 {
+    m_Name.setBaseName(name());
+
     StringTools *l_Temp = new StringTools(name());
     SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("starting"));
 
     int count = 0;
+    ///build and send the OPEN messages to all local interfaces except
+    ///the last one. The last local interface is the AS interface.
+    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
+        {
+            m_BGPMsg.m_BGPIdentifier = m_BGPConfig->getIPAsString();
+            m_BGPMsg.m_Type = OPEN;
+            m_BGPMsg.m_OutboundInterface = i;
+            port_ToDataPlane->write(m_BGPMsg);
+        }
 
 
   //The main thread of the control plane starts
@@ -66,7 +77,7 @@ void ControlPlane::controlPlaneMain(void)
           {
 
               m_ReceivingBuffer.read(m_BGPMsg);  
-              m_BGPMsg.m_Type = UPDATE;
+
 
               // IIRO testailuu - message structure: prefix;mask;ASes
               // TODO from where is OutputPort coming? vs. create Route class and pass them? NOT bcoz BGPmessages differ so much
@@ -80,15 +91,17 @@ void ControlPlane::controlPlaneMain(void)
 
                       // determine which type of message this is
                       switch(m_BGPMsg.m_Type)
-                      {
+                          {
                           case KEEPALIVE:
                               // KEEPALIVE received, reset KeepAlive timer for this session
                               // TODO is OutboudInterface correct way to identify the session's index?
+                              SC_REPORT_INFO(g_DebugCPID,m_Name.newReportString("KEEPALIVE received"));
                               m_BGPSessions[m_BGPMsg.m_OutboundInterface]->resetHoldDown();
+                              m_BGPMsg.m_Type = -1;
                               break;
                           case UPDATE:
                               // Just forward to routingtable?
-                              port_ToRoutingTable->write(m_BGPMsg);
+                              // port_ToRoutingTable->write(m_BGPMsg);
 
                               break;
                           case NOTIFICATION:
@@ -99,7 +112,10 @@ void ControlPlane::controlPlaneMain(void)
                               // if OPEN-message is received? Antti: The session is closed and
                               // the message is dropped. 
                               break;
-                      }
+                          default:
+                              SC_REPORT_INFO(g_DebugCPID,m_Name.newReportString("unknown received"));
+                              break;
+                          }
 
                   }
 
@@ -109,7 +125,7 @@ void ControlPlane::controlPlaneMain(void)
                       //start new session for the session index
                       //corresponding the interface index to which the
                       //peer is connected
-                      // m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
+                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
 
                       //start the session
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
@@ -124,7 +140,7 @@ void ControlPlane::controlPlaneMain(void)
           }
 
               //To send a message to data plane
-              port_ToDataPlane->write(m_BGPMsg);
+              // write(m_BGPMsg);
 
 
               port_ToRoutingTable->write(m_BGPMsg);
@@ -138,6 +154,20 @@ void ControlPlane::controlPlaneMain(void)
               count++;
     }
 
-    // delete l_Temp;
+    delete l_Temp;
 }
 
+bool ControlPlane::write(BGPMessage p_BGPMsg)
+{
+
+    //enter to the critical region
+    mutex_Write.lock();
+    //reset the corresponding keepalive timer
+    m_BGPSessions[p_BGPMsg.m_OutboundInterface]->resetKeepalive();
+    //write message to the DataPlane
+    port_ToDataPlane->write(p_BGPMsg);
+    //exit from the critical region
+    mutex_Write.unlock();
+    return true;
+
+}
