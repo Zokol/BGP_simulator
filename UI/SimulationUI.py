@@ -5,6 +5,7 @@ from UI import *
 from selectdialog import *
 import eztext
 import socket
+import math
 
 if not pygame.font:
 	print "Warning: Fonts not enabled"
@@ -574,42 +575,60 @@ class SimulationUI:
 				return r
 
 	def draw_network(self):
-		x = 777
-		y = 32
+		x = 968
+		y = 155
 		max_x = 300
 		x_step = 40
 		y_step = 40
-		radius = 15
-		#self.network_con.spritegroup.empty()
+		max_radius = 15
+		a = 190
+		b = 124
+		r_fontsize = 20
+		#angles = []
 		router_points = []
-		r_x = x
-		r_y = y
+		#r_x = x
+		#r_y = y
 		self.network_con.draw()
+		d = ((math.pi*2)/len(self.routers))
+		i = 0
+		#for i in range(len(self.routers)):
+		#	angles.append(a*i)
+		if len(self.routers) > 1:
+			r = math.tan((d/2))*b
+			if r <= (max_radius + 1):
+				radius = int((r-1))
+				r_fontsize = int((radius*1.3))
+			else:
+				radius = max_radius
+			print r
+			print radius
+		else:
+			radius = max_radius
 		for r in self.routers:
-			router_points.append([r.as_id, r_x, r_y])
-			#btn = FuncButton(self.network_con, r_x, r_y, width, height, [[r.as_id, None]], None, 8, self.screen, 1, (None, None), True, False, True)
-			#self.network_con.spritegroup.add(btn)
+			router_points.append([r.as_id, int(x + a*math.cos(d*i)), int(y + b*math.sin(d*i))])
+			i += 1
+			#Find out next coords. Implement Elliptic-curve/line intersection here
+			"""
 			if (r_x - x) < max_x:
 				r_x += (x_step + (radius*2)) 
 			else:
 				r_x = x
 				r_y += (y_step + (radius*2))
-		#print router_points
+			"""
 		for r_id in range(len(self.routers)):
 			r = self.routers[r_id]
 			coord_a = (router_points[r_id][1], router_points[r_id][2])
 			for p in r.interfaces:
 				if p.client != None:
 					for i in router_points:
-						if i[0] == p.client.as_id:
-							#print "Client found"
+						if i[0] == p.client.as_id:	
 							coord_b = (i[1], i[2])
 							pygame.draw.line(self.screen, (0,0,0), coord_a, coord_b, 2)
 							break
 		for c in router_points:	
-			pygame.draw.circle(self.screen, (255,255,255), (c[1], c[2]), radius+2)
-			pygame.draw.circle(self.screen, (0,0,100), (c[1], c[2]), radius)
-			font = pygame.font.Font(FONT, int(20*FONTSCALE))
+			pygame.draw.circle(self.screen, (255,255,255), (c[1], c[2]), radius)
+			pygame.draw.circle(self.screen, (0,0,100), (c[1], c[2]), radius-2)
+			font = pygame.font.Font(FONT, int(r_fontsize*FONTSCALE))
 			text = font.render(c[0], True, (255,255,255))
 			rect = text.get_rect()
 			rect.centerx = c[1]
