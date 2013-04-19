@@ -36,7 +36,7 @@ class RouterModel(UIObject):
 		self.router = router
 		self.selected_port = None
 		self.ezfont = pygame.font.Font(FONT, int(15*FONTSCALE))
-		self.router_logicblock = UIContainer(parent, (self.pos[0] + 150, self.pos[1]), (200, 300), self.surface, False)
+		self.router_logicblock = UIContainer(parent, (self.pos[0] + 100, self.pos[1]), (200, 300), self.surface, False)
 
 		self.port_blocks = []
 		self.update_ports()
@@ -51,16 +51,18 @@ class RouterModel(UIObject):
 
 	def update_ports(self):
 		x_left = 0
-		x_right = 400
-		y = 50
+		x_right = 300
+		y = 37
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.remove(b)
 		self.port_blocks = []
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P0| AS: " + self.router.get_client_id(0), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P1| AS: " + self.router.get_client_id(1), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
-		y += 150
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_left, self.pos[1] + y, 100, 50, [["P2| AS: " + self.router.get_client_id(2), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
-		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["Local AS: " + self.router.as_id, None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P0 AS: " + self.router.get_client_id(0), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		y += 88
+		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P1 AS: " + self.router.get_client_id(1), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		y += 88
+		self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["P2 AS: " + self.router.get_client_id(2), None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
+		#y += 150
+		#self.port_blocks.append(FuncButton(self.parent, self.pos[0] + x_right, self.pos[1] + y, 100, 50, [["Local AS: " + self.router.as_id, None]], None, ICON_FONTSIZE, self.surface, 1, None, True, False, True))
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.add(b)
 
@@ -68,32 +70,32 @@ class RouterModel(UIObject):
 		font = pygame.font.Font(FONT, int(25*FONTSCALE))
 		text = font.render("AS id: " + self.router.as_id, True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = self.pos[0] + 250
+		rect.centerx = self.pos[0] + 200
 		rect.centery = 50
 		self.router_logicblock.surface.blit(text, rect)
 		text = font.render("Prefix: " + self.router.prefix, True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = self.pos[0] + 250
+		rect.centerx = self.pos[0] + 200
 		rect.centery = 80
 		self.router_logicblock.surface.blit(text, rect)
 		text = font.render("MED: " + self.router.med, True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = self.pos[0] + 250
+		rect.centerx = self.pos[0] + 200
 		rect.centery = 110
 		self.router_logicblock.surface.blit(text, rect)
 		text = font.render("Local preference: " + self.router.localpref, True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = self.pos[0] + 250
+		rect.centerx = self.pos[0] + 200
 		rect.centery = 140
 		self.router_logicblock.surface.blit(text, rect)
 		text = font.render("Keepalive time: " + self.router.keepalivetime, True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = self.pos[0] + 250
+		rect.centerx = self.pos[0] + 200
 		rect.centery = 170
 		self.router_logicblock.surface.blit(text, rect)
 		text = font.render("Holddown multiplier: " + self.router.holddown_multiplier, True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = self.pos[0] + 250
+		rect.centerx = self.pos[0] + 200
 		rect.centery = 200
 		self.router_logicblock.surface.blit(text, rect)
 
@@ -225,7 +227,7 @@ class SimulationUI:
 		#self.routers.append(self.init_routerobject)
 		self.add_router(None)
 		self.selected_router = self.routers[0]
-		self.routermodel = RouterModel(None, self.screen, (300, 10), self.routers[0])
+		self.routermodel = RouterModel(None, self.screen, (335, 5), self.routers[0])
 
 		##Socket
 		self.host = "localhost"
@@ -243,17 +245,47 @@ class SimulationUI:
 
 		##UI Elements
 		self.buttons = []
-		self.routerlist_con = UIContainer(None, (5,5), (210, 310), self.screen, False)
-		self.routerlist_dialog = NameList(self.routerlist_con, (15,15), (183, 250), self.routers, selected = self.select_router)
-		self.console_dialog = TextList(None, (15,350), (300, 300), self.console.log)
-		
-		self.routing_table_main_dialog = TextList(None, (450,350), (300, 300), self.selected_router.preferred_routes)
-		self.routing_table_all_dialog = TextList(None, (800,350), (300, 300), self.selected_router.routing_table)
-		
+		self.routerlist_con = UIContainer(None, (5,5), (210, 300), self.screen, False)
+		self.packetlist_con = UIContainer(None, (250,5), (210, 300), self.screen, False)
+		self.network_con = UIContainer(None, (750,5), (430, 300), self.screen, False)
+		self.routerlist_dialog = NameList(self.routerlist_con, (15,27), (184, 220), self.routers, selected = self.select_router)
+		self.console_dialog = TextList(None, (5,345), (300, 340), self.console.log)
 		self.ezfont = pygame.font.Font(FONT, int(15*FONTSCALE))
+		self.console_input = eztext.Input(None, (5, 680), (300, 15), maxlength=50, color=COLOR_FONT, prompt='cmd> ', font = self.ezfont, handle_enter = self.send_cmd)
+		
+		self.routing_table_main_dialog = TextList(None, (320,345), (430, 340), self.selected_router.preferred_routes)
+		self.routing_table_all_dialog = TextList(None, (755,345), (430, 340), self.selected_router.routing_table)
 
-		self.console_input = eztext.Input(None, (15, 650), (300, 15), maxlength=50, color=COLOR_FONT, prompt='cmd> ', font = self.ezfont, handle_enter = self.send_cmd)
+		self.texts = []
+		font = pygame.font.Font(FONT, int(25*FONTSCALE))
+		text = font.render("Routers by AS-id", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 108
+		rect.y = 7
+		self.texts.append([text, rect])
+		text = font.render("Received packets", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 345 
+		rect.y = 7
+		self.texts.append([text, rect])
 
+		font = pygame.font.Font(FONT, int(30*FONTSCALE))
+		text = font.render("Console", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 152
+		rect.y = 320
+		self.texts.append([text, rect])
+		text = font.render("Main routing table", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 535
+		rect.y = 320
+		self.texts.append([text, rect])
+		text = font.render("All routes", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 970
+		rect.y = 320
+		self.texts.append([text, rect])
+		
 		self.sprites = pygame.sprite.LayeredDirty(_time_threshold = 1000.0)
 		self.sprites.set_clip()
 		self.sprites.add(self.routerlist_dialog)
@@ -322,6 +354,8 @@ class SimulationUI:
 				self.log(self.routers[int(params[1])].as_id)
 				self.routers[int(params[1])].as_id = "testing"
 				self.log(self.routers[int(params[1])].as_id)
+			elif params[0] == "update_network" and len(params) == 1:
+				self.draw_network()
 			else:
 				self.log(str(params[0]) + ": command not found or invalid parameters")
 				self.print_help()
@@ -330,19 +364,34 @@ class SimulationUI:
 		self.console.add_log(msg)
 
 	def print_help(self):
-		self.log("Set AS-id: set_id 123")
-		self.log("Set prefix: set_prefix 0.0.0.0/32")
-		self.log("Set MED: set_med 10")
-		self.log("Set Local Pref: set_lp 25")
-		self.log("Set Keepalive Time: set_kt 60")
-		self.log("Set Hold Down Multiplier: set_hdm 3")
-		self.log("Connect routers: connect AS_id1:port_num AS_id2:port_num")
-		self.log("Disconnect routers: disconnect AS_id port_num")
-		self.log("Shutdown router: shutdown AS_id")
-		self.log("Revive router: revive AS_id")
+		if self.sim_running:
+			self.print_sim_help()
+		else:
+			self.print_conf_help()
+
+	def print_conf_help(self):
+		self.log("Set AS-id: set_id [AS_ID]")
+		self.log("Set prefix: set_prefix [PREFIX]")
+		self.log("Set MED: set_med [MED]")
+		self.log("Set Local Pref: set_lp [LocalPref]")
+		self.log("Set Keepalive Time: set_kt [Keepalive]")
+		self.log("Set Hold Down Multiplier: set_hdm [multiplier]")
+		self.log("Connect routers: connect [AS1_ID]:[PORT_ID] [AS2_ID]:[PORT_ID]")
+		self.log("Disconnect routers: disconnect [AS_ID]:[port_num]")
+		self.log("Shutdown router: shutdown [AS_ID]")
+		self.log("Revive router: revive [AS_ID]")
 		self.log("Start simulation: start")
+		self.log("Send command to socket server: debug [CMD]")
+
+	def print_sim_help(self):
+		self.log("Reset router config: reset_router [AS_ID]")
+		self.log("Disable router: kill_router [AS_ID]")
+		self.log("Revive router: revive_router [AS_ID]")
+		self.log("Send packet: send_packet [DEST_PREFIX] [AS_ID] [PAYLOAD]")
+		self.log("Disconnect route: disconnect [AS_ID]:[PORT_ID]")
+		self.log("Re-enable route: connect [AS_ID]:[PORT_ID]")
 		self.log("Stop simulation: stop")
-		self.log("Send command to socket server: debug CMD")
+		self.log("Send command to socket server: debug [CMD]")
 
 	def connect(self, router1, router2):
 		try:
