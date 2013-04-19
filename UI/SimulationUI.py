@@ -147,6 +147,7 @@ class Router:
 			self.interfaces = []
 			for i in range(4):
 				self.interfaces.append(Interface())
+		self.as_packets = []
 	
 	@property
 	def name(self):
@@ -250,6 +251,7 @@ class SimulationUI:
 		self.network_con = UIContainer(None, (750,5), (430, 300), self.screen, False)
 		self.routerlist_dialog = NameList(self.routerlist_con, (15,27), (184, 220), self.routers, selected = self.select_router)
 		self.console_dialog = TextList(None, (5,345), (300, 340), self.console.log)
+		self.packetlist_dialog = NameList(None, (260,32), (170, 268), self.selected_router.as_packets)
 		self.ezfont = pygame.font.Font(FONT, int(15*FONTSCALE))
 		self.console_input = eztext.Input(None, (5, 680), (300, 15), maxlength=50, color=COLOR_FONT, prompt='cmd> ', font = self.ezfont, handle_enter = self.send_cmd)
 		
@@ -290,6 +292,7 @@ class SimulationUI:
 		self.sprites.set_clip()
 		self.sprites.add(self.routerlist_dialog)
 		self.sprites.add(self.console_dialog)
+		self.sprites.add(self.packetlist_dialog)
 		self.sprites.add(self.routing_table_main_dialog)
 		self.sprites.add(self.routing_table_all_dialog)
 		self.sprites.add(self.console_input)
@@ -440,6 +443,65 @@ class SimulationUI:
 			self.log("Depreferring: " + route.name)
 			self.depefer_route(self.selected_router, route)
 
+	def update_routing_tables(self):
+		for i in range(len(self.routers)):
+			if self.routers[i] == self.selected_router:
+				router_index = i
+		table_str = ""
+		done = False
+		self.socket.send("READ_TABLE", str(router_index))
+		while not done:
+			resp = self.socket.recv(self.size)
+			#self.log("Received: ", resp)
+			if resp.find("<TABLE>") != -1:
+				table_str += resp[resp.find("<TABLE>"):]
+				while True:
+					resp = self.socket.recv(self.size)
+					if resp.find("</TABLE>") == -1:
+						table_str += resp
+					else:
+						table_str += resp[:resp.find("</TABLE>")]
+						break
+		table = table_str.split(";")
+		self.selected_router.preferred_routes = table
+		self.socket.send("READ_RAW_TABLE", str(router_index))
+		while not done:
+			resp = self.socket.recv(self.size)
+			#self.log("Received: ", resp)
+			if resp.find("<TABLE>") != -1:
+				table_str += resp[resp.find("<TABLE>"):]
+				while True:
+					resp = self.socket.recv(self.size)
+					if resp.find("</TABLE>") == -1:
+						table_str += resp
+					else:
+						table_str += resp[:resp.find("</TABLE>")]
+						break
+		table = table_str.split(";")
+		self.selected_router.routing_table = table
+	
+	def update_packetlist(self):
+		for i in range(len(self.routers)):
+			if self.routers[i] == self.selected_router:
+				router_index = i
+		table_str = ""
+		done = False
+		self.socket.send("READ_TABLE", str(router_index))
+		while not done:
+			resp = self.socket.recv(self.size)
+			#self.log("Received: ", resp)
+			if resp.find("<TABLE>") != -1:
+				table_str += resp[resp.find("<TABLE>"):]
+				while True:
+					resp = self.socket.recv(self.size)
+					if resp.find("</TABLE>") == -1:
+						table_str += resp
+					else:
+						table_str += resp[:resp.find("</TABLE>")]
+						break
+		table = table_str.split(";")
+		self.selected_router.as_packets = table
+	
 	def start_sim(self):
 		sim_conf = "<SIM_CONFIG>"
 		conf = []
@@ -511,9 +573,17 @@ class SimulationUI:
 
 	def loop(self):
 		self.done = False
+		self.sim_running = False
 		self.screen.blit(self.background, (0,0))
 		self.routerlist_con.draw()
+		self.packetlist_con.draw()
+		self.draw_network()
+		for t in self.texts:
+			self.screen.blit(t[0], t[1])
 		while not self.done:
+			self.draw_network()
+			if self.sim_running:
+				self.update_routing_tables()
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					if event.button == 1:
