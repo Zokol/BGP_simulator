@@ -526,15 +526,34 @@ class SimulationUI:
 		sim_conf += "</SIM_CONFIG>"
 		print sim_conf
 		self.socket.send(sim_conf)
-		resp = self.socket.recv(self.size)
+		self.wait_for("ACK")
+		self.socket.send("START")
 
 	def stop_sim(self):
 		self.socket.send("STOP")
 		resp = self.socket.recv(self.size)
+		self.log("Received: ", resp)
 
+	#Debug-function, raw send and receive. Notice that receive length is fixed and this function does not wayt for any responce
 	def send_socket_cmd(self, cmd):
 		self.socket.send(cmd)
 		resp = self.socket.recv(self.size)
+		self.log("Received: ", resp)
+
+	#Default function to use when setting config while simulation is running, waits for proper responce from server before continuing
+	def send_config(self, cmd):
+		self.socket.send(cmd)
+		resp = self.socket.recv(self.size)
+		self.wait_for("ACK")
+
+	def wait_for(self, cmd):
+		done = False
+		while not done:
+			resp = self.socket.recv(self.size)
+			self.log(resp)
+			if resp.find(cmd) != -1:
+				done = True
+			self.log(cmd, " OK")
 
 	def select_router(self, namelist, event):
 		sel = namelist.get_selected()
