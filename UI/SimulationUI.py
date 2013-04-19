@@ -573,6 +573,52 @@ class SimulationUI:
 			if r.as_id == name:
 				return r
 
+	def draw_network(self):
+		x = 777
+		y = 32
+		max_x = 300
+		x_step = 40
+		y_step = 40
+		radius = 15
+		#self.network_con.spritegroup.empty()
+		router_points = []
+		r_x = x
+		r_y = y
+		self.network_con.draw()
+		for r in self.routers:
+			router_points.append([r.as_id, r_x, r_y])
+			#btn = FuncButton(self.network_con, r_x, r_y, width, height, [[r.as_id, None]], None, 8, self.screen, 1, (None, None), True, False, True)
+			#self.network_con.spritegroup.add(btn)
+			if (r_x - x) < max_x:
+				r_x += (x_step + (radius*2)) 
+			else:
+				r_x = x
+				r_y += (y_step + (radius*2))
+		#print router_points
+		for r_id in range(len(self.routers)):
+			r = self.routers[r_id]
+			coord_a = (router_points[r_id][1], router_points[r_id][2])
+			for p in r.interfaces:
+				if p.client != None:
+					for i in router_points:
+						if i[0] == p.client.as_id:
+							#print "Client found"
+							coord_b = (i[1], i[2])
+							pygame.draw.line(self.screen, (0,0,0), coord_a, coord_b, 2)
+							break
+		for c in router_points:	
+			pygame.draw.circle(self.screen, (255,255,255), (c[1], c[2]), radius+2)
+			pygame.draw.circle(self.screen, (0,0,100), (c[1], c[2]), radius)
+			font = pygame.font.Font(FONT, int(20*FONTSCALE))
+			text = font.render(c[0], True, (255,255,255))
+			rect = text.get_rect()
+			rect.centerx = c[1]
+			rect.centery = c[2]
+			self.screen.blit(text, rect)
+			
+		#rect = pygame.Rect((777,32), (380, 250))
+		#ellipse = pygame.draw.ellipse(self.screen, (0,0,0), rect, 5)
+
 	def draw_selectdialogs(self):
 		self.sprites.update()
 		self.sprites._spritelist.sort(key = lambda sprite: sprite._layer)
