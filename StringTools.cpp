@@ -229,3 +229,47 @@ string StringTools::convertMaskToString(sc_uint<32> p_Mask)
 	convert << 32-i;      // insert the textual representation of 'Number' in the characters in the stream
     return convert.str();
 }
+
+
+/*! \sa StringTools
+ */
+bool StringTools::ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress)
+{
+    
+	string l_Octet;
+	unsigned l_BinOctet = 0;
+
+	unsigned l_Start = 0, l_End;
+
+    //Loop through all the octets
+	for(int i = 0; i < 4; i++ )
+	{
+        //The three first octets
+		if(i < 3)
+            {
+                l_End = p_IPAddress.find(".", l_Start);
+                l_Octet = p_IPAddress.substr(l_Start,l_End-l_Start);
+                l_Start = l_End+1;
+            }
+        //the last octet
+		else
+            l_Octet = p_IPAddress.substr(l_Start);
+
+        //convet the string to binary
+		istringstream(l_Octet) >> l_BinOctet;
+
+        //check that the value is inside the range
+		if(l_BinOctet > 255)
+		{
+			return false;
+		}
+
+        //store the value in the buffer
+		*(p_IPBinAddress+i) = (unsigned char)l_BinOctet;
+    
+    }
+
+    //return
+    return true;
+}
+

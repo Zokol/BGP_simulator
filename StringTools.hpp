@@ -81,6 +81,18 @@ public:
 
     string convertMaskToString(sc_uint<32> p_Mask);
 
+    /*! \fn bool ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress); 
+     * \brief Converts string type IPAddress to binary form in four element unsigned char array
+     * \details 
+     * @param [in] string p_IPAddress 
+     * @param [out] unsigned char *p_IPBinAddress 
+     * \return bool: true - conversion success | false - conversion failed
+     * \public
+     */
+    bool ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress);
+    
+
+
 private:
 
     string m_BaseName;
