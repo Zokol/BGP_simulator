@@ -27,7 +27,7 @@ using sc_dt::sc_bv;
 #ifndef PACKET_H
 #define PACKET_H
 
-#define MTU 192
+#define MTU 576
 #define TYPE_IP 0
 #define TYPE_BGP 1
 
@@ -104,6 +104,24 @@ public:
      */
     bool setProtocolType(int p_ProtocolType);
 
+    /*! \fn void setPDU(const unsigned char *p_PDU); 
+     * \brief Sets the PDU
+     * \details 
+     * @param [in] const unsigned char *p_PDU  
+     * \public
+     */
+    void setPDU(const unsigned char *p_PDU);
+    
+
+    /*! \fn void getPDU(unsigned char *p_PDU); 
+     * \brief Copy PDU to the array pointed by p_PDU
+     * \details 
+     * \return unsigned char *p_PDU
+     * \public
+     */
+    void getPDU(unsigned char *p_PDU);
+    
+
     /*!
      * \brief Get IP packet
      * \return \b <sc_bv<int>> The IP packet as bit string
@@ -156,7 +174,15 @@ public:
     inline friend ostream& operator << (ostream& os,  Packet const & p_Packet )
     {   
 
-        os  << "BGP_Payload: " << p_Packet.m_BGPPayload << ", IP_Payload: " << p_Packet.m_IPPayload << ", Protocol type: " << p_Packet.m_ProtocolType;
+        os  << "BGP_Payload: " << p_Packet.m_BGPPayload << ", IP_Payload: " << p_Packet.m_IPPayload << ", Protocol type: " << p_Packet.m_ProtocolType << "PDU: " << endl;
+
+        for (int i = 0; i < MTU; i++)
+            {
+                if(i%4 == 0)
+                    os << endl;
+                os << p_Packet.m_PDU[i] << ";";
+            }
+
         return os;
     }
 
@@ -174,6 +200,7 @@ public:
         sc_trace(p_TraceFilePointer, p_Packet.m_ProtocolType, p_TraceObjectName + ".Protocol_Type");
         sc_trace(p_TraceFilePointer, p_Packet.m_IPPayload, p_TraceObjectName + ".IP_Payload");
         sc_trace(p_TraceFilePointer, p_Packet.m_BGPPayload, p_TraceObjectName + ".BGP_Payload");
+
     }
   
 
@@ -192,6 +219,14 @@ private:
      * \private
      */
     sc_bv<MTU> m_IPPayload;
+
+    
+    /*! \property unsigned char m_PDU[MTU] 
+     * \brief The PDU that this packet carries 
+     * \details IP packet is stored in this one
+     * \private
+     */
+    unsigned m_PDU[MTU];
 
     /*! \brief Holds the protocol type of the packet 
      * \details 

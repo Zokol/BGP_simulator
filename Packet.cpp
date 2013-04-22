@@ -79,8 +79,36 @@ int Packet::getProtocolType(void)
     return m_ProtocolType;
 }
 
+void Packet::setPDU(const unsigned char *p_PDU)
+{
+    for (int i = 0; i < MTU; i++)
+        {
+            m_PDU[i] = p_PDU[i];
+        }
+}
+
+
+/*! \sa Packet
+ */
+void Packet::getPDU(unsigned char *p_PDU)
+{
+    
+    for (int i = 0; i < MTU; i++)
+        {
+            p_PDU[i] = m_PDU[i];
+        }
+
+}
+
+
 
 bool Packet::operator == (const Packet& p_Packet) const {
+
+    for (int i = 0; i < MTU; i++)
+        {
+            if(m_PDU[i] != p_Packet.m_PDU[i])
+                return false;
+        }
     return (p_Packet.m_IPPayload == m_IPPayload && p_Packet.m_BGPPayload == m_BGPPayload && p_Packet.m_ProtocolType == m_ProtocolType );
 }
 
@@ -88,6 +116,9 @@ Packet& Packet::operator = (const Packet& p_Packet) {
     m_BGPPayload = p_Packet.m_BGPPayload;
     m_IPPayload = p_Packet.m_IPPayload;
     m_ProtocolType = p_Packet.m_ProtocolType;
+    for (int i = 0; i < MTU; i++)
+        m_PDU[i] = p_Packet.m_PDU[i];
+
     return *this;
 }
 
