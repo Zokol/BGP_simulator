@@ -17,8 +17,13 @@
 
 using namespace std;
 
+
+
+
 #ifndef _PACKETPROCESSOR_H_
 #define _PACKETPROCESSOR_H_
+
+#define VERSION 4
 
 /*! \class PacketProcessor
  * \brief Performs all the tasks related to IP packet processing
@@ -114,6 +119,26 @@ private:
      * \private
      */
     bool m_Valid;
+
+    /*! \fn void buildIPPacket(void) 
+     * \brief Builds an IP packet using the member fields as data
+     * \details 
+     * \private
+     */
+    void buildIPPacket(void);
+
+    /*! \fn void setBits(unsigned char *ptr_Target, unsigned char
+     * p_Value, int p_Shift); 
+     * \brief Set the value into the target. p_Shift defines the LSBbit position
+     * \details 
+     * @param [out] unsigned char *ptr_Target Pointer to the target value to be modified
+     * @param [in] unsigned char p_Value  Value to be added into p_Target
+     * @param [in] int p_Shift The LSB position from where the
+     * value will be added
+     * \p
+     */
+    void setBits(unsigned char *ptr_Target, unsigned char p_Value, int p_Shift);
+    
     
     
 };

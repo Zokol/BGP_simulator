@@ -11,6 +11,7 @@
 #include "Simulation.hpp"
 #include "Configuration.hpp"
 #include "GUIProtocolTags.hpp"
+#include "PacketProcessor.hpp"
 
 //!Defines the file name for the VCD output.
 //#define VCD_FILE_NAME "anjosi_ex3_vcd"
@@ -47,6 +48,7 @@ int sc_main(int argc, char * argv [])
     ///field parsing states
     enum fieldStates{S_AS_ID, S_PREFIX, S_MED, S_LOCAL_PREF, S_KEEPALIVE, S_HOLDDOWNMUL, S_PORT_ID};
 
+    PacketProcessor tes;
 
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT ); 
@@ -76,7 +78,7 @@ int sc_main(int argc, char * argv [])
     //general debugging flag
     sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for ControlPlane
-    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for BGPSession
     sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file
