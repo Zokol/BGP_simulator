@@ -14,6 +14,7 @@
 
 #include "systemc"
 #include "Packet.hpp"
+#include "StringTools.hpp"
 
 using namespace std;
 
@@ -23,7 +24,44 @@ using namespace std;
 #ifndef _PACKETPROCESSOR_H_
 #define _PACKETPROCESSOR_H_
 
+/*!
+ *IP Protocol version
+ */
 #define VERSION 4
+/*!
+ *Version length in bits
+ */
+#define VERSION_LENGTH 4
+/*!
+ * The first bit of version field starting from LSB bit of the field
+ */
+#define VERSION_POS 4
+/*!
+ *Version field index
+ */
+#define VERSION_INDEX 0
+/*!
+ *Standard header lenght
+ */
+#define IHL 5
+/*!
+ *Minimum packet length
+ */
+#define MIN_LENGTH 20
+/*!
+ *Time to leave TTL initial value
+ */
+#define TTL 15
+/*!
+ *Protocol type in IP datagram
+ */
+#define PROTOCOL 17
+
+
+
+
+
+
 
 /*! \class PacketProcessor
  * \brief Performs all the tasks related to IP packet processing
@@ -120,6 +158,14 @@ private:
      */
     bool m_Valid;
 
+    /*! \property StringTools m_Converter 
+     * \brief Tool to convert IP from string to binary
+     * \details 
+     * \private
+     */
+    StringTools m_Converter;
+    
+
     /*! \fn void buildIPPacket(void) 
      * \brief Builds an IP packet using the member fields as data
      * \details 
@@ -127,7 +173,7 @@ private:
      */
     void buildIPPacket(void);
 
-    /*! \fn void setBits(unsigned char *ptr_Target, unsigned char
+    /*! \fn void setSubField(unsigned char *ptr_Target, unsigned char
      * p_Value, int p_Shift); 
      * \brief Set the value into the target. p_Shift defines the LSBbit position
      * \details 
@@ -135,9 +181,40 @@ private:
      * @param [in] unsigned char p_Value  Value to be added into p_Target
      * @param [in] int p_Shift The LSB position from where the
      * value will be added
-     * \p
+     * \private
      */
-    void setBits(unsigned char *ptr_Target, unsigned char p_Value, int p_Shift);
+    void setSubField(unsigned char *ptr_Target, unsigned char p_Value, int p_Shift);
+
+    /*! \fn void setBit(unsigned char p_Target, int p_Position); 
+     * \brief Set the bit in position p_Position of the field pointed by ptr_Target.
+     * \details 
+     * @param [out] unsigned char *ptr_Target  
+     * @param [in] int p_Position  
+     * \private
+     */
+    void setBit(unsigned char *ptr_Target, int p_Position);
+    
+    /*! \fn void clearBit(unsigned char *p_Target, int p_Position); 
+     * \brief Clears the bit in position p_Position of the field pointed by ptr_Target
+     * \details 
+     * @param [out] unsigned char *ptr_Target  
+     * @param [in] int p_Position  
+     * \private
+     */
+    void clearBit(unsigned char *ptr_Target, int p_Position);
+
+    /*! \fn void setMultipleFields(unsigned char *ptr_Target, unsigned p_Value, unsigned p_NumberOfFields); 
+     * \brief Sets the value in the target buffer
+     * \details 
+     * @param [out] unsigned char *ptr_Target 
+     * @param [in] unsigned p_Value  
+     * @param [in] unsigned p_NumberOfFields 
+     * \private
+     */
+    void setMultipleFields(unsigned char *ptr_Target, unsigned p_Value, unsigned p_NumberOfFields);
+    
+    
+
     
     
     
