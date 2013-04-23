@@ -36,13 +36,6 @@ Packet::Packet(BGPMessage& p_BGPPayload, int p_ProtocolType)
 
 }
 
-Packet::Packet(sc_bv<MTU> p_IPPayload, int p_ProtocolType)
-{
-    m_ProtocolType = p_ProtocolType;
-    m_IPPayload = p_IPPayload;
-
-}
-
 bool Packet::setProtocolType(int p_ProtocolType)
 {
     m_ProtocolType = p_ProtocolType;  
@@ -52,20 +45,6 @@ bool Packet::setProtocolType(int p_ProtocolType)
 void Packet::setBGPPayload(BGPMessage& p_BGPPayload)
 {
     m_BGPPayload = p_BGPPayload;
-}
-
-void Packet::setIPPayload(sc_bv<MTU> p_IPPayload)
-{
-    m_IPPayload = p_IPPayload;
-}
-
-
-
-
-sc_bv<MTU> Packet::getIPPayload(void)
-{
-
-    return m_IPPayload;
 }
 
 BGPMessage& Packet::getBGPPayload(void)
@@ -86,7 +65,6 @@ void Packet::setPDU(const unsigned char *p_PDU)
             m_PDU[i] = p_PDU[i];
         }
 }
-
 
 /*! \sa Packet
  */
@@ -109,12 +87,11 @@ bool Packet::operator == (const Packet& p_Packet) const {
             if(m_PDU[i] != p_Packet.m_PDU[i])
                 return false;
         }
-    return (p_Packet.m_IPPayload == m_IPPayload && p_Packet.m_BGPPayload == m_BGPPayload && p_Packet.m_ProtocolType == m_ProtocolType );
+    return (p_Packet.m_BGPPayload == m_BGPPayload && p_Packet.m_ProtocolType == m_ProtocolType );
 }
 
 Packet& Packet::operator = (const Packet& p_Packet) {
     m_BGPPayload = p_Packet.m_BGPPayload;
-    m_IPPayload = p_Packet.m_IPPayload;
     m_ProtocolType = p_Packet.m_ProtocolType;
     for (int i = 0; i < MTU; i++)
         m_PDU[i] = p_Packet.m_PDU[i];
