@@ -56,6 +56,15 @@ using namespace std;
  *Protocol type in IP datagram
  */
 #define PROTOCOL 17
+/*!
+ *Defines the postion of the low order byte of checksum field
+ */
+#define CHECKSUM_FIELD 11
+
+/*!
+ *Header length
+ */
+#define HEADER_LENGTH 20
 
 
 
@@ -76,25 +85,23 @@ public:
 
     virtual ~PacketProcessor();
 
-    /*! \fn void sendMessage(string p_DestinationIP, string
-     * p_SourceIP, string p_Payload) 
-     * \brief Sends an IP message to the given destination, from the
-     * given source
+    /*! \fn void buildIPPacket(void) 
+     * \brief Builds an IP packet using the passed fields as data
+     * \details 
      * @param [in] string p_DestinationIP
      * @param [in] string p_SourceIP
      * @param [in] string p_Payload
-     * \details 
      * \public
      */
-    void sendMessage(string p_DestinationIP, string p_SourceIP, string p_Payload);
+    void buildIPPacket(string p_DestinationIP, string p_SourceIP, string p_Payload);
     
-    /*! \fn string readMessage(void); 
+    /*! \fn string readIPPacket(void); 
      * \brief Outputs the contents of an IP packet
      * \details The header and payload is written in the return string
      * \return string: the complete IP packet as a string 
      * \public
      */
-    string readMessage(void);
+    string readIPPacket(void);
     
     /*! \fn bool processPacket(Packet& p_Packet); 
      * \brief Validates an IP packet 
@@ -114,7 +121,8 @@ public:
     string getDestination(void);
 
     /*! \fn Packet& forward(void); 
-     * \brief Decrement the TTL, re-calculates the checksum, and returns the packet
+     * \brief Decrement the TTL, re-calculates the checksum, and
+     * returns the frame object
      * \details 
      * \return Packet&: Reference to this packet object 
      * \public
@@ -144,12 +152,12 @@ private:
      */
     string m_Payload;
 
-    /*! \property Packet m_Packet 
-     * \brief The packet under processing
+    /*! \property Packet m_Frame 
+     * \brief The frame in which the packet will be encapsulated
      * \details 
      * \private
      */
-    Packet m_Packet;
+    Packet m_Frame;
 
     /*! \property bool m_Valid 
      * \brief Indicates whether the packet is valid or not
@@ -163,58 +171,75 @@ private:
      * \details 
      * \private
      */
-    StringTools m_Converter;
+    StringTools m_Converter;  
     
-
-    /*! \fn void buildIPPacket(void) 
-     * \brief Builds an IP packet using the member fields as data
-     * \details 
-     * \private
-     */
-    void buildIPPacket(void);
-
-    /*! \fn void setSubField(unsigned char *ptr_Target, unsigned char
+    /*! \fn void setSubField(unsigned char *ptr_PacketBuffer, unsigned char
      * p_Value, int p_Shift); 
      * \brief Set the value into the target. p_Shift defines the LSBbit position
      * \details 
-     * @param [out] unsigned char *ptr_Target Pointer to the target value to be modified
+     * @param [out] unsigned char *ptr_PacketBuffer Pointer to the target value to be modified
      * @param [in] unsigned char p_Value  Value to be added into p_Target
      * @param [in] int p_Shift The LSB position from where the
      * value will be added
      * \private
      */
-    void setSubField(unsigned char *ptr_Target, unsigned char p_Value, int p_Shift);
+    void setSubField(unsigned char *ptr_PacketBuffer, unsigned char p_Value, int p_Shift);
 
     /*! \fn void setBit(unsigned char p_Target, int p_Position); 
      * \brief Set the bit in position p_Position of the field pointed by ptr_Target.
      * \details 
-     * @param [out] unsigned char *ptr_Target  
+     * @param [out] unsigned char *ptr_PacketBuffer  
      * @param [in] int p_Position  
      * \private
      */
-    void setBit(unsigned char *ptr_Target, int p_Position);
+    void setBit(unsigned char *ptr_PacketBuffer, int p_Position);
     
     /*! \fn void clearBit(unsigned char *p_Target, int p_Position); 
      * \brief Clears the bit in position p_Position of the field pointed by ptr_Target
      * \details 
-     * @param [out] unsigned char *ptr_Target  
+     * @param [out] unsigned char *ptr_PacketBuffer  
      * @param [in] int p_Position  
      * \private
      */
-    void clearBit(unsigned char *ptr_Target, int p_Position);
+    void clearBit(unsigned char *ptr_PacketBuffer, int p_Position);
 
-    /*! \fn void setMultipleFields(unsigned char *ptr_Target, unsigned p_Value, unsigned p_NumberOfFields); 
+    /*! \fn void setMultipleFields(unsigned char *ptr_PacketBuffer, unsigned p_Value, unsigned p_NumberOfFields); 
      * \brief Sets the value in the target buffer
      * \details 
-     * @param [out] unsigned char *ptr_Target 
+     * @param [out] unsigned char *ptr_PacketBuffer 
      * @param [in] unsigned p_Value  
      * @param [in] unsigned p_NumberOfFields 
      * \private
      */
-    void setMultipleFields(unsigned char *ptr_Target, unsigned p_Value, unsigned p_NumberOfFields);
-    
+    void setMultipleFields(unsigned char *ptr_PacketBuffer, unsigned p_Value, unsigned p_NumberOfFields);
+
+    /*! \fn unsigned setPayload(unsigned char *ptr_PacketBuffer); 
+     * \brief Set the payload to the IP packet and determinesthelengthof the packet
+     * \details 
+     * @param [out] unsigned char *ptr_PacketBuffer The target buffer in
+     * which the IP packet is being built to
+     * \return unsigned: The complete length of the built IP packet 
+     * \private
+     */
+    unsigned setPayload(unsigned char *ptr_PacketBuffer);
+
+    /*! \fn unsigned short readShort(unsigned char *ptr_PacketBuffer); 
+     * \brief Reads a short value from the packetBuffer
+     * \details The pointer to the packet buffer defines the loworderbyte ofthe short
+     * @param [in] unsigned char *ptr_PacketBuffer 
+     * \return unsigned short: the value read from the buffer 
+     * \private
+     */
+    unsigned short readShort(unsigned char *ptr_PacketBuffer);
     
 
+    /*! \fn void calculateCheckSum(unsigned_char p_PacketBuffer); 
+     * \brief calculates and add the checksum for the given packet buffer
+     * \details 
+     * @param [in/out] unsigned_char p_PacketBuffer  
+     * \private
+     */
+    void calculateCheckSum(unsigned char *ptr_PacketBuffer);
     
     
     
