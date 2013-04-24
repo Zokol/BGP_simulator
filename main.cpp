@@ -1,4 +1,4 @@
-/*! 
+/*!
  *  \file main.cpp
  *  \brief    The sc_main
  *  \details Start point of the simulation.
@@ -21,7 +21,7 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#define SIMULATION_DURATION 1000
+#define SIMULATION_DURATION 10
 
 #define IF_COUNT 4
 
@@ -51,9 +51,9 @@ int sc_main(int argc, char * argv [])
     PacketProcessor tes;
 
     ///Initiate a Server socket and bind it to port
-    ServerSocket SimulationServer ( PORT ); 
+    ServerSocket SimulationServer ( PORT );
     ///Declare a Server socket for the GUI connection
-    ServerSocket GUISocket; 
+    ServerSocket GUISocket;
     ///Instantiate a SimulationConfig object to store simulation
     ///configuration received from the GUI
     SimulationConfig l_Config;
@@ -88,17 +88,17 @@ int sc_main(int argc, char * argv [])
     StringTools l_DebugReport("Main");
 #if defined (_GUI) || defined(_GUI_TEST)
     RouterConfig *ptr_Router;
-   
+
     ///Accept the GUI connection
     cout << "Waiting the GUI to connect..." << endl;
-    SimulationServer.accept ( GUISocket ); 
+    SimulationServer.accept ( GUISocket );
     ///Set the socket API to non-blocking mode
     GUISocket.set_non_blocking(true);
     ///String buffer for received data
     string DataWord, temp;
     bool setupLoop = true, retrans = false;
     cout << "Receiving from the GUI..." << endl;
-    
+
     ///Start receiving from the GUI
     while(setupLoop)
         {
@@ -115,7 +115,7 @@ int sc_main(int argc, char * argv [])
                 }
 
             ///Find the start tag
-            
+
             if(DataWord.compare(0, START_TAG_LENGTH, START_TAG) == 0)
                 {
                     SC_REPORT_INFO(g_DebugMainID, l_DebugReport.newReportString("Start tag found"));
@@ -125,7 +125,7 @@ int sc_main(int argc, char * argv [])
 
                     ///Set the string index
                     unsigned i_End, i_Start = START_TAG_LENGTH;
-                    
+
                     ///find the end tag
                     i_End = DataWord.find(END_TAG, i_Start);
 
@@ -173,7 +173,7 @@ int sc_main(int argc, char * argv [])
                             ///declare and set the end and start
                             ///indeices for router parameters
                             unsigned j_Start = i_Start, j_End;
-                    
+
                             ///find the end of the router field
                             if(l_Idx == count-1) //the last router
                                 {
@@ -188,7 +188,7 @@ int sc_main(int argc, char * argv [])
                             unsigned k_End = j_End;
 
                             ///Init router configuration object for
-                            ///this 
+                            ///this
                             l_Config.addRouterConfig(l_Idx, IF_COUNT);
 
                             ///refer to the previous
@@ -266,7 +266,7 @@ int sc_main(int argc, char * argv [])
                                             state = S_PORT_ID;
                                             break;
                                         case S_PORT_ID:
-                
+
                                             for(int i = 0; i < 3; i++)
                                                 {
                                                     //parse each
@@ -283,7 +283,7 @@ int sc_main(int argc, char * argv [])
                                                     l_DebugReport.newReportString("subField: ");
                                                     SC_REPORT_INFO(g_DebugMainID, l_DebugReport.appendReportString(subField.c_str()));
 
- 
+
                                                     ///Store each
                                                     ///sub field into a
                                                     ///temporary array
@@ -302,10 +302,10 @@ int sc_main(int argc, char * argv [])
 
                                             break;
                                         default:
-                                            retrans = true;                  
+                                            retrans = true;
                                         }
 
-                                    j_Start = k_End + 1; 
+                                    j_Start = k_End + 1;
 
                                     if(retrans)
                                         break;
@@ -315,10 +315,10 @@ int sc_main(int argc, char * argv [])
 
                             if(retrans)
                                 break;
-                          
-                                
-                            l_Idx++;                            
-                            
+
+
+                            l_Idx++;
+
                         } //End of router field loop
 
                     if(retrans)
@@ -333,7 +333,7 @@ int sc_main(int argc, char * argv [])
                     GUISocket << NACK;
                     cout << "Unknown messge" << endl;
                     ///Continue receiving
-                    continue;   
+                    continue;
                 }
 
         }//End of receiving loop
@@ -367,7 +367,7 @@ int sc_main(int argc, char * argv [])
     SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Out of receiving loop"));
 
     ///Output received configuration
-    
+
 #else
 
 
@@ -395,7 +395,7 @@ int sc_main(int argc, char * argv [])
 
 #endif
 
-    
+
   /* Clock period intialization.
    * The clock period is 10 ns.
    */
@@ -413,7 +413,7 @@ int sc_main(int argc, char * argv [])
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation starts"));
 
 
-  ///run the simulation	
+  ///run the simulation
 
 
 #if defined (_GUI) || defined(_GUI_TEST)
