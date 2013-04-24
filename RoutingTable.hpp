@@ -35,10 +35,8 @@ struct Route
     string prefix;
     int mask;
     string ASes;
-    vector<int> routers;    // this is the sequence of routers in one path
     int OutputPort;
     Route * next;
-    Route * prev;
 };
 
 class RoutingTable: public sc_module, public RoutingTable_If
