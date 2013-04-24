@@ -59,7 +59,7 @@ void RoutingTable::routingTableMain(void)
             wait();
 
             ///Check the Interface states
-            for (int i = 0; i < m_RTConfig->getNumberOfInterfaces(); ++i)
+            for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
                 {
                     if(!(port_Session[i]->isSessionValid()))
                     {

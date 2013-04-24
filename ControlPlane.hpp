@@ -78,7 +78,7 @@ public:
     {
 
         //inititate the session events
-        for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
+        for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
             {
                 //connect the session to the data plane
                 m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);

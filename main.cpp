@@ -21,10 +21,6 @@ using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
 
-#define SIMULATION_DURATION 10
-
-#define IF_COUNT 4
-
 /*!
  * \brief SystemC main function
  * \details \li Establishes a TCP connection with the GUI program

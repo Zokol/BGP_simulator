@@ -136,6 +136,10 @@
 
 ///************************ Program modes *******************************
 
-#define _GUI
+#define SIMULATION_DURATION 10
+
+#define IF_COUNT 4
+
+//#define _GUI
 
 //#define _GUI_TEST

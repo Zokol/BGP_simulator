@@ -59,7 +59,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
     //bind routing table to the control plane
     m_RoutingTable.port_Output(m_Bgp);
-    for (int i = 0; i < m_RouterConfiguration->getNumberOfInterfaces(); i++)
+    for (int i = 0; i < m_RouterConfiguration->getNumberOfInterfaces()-1; i++)
         {
             m_RoutingTable.port_Session(*(m_Bgp.export_Session[i]));   
         }

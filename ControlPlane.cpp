@@ -27,11 +27,11 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
     export_Session = new sc_export<BGPSession_If>*[m_BGPConfig->getNumberOfInterfaces()];
 
     //inititate the sessions
-    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
+    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
         {
             //create a session
             m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), m_BGPConfig);
-            //make the hierarchial binding for receiving exports
+            //Export the session interface for RT
             export_Session[i] = new sc_export<BGPSession_If>;
             export_Session[i]->bind(*m_BGPSessions[i]);
         }
@@ -43,7 +43,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
 ControlPlane::~ControlPlane()
 {
 
-    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
+    for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
         delete m_BGPSessions[i];
     delete m_BGPSessions;
 }
