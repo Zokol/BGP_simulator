@@ -59,6 +59,10 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
     //bind routing table to the control plane
     m_RoutingTable.port_Output(m_Bgp);
+    for (int i = 0; i < m_RouterConfiguration->getNumberOfInterfaces(); i++)
+        {
+            m_RoutingTable.port_Session(*(m_Bgp.export_Session[i]));   
+        }
 
     SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Building the network interfaces"));
 
@@ -97,8 +101,6 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
             m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
             m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
 
-            //bind the interface to the Routing Table
-            //            m_RoutingTable.port_Session(*m_NetworkInterface[i]);
 
         }
     //delete the StringTools object
