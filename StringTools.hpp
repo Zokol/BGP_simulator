@@ -92,6 +92,16 @@ public:
      * \public
      */
     bool ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress);
+
+    /*! \fn string ipToString(unsigned char *ptr_IPBinAddress); 
+     * \brief Converts IP address from four byte binary form to string form
+     * \details 
+     * @param [in] unsigned p_IPBinAddress The ip address in binary form
+     * \return string: The IP address in string 
+     * \public
+     */
+    string ipToString(unsigned char *ptr_IPBinAddress);
+    
     
 
 

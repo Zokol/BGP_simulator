@@ -280,3 +280,19 @@ bool StringTools::ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress)
     return true;
 }
 
+/*! \sa StringTools
+ */
+string StringTools::ipToString(unsigned char *p_IPBinAddress)
+{
+	string l_IP = "";
+    //Loop through all the octets
+	for(int i = 0; i < 3; i++ )
+	{
+        l_IP += uToS(p_IPBinAddress[i]) + "."; 
+    }
+    l_IP += uToS(p_IPBinAddress[3]); 
+
+    //return
+    return l_IP;
+}
+
