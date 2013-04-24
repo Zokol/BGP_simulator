@@ -15,7 +15,7 @@
 
 Packet::Packet(void)
 {
-
+    initPDU();
 }
 
 Packet::~Packet(void)
@@ -24,12 +24,14 @@ Packet::~Packet(void)
 
 Packet::Packet(const Packet& p_Packet)
 {
+    initPDU();
     *this = p_Packet;
 }
 
 
 Packet::Packet(BGPMessage& p_BGPPayload, int p_ProtocolType)
 {
+    initPDU();
     m_BGPPayload = p_BGPPayload;
     m_ProtocolType = p_ProtocolType;
 
@@ -93,11 +95,24 @@ bool Packet::operator == (const Packet& p_Packet) const {
 Packet& Packet::operator = (const Packet& p_Packet) {
     m_BGPPayload = p_Packet.m_BGPPayload;
     m_ProtocolType = p_Packet.m_ProtocolType;
-    for (int i = 0; i < MTU; i++)
-        m_PDU[i] = p_Packet.m_PDU[i];
+    initPDU();
+    setPDU(p_Packet.m_PDU);
+
 
     return *this;
 }
+
+
+/*! \sa Packet
+ */
+void Packet::initPDU(void)
+{
+for (int i = 0; i < MTU; i++)
+    {
+        m_PDU[i] = 0;
+    }    
+}
+
 
 
 

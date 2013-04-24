@@ -193,13 +193,20 @@ private:
      * \details IP packet is stored in this one
      * \private
      */
-    unsigned m_PDU[MTU];
+    unsigned char m_PDU[MTU];
 
     /*! \brief Holds the protocol type of the packet 
      * \details 
      * \private
      */
     int m_ProtocolType;
+
+    /*! \fn void initPDU(void) 
+     * \brief Sets all the fields in m_PDU to zero
+     * \details 
+     * \private
+     */
+    void initPDU(void);
 
 };
 
