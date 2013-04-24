@@ -102,7 +102,7 @@ class RouterModel(UIObject):
 
 #XXX
 ##
-# Mock-up classes to hold the information until sockets are in place
+# Classes that mimic the simulation object-classes, simulation data is stored in these classes and data is synchronized via socket connection.
 ##
 #XXX
 
@@ -563,7 +563,7 @@ class SimulationUI:
 			self.log("Selected: " + router.name)
 			self.routermodel.select_router(router)
 			self.selected_router = router
-			print router, router.name, router.as_id, router.prefix, router.interfaces, router.routing_table, router.preferred_routes
+			#print router, router.name, router.as_id, router.prefix, router.interfaces, router.routing_table, router.preferred_routes
 		else:
 			# Unselect
 			self.routermodel.select_router(None)
@@ -600,8 +600,8 @@ class SimulationUI:
 				r_fontsize = int((radius*1.3))
 			else:
 				radius = max_radius
-			print r
-			print radius
+			#print r
+			#print radius
 		else:
 			radius = max_radius
 		for r in self.routers:
