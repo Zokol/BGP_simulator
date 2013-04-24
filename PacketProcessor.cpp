@@ -25,7 +25,9 @@ PacketProcessor::~PacketProcessor()
 string PacketProcessor::readIPPacket(void)
 {
     //Start tag
-    string l_IPString = "<TABLE>";
+    string l_IPString = "";
+
+    ///READ HEADER FIELDS
     //VERSION
     l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[0], 7, 4));
     l_IPString += ",";
@@ -36,17 +38,55 @@ string PacketProcessor::readIPPacket(void)
     l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[1], 7, 2));
     l_IPString += ",";
     //ECN
-    l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[0], 1, 0));
+    l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[1], 1, 0));
     l_IPString += ",";
     //LENGTH
-    l_IPString += m_Converter.uToS(readShort(&m_PacketBuffer[3]));
+    unsigned short l_Length = readShort(&m_PacketBuffer[3]);
+    l_IPString += m_Converter.uToS(l_Length);
     l_IPString += ",";
     //IDENTIFICATION
-    l_IPString += m_Converter.uToS(readShort(&m_PacketBuffer[3]));
+    l_IPString += m_Converter.uToS(readShort(&m_PacketBuffer[5]));
     l_IPString += ",";
-    //
+    //FLAGS
+    l_IPString += readBit(m_PacketBuffer[6], 7)?"1":"0"; //reserved
+    l_IPString += ",";
+    l_IPString += readBit(m_PacketBuffer[6], 6)?"1":"0"; //Don't fragment DF
+    l_IPString += ",";
+    l_IPString += readBit(m_PacketBuffer[6], 5)?"1":"0"; //More fragments MF
+    l_IPString += ",";
+    //FRAGMENT OFFSET
+    l_IPString += m_Converter.uToS(readFragmentOffSet());
+    l_IPString += ",";
+    //TTL
+    l_IPString += m_Converter.uToS(m_PacketBuffer[8]);
+    l_IPString += ",";
+    //PROTOCOL
+    l_IPString += m_Converter.uToS(m_PacketBuffer[9]);
+    l_IPString += ",";
+    //CHECKSUM
+    l_IPString += m_Converter.uToS(readShort(&m_PacketBuffer[11]));
+    l_IPString += ",";
+    //SOURCE IP
+    l_IPString += m_Converter.ipToString(&m_PacketBuffer[12]);
+    l_IPString += ",";
+    //DESTINATION IP
+    l_IPString += m_Converter.ipToString(&m_PacketBuffer[16]);
+    l_IPString += ",";
     //return
-    return "";
+
+    ///READ PAYLOAD
+
+    for (int i = HEADER_LENGTH; i < l_Length; i++)
+        {
+            if(m_PacketBuffer[i] == 32)
+                l_IPString += "_";
+            else
+                l_IPString += m_PacketBuffer[i];
+
+        }
+
+    l_IPString += ";";
+    return l_IPString;
 }
 
 /*! \sa PacketProcessor
@@ -254,19 +294,19 @@ unsigned short PacketProcessor::calculateCheckSum(unsigned char *ptr_PacketBuffe
         {
             //read next short from the header
             l_16b = readShort(&ptr_PacketBuffer[i]);
-            cout << i <<". short: " << l_16b << endl;
+
             //add it with the previous short
             l_32b += l_16b;            
         }
-    cout << "Header sum: " << l_32b << endl;
+
 
     //Store low order bits
     l_16b = 0;
     l_16b |= l_32b;
-    cout << "Low order byte: " << l_16b << endl;
+
     //shift the carry bits
     l_32b >>= 16;
-    cout << "Carry bits: " << l_32b << endl;
+
     //add the carry bits and low order bits
     l_16b += l_32b;
     return l_16b;    
@@ -280,11 +320,11 @@ void PacketProcessor::addCheckSum(unsigned char *ptr_PacketBuffer)
     
     //sum the header fields
     unsigned short l_16b = calculateCheckSum(ptr_PacketBuffer);
-    cout << "Carry bitss + Low order byte = " << l_16b << endl;
+
     //inverse the sum
-    cout << "before inversion: " << l_16b << endl;
+
     l_16b = ~l_16b;
-    cout << "inversed: " << l_16b << endl;
+
     //set the result to the checksum field of the header
     setMultipleFields(&ptr_PacketBuffer[CHECKSUM_FIELD], l_16b, 2);
 }
@@ -301,10 +341,10 @@ bool PacketProcessor::confirmCheckSum(void)
     //perform the first portion of the checksum calculation
     unsigned short l_Result = calculateCheckSum(m_PacketBuffer);
     //check the result
-    if(~(l_Result&0xFF))
-        return true;//The l_Result was all ones: Checksum is valid
-    else
+    if(l_Result != 0xFFFF)
         return false;//The l_Result was not all ones: Checksum is not valid
+    else
+        return true;//The l_Result was all ones: Checksum is valid
 }
 
 /*! \sa PacketProcessor
@@ -316,11 +356,13 @@ void PacketProcessor::resetPacketBuffer(void)
         m_PacketBuffer[i] = 0;
 }
 
-
-
-
-
-
+/*! \sa PacketProcessor
+ */
+unsigned short PacketProcessor::readFragmentOffSet(void)
+{
+    //return
+    return readShort(&m_PacketBuffer[7]) & 0x1fff;
+}
 
 
 

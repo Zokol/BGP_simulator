@@ -300,6 +300,15 @@ private:
      * \private
      */
     void resetPacketBuffer(void);
+
+    /*! \fn unsigned short readFragmentOffSet(void); 
+     * \brief Reads the fragment offset field from IP header
+     * \details 
+     * \return unsigned_short: the fragment offset value 
+     * \private
+     */
+    unsigned short readFragmentOffSet(void);
+    
     
     
     
