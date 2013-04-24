@@ -103,14 +103,14 @@ public:
      */
     string readIPPacket(void);
     
-    /*! \fn bool processPacket(Packet& p_Packet); 
+    /*! \fn bool processFrame(Packet& p_Packet); 
      * \brief Validates an IP packet 
      * \details Check whether the passed packet is a valid IP packet. 
      * @param [in] Packet p_Packet IP packet to be processed
      * \return bool: true == Packet is valid || false == Packet is not valid
      * \public
      */
-    bool processPacket(Packet& p_Packet);
+    bool processFrame(Packet& p_Packet);
 
     /*! \fn string getDestination(void); 
      * \brief Returns the destination of the processed packet
@@ -172,6 +172,14 @@ private:
      * \private
      */
     StringTools m_Converter;  
+
+    /*! \property unsigned char m_PacketBuffer[MTU] 
+     * \brief Buffer for the IP packet being processed
+     * \details 
+     * \private
+     */
+    unsigned char m_PacketBuffer[MTU];
+    
     
     /*! \fn void setSubField(unsigned char *ptr_PacketBuffer, unsigned char
      * p_Value, int p_Shift); 
@@ -231,15 +239,68 @@ private:
      * \private
      */
     unsigned short readShort(unsigned char *ptr_PacketBuffer);
-    
 
-    /*! \fn void calculateCheckSum(unsigned_char p_PacketBuffer); 
-     * \brief calculates and add the checksum for the given packet buffer
+    /*! \fn bool readBit(unsigned p_Value, unsigned p_BitPosition); 
+     * \brief Reads the bit from the p_Value field in position defined by p_BitPosition 
      * \details 
-     * @param [in/out] unsigned_char p_PacketBuffer  
+     * @param [in] unsigned p_Value The field from where the bit is to
+     * be read 
+     * @param [in] unsigned p_BitPosition The bit position in the
+     * p_Value field 
+     * \return bool: true - bit is set | false - bit is cleared
      * \private
      */
-    void calculateCheckSum(unsigned char *ptr_PacketBuffer);
+    bool readBit(unsigned p_Value, unsigned p_BitPosition);
+
+    /*! \fn unsigned readSubField(unsigned p_Value, unsigned p_LSB, unsigned p_MSB); 
+     * \brief Reads a sub field from the p_Value field starting fromthe po
+     * \details 
+     * @param [in] unsigned p_Value The field including the sub field
+     * @param [in] unsigned p_LSB The LSB bit of the sub field
+     * @param [in] unsigned p_MSB The MSB bit of the sub field
+     * \return unsigned: The value of the sub field
+     * \private
+     */
+    unsigned readSubField(unsigned p_Value, unsigned p_MSB, unsigned p_LSB);
+    
+    /*! \fn void calculateCheckSum(unsigned_char p_PacketBuffer); 
+     * \brief The common portion of the checksum calculation
+     * \details Divides the IP header into 16 bit fields, sums up
+     * those fields to a 32 bit field, and finally sums the 16 bit high order
+     * portion of the 32 bit field to the remaining low order portion and
+     * returns the sum
+     * @param [in] unsigned_char p_PacketBuffer  
+     * \return unsigned short: the first part of the header sum
+     * calculation: adding header fields in 16bit blocks and the sum
+     * of the carries and the loworder portion.
+     * \private
+     */
+    unsigned short calculateCheckSum(unsigned char *ptr_PacketBuffer);
+
+    /*! \fn void addCheckSum(unsigned char *ptr_PacketBuffer); 
+     * \brief Calculates and adds the check sum to the given IP packet
+     * \details 
+     * @param [in/out] unsigned p_PacketBuffer Pointer to the IP packet 
+     * \private
+     */
+    void  addCheckSum(unsigned char *ptr_PacketBuffer);
+
+    /*! \fn bool confirmCheckSum(void); 
+     * \brief Confirms that the checksum of the IP packet in m_Frame is
+     * valid
+     * \details 
+     * \return bool: true - checksum is valid | false - check sum is not valid 
+     * \private
+     */
+    bool confirmCheckSum(void);
+
+    /*! \fn void resetPacketBuffer(void) 
+     * \brief Resets all the fields in the m_PacketBuffer array
+     * \details 
+     * \private
+     */
+    void resetPacketBuffer(void);
+    
     
     
     
