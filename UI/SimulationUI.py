@@ -1,3 +1,12 @@
+"""
+ # \file 	SimulationUI.py
+ # \brief	User interface for BGP simulation
+ # \details	Sets the initial configuration and gives feedback for user about the simulation
+ # \author	Heikki Juva, 76718
+ # \version	1.5
+ # \date	24.4.2013
+"""
+
 import os, sys, time
 import pygame
 from pygame.locals import *
@@ -12,22 +21,21 @@ if not pygame.font:
 if not pygame.mixer:
 	print "Warning: Audio not enabled"
 
-
 class NameList(TextList):
 	def format_item(self, item):
 		return item.name
 
 
 ###
-# Name: RouterModel
+# \brief	RouterModel
 #
-# Description:
+# \details
 # Class to represent visual model of an simulated router
 # RouterModel uses InterfaceModel-class to handle FIFOs
 #
 # Parameters: 
-# - ports, number of network interfaces in router
-# - router, router-object that is shown in model
+# \li ports, number of network interfaces in router
+# \li router, router-object that is shown in model
 ###
 class RouterModel(UIObject):
 	def __init__(self, parent, surface, pos, router = None):
@@ -100,11 +108,10 @@ class RouterModel(UIObject):
 		rect.centery = 200
 		self.router_logicblock.surface.blit(text, rect)
 
-#XXX
-##
-# Mock-up classes to hold the information until sockets are in place
-##
-#XXX
+"""
+# \brief Simulation-objects
+# \details Classes that mimic the simulation object-classes, simulation data is stored in these classes and data is synchronized via socket connection.
+"""
 
 class Packet:
 	def __init__(self, header, payload):
@@ -204,6 +211,14 @@ class Console:
 class RoutingTable:
 	def __init__(self):
 		self.table = []
+
+"""
+# \brief SimulationUI
+# \details 
+# \li Defines the pygame-objects. 
+# \li Initializes simulation-objects to handle the data.
+# \li Creates socket to communicate with the simulation software.
+"""
 
 class SimulationUI:
 	def __init__(self, screen):
@@ -349,7 +364,8 @@ class SimulationUI:
 				self.log(self.selected_router.set_kt(str(params[1])))
 			elif params[0] == "set_hdm" and len(params) == 2:
 				self.log(self.selected_router.set_hdm(str(params[1])))
-			elif params[0] == "debug" and len(params) == 2:
+			elif params[0] == "debug":
+				params = cmd.split(" ", 1)
 				self.log(self.send_socket_cmd(str(params[1])))
 			elif params[0] == "test":
 				print self.routers
@@ -533,13 +549,13 @@ class SimulationUI:
 	def stop_sim(self):
 		self.socket.send("STOP")
 		resp = self.socket.recv(self.size)
-		self.log("Received: ", resp)
+		return "Received: ", resp
 
 	#Debug-function, raw send and receive. Notice that receive length is fixed and this function does not wayt for any responce
 	def send_socket_cmd(self, cmd):
 		self.socket.send(cmd)
 		resp = self.socket.recv(self.size)
-		self.log("Received: ", resp)
+		return "Received: ", resp
 
 	#Default function to use when setting config while simulation is running, waits for proper responce from server before continuing
 	def send_config(self, cmd):
@@ -554,7 +570,7 @@ class SimulationUI:
 			self.log(resp)
 			if resp.find(cmd) != -1:
 				done = True
-			self.log(cmd, " OK")
+			self.log(cmd + " OK")
 
 	def select_router(self, namelist, event):
 		sel = namelist.get_selected()
@@ -563,7 +579,7 @@ class SimulationUI:
 			self.log("Selected: " + router.name)
 			self.routermodel.select_router(router)
 			self.selected_router = router
-			print router, router.name, router.as_id, router.prefix, router.interfaces, router.routing_table, router.preferred_routes
+			#print router, router.name, router.as_id, router.prefix, router.interfaces, router.routing_table, router.preferred_routes
 		else:
 			# Unselect
 			self.routermodel.select_router(None)
@@ -600,8 +616,8 @@ class SimulationUI:
 				r_fontsize = int((radius*1.3))
 			else:
 				radius = max_radius
-			print r
-			print radius
+			#print r
+			#print radius
 		else:
 			radius = max_radius
 		for r in self.routers:
@@ -655,6 +671,19 @@ class SimulationUI:
 				f = b.function[0]
 				f(b.function[1])
 
+	"""
+	# \brief Simulation UI loop
+	# \details Main loop that updates the UI
+	# \li Clears the screen and draws the containers that divide window in smaller partitions 
+	# \li Updates network topology-view
+	# \li Starts the loop
+	# Inside the loop: 
+	# \li Update network topology.
+	# \li Update routing table-lists. 
+	# \li Check if there are evts for console of buttons.
+	# \li Draw the router-model to show parameters for selected router.
+	# \li Update the router selection dialog.
+	"""
 	def loop(self):
 		self.done = False
 		self.sim_running = False
@@ -679,6 +708,11 @@ class SimulationUI:
 					self.done = True
 			self.draw()
 			self.draw_selectdialogs()
+
+"""
+# \brief Init and loop
+# \details If UI is run, set the window to 1200*700, run initialization for Simulation UI and run the loop.
+"""
 
 if __name__ == "__main__":
 	screen = init_pygame((1200, 700))

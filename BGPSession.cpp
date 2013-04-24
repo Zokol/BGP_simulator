@@ -157,3 +157,41 @@ void BGPSession::setPeerIdentifier(string p_BGPIdentifier)
     m_BGPIdentifierPeer = p_BGPIdentifier;
 }
 
+
+/*! \sa BGPSession
+ */
+string BGPSession::getAS(void)
+{
+    
+    //return
+    return m_RTool.iToS(m_AS);
+}
+
+/*! \sa BGPSession
+ */
+int BGPSession::getOutboundInterface(void)
+{
+    return m_OutboundInterface;
+}
+
+/*! \sa BGPSession
+ */
+void BGPSession::setOutboundInterface(int p_Interface)
+{
+    
+    //store the arguments
+    m_OutboundInterface = p_Interface;
+    
+}
+
+/*! \sa BGPSession
+ */
+void BGPSession::setAS(int p_PeerAS)
+{
+    
+    //store the arguments
+    m_AS = p_PeerAS;
+    
+}
+
+

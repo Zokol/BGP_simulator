@@ -16,7 +16,6 @@
 
 
 
-
 RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
 {
 
@@ -62,10 +61,10 @@ void RoutingTable::routingTableMain(void)
             ///Check the Interface states
             for (int i = 0; i < m_RTConfig->getNumberOfInterfaces(); ++i)
                 {
-                    if(!(port_Control[i]->isUp()))
+                    if(!(port_Session[i]->isSessionValid()))
                     {
                         deleteRoutes(i);
-                        //cout << "Interface " << i << " is down: " << port_Control[i]->isUp() << endl;
+                        //cout << "Interface " << i << " is down: " << port_Session[i]->isUp() << endl;
                     }
                 }
 

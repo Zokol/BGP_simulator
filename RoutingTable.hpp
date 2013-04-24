@@ -18,7 +18,7 @@
 #include "RoutingTable_If.hpp"
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
-#include "Interface_If.hpp"
+#include "BGPSession_If.hpp"
 #include "Output_If.hpp"
 
 using namespace std;
@@ -63,7 +63,7 @@ public:
      * network interfaces are up or not.
      * \public
      */
-    sc_port<Interface_If, 0, SC_ZERO_OR_MORE_BOUND> port_Control;
+    sc_port<BGPSession_If, 0, SC_ZERO_OR_MORE_BOUND> port_Session;
 
     /*! \brief Output port for BGP messages
      * \details The RoutingTable writes all the BGP messages to be send
