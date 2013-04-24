@@ -349,7 +349,8 @@ class SimulationUI:
 				self.log(self.selected_router.set_kt(str(params[1])))
 			elif params[0] == "set_hdm" and len(params) == 2:
 				self.log(self.selected_router.set_hdm(str(params[1])))
-			elif params[0] == "debug" and len(params) == 2:
+			elif params[0] == "debug":
+				params = cmd.split(" ", 1)
 				self.log(self.send_socket_cmd(str(params[1])))
 			elif params[0] == "test":
 				print self.routers
@@ -533,13 +534,13 @@ class SimulationUI:
 	def stop_sim(self):
 		self.socket.send("STOP")
 		resp = self.socket.recv(self.size)
-		self.log("Received: ", resp)
+		return "Received: ", resp
 
 	#Debug-function, raw send and receive. Notice that receive length is fixed and this function does not wayt for any responce
 	def send_socket_cmd(self, cmd):
 		self.socket.send(cmd)
 		resp = self.socket.recv(self.size)
-		self.log("Received: ", resp)
+		return "Received: ", resp
 
 	#Default function to use when setting config while simulation is running, waits for proper responce from server before continuing
 	def send_config(self, cmd):
