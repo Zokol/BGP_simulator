@@ -49,6 +49,14 @@ int sc_main(int argc, char * argv [])
     enum fieldStates{S_AS_ID, S_PREFIX, S_MED, S_LOCAL_PREF, S_KEEPALIVE, S_HOLDDOWNMUL, S_PORT_ID};
 
     PacketProcessor tes;
+    tes.buildIPPacket("192.168.1.1", "192.168.1.2", "This is a test message");
+    Packet l_Frame = tes.forward();
+    // cout << l_Frame << endl;
+    PacketProcessor rcv;
+    if(rcv.processFrame(l_Frame))
+        cout << "CheckSum is valid" << endl;
+    else
+        cout << "CheckSum is not valid" << endl;
 
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT ); 

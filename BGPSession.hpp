@@ -34,6 +34,7 @@
 
 
 #include "systemc"
+#include "BGPSession_If.hpp"
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
 #include "Output_If.hpp"
@@ -49,7 +50,7 @@ using namespace sc_dt;
 
 
 
-class BGPSession: public sc_module
+class BGPSession: public sc_module, public BGPSession_If
 {
 
 public:
@@ -119,7 +120,7 @@ public:
      * is still valid or not. I.e. is the HoldDown timer expired.
      * \public
      */
-    bool isSessionValid(void);
+    virtual bool isSessionValid(void);
 
     /*! \fn void sessionStop(void)
      *  \brief Stops this session
@@ -127,7 +128,7 @@ public:
      * keepalive messages are sent after a call of this function
      * \public
      */
-    void sessionStop(void);
+    virtual void sessionStop(void);
 
     /*! \fn void sessionStart(void)
      *  \brief Starts the session
@@ -145,6 +146,24 @@ public:
      * \public
      */
     void setPeerIdentifier(string p_BGPIdentifier);
+
+    /*! \fn void setOutboundInterface(int p_Interface); 
+     * \brief Set the interface id, which connects to the peering session
+     * \details 
+     * @param [in] int p_Interface  
+     * \public
+     */
+    void setOutboundInterface(int p_Interface);
+    
+    /*! \fn void setAS(int p_PeerAS); 
+     * \brief The AS of the peer
+     * \details 
+     * @param [in] int p_PeerAS  
+     * \public
+     */
+    void setAS(int p_PeerAS);
+    
+
 
     /*! \fn bool isThisSession(string p_BGPIdentifier)
      *  \brief Checks whether this session is for the passed BGP Identifier
@@ -164,6 +183,16 @@ public:
      */
     void resetKeepalive(void);
 
+    /*!
+     * \sa BGPSession_If
+     */
+    virtual int getOutboundInterface(void);
+
+    /*!
+     * \sa BGPSession_If
+     */
+    virtual string getAS(void);
+
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
      * \public
@@ -171,6 +200,21 @@ public:
     SC_HAS_PROCESS(BGPSession);
 
 private:
+
+    /*! \property int m_AS 
+     * \brief AS identifier
+     * \details 
+     * \private
+     */
+    int m_AS;
+
+    /*! \property int m_OutboundInterface 
+     * \brief The local interface that connect to the session peer
+     * \details 
+     * \private
+     */
+    int m_OutboundInterface;
+    
 
     /*! \property sc_mutex m_KeepaliveMutex
      *  \brief Handles the arbitration for Keepalive reset
