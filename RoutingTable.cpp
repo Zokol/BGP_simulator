@@ -52,7 +52,6 @@ void RoutingTable::routingTableMain(void)
     fillRoutingTable(); // IIRO testing
 
 
-
     int count = 0;
     //The main thread of routing table module starts
     while(true)
@@ -87,15 +86,12 @@ void RoutingTable::routingTableMain(void)
 
             if((m_BGPMsg.m_Type = UPDATE))
             {
-
-
-
                 updateRoutingTable();
 
                 // IIRO testailuu
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
-/*
+
                 cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
@@ -105,7 +101,8 @@ void RoutingTable::routingTableMain(void)
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-*/
+
+//                handleWithdraw("0,50.40.200.0,2,50-70-100-5555");
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
@@ -224,14 +221,12 @@ void RoutingTable::setRoute(Route p_route)
     newRoute->mask = p_route.mask;
     newRoute->OutputPort = p_route.OutputPort;
     newRoute->ASes = p_route.ASes;
-    newRoute->routers = p_route.routers;
 
 
     if(m_headOfRoutingTable->next == 0)
     {
         // RoutingTable is empty. So add the first Route in it
         m_headOfRoutingTable->next = newRoute;
-        newRoute->prev = m_headOfRoutingTable;
         m_endOfRoutingTable = newRoute;
         newRoute->next = 0;
     }
@@ -239,7 +234,6 @@ void RoutingTable::setRoute(Route p_route)
     {
         // RoutingTable wasn't empty
         m_endOfRoutingTable->next = newRoute;
-        newRoute->prev = m_endOfRoutingTable;
         m_endOfRoutingTable = newRoute;
         newRoute->next = 0;
     }
@@ -367,25 +361,13 @@ string RoutingTable::routingTableToString(Route * p_route)
 
 /*
     Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
-    Syntax: ID,Prefix,Mask,Routers,ASes (e.g. 5,100100200050,8,2-4-6-7,100-4212-231-22)
+    Syntax: ID,Prefix,Mask,ASes (e.g. 5,100100200050,8,100-4212-231-22)
 */
 string RoutingTable::routeToString(Route p_route)
 {
     stringstream ss;
     ss.str("");
-    ss << p_route.id  << "," << p_route.prefix << "," << p_route.mask << ",";
-
-
-    for(unsigned i = 0;i < p_route.routers.size();i++)
-    {
-        if(i < p_route.routers.size()-1)
-            ss << p_route.routers.at(i) << "-";
-        else
-            ss << p_route.routers.at(i);
-    }
-    ss << ",";
-    ss << p_route.ASes;
-
+    ss << p_route.id  << "," << p_route.prefix << "," << p_route.mask << "," << p_route.ASes;
     return ss.str();
 }
 
@@ -422,19 +404,8 @@ void RoutingTable::printRawRoutingTable()
 void RoutingTable::printOneRoute(Route p_route)
 {
     stringstream ss;
-    ss << "Id:" << p_route.id <<" Prefix: " <<  p_route.prefix << " Mask: " <<  p_route.mask << " Output port: " << p_route.OutputPort << " ASes: ";
+    ss << "Id:" << p_route.id <<" Prefix: " <<  p_route.prefix << " Mask: " <<  p_route.mask << " Output port: " << p_route.OutputPort << " ASes: " << p_route.ASes;
     string message = ss.str();
-    ss.str("");
-
-    for(unsigned i = 0; i < p_route.routers.size();i++)
-    {
-        ss << p_route.routers.at(i);
-
-    }
-    string routers = ss.str();
-    //cout << "JA ROUTTERIT: " << routers << endl;
-
-    message.append(p_route.ASes);
     cout << message << endl;
 }
 
@@ -459,7 +430,6 @@ void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
     {
         // RoutinTable was empty. Add the first item in it. It's also the last item of it.
         m_headOfRawTable->next = newRoute;
-        newRoute->prev = m_headOfRawTable;
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
     }
@@ -467,7 +437,6 @@ void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
     {
         // RoutinTable wasn't empty. Add new Route object in it. Add it to the end.
         m_endOfRawTable->next = newRoute;
-        newRoute->prev = m_endOfRawTable;
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
     }
@@ -475,16 +444,16 @@ void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 
 /*
     Create a Route object from p_msg. p_msg must be constructed as follows:
-    IP;Mask;Routers;ASes;ownRouterId;ownAS (e.g. 10.255.0.100,8,2-5-10-1,550-7564-4,9,555)
-    Parse message and collect IP,Mask, Routers,ASes, own router id and own AS number which are separated by ","-mark
+    IP;Mask;ASes;ownRouterId;ownAS (e.g. 10.255.0.100,8,550-7564-4,9,555)
+    Parse message and collect IP,Mask,ASes, own router id and own AS number which are separated by ","-mark
 */
 void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
     // Use these to collect data separetad by semicolon
     int position = 0;
-    int IP_end,Mask_end,Routers_end, ASes_end,ownRouterId_end,ownAsId_end;
+    int IP_end,Mask_end, ASes_end,ownRouterId_end,ownAsId_end;
 
-    for(int i=0;i<6;i++)
+    for(int i=0;i<5;i++)
     {
         position = p_msg.find(",",position+1);
 
@@ -493,37 +462,19 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
         else if(i==1)
             Mask_end = position;
         else if(i==2)
-            Routers_end = position;
-        else if(i==3)
             ASes_end = position;
-        else if(i==4)
+        else if(i==3)
             ownRouterId_end = position;
-        else if(i==5)
+        else if(i==4)
             ownAsId_end = position;
     }
 
     string IPAddress = p_msg.substr(0,IP_end);
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
-    string Routers = p_msg.substr((Mask_end+1),(Routers_end-Mask_end-1));
-    string ASes = p_msg.substr((Routers_end+1),(ASes_end-Routers_end-1));
+    string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
     string ownRouter = p_msg.substr((ASes_end+1),(ownRouterId_end-ASes_end-1));
     string ownAS = p_msg.substr((ownRouterId_end+1),(ownAsId_end-ownRouterId_end-1));
 
-    // Create vector<int> from "Routers"
-    unsigned newPosition = 0;
-    unsigned oldPosition = 0;
-    int routerId;
-    vector<int> listOfRouters;
-
-
-    while(newPosition<Routers.size())
-    {
-        newPosition = Routers.find("-",oldPosition+1);
-        routerId =  atoi((Routers.substr(oldPosition,newPosition-oldPosition)).c_str());
-        oldPosition = newPosition+1;
-        listOfRouters.push_back(routerId);
-    }
-    listOfRouters.push_back(atoi(ownRouter.c_str()));
     ASes.append("-");
     ASes.append(ownAS);
 
@@ -532,14 +483,13 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     p_route->prefix = IPAddress;
     p_route->mask = atoi(Mask.c_str());
     p_route->ASes = ASes;
-    p_route->routers = listOfRouters;
     p_route->OutputPort = p_outputPort;
 }
 
 /*
     Remove given route from RawRoutingTable
 */
-void RoutingTable::removeFromRawTable(int p_routerId)
+void RoutingTable::removeFromRawTable(int p_routeId)
 {
     Route * deleteRoute = new Route();
     Route * tempRoute = new Route();
@@ -548,7 +498,7 @@ void RoutingTable::removeFromRawTable(int p_routerId)
     {
         tempRoute = deleteRoute;
         deleteRoute = deleteRoute->next;
-        if(deleteRoute->id == p_routerId)
+        if(deleteRoute->id == p_routeId)
         {
             if(deleteRoute == m_endOfRoutingTable)
             {
@@ -563,7 +513,7 @@ void RoutingTable::removeFromRawTable(int p_routerId)
 /*
     Remove given route from MainRoutingTable
 */
-void RoutingTable::removeFromRoutingTable(int p_routerId)
+void RoutingTable::removeFromRoutingTable(int p_routeId)
 {
     Route * deleteRoute = new Route();
     Route * tempRoute = new Route();
@@ -572,7 +522,7 @@ void RoutingTable::removeFromRoutingTable(int p_routerId)
     {
         tempRoute = deleteRoute;
         deleteRoute = deleteRoute->next;
-        if(deleteRoute->id == p_routerId)
+        if(deleteRoute->id == p_routeId)
         {
             tempRoute->next = deleteRoute->next;
             if(deleteRoute == m_endOfRoutingTable)
@@ -605,31 +555,6 @@ void RoutingTable::clearRoutingTables()
     updateRoutingTable();
 }
 
-/*
-    Iterate through RawRoutingTable and remove all the routes that have link between p_router1 and p_router2
-*/
-void RoutingTable::deleteRoute(int p_router1, int p_router2)
-{
-    m_iterator = m_headOfRawTable;
-
-    // Iterate through RawRoutingTable
-    while(m_iterator->next != 0)
-    {
-        m_iterator = m_iterator->next;
-
-        // Check if this route has link between p_router1 and p_router2
-        for(unsigned i = 0;i<m_iterator->routers.size()-1;i++)
-        {
-            if(m_iterator->routers.at(i) == p_router1)
-                if(m_iterator->routers.at(i+1) == p_router2)
-                    removeFromRawTable(m_iterator->id);
-            if(m_iterator->routers.at(i) == p_router2)
-                if(m_iterator->routers.at(i+1) == p_router1)
-                    removeFromRawTable(m_iterator->id);
-        }
-    }
-
-}
 
 /*
     Delete all the routes from RawRoutingTable that have p_outputPort as output port.
@@ -644,8 +569,9 @@ void RoutingTable::deleteRoutes(int p_outputPort)
         m_iterator = m_iterator->next;
         if(m_iterator->OutputPort == p_outputPort)
         {
+            // Same output port so delete the route from RawTable and send UPDATE-withdraw message to all peers
+            sendWithdraw(*m_iterator);
 
-            // Same output port so delete the route from RawTable
             removeFromRawTable(m_iterator->id);
             routesDeleted = true;
         }
@@ -653,6 +579,85 @@ void RoutingTable::deleteRoutes(int p_outputPort)
     // If RawTable was modified update MainRoutingTable
     if(routesDeleted)
         updateRoutingTable();
+}
+
+// Handle withdraw-message. Remove given route from RawRoutingTable, update MainRoutingTable and forward this message
+// Withdraw-message syntax: withdraw/ad,prefix,mask,AS-path (i.e. 0,100.200.50.0,16,50-123-321-999)
+void RoutingTable::handleWithdraw(string p_message)
+{
+    // Parse message
+
+    int pos_prefix, pos_mask, pos_ASes;
+    int position = 0;
+
+    for(int i = 0; i < 3;i++)
+    {
+        position = p_message.find(",",position+2);
+
+        if(i==0)
+            pos_prefix = position;
+        else if(i==1)
+            pos_mask = position;
+        else if(i==2)
+            pos_ASes = position;
+    }
+    string l_prefix = p_message.substr(0,pos_prefix);
+    string l_mask = p_message.substr((pos_prefix+1),(pos_mask-pos_prefix-1));  // -1 to remove ","-sign
+    string l_ASpath = p_message.substr((pos_mask+1),(pos_ASes-pos_mask-1));
+
+
+    stringstream ss;
+    Route * l_iterator = new Route;
+    l_iterator = m_headOfRawTable;
+    while(l_iterator->next != 0)
+    {
+        l_iterator = l_iterator->next;
+        ss << l_iterator->mask;
+
+        // Comapre if p_message and current ruote have same prefix,mask and AS-path
+        if(l_iterator->prefix == l_prefix && ss.str() == l_mask && l_iterator->ASes == l_ASpath)
+        {
+            // Same, so remove this route from own RawRoutingTable and send advertise this to peers
+            Route * removedRoute = new Route;
+            removedRoute->prefix = l_iterator->prefix;
+            removedRoute->mask = l_iterator->mask;
+            removedRoute->ASes = "0";   // TODO add own AS to AS-path
+            sendWithdraw(*removedRoute);
+
+            // Now remove this route from RawRoutingTable
+            removeFromRawTable(l_iterator->id);
+        }
+        ss.str("");
+    }
+
+
+}
+// Send withdraw-message to all peers
+void RoutingTable::sendWithdraw(Route p_route)
+{
+    stringstream ss;
+//    int l_peerASid;
+//    int l_ownASid;
+    p_route.ASes = "";
+    // p_route.ASes = peerASid ja ownASid
+
+    // Construct the message here
+
+    // This is withdraw-message so it begins with "0"
+    string l_message = "0,";
+    l_message.append(p_route.prefix);
+    l_message.append(",");
+    ss << p_route.mask;
+    l_message.append(ss.str());
+//    l_message.append(",");
+    // TODO add peer router and own router
+//    l_message.append(p_route.);
+
+
+    // Create new BGPMessage
+    BGPMessage * l_msg = new BGPMessage;
+    l_msg->m_Type = UPDATE;
+    l_msg->m_Message = l_message;
 }
 
 void RoutingTable::handleNotification(BGPMessage p_msg)
@@ -799,10 +804,6 @@ void RoutingTable::fillRoutingTable()
         mask = 1+(rand()%8);
         OutputPort = 1+(rand()%20);
 
-        // to test stuff
-        string routers = "1-2-3-4-5-6";
-        if(i == 2)
-            routers = "4-3-5-1";
 
         if(i==1)
         {
@@ -811,7 +812,7 @@ void RoutingTable::fillRoutingTable()
             OutputPort = 10;
         }
 
-        ss << prefix << "," << mask << "," << routers << "," << ASes << "," << "9" << "," << "5555";
+        ss << prefix << "," << mask << "," << ASes << "," << "9" << "," << "5555";
         l_message = ss.str();
 
         addRouteToRawTable(l_message,OutputPort);
