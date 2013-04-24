@@ -98,7 +98,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
             m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
 
             //bind the interface to the Routing Table
-            m_RoutingTable.port_Control(*m_NetworkInterface[i]);
+            //            m_RoutingTable.port_Session(*m_NetworkInterface[i]);
 
         }
     //delete the StringTools object
