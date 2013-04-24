@@ -132,6 +132,13 @@ void StringTools::resetReportString(void)
 
 }
 
+string StringTools::uToS(unsigned p_Value)
+{
+    ostringstream l_Temp;
+    l_Temp << p_Value;
+    return l_Temp.str();
+}
+
 string StringTools::iToS(int p_Value)
 {
     ostringstream l_Temp;
