@@ -64,7 +64,7 @@ void RoutingTable::routingTableMain(void)
                     if(!(port_Session[i]->isSessionValid()))
                     {
                         //deleteRoutes(i);
-                        // cout << "Session " << i << " is not valid." << endl;
+                        // cout << "Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << endl;
                     }
                 }
 
