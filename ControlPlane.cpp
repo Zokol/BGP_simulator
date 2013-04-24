@@ -23,12 +23,17 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
 
     //initiate the BGPSession pointer arrays
     m_BGPSessions = new BGPSession*[m_BGPConfig->getNumberOfInterfaces()];
+    //allocate reference array for receiving exports
+    export_Session = new sc_export<BGPSession_If>*[m_BGPConfig->getNumberOfInterfaces()];
 
     //inititate the sessions
     for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces(); ++i)
         {
             //create a session
             m_BGPSessions[i] = new BGPSession(m_Name.getNextName(), m_BGPConfig);
+            //make the hierarchial binding for receiving exports
+            export_Session[i] = new sc_export<BGPSession_If>;
+            export_Session[i]->bind(*m_BGPSessions[i]);
         }
 
     SC_THREAD(controlPlaneMain);
