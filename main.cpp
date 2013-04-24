@@ -115,6 +115,7 @@ int sc_main(int argc, char * argv [])
                     ///Try to receive
                     GUISocket >> DataWord;
                     cout << DataWord << endl;
+
                 }
             catch(SocketException e)
                 {
@@ -334,6 +335,7 @@ int sc_main(int argc, char * argv [])
                             retrans = false;
                             continue;
                         }
+
                 }
             else
                 {
@@ -348,8 +350,9 @@ int sc_main(int argc, char * argv [])
 
     cout << l_Config.toString().c_str() << endl;
     //Sync with the test client
-    GUISocket << "Simu";
+    GUISocket << ACK;
     setupLoop = true;
+
     while(setupLoop)
         {
 
