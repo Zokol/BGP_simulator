@@ -63,7 +63,7 @@ void RoutingTable::routingTableMain(void)
                 {
                     if(!(port_Session[i]->isSessionValid()))
                     {
-                        deleteRoutes(i);
+                        //deleteRoutes(i);
                         //cout << "Interface " << i << " is down: " << port_Session[i]->isUp() << endl;
                     }
                 }
@@ -91,7 +91,7 @@ void RoutingTable::routingTableMain(void)
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
 
-                cout << "Raw table: " << endl;
+ /*               cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
                 preferredASes.push_back(5432);
@@ -101,8 +101,8 @@ void RoutingTable::routingTableMain(void)
                 cout << "Main table: " << endl;
                 printRoutingTable();
 
-//                handleWithdraw("0,50.40.200.0,2,50-70-100-5555");
-            }
+                handleWithdraw("0,50.40.200.0,2,50-70-100-5555");
+*/            }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
                 cout << "In notification handling" << endl;
@@ -166,11 +166,14 @@ void RoutingTable::updateRoutingTable()
     bool foundFromRawTable;
     while(m_iterator->next != 0)
     {
+        l_iteratorRaw = m_headOfRawTable;
         foundFromRawTable = false;
         m_iterator = m_iterator->next;
+
         // Iterate RawRT
         while(l_iteratorRaw->next != 0)
         {
+
             l_iteratorRaw = l_iteratorRaw->next;
             if(sameRoutes(*m_iterator,*l_iteratorRaw))
             {
@@ -194,7 +197,6 @@ void RoutingTable::updateRoutingTable()
 */
 bool RoutingTable::sameRoutes(Route p_route1, Route p_route2)
 {
-
     if(p_route1.prefix == p_route2.prefix && p_route1.mask == p_route2.mask)
         return true;
     else
@@ -490,6 +492,7 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 */
 void RoutingTable::removeFromRawTable(int p_routeId)
 {
+    cout << "REMOVE FROM RAWTABLE" << endl;
     Route * deleteRoute = new Route();
     Route * tempRoute = new Route();
     deleteRoute = m_headOfRawTable;
@@ -587,11 +590,11 @@ void RoutingTable::handleWithdraw(string p_message)
     // Parse message
 
     int pos_prefix, pos_mask, pos_ASes;
-    int position = 0;
+    int position = 1;
 
     for(int i = 0; i < 3;i++)
     {
-        position = p_message.find(",",position+2);
+        position = p_message.find(",",position+1);
 
         if(i==0)
             pos_prefix = position;
@@ -600,9 +603,11 @@ void RoutingTable::handleWithdraw(string p_message)
         else if(i==2)
             pos_ASes = position;
     }
-    string l_prefix = p_message.substr(0,pos_prefix);
+    string l_prefix = p_message.substr(2,pos_prefix-2);
     string l_mask = p_message.substr((pos_prefix+1),(pos_mask-pos_prefix-1));  // -1 to remove ","-sign
     string l_ASpath = p_message.substr((pos_mask+1),(pos_ASes-pos_mask-1));
+
+//    cout << "|Prefix|" << l_prefix << "|Mask|" << l_mask << "|ASes|" << l_ASpath << "|end|" << endl;
 
 
     stringstream ss;
@@ -635,10 +640,7 @@ void RoutingTable::handleWithdraw(string p_message)
 void RoutingTable::sendWithdraw(Route p_route)
 {
     stringstream ss;
-//    int l_peerASid;
-//    int l_ownASid;
     p_route.ASes = "";
-    // p_route.ASes = peerASid ja ownASid
 
     // Construct the message here
 
@@ -648,9 +650,12 @@ void RoutingTable::sendWithdraw(Route p_route)
     l_message.append(",");
     ss << p_route.mask;
     l_message.append(ss.str());
-//    l_message.append(",");
+    l_message.append(",");
     // TODO add peer router and own router
-//    l_message.append(p_route.);
+
+    ss.str("");
+    ss << m_RTConfig->getASNumber();
+    l_message.append(ss.str());
 
 
     // Create new BGPMessage
@@ -808,6 +813,7 @@ void RoutingTable::fillRoutingTable()
         {
             prefix = "50.40.200.0";
             ASes = "50-70-100";
+            mask = 2;
             OutputPort = 10;
         }
 
