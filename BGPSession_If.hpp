@@ -50,20 +50,20 @@ public:
     virtual void sessionStop(void) = 0;
 
     /*! \fn int getPeeringInterface(void); 
-     * \brief 
+     * \brief Returns the interface index of the session peer
      * \details 
      * \return int:  
      * \public
      */
-    virtual int getOutboundInterface(void) = 0;
+    virtual int getPeeringInterface(void) = 0;
 
-    /*! \fn int getAS(void); 
-     * \brief Returns the AS of the peer
+    /*! \fn int getPeerAS(void); 
+     * \brief Returns the AS number of the session peer
      * \details 
      * \return string: 
      * \public
      */
-    virtual string getAS(void) = 0;    
+    virtual string getPeerAS(void) = 0;    
 
 };
 

@@ -10,7 +10,7 @@
 #include "BGPSession.hpp"
 #include "ReportGlobals.hpp"
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeeringInterface(0), m_Config(p_SessionParam)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam)
 {
 
 
@@ -31,7 +31,7 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1)
 {
     
     m_RTool.setBaseName(name());
@@ -72,8 +72,6 @@ void BGPSession::sendKeepalive(void)
             //send keepalives only if the session is valid
             if (m_SessionValidity)
                 {
-        
-    
 
                     //TODO build the message
                     m_KeepaliveMsg.m_OutboundInterface = m_PeeringInterface;            
@@ -160,37 +158,37 @@ void BGPSession::setPeerIdentifier(string p_BGPIdentifier)
 
 /*! \sa BGPSession
  */
-string BGPSession::getAS(void)
+string BGPSession::getPeerAS(void)
 {
     
     //return
-    return m_RTool.iToS(m_AS);
+    return m_RTool.iToS(m_PeerAS);
 }
 
 /*! \sa BGPSession
  */
-int BGPSession::getOutboundInterface(void)
+int BGPSession::getPeeringInterface(void)
 {
-    return m_OutboundInterface;
+    return m_PeeringInterface;
 }
 
 /*! \sa BGPSession
  */
-void BGPSession::setOutboundInterface(int p_Interface)
-{
-    
-    //store the arguments
-    m_OutboundInterface = p_Interface;
-    
-}
-
-/*! \sa BGPSession
- */
-void BGPSession::setAS(int p_PeerAS)
+void BGPSession::setPeeringInterface(int p_Interface)
 {
     
     //store the arguments
-    m_AS = p_PeerAS;
+    m_PeeringInterface = p_Interface;
+    
+}
+
+/*! \sa BGPSession
+ */
+void BGPSession::setPeerAS(int p_PeerAS)
+{
+    
+    //store the arguments
+    m_PeerAS = p_PeerAS;
     
 }
 

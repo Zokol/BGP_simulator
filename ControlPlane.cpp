@@ -62,6 +62,7 @@ void ControlPlane::controlPlaneMain(void)
     for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
         {
             m_BGPMsg.m_BGPIdentifier = m_BGPConfig->getIPAsString();
+            m_BGPMsg.m_AS = m_BGPConfig->getASNumber();
             m_BGPMsg.m_Type = OPEN;
             m_BGPMsg.m_OutboundInterface = i;
             port_ToDataPlane->write(m_BGPMsg);
@@ -92,7 +93,6 @@ void ControlPlane::controlPlaneMain(void)
               //check whether the session is valid
               if (m_BGPSessions[m_BGPMsg.m_OutboundInterface]->isSessionValid())
                   {
-
 
                       // determine which type of message this is
                       switch(m_BGPMsg.m_Type)
@@ -131,7 +131,8 @@ void ControlPlane::controlPlaneMain(void)
                       //corresponding the interface index to which the
                       //peer is connected
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
-
+                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeeringInterface(m_BGPMsg.m_OutboundInterface);
+                      m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerAS(m_BGPMsg.m_AS);
                       //start the session
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
 

@@ -64,7 +64,7 @@ void RoutingTable::routingTableMain(void)
                     if(!(port_Session[i]->isSessionValid()))
                     {
                         //deleteRoutes(i);
-                        //cout << "Interface " << i << " is down: " << port_Session[i]->isUp() << endl;
+                        // cout << "Session " << i << " is not valid." << endl;
                     }
                 }
 

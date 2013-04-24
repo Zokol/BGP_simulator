@@ -147,13 +147,13 @@ public:
      */
     void setPeerIdentifier(string p_BGPIdentifier);
 
-    /*! \fn void setOutboundInterface(int p_Interface); 
+    /*! \fn void setPeeringInterface(int p_Interface); 
      * \brief Set the interface id, which connects to the peering session
      * \details 
      * @param [in] int p_Interface  
      * \public
      */
-    void setOutboundInterface(int p_Interface);
+    void setPeeringInterface(int p_Interface);
     
     /*! \fn void setAS(int p_PeerAS); 
      * \brief The AS of the peer
@@ -161,9 +161,7 @@ public:
      * @param [in] int p_PeerAS  
      * \public
      */
-    void setAS(int p_PeerAS);
-    
-
+    void setPeerAS(int p_PeerAS);
 
     /*! \fn bool isThisSession(string p_BGPIdentifier)
      *  \brief Checks whether this session is for the passed BGP Identifier
@@ -186,12 +184,12 @@ public:
     /*!
      * \sa BGPSession_If
      */
-    virtual int getOutboundInterface(void);
+    virtual int getPeeringInterface(void);
 
     /*!
      * \sa BGPSession_If
      */
-    virtual string getAS(void);
+    virtual string getPeerAS(void);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
@@ -201,20 +199,12 @@ public:
 
 private:
 
-    /*! \property int m_AS 
-     * \brief AS identifier
+    /*! \property int m_PeerAS 
+     * \brief AS identifier of the peer
      * \details 
      * \private
      */
-    int m_AS;
-
-    /*! \property int m_OutboundInterface 
-     * \brief The local interface that connect to the session peer
-     * \details 
-     * \private
-     */
-    int m_OutboundInterface;
-    
+    int m_PeerAS;
 
     /*! \property sc_mutex m_KeepaliveMutex
      *  \brief Handles the arbitration for Keepalive reset
