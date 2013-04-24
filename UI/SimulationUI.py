@@ -2,7 +2,7 @@
  # \file 	SimulationUI.py
  # \brief	User interface for BGP simulation
  # \details	Sets the initial configuration and gives feedback for user about the simulation
- # \author	Heikki Juva, 75718
+ # \author	Heikki Juva, 76718
  # \version	1.5
  # \date	24.4.2013
 """
@@ -570,7 +570,7 @@ class SimulationUI:
 			self.log(resp)
 			if resp.find(cmd) != -1:
 				done = True
-			self.log(cmd, " OK")
+			self.log(cmd + " OK")
 
 	def select_router(self, namelist, event):
 		sel = namelist.get_selected()
@@ -671,19 +671,19 @@ class SimulationUI:
 				f = b.function[0]
 				f(b.function[1])
 
-"""
-# \brief Simulation UI loop
-# \details Main loop that updates the UI
-# \li Clears the screen and draws the containers that divide window in smaller partitions 
-# \li Updates network topology-view
-# \li Starts the loop
-# Inside the loop: 
-# \li Update network topology.
-# \li Update routing table-lists. 
-# \li Check if there are evts for console of buttons.
-# \li Draw the router-model to show parameters for selected router.
-# \li Update the router selection dialog.
-"""
+	"""
+	# \brief Simulation UI loop
+	# \details Main loop that updates the UI
+	# \li Clears the screen and draws the containers that divide window in smaller partitions 
+	# \li Updates network topology-view
+	# \li Starts the loop
+	# Inside the loop: 
+	# \li Update network topology.
+	# \li Update routing table-lists. 
+	# \li Check if there are evts for console of buttons.
+	# \li Draw the router-model to show parameters for selected router.
+	# \li Update the router selection dialog.
+	"""
 	def loop(self):
 		self.done = False
 		self.sim_running = False
