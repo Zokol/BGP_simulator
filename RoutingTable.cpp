@@ -52,7 +52,6 @@ void RoutingTable::routingTableMain(void)
     fillRoutingTable(); // IIRO testing
 
 
-
     int count = 0;
     //The main thread of routing table module starts
     while(true)
@@ -87,8 +86,6 @@ void RoutingTable::routingTableMain(void)
 
             if((m_BGPMsg.m_Type = UPDATE))
             {
-
-
 
                 updateRoutingTable();
 
@@ -644,8 +641,9 @@ void RoutingTable::deleteRoutes(int p_outputPort)
         m_iterator = m_iterator->next;
         if(m_iterator->OutputPort == p_outputPort)
         {
+            // Same output port so delete the route from RawTable and send UPDATE-withdraw message to all peers
+            sendWithdraw(*m_iterator);
 
-            // Same output port so delete the route from RawTable
             removeFromRawTable(m_iterator->id);
             routesDeleted = true;
         }
@@ -653,6 +651,12 @@ void RoutingTable::deleteRoutes(int p_outputPort)
     // If RawTable was modified update MainRoutingTable
     if(routesDeleted)
         updateRoutingTable();
+}
+
+// Send withdraw-message to all peers
+void RoutingTable::sendWithdraw(Route p_route)
+{
+    // TODO Construct withdraw message
 }
 
 void RoutingTable::handleNotification(BGPMessage p_msg)

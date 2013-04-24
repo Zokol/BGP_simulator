@@ -205,6 +205,9 @@ private:
     // Delete routes from RawRoutingTable with given output port
     void deleteRoutes(int p_outputPort);
 
+    // Send withdraw-message to all peers
+    void sendWithdraw(Route p_route);
+
     // Return the length of the table
     int tableLength();
 
