@@ -134,9 +134,8 @@
 #define SHOW_IF "SHOW_IF" // SHOW_IF [ROUTER_ID] [IF_ID]
 
 
-
 ///************************ Program modes *******************************
 
-//#define _GUI
+#define _GUI
 
 //#define _GUI_TEST

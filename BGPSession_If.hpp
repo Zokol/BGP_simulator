@@ -33,38 +33,37 @@ public:
     //TODO Define the methods
 
 
-  /*! \brief Sets the BGP hold down time for this session
-   * \details
-   * @param[in] int p_HoldDown  The hold down time in seconds
-   * \return bool True: if p_HoldDown is valid, False: if p_HoldDown
-   * is not valid
-   * \public
-   */
-  virtual bool setHoldDown(int p_HoldDown) = 0;
+    /*! \fn bool isSessionValid(void)
+     *  \brief Checks whether this session is valid or not
+     * \details Allows the control plane to check whether this session
+     * is still valid or not. I.e. is the HoldDown timer expired.
+     * \public
+     */
+    virtual bool isSessionValid(void) = 0;
 
-  /*! \brief Sets the BGP keepalive interval for this session
-   * \details This value defines the keepalive interval that this BGP
-   * session uses for sending keepalive messages. The keepalive
-   * interval is a fraction of Hold Down time that the p_KeepaliveFraction
-   * defines. I.e. If Hold Down is set to 180s and the Keepalive
-   * fraction is 3 then the keepalive interval would be 60s.
-   * @param[in] int p_KeepaliveFraction The fraction of Hold Down time
-   * that determines the keepalive interval
-   * \return bool True: if p_KeepaliveFraction is valid, False: if p_KeepaliveFraction
-   * is not valid
-   * \public
-   */
-  virtual bool setKeepaliveFraction(int p_KeepaliveFraction) = 0;
+    /*! \fn void sessionStop(void)
+     *  \brief Stops this session
+     * \details HoldDown and Keepalive timers are stopped and no
+     * keepalive messages are sent after a call of this function
+     * \public
+     */
+    virtual void sessionStop(void) = 0;
 
+    /*! \fn int getPeeringInterface(void); 
+     * \brief 
+     * \details 
+     * \return int:  
+     * \public
+     */
+    virtual int getOutboundInterface(void) = 0;
 
-  /*! \brief Reset the hold down timer for this session
-   * \details 
-   * \public
-   */
-  virtual void resetHoldDown(void) = 0;
-
-
-
+    /*! \fn int getAS(void); 
+     * \brief Returns the AS of the peer
+     * \details 
+     * \return string: 
+     * \public
+     */
+    virtual string getAS(void) = 0;    
 
 };
 

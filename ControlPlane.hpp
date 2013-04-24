@@ -17,6 +17,7 @@
 #include "BGPMessage.hpp"
 #include "Configuration.hpp"
 #include "BGPSession.hpp"
+#include "BGPSession_If.hpp"
 #include "RoutingTable_If.hpp"
 #include "StringTools.hpp"
 #include "Output_If.hpp"
@@ -63,6 +64,8 @@ public:
      * \public
      */
     sc_export<sc_fifo_out_if<BGPMessage> > export_ToControlPlane;
+
+    sc_export<BGPSession_If> **export_Session;
    
    
     /*! \brief This provides the DataPlane_In_If for BGP sessions

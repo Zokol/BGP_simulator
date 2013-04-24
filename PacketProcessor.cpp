@@ -24,8 +24,27 @@ PacketProcessor::~PacketProcessor()
  */
 string PacketProcessor::readIPPacket(void)
 {
-    string l_IPString = "";
-    
+    //Start tag
+    string l_IPString = "<TABLE>";
+    //VERSION
+    l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[0], 7, 4));
+    l_IPString += ",";
+    //IHL
+    l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[0], 3, 0));
+    l_IPString += ",";
+    //DSCP
+    l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[1], 7, 2));
+    l_IPString += ",";
+    //ECN
+    l_IPString += m_Converter.uToS(readSubField(m_PacketBuffer[0], 1, 0));
+    l_IPString += ",";
+    //LENGTH
+    l_IPString += m_Converter.uToS(readShort(&m_PacketBuffer[3]));
+    l_IPString += ",";
+    //IDENTIFICATION
+    l_IPString += m_Converter.uToS(readShort(&m_PacketBuffer[3]));
+    l_IPString += ",";
+    //
     //return
     return "";
 }
