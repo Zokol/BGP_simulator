@@ -595,7 +595,6 @@ void RoutingTable::handleWithdraw(string p_message)
     ss << int_ownAS;
     string str_ownAS = ss.str();
 
-    cout << "npos:" << string::npos << endl;
     if(p_message.find(str_ownAS) == string::npos)
     {
         // Own AS number was found from AS-path so exit from this method
