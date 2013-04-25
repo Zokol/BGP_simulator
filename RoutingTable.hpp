@@ -161,6 +161,9 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
+    // Advertise this route to peers
+    void advertiseRoute(Route * p_route);
+
     // Construct new route from p_msg.
     void createRoute(string p_msg,int p_outputPort, Route * p_route);
 

@@ -93,12 +93,17 @@ void RoutingTable::routingTableMain(void)
                     // First char was 0, so this is a withdraw-message
                     handleWithdraw(m_BGPMsg.m_Message);
                 }
+                else if(m_BGPMsg.m_Message.substr(0,1) == "1")
+                {
+                    // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
+                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+                    advertiseRoute(m_endOfRawTable);
+                }
                 else
                 {
-                    // This is an advertise-message
-                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+                    // Message was incorrectly constructed. Send NOTIFICATION
                 }
-
+/*
                 updateRoutingTable();
 
                 cout << "Raw table: " << endl;
@@ -106,6 +111,7 @@ void RoutingTable::routingTableMain(void)
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
+                */
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
@@ -449,39 +455,35 @@ void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 
 /*
     Create a Route object from p_msg. p_msg must be constructed as follows:
-    0 or 1,IP,Mask,ASes,ownRouterId,ownAS (e.g. 1,10.255.0.100,8,550-7564-4,9,555)
-    Parse message and collect IP,Mask,ASes, own router id and own AS number which are separated by ","-mark
+    0 or 1,IP,Mask,ASes(e.g. 1,10.255.0.100,8,550-7564-4)
+    Parse message and collect IP,Mask,ASes which are separated by ","-mark
 */
 void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
     // Use these to collect data separetad by semicolon
     int position = 2;
-    int IP_end,Mask_end, ASes_end,ownRouterId_end,ownAsId_end;
+    int IP_end,Mask_end, ASes_end;
 
-    for(int i=0;i<5;i++)
+    for(int i=0;i<3;i++)
     {
         position = p_msg.find(",",position+1);
-
         if(i==0)
             IP_end = position;
         else if(i==1)
             Mask_end = position;
         else if(i==2)
             ASes_end = position;
-        else if(i==3)
-            ownRouterId_end = position;
-        else if(i==4)
-            ownAsId_end = position;
     }
 
     string IPAddress = p_msg.substr(2,IP_end-2);
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
-    string ownRouter = p_msg.substr((ASes_end+1),(ownRouterId_end-ASes_end-1));
-    string ownAS = p_msg.substr((ownRouterId_end+1),(ownAsId_end-ownRouterId_end-1));
 
+    // Add own AS in AS-path
     ASes.append("-");
-    ASes.append(ownAS);
+    stringstream ss;
+    ss << m_RTConfig->getASNumber();
+    ASes.append(ss.str());
 
 
     // Set the values to Route pointer
@@ -766,6 +768,12 @@ void RoutingTable::removeLocalPref(int p_AS)
     }
 }
 
+// Advertise this route to peers
+void RoutingTable::advertiseRoute(Route * p_route)
+{
+
+}
+
 
 /*
     only for testing?
@@ -840,7 +848,7 @@ void RoutingTable::fillRoutingTable()
         }
         int withdrawOrAd = 0;
 
-        ss << withdrawOrAd << "," << prefix << "," << mask << "," << ASes << "," << "9" << "," << "5555";
+        ss << withdrawOrAd << "," << prefix << "," << mask << "," << ASes;
         l_message = ss.str();
 
         addRouteToRawTable(l_message,OutputPort);
