@@ -85,23 +85,27 @@ void RoutingTable::routingTableMain(void)
 
             if((m_BGPMsg.m_Type = UPDATE))
             {
+
+                // Read the first integer of the m_BGPMsg.m_Message. That indicates if this UPDATE-message is an advertise or a withdraw
+
+                if(m_BGPMsg.m_Message.substr(0,1) == "0")
+                {
+                    // First char was 0, so this is a withdraw-message
+                    handleWithdraw(m_BGPMsg.m_Message);
+                }
+                else
+                {
+                    // This is an advertise-message
+                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+                }
+
                 updateRoutingTable();
 
-                // IIRO testailuu
-                //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
-
-
-/*                cout << "Raw table: " << endl;
+                cout << "Raw table: " << endl;
                 printRawRoutingTable();
-
-                preferredASes.push_back(5432);
-                preferredASes.push_back(100);
-
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-*/
-                handleWithdraw("0,50.40.200.0,2,50-70-100-5555");
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
@@ -445,13 +449,13 @@ void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 
 /*
     Create a Route object from p_msg. p_msg must be constructed as follows:
-    IP;Mask;ASes;ownRouterId;ownAS (e.g. 10.255.0.100,8,550-7564-4,9,555)
+    0 or 1,IP,Mask,ASes,ownRouterId,ownAS (e.g. 1,10.255.0.100,8,550-7564-4,9,555)
     Parse message and collect IP,Mask,ASes, own router id and own AS number which are separated by ","-mark
 */
 void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
     // Use these to collect data separetad by semicolon
-    int position = 0;
+    int position = 2;
     int IP_end,Mask_end, ASes_end,ownRouterId_end,ownAsId_end;
 
     for(int i=0;i<5;i++)
@@ -470,7 +474,7 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
             ownAsId_end = position;
     }
 
-    string IPAddress = p_msg.substr(0,IP_end);
+    string IPAddress = p_msg.substr(2,IP_end-2);
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
     string ownRouter = p_msg.substr((ASes_end+1),(ownRouterId_end-ASes_end-1));
@@ -599,15 +603,11 @@ void RoutingTable::handleWithdraw(string p_message)
     {
         // Own AS number was found from AS-path so exit from this method
         return;
-
     }
 
-
     // Parse message
-
     int pos_prefix, pos_mask, pos_ASes;
     int position = 1;
-
     for(int i = 0; i < 3;i++)
     {
         position = p_message.find(",",position+1);
@@ -838,8 +838,9 @@ void RoutingTable::fillRoutingTable()
             mask = 2;
             OutputPort = 10;
         }
+        int withdrawOrAd = 0;
 
-        ss << prefix << "," << mask << "," << ASes << "," << "9" << "," << "5555";
+        ss << withdrawOrAd << "," << prefix << "," << mask << "," << ASes << "," << "9" << "," << "5555";
         l_message = ss.str();
 
         addRouteToRawTable(l_message,OutputPort);
@@ -848,14 +849,6 @@ void RoutingTable::fillRoutingTable()
     }
 
 }
-
-
-
-
-
-
-
-
 
 
 
