@@ -103,6 +103,14 @@ const char* StringTools::newReportString(const char* p_ReportString)
     return getReportString();
 }
 
+const char* StringTools::appendReportString(const string p_ReportString)
+{
+
+
+    appendString(p_ReportString.c_str());
+    return getReportString();
+}
+
 const char* StringTools::appendReportString(const char* p_ReportString)
 {
 
@@ -199,8 +207,6 @@ string StringTools::convertIPToString(sc_uint<32> p_IP, sc_uint<32> p_Mask)
     l_Prefix += "/";
     l_Prefix += convertMaskToString(p_Mask);
 	return l_Prefix;
-
-
 }
 
 

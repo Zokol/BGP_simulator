@@ -63,6 +63,8 @@ public:
 
     const char* appendReportString(const char* p_ReportString);
 
+    const char* appendReportString(string p_ReportString);
+
     const char* newReportString(int p_ReportInt);
 
     const char* appendReportString(int p_ReportInt);
