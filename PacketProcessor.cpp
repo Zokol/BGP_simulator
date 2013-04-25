@@ -10,7 +10,7 @@
 #include "ReportGlobals.hpp"
 
 
-PacketProcessor::PacketProcessor():m_DestinationIP("127.0.0.2"), m_SourceIP("127.0.0.1"), m_Payload("--"), m_Valid(false), m_Identification(0)
+PacketProcessor::PacketProcessor():m_DestinationIP("127.0.0.2"), m_SourceIP("127.0.0.1"), m_Payload("--"), m_Valid(false), m_Converter("Packet_Processor"), m_Identification(0)
 {
     resetPacketBuffer();
 }
@@ -94,7 +94,10 @@ string PacketProcessor::readIPPacket(void)
  */
 bool PacketProcessor::processFrame(Packet& p_Frame)
 {
-    
+    //invalidate the packet by default
+    m_Valid = false;    
+    //invalidate the destination IP by default
+    m_DestinationIP = ""; 
     //store the argument
     m_Frame = p_Frame;
     //reset the processing buffer
@@ -104,16 +107,66 @@ bool PacketProcessor::processFrame(Packet& p_Frame)
 
     //VALIDATE THE PACKET
 
-    //check the header length
-    if((readSubField(m_PacketBuffer[0], 3, 0) < 5))
+
+    //check the link layer length 
+    if((readShort(&m_PacketBuffer[3])) < MIN_LENGTH)
         {
-            //drop
+            //Report and drop
+            m_Converter.newReportString("Ilegal link layer length for packet: \n");
+            m_Converter.appendReportString(readIPPacket());
             resetPacketBuffer();
+            SC_REPORT_WARNING(g_ErrorID, m_Converter.getReportString());
             return false;
         }
-    m_Valid = confirmCheckSum();    
 
-    return m_Valid;
+    //verify checksum
+    if(!(confirmCheckSum()))    
+        {
+            //Report and drop
+            m_Converter.newReportString("Invalid CheckSum for packet: \n");
+            m_Converter.appendReportString(readIPPacket());
+            resetPacketBuffer();
+            SC_REPORT_WARNING(g_ErrorID, m_Converter.getReportString());
+            return false;
+        }
+
+    //verify the version
+    if((readSubField(m_PacketBuffer[0], 7, 4) != VERSION))    
+        {
+            //Report and drop
+            m_Converter.newReportString("Invalid protocol version for packet: \n");
+            m_Converter.appendReportString(readIPPacket());
+            resetPacketBuffer();
+            SC_REPORT_WARNING(g_ErrorID, m_Converter.getReportString());
+            return false;
+        }
+
+    //verify the IHL
+    if((readSubField(m_PacketBuffer[0], 3, 0) < 5))
+        {
+            //Report and drop
+            m_Converter.newReportString("Ilegal header length for packet: \n");
+            m_Converter.appendReportString(readIPPacket());
+            resetPacketBuffer();
+            SC_REPORT_WARNING(g_ErrorID, m_Converter.getReportString());
+            return false;
+        }
+        
+    //verify the maximum length of the packet
+    if((readShort(&m_PacketBuffer[3])) > MAX_LENGTH)    
+        {
+            //Report and drop
+            m_Converter.newReportString("The packet length is too long: \n");
+            m_Converter.appendReportString(readIPPacket());
+            resetPacketBuffer();
+            SC_REPORT_WARNING(g_ErrorID, m_Converter.getReportString());
+            return false;
+        }
+    //store the destination address
+    m_DestinationIP = m_Converter.ipToString(&m_PacketBuffer[16]);
+    //validate the packet
+    m_Valid = true;
+    return true;
 }
 
 /*! \sa PacketProcessor

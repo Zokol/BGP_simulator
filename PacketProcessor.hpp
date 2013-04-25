@@ -34,18 +34,6 @@ using namespace std;
  */
 #define VERSION 4
 /*!
- *Version length in bits
- */
-#define VERSION_LENGTH 4
-/*!
- * The first bit of version field starting from LSB bit of the field
- */
-#define VERSION_POS 4
-/*!
- *Version field index
- */
-#define VERSION_INDEX 0
-/*!
  *Standard header lenght
  */
 #define IHL 5
@@ -53,6 +41,10 @@ using namespace std;
  *Minimum packet length
  */
 #define MIN_LENGTH 20
+/*!
+ *Minimum packet length
+ */
+#define MAX_LENGTH 65535
 /*!
  *Time to leave TTL initial value
  */
