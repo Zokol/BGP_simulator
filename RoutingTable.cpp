@@ -91,7 +91,7 @@ void RoutingTable::routingTableMain(void)
                 //addNewRoute(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
 
 
- /*               cout << "Raw table: " << endl;
+/*                cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
                 preferredASes.push_back(5432);
@@ -100,9 +100,9 @@ void RoutingTable::routingTableMain(void)
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-
+*/
                 handleWithdraw("0,50.40.200.0,2,50-70-100-5555");
-*/            }
+            }
             else if(m_BGPMsg.m_Type == NOTIFICATION)
             {
                 cout << "In notification handling" << endl;
@@ -492,7 +492,6 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 */
 void RoutingTable::removeFromRawTable(int p_routeId)
 {
-    cout << "REMOVE FROM RAWTABLE" << endl;
     Route * deleteRoute = new Route();
     Route * tempRoute = new Route();
     deleteRoute = m_headOfRawTable;
@@ -587,6 +586,24 @@ void RoutingTable::deleteRoutes(int p_outputPort)
 // Withdraw-message syntax: withdraw/ad,prefix,mask,AS-path (i.e. 0,100.200.50.0,16,50-123-321-999)
 void RoutingTable::handleWithdraw(string p_message)
 {
+    /*  First check that own AS is not in AS-path.
+        If own AS is found from AS-path --> do nothing since the package has made a circle and this router has already handled this packege
+    */
+    stringstream ss;
+    int int_ownAS = m_RTConfig->getASNumber();
+
+    ss << int_ownAS;
+    string str_ownAS = ss.str();
+
+    cout << "npos:" << string::npos << endl;
+    if(p_message.find(str_ownAS) == string::npos)
+    {
+        // Own AS number was found from AS-path so exit from this method
+        return;
+
+    }
+
+
     // Parse message
 
     int pos_prefix, pos_mask, pos_ASes;
@@ -610,7 +627,7 @@ void RoutingTable::handleWithdraw(string p_message)
 //    cout << "|Prefix|" << l_prefix << "|Mask|" << l_mask << "|ASes|" << l_ASpath << "|end|" << endl;
 
 
-    stringstream ss;
+    ss.str("");
     Route * l_iterator = new Route;
     l_iterator = m_headOfRawTable;
     while(l_iterator->next != 0)
@@ -621,11 +638,14 @@ void RoutingTable::handleWithdraw(string p_message)
         // Comapre if p_message and current ruote have same prefix,mask and AS-path
         if(l_iterator->prefix == l_prefix && ss.str() == l_mask && l_iterator->ASes == l_ASpath)
         {
-            // Same, so remove this route from own RawRoutingTable and send advertise this to peers
+            // Same, so remove this route from own RawRoutingTable and send advertise to peers
             Route * removedRoute = new Route;
             removedRoute->prefix = l_iterator->prefix;
             removedRoute->mask = l_iterator->mask;
-            removedRoute->ASes = "0";   // TODO add own AS to AS-path
+            // Clear ss and then read own AS number in there
+            ss.str("");
+            ss << m_RTConfig->getASNumber();
+            removedRoute->ASes = ss.str();   // TODO add own AS to AS-path
             sendWithdraw(*removedRoute);
 
             // Now remove this route from RawRoutingTable
@@ -662,6 +682,9 @@ void RoutingTable::sendWithdraw(Route p_route)
     BGPMessage * l_msg = new BGPMessage;
     l_msg->m_Type = UPDATE;
     l_msg->m_Message = l_message;
+
+    // Send the message
+    port_Output->write(*l_msg);
 }
 
 void RoutingTable::handleNotification(BGPMessage p_msg)
