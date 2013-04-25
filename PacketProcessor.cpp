@@ -10,7 +10,7 @@
 #include "ReportGlobals.hpp"
 
 
-PacketProcessor::PacketProcessor():m_DestinationIP("127.0.0.2"), m_SourceIP("127.0.0.1"), m_Payload("--"), m_Valid(false)
+PacketProcessor::PacketProcessor():m_DestinationIP("127.0.0.2"), m_SourceIP("127.0.0.1"), m_Payload("--"), m_Valid(false), m_Identification(0)
 {
     resetPacketBuffer();
 }
@@ -78,13 +78,14 @@ string PacketProcessor::readIPPacket(void)
 
     for (int i = HEADER_LENGTH; i < l_Length; i++)
         {
+            //add under score instead of white space
             if(m_PacketBuffer[i] == 32)
                 l_IPString += "_";
             else
                 l_IPString += m_PacketBuffer[i];
 
         }
-
+    //insert packet terminator
     l_IPString += ";";
     return l_IPString;
 }
@@ -96,6 +97,20 @@ bool PacketProcessor::processFrame(Packet& p_Frame)
     
     //store the argument
     m_Frame = p_Frame;
+    //reset the processing buffer
+    resetPacketBuffer();
+    //get IP packet from the frame
+    p_Frame.getPDU(m_PacketBuffer);
+
+    //VALIDATE THE PACKET
+
+    //check the header length
+    if((readSubField(m_PacketBuffer[0], 3, 0) < 5))
+        {
+            //drop
+            resetPacketBuffer();
+            return false;
+        }
     m_Valid = confirmCheckSum();    
 
     return m_Valid;
@@ -131,13 +146,15 @@ void PacketProcessor::buildIPPacket(string p_DestinationIP, string p_SourceIP, s
     m_Payload = p_Payload;    
    
     //set version
-    setSubField(m_PacketBuffer, VERSION, VERSION_POS);
+    m_PacketBuffer[0] = (unsigned char)setSubField((unsigned)m_PacketBuffer[0], VERSION, 7, 4);
+
     //set standard header length
-    setSubField(m_PacketBuffer, IHL, 0);
+    m_PacketBuffer[0] = (unsigned char)setSubField((unsigned)m_PacketBuffer[0], IHL, 3, 0);
+
     //set the second field to zero (DSCP[7-2] and ECN[1-0])
 
     //set identification
-
+    setMultipleFields(&m_PacketBuffer[5], m_Identification++, SHORT);
     //set flags
     clearBit(&m_PacketBuffer[6], 7); //reserved
     clearBit(&m_PacketBuffer[6], 6); //Don't fragment DF
@@ -156,12 +173,12 @@ void PacketProcessor::buildIPPacket(string p_DestinationIP, string p_SourceIP, s
 
 
     //set paylod and packet length
-    setMultipleFields(&m_PacketBuffer[3], setPayload(&m_PacketBuffer[20]), 2);    
+    setMultipleFields(&m_PacketBuffer[3], setPayload(&m_PacketBuffer[20]), SHORT);    
 
     addCheckSum(m_PacketBuffer);
     //set the IP packet into the frame
     m_Frame.setPDU(m_PacketBuffer);
-
+    resetPacketBuffer();
 
 
 }
@@ -169,12 +186,28 @@ void PacketProcessor::buildIPPacket(string p_DestinationIP, string p_SourceIP, s
 
 /*! \sa PacketProcessor
  */
-void PacketProcessor::setSubField(unsigned char *ptr_PacketBuffer, unsigned char p_Value, int p_Shift)
+unsigned PacketProcessor::setSubField(unsigned p_Field, unsigned char p_Value, unsigned p_MSB, unsigned p_LSB)
 {
-    
-    unsigned char l_Value = p_Value;
-    l_Value = l_Value << p_Shift;
-    *ptr_PacketBuffer = *ptr_PacketBuffer^l_Value;
+
+    unsigned l_Mask = buildSubFieldMask(p_MSB, p_LSB);    
+
+    unsigned l_Field = p_Field;
+
+    unsigned l_Value = p_Value;
+    //clear the subfield first
+    l_Field &= l_Mask;
+
+    //make sure tha the value to be added is not longer than the
+    //subfield
+    l_Mask = ~l_Mask;
+
+    l_Value <<= p_LSB;
+    l_Value &= l_Mask;
+
+    //finally add the value to the subfield
+    l_Field ^= l_Value;
+
+    return l_Field;
     
 }
 
@@ -238,15 +271,8 @@ bool PacketProcessor::readBit(unsigned p_Field, unsigned p_BitPosition)
  */
 unsigned PacketProcessor::readSubField(unsigned p_Value, unsigned p_MSB, unsigned p_LSB)
 {
-    unsigned l_BuildMask = 0xffffffff, l_Mask = 0xffffffff, l_Value = 0;
-    //shift the ones to the left. The MSB of the sub field is the
-    //last 0 bit
-    l_Mask <<= p_MSB+1;
-    //shift the ones to the rigth. The LSB of the sub field is the
-    //first 0 bit 
-    l_BuildMask >>= (sizeof(unsigned)*8) - p_LSB;
-    //combine the masks
-    l_Mask ^= l_BuildMask;
+    //build the proper mask according to given arguments
+    unsigned l_Mask = buildSubFieldMask(p_MSB, p_LSB), l_Value = 0;
     //inverse the mask. Now the subfield portion is set to ones and
     //the rest of the bits are set to zeros
     l_Mask = ~l_Mask;
@@ -257,6 +283,31 @@ unsigned PacketProcessor::readSubField(unsigned p_Value, unsigned p_MSB, unsigne
     //return the value
     return l_Value;
 }
+
+/*! \sa PacketProcessor
+ */
+unsigned PacketProcessor::buildSubFieldMask(unsigned p_MSB, unsigned p_LSB)
+{
+
+    
+    unsigned l_BuildMask = 0xffffffff, l_Mask = 0xffffffff;
+    //shift the ones to the left. The MSB of the sub field is the
+    //last 0 bit
+    l_Mask <<= p_MSB+1;
+    //shift the ones to the rigth. The LSB of the sub field is the
+    //first 0 bit 
+    if(p_LSB == 0)
+        l_BuildMask = 0;
+    else
+        l_BuildMask >>= (sizeof(unsigned)*8) - p_LSB;
+
+    //combine the masks
+    l_Mask ^= l_BuildMask;
+
+    //return
+    return l_Mask;
+}
+
 
 /*! \sa PacketProcessor
  */
@@ -326,7 +377,7 @@ void PacketProcessor::addCheckSum(unsigned char *ptr_PacketBuffer)
     l_16b = ~l_16b;
 
     //set the result to the checksum field of the header
-    setMultipleFields(&ptr_PacketBuffer[CHECKSUM_FIELD], l_16b, 2);
+    setMultipleFields(&ptr_PacketBuffer[CHECKSUM_FIELD], l_16b, SHORT);
 }
 
 
@@ -334,10 +385,6 @@ void PacketProcessor::addCheckSum(unsigned char *ptr_PacketBuffer)
  */
 bool PacketProcessor::confirmCheckSum(void)
 {
-    //reset the buffer
-    resetPacketBuffer();
-    //get the IP packet from the frame
-    m_Frame.getPDU(m_PacketBuffer);
     //perform the first portion of the checksum calculation
     unsigned short l_Result = calculateCheckSum(m_PacketBuffer);
     //check the result

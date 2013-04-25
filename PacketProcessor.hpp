@@ -25,6 +25,11 @@ using namespace std;
 #define _PACKETPROCESSOR_H_
 
 /*!
+ *The length of short field
+ */
+#define SHORT 2
+
+/*!
  *IP Protocol version
  */
 #define VERSION 4
@@ -179,19 +184,29 @@ private:
      * \private
      */
     unsigned char m_PacketBuffer[MTU];
-    
-    
-    /*! \fn void setSubField(unsigned char *ptr_PacketBuffer, unsigned char
-     * p_Value, int p_Shift); 
-     * \brief Set the value into the target. p_Shift defines the LSBbit position
+
+    /*! \property unsinged short m_Identification 
+     * \brief The packet identification value
      * \details 
-     * @param [out] unsigned char *ptr_PacketBuffer Pointer to the target value to be modified
-     * @param [in] unsigned char p_Value  Value to be added into p_Target
-     * @param [in] int p_Shift The LSB position from where the
-     * value will be added
      * \private
      */
-    void setSubField(unsigned char *ptr_PacketBuffer, unsigned char p_Value, int p_Shift);
+    unsigned short m_Identification;
+    
+    
+    
+    /*! \fn unsigned setSubField(unsigned p_Field, unsigned char p_Value, unsigned p_MSB, unsigned p_LSB); 
+     * \brief Set the value into the target. p_Shift defines the LSBbit position
+     * \details 
+     * @param [in] unsigned p_Field The field in which the value will
+     * be added
+     * @param [in] unsigned p_Value  The value to be added into the subfield
+     * @param [in] unsigned p_MSB The high order bit of the subfield
+     * @param [in] unsigned p_LSB The low order bit of the subfield
+     * \return unsigned: The field conataining the new value in the
+     * defined subfield
+     * \private
+     */
+    unsigned setSubField(unsigned p_Field, unsigned char p_Value, unsigned p_MSB, unsigned p_LSB);
 
     /*! \fn void setBit(unsigned char p_Target, int p_Position); 
      * \brief Set the bit in position p_Position of the field pointed by ptr_Target.
@@ -263,6 +278,17 @@ private:
      */
     unsigned readSubField(unsigned p_Value, unsigned p_MSB, unsigned p_LSB);
     
+    /*! \fn unsigned buildSubFieldMask(unsigned p_MSB, unsigned p_LSB); 
+     * \brief Build the mask used to insert a sub field to a field
+     * \details 
+     * @param [in] unsigned p_MSB The high order bit of the subfield
+     * @param [in] unsigned p_LSB The low order bit of the subfield
+     * \return unsigned: The subfield mask
+     * \private
+     */
+    unsigned buildSubFieldMask(unsigned p_MSB, unsigned p_LSB);
+    
+
     /*! \fn void calculateCheckSum(unsigned_char p_PacketBuffer); 
      * \brief The common portion of the checksum calculation
      * \details Divides the IP header into 16 bit fields, sums up

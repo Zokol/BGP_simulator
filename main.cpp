@@ -40,19 +40,20 @@ const char* g_SimulationVersion = "Test run";
 int sc_main(int argc, char * argv [])
 {
 
-
     ///field parsing states
     enum fieldStates{S_AS_ID, S_PREFIX, S_MED, S_LOCAL_PREF, S_KEEPALIVE, S_HOLDDOWNMUL, S_PORT_ID};
 
     PacketProcessor tes;
-    tes.buildIPPacket("192.168.1.1", "192.168.1.2", "This is a test message");
+    tes.buildIPPacket("192.168.1.1", "192.168.1.2", "_ This is a test message");
     Packet l_Frame = tes.forward();
-    // cout << l_Frame << endl;
+    //    cout << l_Frame;
     PacketProcessor rcv;
     if(rcv.processFrame(l_Frame))
-        cout << "CheckSum is valid" << endl;
+        cout << "CheckSum is valid" << endl;// << l_Frame << endl;
     else
-        cout << "CheckSum is not valid" << endl;
+        cout << "CheckSum is not valid" << endl;// << l_Frame << endl;
+    tes.buildIPPacket("192.168.1.1", "192.168.1.3", "_ This is another test message with ä and ö and å");
+    l_Frame = tes.forward();
 
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT );
@@ -432,6 +433,12 @@ int sc_main(int argc, char * argv [])
   sc_start(SIMULATION_DURATION, SC_SEC);
 #endif
 
+  cout << rcv.readIPPacket() << endl;
+    if(rcv.processFrame(l_Frame))
+        cout << "CheckSum is valid" << endl;// << l_Frame << endl;
+    else
+        cout << "CheckSum is not valid" << endl;// << l_Frame << endl;
+  cout << rcv.readIPPacket() << endl;
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
 
 return 0;
