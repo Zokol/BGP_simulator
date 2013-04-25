@@ -34,7 +34,7 @@ const char* g_DebugID = "Level_debug:";
 const char* g_ReportID = "Level_info:";
 const char *g_DebugCPID = "Level_debug_CP";
 const char *g_DebugBSID = "Level_debug_BS";
-
+const char *g_ErrorID = "Level_error";
 const char* g_SimulationVersion = "Test run";
 
 int sc_main(int argc, char * argv [])
@@ -52,7 +52,7 @@ int sc_main(int argc, char * argv [])
         cout << "CheckSum is valid" << endl;// << l_Frame << endl;
     else
         cout << "CheckSum is not valid" << endl;// << l_Frame << endl;
-    tes.buildIPPacket("192.168.1.1", "192.168.1.3", "_ This is another test message with ä and ö and å");
+    tes.buildIPPacket("192.168.2.1", "192.168.1.3", "_ This is another test message with ä and ö and å");
     l_Frame = tes.forward();
 
     ///Initiate a Server socket and bind it to port
@@ -88,6 +88,8 @@ int sc_main(int argc, char * argv [])
     sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DISPLAY);
+    //debuggin flag for this file
+    sc_report_handler::set_actions(g_ErrorID, SC_WARNING, SC_DISPLAY);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
 
     StringTools l_DebugReport("Main");
@@ -434,11 +436,14 @@ int sc_main(int argc, char * argv [])
 #endif
 
   cout << rcv.readIPPacket() << endl;
+  cout << endl << endl << "Destination IP is " << rcv.getDestination() << endl; 
+
     if(rcv.processFrame(l_Frame))
         cout << "CheckSum is valid" << endl;// << l_Frame << endl;
     else
         cout << "CheckSum is not valid" << endl;// << l_Frame << endl;
   cout << rcv.readIPPacket() << endl;
+  cout << endl << endl << "Destination IP is " << rcv.getDestination() << endl; 
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
 
 return 0;
