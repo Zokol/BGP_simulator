@@ -391,8 +391,11 @@ int sc_main(int argc, char * argv [])
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
-    l_Config.getRouterConfiguration(0).setMED(10);
-
+	
+	//set AS number here
+    l_Config.getRouterConfiguration(0).setASNumber(101);
+    l_Config.getRouterConfiguration(1).setASNumber(201);
+    l_Config.getRouterConfiguration(2).setASNumber(301);
 
     //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
     l_Config.addConnectionConfig(0, 0, 0, 1 );
