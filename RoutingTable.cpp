@@ -61,7 +61,7 @@ void RoutingTable::routingTableMain(void)
             ///Check the Interface states
             for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
                 {
-					cout << "Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << endl;
+					cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << endl;
                    if(!(port_Session[i]->isSessionValid()))
                     {
                         //deleteRoutes(i);
