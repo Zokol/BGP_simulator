@@ -83,7 +83,12 @@ public:
      */
     int m_AS;
     
-
+    /*! \property string m_Message 
+     * \brief BGP message fields
+     * \details 
+     * \public
+     */
+    string m_Message;
 
     BGPMessage():m_Type(0), m_OutboundInterface(0){};
 
@@ -91,7 +96,7 @@ public:
 
     BGPMessage(BGPMessage& p_Msg);
 
-    string m_Message;
+
 
 
 
