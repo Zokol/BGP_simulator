@@ -61,7 +61,8 @@ void DataPlane::main(void)
                                 {
                                     m_BGPMsg = m_Packet.getBGPPayload();
                                     m_BGPMsg.m_OutboundInterface = i;
-                                    port_ToControlPlane->write(m_BGPMsg);                            
+									//cout << name() << "    received BGP message: AS " << m_BGPMsg.m_AS << " Interface " << m_BGPMsg.m_OutboundInterface << endl;
+                                   port_ToControlPlane->write(m_BGPMsg);                            
                                 }
                         }
                 }     
@@ -71,6 +72,7 @@ void DataPlane::main(void)
                     
                     // SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("Sending BGP message"));
                     m_BGPForwardingBuffer.read(m_BGPMsg);
+					//cout << name() << "    sending BGP message: AS " << m_BGPMsg.m_AS << " Interface " << m_BGPMsg.m_OutboundInterface << endl;
                     m_Packet.setBGPPayload(m_BGPMsg);
                     m_Packet.setProtocolType(TYPE_BGP);
                     port_ToInterface[m_BGPMsg.m_OutboundInterface]->write(m_Packet);
