@@ -125,13 +125,14 @@ void ControlPlane::controlPlaneMain(void)
                   }
 
               //if the session was not valid but this is an OPEN message
-              else if (m_BGPMsg.m_Type == OPEN)
+              else if (m_BGPMsg.m_Type == OPEN && m_BGPMsg.m_AS != m_BGPConfig->getASNumber())
                   {
                       //start new session for the session index
                       //corresponding the interface index to which the
                       //peer is connected
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeeringInterface(m_BGPMsg.m_OutboundInterface);
+					  cout << name() << "    Setting the peer AS " << m_BGPMsg.m_AS << " for Session " << m_BGPMsg.m_OutboundInterface << endl;
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerAS(m_BGPMsg.m_AS);
                       //start the session
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
