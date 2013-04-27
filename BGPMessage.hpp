@@ -113,7 +113,7 @@ public:
     inline friend ostream& operator << (ostream& os,  BGPMessage const & p_Msg )
     {
 
-os  << " BGP type: " << p_Msg.m_Type;
+        os  << " BGP type: " << p_Msg.m_Type  << " BGP identifier: " << p_Msg.m_BGPIdentifier  << " BGP session interface: " << p_Msg.m_OutboundInterface  << " AS number: " << p_Msg.m_AS  << " Message: " << p_Msg.m_Message;
         return os;
     }
 
