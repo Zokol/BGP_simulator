@@ -397,6 +397,14 @@ int sc_main(int argc, char * argv [])
     l_Config.getRouterConfiguration(1).setASNumber(201);
     l_Config.getRouterConfiguration(2).setASNumber(301);
 
+    //set Prefix
+    string l_Prefix = "11.0.0.0/8";
+    l_Config.getRouterConfiguration(0).setPrefix(l_Prefix);
+    l_Prefix = "12.0.0.0/8";
+    l_Config.getRouterConfiguration(1).setPrefix(l_Prefix);
+    l_Prefix = "13.0.0.0/8";
+    l_Config.getRouterConfiguration(2).setPrefix(l_Prefix);
+
     //    int p_LocalRouterId, int p_LocalInterfaceId, int p_NeighborInterfaceId, int p_NeighborRouterId
     l_Config.addConnectionConfig(0, 0, 0, 1 );
     l_Config.addConnectionConfig(1, 0, 0, 0 );
