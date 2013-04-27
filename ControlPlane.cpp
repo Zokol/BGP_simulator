@@ -132,7 +132,6 @@ void ControlPlane::controlPlaneMain(void)
                       //peer is connected
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeeringInterface(m_BGPMsg.m_OutboundInterface);
-					  cout << name() << "    Setting the peer AS " << m_BGPMsg.m_AS << " for Session " << m_BGPMsg.m_OutboundInterface << endl;
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerAS(m_BGPMsg.m_AS);
                       //start the session
                       m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
