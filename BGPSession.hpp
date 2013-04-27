@@ -190,6 +190,11 @@ public:
      * \sa BGPSession_If
      */
     virtual string getPeerAS(void);
+    /*!
+     * \sa BGPSession_If
+     */
+    virtual string getPeerIdentifier(void);
+    
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html

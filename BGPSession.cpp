@@ -87,8 +87,7 @@ void BGPSession::sendKeepalive(void)
             resetKeepalive();
 
         }
-    //set next_trigger for this method
-    // next_trigger(m_BGPKeepalive);
+
     
 }
 
@@ -100,17 +99,18 @@ void BGPSession::sessionInvalidation(void)
         {
             wait(m_BGPHoldDown);
 
-            SC_REPORT_INFO(g_DebugBSID, m_RTool.newReportString("session invalid at time"));
-
+            SC_REPORT_INFO(g_ReportID, m_RTool.newReportString("Hold-down timer expired. Session is invalid."));
+ 
             sessionStop();
         }
-    // next_trigger(m_BGPHoldDown);
+
 }
 
 void BGPSession::sessionStop(void)
 {
     m_BGPHoldDown.cancel();
     m_BGPKeepalive.cancel();
+    SC_REPORT_INFO(g_ReportID, m_RTool.newReportString("Session stopped."));
     m_SessionValidity = false;
 }
 
@@ -118,6 +118,7 @@ void BGPSession::sessionStart(void)
 {
     // resetHoldDown();
     resetKeepalive();
+    SC_REPORT_INFO(g_ReportID, m_RTool.newReportString("Session started."));
     m_SessionValidity = true;
 }
 
@@ -192,4 +193,14 @@ void BGPSession::setPeerAS(int p_PeerAS)
     
 }
 
+
+
+/*! \sa BGPSession
+ */
+string BGPSession::getPeerIdentifier(void)
+{
+    
+    //return
+    return m_BGPIdentifierPeer;
+}
 

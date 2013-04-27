@@ -33,7 +33,7 @@ public:
     //TODO Define the methods
 
 
-    /*! \fn bool isSessionValid(void)
+    /*! \fn virtual bool isSessionValid(void) = 0
      *  \brief Checks whether this session is valid or not
      * \details Allows the control plane to check whether this session
      * is still valid or not. I.e. is the HoldDown timer expired.
@@ -41,7 +41,7 @@ public:
      */
     virtual bool isSessionValid(void) = 0;
 
-    /*! \fn void sessionStop(void)
+    /*! \fn virtual void sessionStop(void) = 0
      *  \brief Stops this session
      * \details HoldDown and Keepalive timers are stopped and no
      * keepalive messages are sent after a call of this function
@@ -49,7 +49,7 @@ public:
      */
     virtual void sessionStop(void) = 0;
 
-    /*! \fn int getPeeringInterface(void); 
+    /*! \fn virtual int getPeeringInterface(void) = 0 
      * \brief Returns the interface index of the session peer
      * \details 
      * \return int:  
@@ -57,13 +57,22 @@ public:
      */
     virtual int getPeeringInterface(void) = 0;
 
-    /*! \fn int getPeerAS(void); 
+    /*! \fn int virtual getPeerAS(void) = 0
      * \brief Returns the AS number of the session peer
      * \details 
      * \return string: 
      * \public
      */
     virtual string getPeerAS(void) = 0;    
+
+    /*! \fn virtual string getPeerIdentifier(void) = 0 
+     * \brief Return the Identifier of the session peer
+     * \details 
+     * \return string:  
+     * \public
+     */
+    virtual string getPeerIdentifier(void) = 0;
+    
 
 };
 
