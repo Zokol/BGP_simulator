@@ -34,7 +34,7 @@ int main ( int argc, char **argv )
                           {
                               state = true;
                               std::cout << "Received: " << reply << std::endl;
-                              if(reply.compare("Simu") == 0)
+                              if(reply.compare("ACK") == 0)
                                   flag = false;
                           }
                   }
