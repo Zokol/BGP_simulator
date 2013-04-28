@@ -387,8 +387,8 @@ void Simulation::socketRoutine(void)
                 }
             else
                 {
-                    // cout << m_Word << endl;
-                    // m_Word = NACK;
+                    cout << m_Word << endl;
+                    m_Word = NACK;
                     enum_State = SEND;    
                 }
         }
