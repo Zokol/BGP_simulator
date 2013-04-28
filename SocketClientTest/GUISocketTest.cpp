@@ -16,52 +16,53 @@ int main ( int argc, char **argv )
       ClientSocket client_socket ( "localhost", 50000 );
       // client_socket.set_non_blocking(true);
       cout << "Client sends the following configuration to the simulation:" << endl << CONF_STR << endl;
-
+      
       std::string reply = "";
       while(flag){
-      try
-          {
-              if(state)
-                  {
-                      client_socket << CONF_STR;
-                      state = false;
-                  }
+          try
+              {
+                  if(state)
+                      {
+                          client_socket << CONF_STR;
+                          state = false;
+                      }
 
-              if(!state)
-                  {
-                      client_socket >> reply;
-                      if(reply != "")
-                          {
-                              state = true;
-                              std::cout << "Received: " << reply << std::endl;
-                              if(reply.compare("ACK") == 0)
-                                  flag = false;
-                          }
-                  }
+                  if(!state)
+                      {
+                          client_socket >> reply;
+                          if(reply != "")
+                              {
+                                  state = true;
+                                  std::cout << "Received: " << reply << std::endl;
+                                  if(reply.compare("ACK") == 0)
+                                      flag = false;
+                              }
+                      }
 
 
-          }
-      catch ( SocketException e )
-          {
-              std::cout << "socket empty: " << e. description() << std::endl;
-              if(!(client_socket.is_valid()))
-                  {
-                      std::cout << "Socket not valid!" << std::endl;
-                      return 0;
-                  }
-          }
+              }
+          catch ( SocketException e )
+              {
+                  std::cout << "socket empty: " << e. description() << std::endl;
+                  if(!(client_socket.is_valid()))
+                      {
+                          std::cout << "Socket not valid!" << std::endl;
+                          return 0;
+                      }
+              }
       }
 
-
+      cout << "Entering to Promt loop" << endl;
   flag = true;
   state = true;
+  string l_Cmd = "";
   while(flag)
       {
           try
               {
                   if(state)
                       {
-                          string l_Cmd;
+                          l_Cmd = "";
                           std::cout << "Promt@ ";
                           cin >> l_Cmd;
                           client_socket << l_Cmd;
@@ -85,6 +86,7 @@ int main ( int argc, char **argv )
                                       {
                                           state = true;
                                       }
+                                  reply = "";
                               }
 
                       }
