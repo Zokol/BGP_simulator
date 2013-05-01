@@ -1,4 +1,5 @@
 
+
 /*! \file RoutingTable.cpp
  *  \brief     Implementation of RoutingTable.
  *  \details
@@ -95,9 +96,10 @@ void RoutingTable::routingTableMain(void)
                 }
                 else if(m_BGPMsg.m_Message.substr(0,1) == "1")
                 {
+
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
-                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
-                    advertiseRoute(m_endOfRawTable);
+                    //      antti oti pois kun buffaa muistia              addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+                    //      antti oti pois kun buffaa muistia              advertiseRoute(m_endOfRawTable);
                 }
                 else
                 {
