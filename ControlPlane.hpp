@@ -123,7 +123,7 @@ public:
 
 
 private:
-  
+
 
     /*! \property sc_mutex mutex_Write 
      * \brief Handles the arbitration inside the write method

@@ -465,6 +465,7 @@ public:
     RouterConfig& getRouterConfiguration(int p_RouterId);
 
     RouterConfig* getRouterConfigurationPtr(int p_RouterId);
+    Connection* getHostConfigurationPtr(int p_RouterId);
 
 
     SimulationConfig& operator = (const SimulationConfig& p_Original);
@@ -486,6 +487,8 @@ private:
      * \public
      */
     RouterConfig **m_RouterConfiguration;
+
+    Connection **m_HostConfig;
 
 
 

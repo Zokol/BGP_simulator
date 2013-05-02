@@ -25,9 +25,11 @@
 
 #include "systemc"
 #include "Router.hpp"
+#include "Host.hpp"
 #include "StringTools.hpp"
 #include "ServerSocket.h"
 #include "SocketException.h"
+#include "PacketProcessor.hpp"
 
 
 using namespace std;
@@ -68,7 +70,7 @@ private:
     ServerSocket m_GUISocket;
 
     /*!
-     * \property string word
+     * \property string m_Word
      * \brief holds the commands received from the UI
      * \details 
      * \private
@@ -121,6 +123,7 @@ private:
      */
     int m_FieldBuffer[3];
 
+    Host **m_Host;
     /*!
      * \property  enum ServerStates{RECEIVE, PROCESS, SEND, TERMINATE} enum_State
      * \brief Defines the socket server states

@@ -78,7 +78,7 @@ class PacketProcessor
 {
 public:
 
-    PacketProcessor();
+    PacketProcessor(const char *p_Name);
 
     virtual ~PacketProcessor();
 
@@ -88,9 +88,10 @@ public:
      * @param [in] string p_DestinationIP
      * @param [in] string p_SourceIP
      * @param [in] string p_Payload
+     * \return Packet& reference to the frame that contains the built packet
      * \public
      */
-    void buildIPPacket(string p_DestinationIP, string p_SourceIP, string p_Payload);
+    Packet& buildIPPacket(string p_DestinationIP, string p_SourceIP, string p_Payload);
     
     /*! \fn string readIPPacket(void); 
      * \brief Outputs the contents of an IP packet
@@ -117,14 +118,14 @@ public:
      */
     string getDestination(void);
 
-    /*! \fn Packet& forward(void); 
-     * \brief Decrement the TTL, re-calculates the checksum, and
-     * returns the frame object
-     * \details 
-     * \return Packet&: Reference to this packet object 
+    /*! \fn bool forward(Packet& p_Frame); 
+     * \brief copies the processed frame to the passed reference
+     * \details decrements the TTL and recalculates the checksum using the incremental method
+     * @param[out] Packet& p_Frame Reference to the object in which the processed frame should be copied 
+     * \return bool true: packet is ready to be forwarded - false: packet was dropped
      * \public
      */
-    Packet& forward(void);
+    bool forward(Packet& p_Frame);
     
 private:
 
@@ -311,6 +312,14 @@ private:
      * \private
      */
     bool confirmCheckSum(void);
+
+    /*! \fn bool incremetalCheckSumUpdate(void); 
+     * \brief Recalculates the checksum value using the incremental method
+     * \details 
+     * \return bool true: packet is ready to be forwarded - false: packet was dropped
+     * \private
+     */
+    bool incrementalCheckSumUpdate(void);
 
     /*! \fn void resetPacketBuffer(void) 
      * \brief Resets all the fields in the m_PacketBuffer array

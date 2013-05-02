@@ -14,7 +14,7 @@
 Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, SimulationConfig * const p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_SimuConfiguration(p_SimuConfiguration)
 {
 
-//  //Throws segmentation fault
+
 
 //  DEBUGGING
 m_Name.appendReportString("Router count: ");
@@ -25,19 +25,21 @@ m_Name.appendReportString("Interface count: ");
 
 
   /// \li Allocate Router pointer array
-  m_Router = new Router*[m_SimuConfiguration->getNumberOfRouters()];
+ m_Router = new Router*[m_SimuConfiguration->getNumberOfRouters()];
+ m_Host = new Host*[m_SimuConfiguration->getNumberOfRouters()];
 
   /// \li Set the base name for the StringTools object
   m_Name.setBaseName("Router");
 
 
-
-
+  StringTools *l_HostName = new StringTools("Host");
+cout << "here" << endl;
   /// \li Initiate the Router modules as m_Router
   for(int i = 0; i < m_SimuConfiguration->getNumberOfRouters(); i++)
     {
       /// \li Generate the routers
-        m_Router[i] = new Router(m_Name.getNextName(), m_SimuConfiguration->getRouterConfigurationPtr(i));
+      m_Router[i] = new Router(m_Name.getNextName(), m_SimuConfiguration->getRouterConfigurationPtr(i));
+      m_Host[i] = new Host(l_HostName->getNextName(), m_SimuConfiguration->getHostConfigurationPtr(i));
 
     }
   
@@ -58,8 +60,11 @@ m_Name.appendReportString("Interface count: ");
                   if (l_Handle->isConnection(j))
                       {
                           ///Connect the interfaces
-
-                          if(m_Router[i]->connectInterface(m_Router[l_Handle->getNeighborRouterId(j)], j, l_Handle->getNeighborInterfaceId(j)))
+                	  	  if(l_Handle->getNeighborRouterId(j) == 0x7FFFFFFF)
+                	  	  {
+                	  		m_Router[i]->connectInterface(m_Host[i], j);
+                	  	  }
+                	  	  else if(m_Router[i]->connectInterface(m_Router[l_Handle->getNeighborRouterId(j)], j, l_Handle->getNeighborInterfaceId(j)))
                               {
 
                               }
@@ -69,7 +74,7 @@ m_Name.appendReportString("Interface count: ");
           
       }
 
-
+cout << "Simulation elaboration finished" << endl;
     SC_THREAD(simulationMain);
     sensitive << port_Clk.pos();
 
@@ -252,7 +257,7 @@ void Simulation::socketRoutine(void)
                     fieldRoutine(1);
 
                     //TODO: add readMessages() method into Router module
-                    // m_Word = m_Router[m_FieldBuffer[0]]->readMessage()
+                    // m_Word = m_Router[m_FieldBuffer[0]]->receive()
                     m_Word = ACK;
                     //set next server state to SEND
                     enum_State = SEND;

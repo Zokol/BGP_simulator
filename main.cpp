@@ -43,18 +43,6 @@ int sc_main(int argc, char * argv [])
     ///field parsing states
     enum fieldStates{S_AS_ID, S_PREFIX, S_MED, S_LOCAL_PREF, S_KEEPALIVE, S_HOLDDOWNMUL, S_PORT_ID};
 
-    PacketProcessor tes;
-    tes.buildIPPacket("192.168.1.1", "192.168.1.2", "_ This is a test message");
-    Packet l_Frame = tes.forward();
-    //    cout << l_Frame;
-    PacketProcessor rcv;
-    if(rcv.processFrame(l_Frame))
-        cout << "CheckSum is valid" << endl;// << l_Frame << endl;
-    else
-        cout << "CheckSum is not valid" << endl;// << l_Frame << endl;
-    tes.buildIPPacket("192.168.2.1", "192.168.1.3", "_ This is another test message with ä and ö and å");
-    l_Frame = tes.forward();
-
     ///Initiate a Server socket and bind it to port
     ServerSocket SimulationServer ( PORT );
     ///Declare a Server socket for the GUI connection
@@ -81,11 +69,11 @@ int sc_main(int argc, char * argv [])
     //general reporting flag
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
     //general debugging flag
-    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
+    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DISPLAY);
     //debugging flag for ControlPlane
-    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DO_NOTHING);
+    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DISPLAY);
     //debugging flag for BGPSession
-    sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DO_NOTHING);
+    sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DISPLAY);
     //debuggin flag for this file
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DISPLAY);
     //debuggin flag for this file
@@ -380,7 +368,7 @@ int sc_main(int argc, char * argv [])
 
 #else
 
-
+    cout << "CONF"<< endl;
 //testing the simulation configuration
     ///set the number of routers
     l_Config.init(3);
@@ -388,6 +376,7 @@ int sc_main(int argc, char * argv [])
     l_Config.addRouterConfig(0, 4);
     l_Config.addRouterConfig(1, 4);
     l_Config.addRouterConfig(2, 4);
+    cout << "CONF"<< endl;
     l_Config.addBGPSessionParameters(0, 60, 3);
     l_Config.addBGPSessionParameters(1, 60, 3);
     l_Config.addBGPSessionParameters(2, 60, 3);
@@ -436,7 +425,7 @@ int sc_main(int argc, char * argv [])
 
   ///run the simulation
 
-
+cout << "START"<< endl;
 #if defined (_GUI) || defined(_GUI_TEST)
   sc_start();
   GUISocket << "END";
@@ -446,15 +435,54 @@ int sc_main(int argc, char * argv [])
   sc_start(SIMULATION_DURATION, SC_SEC);
 #endif
 
-  cout << rcv.readIPPacket() << endl;
-  cout << endl << endl << "Destination IP is " << rcv.getDestination() << endl; 
 
-    if(rcv.processFrame(l_Frame))
-        cout << "CheckSum is valid" << endl;// << l_Frame << endl;
-    else
-        cout << "CheckSum is not valid" << endl;// << l_Frame << endl;
-  cout << rcv.readIPPacket() << endl;
-  cout << endl << endl << "Destination IP is " << rcv.getDestination() << endl; 
+
+//    PacketProcessor tes;
+//    Packet l_Frame = tes.buildIPPacket("192.168.1.1", "192.168.1.2", "_ This is a test message");
+//
+//    PacketProcessor check;
+//    check.processFrame(l_Frame);
+//    cout << "First packet built: " << check.readIPPacket() << endl;
+//    PacketProcessor rcv;
+//    if(rcv.processFrame(l_Frame))
+//        cout << "Packet is valid" << endl;// << l_Frame << endl;
+//    else
+//        cout << "Packet is not valid" << endl;// << l_Frame << endl;
+//
+//    cout << endl << endl << "Destination IP is " << rcv.getDestination() << endl;
+//
+//    if(rcv.forward(l_Frame))
+//        {
+//
+//            check.processFrame(l_Frame);
+//            cout<<"First packet forwarded: " << check.readIPPacket() << endl;
+//        }
+//
+//    l_Frame = tes.buildIPPacket("192.168.2.1", "192.168.1.3", "_ This is another test message with ä and ö and å");
+//    check.processFrame(l_Frame);
+//    cout <<"Second packet built: " << check.readIPPacket() << endl;
+//
+//
+//    if(rcv.processFrame(l_Frame))
+//        cout << "Packet is valid" << endl;// << l_Frame << endl;
+//    else
+//        cout << "Packet is not valid" << endl;// << l_Frame << endl;
+//    if(rcv.forward(l_Frame))
+//        {
+//
+//
+//                        check.processFrame(l_Frame);
+//                        cout <<"Second packet forwarded: " << check.readIPPacket() << endl;
+//        }
+//
+//
+//  cout << endl << endl << "Destination IP is " << rcv.getDestination() << endl;
+//
+//
+//  cout << l_Frame;
+//
+//  cout << l_Frame.outputPDU();
+//
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
 
 return 0;

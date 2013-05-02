@@ -10,7 +10,7 @@
 #include "ReportGlobals.hpp"
 
 
-PacketProcessor::PacketProcessor():m_DestinationIP("127.0.0.2"), m_SourceIP("127.0.0.1"), m_Payload("--"), m_Valid(false), m_Converter("Packet_Processor"), m_Identification(0)
+PacketProcessor::PacketProcessor(const char *p_Name):m_DestinationIP("127.0.0.2"), m_SourceIP("127.0.0.1"), m_Payload("--"), m_Valid(false), m_Converter(p_Name), m_Identification(0)
 {
     resetPacketBuffer();
 }
@@ -19,6 +19,7 @@ PacketProcessor::~PacketProcessor()
 {
 
 }
+
 
 /*! \sa PacketProcessor
  */
@@ -98,8 +99,6 @@ bool PacketProcessor::processFrame(Packet& p_Frame)
     m_Valid = false;    
     //invalidate the destination IP by default
     m_DestinationIP = ""; 
-    //store the argument
-    m_Frame = p_Frame;
     //reset the processing buffer
     resetPacketBuffer();
     //get IP packet from the frame
@@ -180,17 +179,24 @@ string PacketProcessor::getDestination(void)
 
 /*! \sa PacketProcessor
  */
-Packet& PacketProcessor::forward(void)
+bool PacketProcessor::forward(Packet& p_Frame)
 {
-    
-    
-    //return
-    return m_Frame;
+
+
+    if(incrementalCheckSumUpdate())
+        {
+            p_Frame.setPDU(m_PacketBuffer);
+            resetPacketBuffer();
+            return true;
+        }
+    else    
+        //return
+        return false;
 }
 
 /*! \sa PacketProcessor
  */
-void PacketProcessor::buildIPPacket(string p_DestinationIP, string p_SourceIP, string p_Payload)
+Packet& PacketProcessor::buildIPPacket(string p_DestinationIP, string p_SourceIP, string p_Payload)
 {
 
     //store the arguments
@@ -233,6 +239,7 @@ void PacketProcessor::buildIPPacket(string p_DestinationIP, string p_SourceIP, s
     m_Frame.setPDU(m_PacketBuffer);
     resetPacketBuffer();
 
+    return m_Frame;
 
 }
 
@@ -287,11 +294,12 @@ void PacketProcessor::clearBit(unsigned char *ptr_PacketBuffer, int p_Position)
  */
 void PacketProcessor::setMultipleFields(unsigned char *ptr_PacketBuffer, unsigned p_Value, unsigned p_NumberOfFields)
 {
-        *ptr_PacketBuffer |= p_Value;
+
+
+    *ptr_PacketBuffer = p_Value;
 
     for (unsigned i = 1; i < p_NumberOfFields; i++)
-        *(ptr_PacketBuffer - i) |= p_Value >> (8*i);
-
+        *(ptr_PacketBuffer - i) = p_Value >> (8*i);
     
 }
  
@@ -462,6 +470,51 @@ unsigned short PacketProcessor::readFragmentOffSet(void)
 {
     //return
     return readShort(&m_PacketBuffer[7]) & 0x1fff;
+}
+
+/*! \sa PacketProcessor
+ */
+bool PacketProcessor::incrementalCheckSumUpdate(void)
+{
+
+    unsigned l_HCP = 0;
+    unsigned short l_HC = readShort(&m_PacketBuffer[11]);
+    unsigned short l_m = readShort(&m_PacketBuffer[9]);
+
+
+
+
+    m_PacketBuffer[8] -= 1; 
+
+
+
+    if (m_PacketBuffer[8] <= 0)
+        {
+            resetPacketBuffer();
+            return false;
+        }
+
+    unsigned short l_mP = readShort(&m_PacketBuffer[9]);
+
+
+    //perform the incremental update
+    l_HC = ~l_HC;
+
+    l_m = ~l_m;
+
+    l_HCP = l_HC + l_m + l_mP;
+
+    l_HC = (l_HCP&0xFFFF0000)>>16;
+
+    l_HCP &= 0x0000FFFF;
+
+    l_HC += l_HCP;
+
+    l_HC = ~l_HC;
+
+
+    setMultipleFields(&m_PacketBuffer[11], l_HC, 2);
+    return true;
 }
 
 

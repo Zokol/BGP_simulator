@@ -20,7 +20,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
 
     //DEBUGGING
-    SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Router starts"));
+    SC_REPORT_INFO(g_DebugID, l_Report->newReportString("elaborates"));
     l_Report->newReportString("Interface count: ");
     SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_RouterConfiguration->getNumberOfInterfaces()));
 
@@ -82,30 +82,33 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
 
             //instantiate an interface
-            m_NetworkInterface[i] = new Interface(m_Name.getNextName(), m_RouterConfiguration->getConnection(i));
 
-            //instantiate hierarchial forwarding port
-            port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
+        	   m_NetworkInterface[i] = new Interface(m_Name.getNextName(), m_RouterConfiguration->getConnection(i));
 
-            //bind network interface port to router's hierarchial port
-            m_NetworkInterface[i]->port_Output.bind(*port_ForwardingInterface[i]);
+				//instantiate hierarchial forwarding port
+				port_ForwardingInterface[i] = new sc_port<Interface_If, 1, SC_ZERO_OR_MORE_BOUND>;
 
-            //make the hierarchial binding for receiving exports
-            export_ReceivingInterface[i] = new sc_export<Interface_If>;
-            export_ReceivingInterface[i]->bind(*m_NetworkInterface[i]);
+				//bind network interface port to router's hierarchial port
+				m_NetworkInterface[i]->port_Output.bind(*port_ForwardingInterface[i]);
 
-            //bind the clock to the network interface
-            m_NetworkInterface[i]->port_Clk(*m_ClkRouter);
+				//make the hierarchial binding for receiving exports
+				export_ReceivingInterface[i] = new sc_export<Interface_If>;
+				export_ReceivingInterface[i]->bind(*m_NetworkInterface[i]);
 
-            //bind the interfaces to the data plane
-            m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
-            m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
+			//bind the clock to the network interface
+			m_NetworkInterface[i]->port_Clk(*m_ClkRouter);
+
+			//bind the interfaces to the data plane
+			m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
+			m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
 
 
         }
     //delete the StringTools object
     delete l_Report;
 }
+
+
 
 Router::~Router()
 {
@@ -149,6 +152,18 @@ bool Router::interfaceIsUp(int p_InterfaceId)
 }
 
 
+bool Router::connectInterface(Host *p_TargetHost,int p_LocalInterface)
+{
+    // cout << name() << ": Both IFes down." << endl;
+    port_ForwardingInterface[p_LocalInterface]->bind(*(p_TargetHost->export_ReceivingInterface[0]));
+
+    p_TargetHost->port_ForwardingInterface[0]->bind(*(export_ReceivingInterface[p_LocalInterface]));
+
+    interfaceUp(p_LocalInterface);
+    p_TargetHost->interfaceUp();
+    return true;
+
+}
 bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p_TargetInterface)
 {
 
@@ -280,7 +295,15 @@ void Router::removeLocalPref(int p_AS)
     m_RoutingTable.removeLocalPref(p_AS);
 }
 
+bool Router::send(Packet& p_Packet)
+{
+	return m_NetworkInterface[m_RouterConfiguration->getNumberOfInterfaces()-1]->forward(p_Packet);
+}
 
+bool Router::receive(Packet& p_Packet)
+{
+	return true;
+}
 
 
 

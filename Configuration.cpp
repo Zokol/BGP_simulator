@@ -273,6 +273,8 @@ SimulationConfig::SimulationConfig(int p_NumberOfRouters):m_NumberOfRouters(p_Nu
     {
         m_RouterConfiguration = new RouterConfig*[p_NumberOfRouters];
 
+        cout << "size: "<< p_NumberOfRouters <<endl;
+        m_HostConfig = new Connection*[p_NumberOfRouters];
     }
 
 
@@ -286,6 +288,7 @@ void SimulationConfig::init(int p_NumberOfRouters)
 {
     m_NumberOfRouters = p_NumberOfRouters;
     m_RouterConfiguration = new RouterConfig*[m_NumberOfRouters];
+    m_HostConfig = new Connection*[p_NumberOfRouters];
 
 }
 
@@ -293,6 +296,10 @@ void SimulationConfig::init(int p_NumberOfRouters)
 void SimulationConfig::addRouterConfig(int p_RouterId, int p_NumberOfInterfaces)
     {
         m_RouterConfiguration[p_RouterId] = new RouterConfig(p_NumberOfInterfaces);
+
+        m_RouterConfiguration[p_RouterId]->addConnectionConfig(p_NumberOfInterfaces-1, 0, 0x7FFFFFFF);
+        cout << "index: "<< p_RouterId <<endl;
+        m_HostConfig[p_RouterId] = new Connection(p_NumberOfInterfaces-1, p_RouterId);
 
     }
     
@@ -325,6 +332,10 @@ RouterConfig& SimulationConfig::getRouterConfiguration(int p_RouterId)
 RouterConfig* SimulationConfig::getRouterConfigurationPtr(int p_RouterId)
 {
     return m_RouterConfiguration[p_RouterId];
+}
+Connection* SimulationConfig::getHostConfigurationPtr(int p_RouterId)
+{
+    return m_HostConfig[p_RouterId];
 }
 
 ///Operators

@@ -13,6 +13,7 @@
 
 #include <systemc>
 #include "BGPMessage.hpp"
+#include "StringTools.hpp"
 
 
 using std::cout;
@@ -151,13 +152,43 @@ public:
 
         os  << "**********************" << endl << "BGP_Payload: " << p_Packet.m_BGPPayload << ", Protocol type: " << p_Packet.m_ProtocolType<< endl << "**********************" << endl << "PDU" << endl <<"----------------------";
 
-        for (int i = 0; i < MTU; i++)
+        string l_out;
+        string l_Result;
+        unsigned char l_Value, l_H, l_T;
+
+        int i;
+        for (i = 0; i < 20; i++)
             {
+                l_Result = "";
                 if(i%4 == 0)
-                    os << endl;
-                os << p_Packet.m_PDU[i] << ";";
+                    l_out += "\n";
+                l_Value = p_Packet.m_PDU[i];
+                l_H = l_Value/100;
+                if(l_H != 0)
+                    {
+                        l_Value -= (l_H*100);
+                        l_Result = StringTools().uToS(l_H);
+                    }
+                l_T = l_Value/10;
+
+                if(l_T != 0)
+                    {
+                        l_Value -= (l_T*10);
+                        l_Result += StringTools().uToS(l_T);
+                    }
+                l_Result += StringTools().uToS(l_Value);
+                l_out += l_Result + ",";
             }
 
+        os << l_out;    
+        l_out = "";
+        for (; i < MTU; i++)
+            {
+                l_out += p_Packet.m_PDU[i]; //jos string väliin lisää pilkun tai rivin vaihdon  ennen ä, ö, tai å niin enkoodaus menee persiilleen
+                if(p_Packet.m_PDU[i] == 0)
+                    l_out += ",";
+            }
+        os << l_out << endl;
         return os;
     }
 
@@ -177,9 +208,10 @@ public:
 
     }
   
+    string outputPDU(void);
+
 
 private:
-
 
 
     /*! \brief Holds the BGP message object
@@ -207,7 +239,7 @@ private:
      * \private
      */
     void initPDU(void);
-
+    string u8ToS(unsigned char p_Value);
 };
 
 #endif

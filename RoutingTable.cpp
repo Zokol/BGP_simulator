@@ -3,7 +3,7 @@
 /*! \file RoutingTable.cpp
  *  \brief     Implementation of RoutingTable.
  *  \details
- *  \author    Antti Siirilä, 501449
+ *  \author    Antti Siirilï¿½, 501449
  *  \version   1.0
  *  \date      Tue Feb 19 08:44:06 2013
  */

@@ -8,6 +8,7 @@
 
 
 #include "Packet.hpp"
+#include "StringTools.hpp"
 
 
 
@@ -114,9 +115,58 @@ for (int i = 0; i < MTU; i++)
 }
 
 
+string Packet::outputPDU(void)
+{
+    string l_out, l_temp;
+    std::stringstream l_ss;
+    int i;
+    for (i = 0; i < 20; i++)
+        {
+            if(i%4 == 0)
+                l_out += "\n";
+
+            l_out += u8ToS(m_PDU[i]) + ",";
+        }
+
+    for (; i < MTU; i++)
+        {
+            if(i%4 == 0)
+                l_out += "\n";
+            l_temp = string(1,(char)m_PDU[i]);
+            l_out += l_temp + ",";
+        }
+
+    l_out += "\n";
+
+    return l_out;
+}
 
 
+string Packet::u8ToS(unsigned char p_Value)
+{
+    string l_Result = "";
+    unsigned char l_Value = p_Value, l_H, l_T;
 
 
+    l_H = l_Value/100;
 
+    if(l_H != 0)
+        {
+
+            l_Value -= (l_H*100);
+            l_Result = StringTools().uToS(l_H);
+        }
+    l_T = l_Value/10;
+
+    if(l_T != 0)
+        {
+
+            l_Value -= (l_T*10);
+
+            l_Result += StringTools().uToS(l_T);
+        }
+    l_Result += StringTools().uToS(l_Value);
+
+    return l_Result;
+}
 

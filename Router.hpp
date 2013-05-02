@@ -22,6 +22,7 @@
 #include "RoutingTable.hpp"
 #include "StringTools.hpp"
 #include "Configuration.hpp"
+#include "Host.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -51,6 +52,7 @@ public:
      * \public
      */
     Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfiguration);
+
 
     ~Router();
 
@@ -92,6 +94,8 @@ public:
      * \public
      */
     bool connectInterface(Router *p_TargetRouter, int p_LocalInterface,  int p_TargetInterface);
+
+    bool connectInterface(Host *p_TargetHost,int p_LocalInterface);
 
     /*! \fn void killRouter(void)
      *  \brief Sets all the interfaces of this router down, clears all
@@ -180,9 +184,23 @@ public:
      */
     void removeLocalPref(int p_AS);
 
-private:
+    /*! \fn bool send(Packet& p_Packet)
+     *  \brief Writes the passed packet into the routers AS interface
+     *  @param[in] Packet& p_Packet Reference to the packet object to be sent
+     * \return bool true: success false: failure
+     *  \public
+     */
+    bool send(Packet& p_Packet);
 
-    /************* Private members **************************/
+    /*! \fn bool receive(Packet& p_Packet)
+     *  \brief Writes the passed packet into the routers AS interface
+     *  @param[in] Packet& p_Packet Reference to the packet object to be received
+     * \return bool true: success false: failure
+     *  \public
+     */
+    bool receive(Packet& p_Packet);
+
+private:
 
     /*!
      * \property   const sc_time *clk_Periods
@@ -199,6 +217,10 @@ private:
      * \private
      */
     sc_clock *m_ClkRouter;
+
+
+
+    /************* Private members **************************/
 
     /*!
      * \property ControlPlane m_Bgp
