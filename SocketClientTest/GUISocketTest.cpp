@@ -62,16 +62,18 @@ int main ( int argc, char **argv )
               {
                   if(state)
                       {
-                          l_Cmd = "";
+                          l_Cmd = "<CMD>";
                           std::cout << "Promt@ ";
+
                           cin >> l_Cmd;
+
                           client_socket << l_Cmd;
                           state = false;
                       }
 
                   if(!state)
                       {
-
+                      	  reply = "";
                           client_socket >> reply;
 
                           if(reply != "")
@@ -86,7 +88,7 @@ int main ( int argc, char **argv )
                                       {
                                           state = true;
                                       }
-                                  reply = "";
+
                               }
 
                       }
