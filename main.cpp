@@ -69,13 +69,13 @@ int sc_main(int argc, char * argv [])
     //general reporting flag
     sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
     //general debugging flag
-    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for ControlPlane
-    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for BGPSession
-    sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file
-    sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file
     sc_report_handler::set_actions(g_ErrorID, SC_WARNING, SC_DISPLAY);
     SC_REPORT_INFO(g_ReportID, g_SimulationVersion);
@@ -347,7 +347,21 @@ int sc_main(int argc, char * argv [])
                 {
                     ///Try to receive
                     GUISocket >> DataWord;
-
+            		if(DataWord.find("<CMD>", 0, 5) == string::npos)
+            		{
+            			GUISocket << NACK;
+            			continue;
+            		}
+            		else if(DataWord.find("</CMD>",0) == string::npos)
+            		{
+            			GUISocket << NACK;
+            			continue;
+            		}
+            		else
+            		{
+            			DataWord = DataWord.substr(5);
+            			DataWord = DataWord.substr(0,DataWord.find("</CMD>",0));
+            		}
                 }
             catch(SocketException e)
                 {
@@ -359,6 +373,8 @@ int sc_main(int argc, char * argv [])
                     GUISocket << ACK;
                     setupLoop = false;
                 }
+            else
+            	GUISocket << NACK;
         }
 
 
