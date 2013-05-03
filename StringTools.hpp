@@ -75,6 +75,8 @@ public:
 
     string uToS(unsigned p_Value);
 
+    int sToI(string p_Value);
+
     sc_uint<32> convertIPToBinary(string p_Prefix);
 
     sc_uint<32> convertMaskToBinary(string p_Prefix);

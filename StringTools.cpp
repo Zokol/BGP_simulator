@@ -154,6 +154,14 @@ string StringTools::iToS(int p_Value)
     return l_Temp.str();
 }
 
+int StringTools::sToI(string p_Value)
+{
+
+	int l_Rtn;
+	istringstream(p_Value) >> l_Rtn;
+	return l_Rtn;
+}
+
 
 sc_uint<32> StringTools::convertIPToBinary(string p_Prefix)
 {
