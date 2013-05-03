@@ -77,6 +77,10 @@ private:
      */
     string m_Word;
 
+    string m_Fields;
+
+    string m_Cmd;
+
     /*!
      * \property Packet m_Packet
      * \brief 
@@ -121,7 +125,14 @@ private:
      * \brief Holds temporarly the values of command arguments
      * \private
      */
-    int m_FieldBuffer[3];
+    string m_FieldBuffer[3];
+
+    /*!
+     * \property  int m_IntBuffer
+     * \brief Holds temporarly the values of command arguments
+     * \private
+     */
+    int m_IntBuffer[3];
 
     Host **m_Host;
     /*!
@@ -162,6 +173,15 @@ private:
      * \private
      */
     bool fieldRoutine(int p_NumOfFields);
+
+    /*!
+     * \fn void bufferToInt(int p_NumberOfElements)
+     * \brief Converts the string values of m_FieldBUffer to integer values in m_IntBuffer
+     * param[in] int p_NumberOfElements Defines how many elements from the m_FieldBuffer will be converted
+     * \private
+     */
+    void bufferToInt(int p_NumberOfElements);
+
 
 };
 
