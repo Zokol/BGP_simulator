@@ -15,11 +15,19 @@
 
 
 
+
+#ifndef HOST_H
+#define HOST_H
+
+
 #include "systemc"
 #include "Interface.hpp"
 #include "StringTools.hpp"
 #include "Configuration.hpp"
+#include "PacketProcessor.hpp"
+#include "Communication_If.hpp"
 
+#define EMPTY "<EMPTY />"
 
 using namespace std;
 using namespace sc_core;
@@ -27,12 +35,7 @@ using namespace sc_dt;
 
 
 
-#ifndef HOST_H
-#define HOST_H
-
-
-
-class Host: public sc_module
+class Host: public sc_module, public Communication_If
 {
 
 public:
@@ -45,8 +48,22 @@ public:
 	void hostMain(void);
 	Host(sc_module_name p_ModuleName, Connection *p_ConnectionConfig);
 	virtual ~Host();
+
 	void interfaceUp(void);
-    SC_HAS_PROCESS(Host);
+
+	/*! \sa Communication_If
+     */
+    virtual bool sendMessage(string p_DestinationIP, string p_SourceIP, string p_Payload);
+
+    /*! \sa Communication_If
+     */
+    virtual string reaMessageBuffer(void);
+
+    /*! \sa Communication_If
+     */
+    virtual void clearMessageBuffer(void);
+
+   SC_HAS_PROCESS(Host);
 
 private:
 
@@ -82,6 +99,12 @@ private:
      * \private
      */
     StringTools m_Name;
+
+    Packet m_Frame;
+
+    PacketProcessor m_Encoder;
+
+    PacketProcessor m_Decoder;
 
 
 
