@@ -101,7 +101,8 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 			//bind the interfaces to the data plane
 			m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
 			m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
-
+			//bind the interface to the control plane
+			m_Bgp.port_InterfaceControl(*m_NetworkInterface[i]);
 
         }
     //delete the StringTools object
