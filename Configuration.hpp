@@ -13,6 +13,9 @@
 #include "systemc"
 #include "StringTools.hpp"
 
+#define CLIENT 1
+#define SERVER 0
+
 using namespace sc_dt;
 using namespace std;
 using namespace sc_core;
@@ -210,6 +213,22 @@ public:
      */
     void setLocalPref(int p_LocalPref);
 
+    /*! \fn void setNICMode(int p_Interface, int p_Mode)
+     *  \brief Sets the interface mode used in TCP session establishment
+     *  @param[in] int p_Interface The interface id
+     *  @param[in] int p_Mode The mode value: SERVER || CLIENT
+     * \public
+     */
+    void setNICMode(int p_Interface, int p_Mode);
+
+    /*! \fn bool isClient(int p_Interface)
+     *  \brief Checks whether the given interface is in the client mode
+     *  @param[in] int p_Interface The interface id
+     *  \return true: interface is in CLIENT-mode - false: interface is in SERVER-mode
+     * \public
+     */
+    bool isClient(int p_Interface);
+
     /*! \fn int getNumberOfInterfaces(void); 
      *  \brief Returns the number of interface
      *  \return integer value
@@ -312,6 +331,11 @@ protected:
      * \protected
      */
     int m_LocalPref;
+
+    /*! \property int *m_NICMode
+     * \brief holds the network interface mode information
+     */
+    int *m_NICMode;
 
 private:
 
