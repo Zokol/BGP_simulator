@@ -2,6 +2,7 @@
 #include "../SocketException.h"
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -11,102 +12,109 @@ using namespace std;
 int main ( int argc, char **argv )
 {
 
-    bool state = true, flag = true;
+	bool state = true, flag = true;
 
-      ClientSocket client_socket ( "localhost", 50000 );
-      // client_socket.set_non_blocking(true);
-      cout << "Client sends the following configuration to the simulation:" << endl << CONF_STR << endl;
-      
-      std::string reply = "";
-      while(flag){
-          try
-              {
-                  if(state)
-                      {
-                          client_socket << CONF_STR;
-                          state = false;
-                      }
+	ClientSocket client_socket ( "localhost", 50000 );
+	// client_socket.set_non_blocking(true);
+	cout << "Client sends the following configuration to the simulation:" << endl << CONF_STR << endl;
 
-                  if(!state)
-                      {
-                          client_socket >> reply;
-                          if(reply != "")
-                              {
-                                  state = true;
-                                  std::cout << "Received: " << reply << std::endl;
-                                  if(reply.compare("ACK") == 0)
-                                      flag = false;
-                              }
-                      }
+	std::string reply = "";
+	while(flag){
+		try
+		{
+			if(state)
+			{
+				client_socket << CONF_STR;
+				state = false;
+			}
 
-
-              }
-          catch ( SocketException e )
-              {
-                  std::cout << "socket empty: " << e. description() << std::endl;
-                  if(!(client_socket.is_valid()))
-                      {
-                          std::cout << "Socket not valid!" << std::endl;
-                          return 0;
-                      }
-              }
-      }
-
-      cout << "Entering to Promt loop" << endl;
-  flag = true;
-  state = true;
-  string l_Cmd = "";
-  while(flag)
-      {
-          try
-              {
-                  if(state)
-                      {
-                          l_Cmd = "<CMD>";
-                          std::cout << "Promt@ ";
-
-                          cin >> l_Cmd;
-
-                          client_socket << l_Cmd;
-                          state = false;
-                      }
-
-                  if(!state)
-                      {
-                      	  reply = "";
-                          client_socket >> reply;
-
-                          if(reply != "")
-                              {
-
-                                  std::cout << "Received: " << reply << std::endl;
-                                  if(reply.compare("END") == 0)
-                                      flag = false;
-                                  if(reply.compare("STOP") == 0)
-                                      cout << "Simulation terminates." << endl;
-                                  else 
-                                      {
-                                          state = true;
-                                      }
-
-                              }
-
-                      }
-              }
-          catch ( SocketException e )
-              {
-                  // std::cout << "Exception was caught:" << e.description() << "\n";
-                  //                  client_socket << "Waiting the simulation to end...";
-              if(!(client_socket.is_valid()))
-                  {
-                      std::cout << "Socket not valid!" << std::endl;
-                      return 0;
-                  }
-
-              }
-
-      }
+			if(!state)
+			{
+				client_socket >> reply;
+				if(reply != "")
+				{
+					state = true;
+					std::cout << "Received: " << reply << std::endl;
+					if(reply.compare("ACK") == 0)
+						flag = false;
+				}
+			}
 
 
-  return 0;
+		}
+		catch ( SocketException e )
+		{
+			std::cout << "socket empty: " << e. description() << std::endl;
+			if(!(client_socket.is_valid()))
+			{
+				std::cout << "Socket not valid!" << std::endl;
+				return 0;
+			}
+		}
+	}
+
+	cout << "Entering to Promt loop" << endl;
+	flag = true;
+	state = true;
+	string l_Cmd = "", l_SInput;
+
+
+	while(flag)
+	{
+		try
+		{
+			if(state)
+			{
+				l_Cmd = "<CMD>";
+				l_SInput = "";
+
+				std::cout << "Promt@ ";
+
+				cin >> l_SInput;
+
+				l_Cmd += l_SInput;
+				l_Cmd += "</CMD>";
+				cout << "Command: " << l_Cmd << endl;
+				client_socket << l_Cmd;
+				state = false;
+			}
+
+			if(!state)
+			{
+				reply = "";
+				client_socket >> reply;
+
+				if(reply != "")
+				{
+
+					std::cout << "Received: " << reply << std::endl;
+					if(reply.compare("END") == 0)
+						flag = false;
+					if(reply.compare("STOP") == 0)
+						cout << "Simulation terminates." << endl;
+					else
+					{
+						state = true;
+					}
+
+				}
+
+			}
+		}
+		catch ( SocketException e )
+		{
+			// std::cout << "Exception was caught:" << e.description() << "\n";
+			//                  client_socket << "Waiting the simulation to end...";
+			if(!(client_socket.is_valid()))
+			{
+				std::cout << "Socket not valid!" << std::endl;
+				return 0;
+			}
+
+		}
+
+	}
+
+
+	return 0;
 }
