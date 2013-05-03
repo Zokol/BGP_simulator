@@ -203,21 +203,34 @@ void Simulation::simulationMain(void)
 
 void Simulation::socketRoutine(void)
 {
-
+	bool l_Param = true;
 	try
 	{
+		//separate the command and the parameters from the received string
 		if(m_Word.find("<CMD>", 0, 5) == string::npos)
 			m_Cmd = "UNKNOWN";
 		else if(m_Word.find("</CMD>",0) == string::npos)
 			m_Cmd = "UNKNOWN";
 		else
 		{
+
 			m_Word = m_Word.substr(5);
 			m_Word = m_Word.substr(0,m_Word.find("</CMD>",0));
+
 			cout << "Word without tags: " << m_Word << endl;
-			int l_Pos = m_Word.find(",",0);
-			m_Cmd = m_Word.substr(0,l_Pos);
-			m_Fields = m_Word.substr(l_Pos+1);
+			unsigned l_Pos = m_Word.find(",",0);
+
+			if(l_Pos == string::npos)
+			{
+				m_Cmd = m_Word;
+				m_Fields = "";
+				l_Param = false;
+			}
+			else
+			{
+				m_Cmd = m_Word.substr(0,l_Pos);
+				m_Fields = m_Word.substr(l_Pos+1);
+			}
 		}
 
 		///The command cases
@@ -228,7 +241,7 @@ void Simulation::socketRoutine(void)
 			//set the next server state to TERMINATE
 			enum_State = TERMINATE;
 		}
-		else if (m_Cmd.compare(RESET_ROUTER) == 0) ///RESET_ROUTER
+		else if (m_Cmd.compare(RESET_ROUTER) == 0 && l_Param) ///RESET_ROUTER
 		{
 
 			//get the router ID
@@ -240,7 +253,7 @@ void Simulation::socketRoutine(void)
 			//set next server state to ACTIVE
 			enum_State = SEND;
 		}
-		else if (m_Cmd.compare(KILL_ROUTER) == 0) ///KILL_ROUTER
+		else if (m_Cmd.compare(KILL_ROUTER) == 0 && l_Param) ///KILL_ROUTER
 		{
 
 			//get the router ID
@@ -253,7 +266,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(REVIVE_ROUTER) == 0) ///REVIVE_ROUTER
+		else if (m_Cmd.compare(REVIVE_ROUTER) == 0 && l_Param) ///REVIVE_ROUTER
 		{
 
 			//get the router ID
@@ -265,7 +278,7 @@ void Simulation::socketRoutine(void)
 			//set next server state to SEND
 			enum_State = SEND;
 		}
-		else if (m_Cmd.compare(READ_PACKET) == 0) ///READ_PACKET
+		else if (m_Cmd.compare(READ_PACKET) == 0 && l_Param) ///READ_PACKET
 		{
 			//get the router ID
 			fieldRoutine(1);
@@ -276,7 +289,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(CLEAR_PACKET) == 0) ///CLEAR_PACKET
+		else if (m_Cmd.compare(CLEAR_PACKET) == 0 && l_Param) ///CLEAR_PACKET
 		{
 			//get the router ID
 			fieldRoutine(1);
@@ -292,7 +305,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(SEND_PACKET) == 0) ///SEND_PACKET
+		else if (m_Cmd.compare(SEND_PACKET) == 0 && l_Param) ///SEND_PACKET
 		{
 			//get the router ID
 			fieldRoutine(3);
@@ -306,7 +319,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(CONNECT) == 0) ///CONNECT
+		else if (m_Cmd.compare(CONNECT) == 0 && l_Param) ///CONNECT
 		{
 			//get the router ID
 			fieldRoutine(2);
@@ -318,7 +331,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(DISCONNECT) == 0) ///DISCONNECT
+		else if (m_Cmd.compare(DISCONNECT) == 0 && l_Param) ///DISCONNECT
 		{
 			//get the router ID
 			fieldRoutine(2);
@@ -330,7 +343,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(READ_TABLE) == 0) ///READ_TABLE
+		else if (m_Cmd.compare(READ_TABLE) == 0 && l_Param) ///READ_TABLE
 		{
 			//get the router ID
 			fieldRoutine(1);
@@ -341,7 +354,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(READ_RAW_TABLE) == 0) ///READ_RAW_TABLE
+		else if (m_Cmd.compare(READ_RAW_TABLE) == 0 && l_Param) ///READ_RAW_TABLE
 		{
 			//get the router ID
 			fieldRoutine(1);
@@ -352,7 +365,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(SET_LOCAL_PREF) == 0) ///SET_LOCAL_PREF
+		else if (m_Cmd.compare(SET_LOCAL_PREF) == 0 && l_Param) ///SET_LOCAL_PREF
 		{
 			//get the router ID
 			fieldRoutine(3);
@@ -368,7 +381,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(SET_KEEPALIVE) == 0) ///SET_KEEPALIVE
+		else if (m_Cmd.compare(SET_KEEPALIVE) == 0 && l_Param) ///SET_KEEPALIVE
 		{
 			//get the router ID
 			fieldRoutine(2);
@@ -383,7 +396,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(SET_HOLDDOWN_MULT) == 0) ///SET_HOLDDOWN_MULT
+		else if (m_Cmd.compare(SET_HOLDDOWN_MULT) == 0 && l_Param) ///SET_HOLDDOWN_MULT
 		{
 			//get the router ID
 			fieldRoutine(2);
@@ -396,7 +409,7 @@ void Simulation::socketRoutine(void)
 			enum_State = SEND;
 
 		}
-		else if (m_Cmd.compare(SHOW_IF) == 0) /// SHOW_IF
+		else if (m_Cmd.compare(SHOW_IF) == 0 && l_Param) /// SHOW_IF
 		{
 			//TODO: to be implemented if extra time is left
 		}
@@ -451,6 +464,9 @@ bool Simulation::fieldRoutine(int p_NumOfFields)
 	bool l_Parse = true;
 	int i = 0;
 	unsigned l_Pre = 0, l_Post = 0;
+
+	if(m_Fields.compare("") == 0)
+		return false;
 
 	while (l_Parse)
 	{
