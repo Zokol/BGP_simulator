@@ -53,7 +53,7 @@ void DataPlane::main(void)
 
                                     // m_Packet.setIPPayload(m_Packet.getIPPayload() << 1);
 
-                                    // port_ToInterface[0]->write(m_Packet);
+                                    port_ToInterface[i]->write(m_Packet);
 
                                     // port_ToInterface[1]->write(m_Packet);
                                 }
