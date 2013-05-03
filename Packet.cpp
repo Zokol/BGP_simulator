@@ -81,6 +81,15 @@ void Packet::getPDU(unsigned char *p_PDU)
 
 }
 
+void Packet::setTCPID(int p_TCPID)
+{
+	m_TCPID = p_TCPID;
+}
+
+int Packet::getTCPID()
+{
+	return m_TCPID;
+}
 
 
 bool Packet::operator == (const Packet& p_Packet) const {
@@ -90,12 +99,13 @@ bool Packet::operator == (const Packet& p_Packet) const {
             if(m_PDU[i] != p_Packet.m_PDU[i])
                 return false;
         }
-    return (p_Packet.m_BGPPayload == m_BGPPayload && p_Packet.m_ProtocolType == m_ProtocolType );
+    return (p_Packet.m_BGPPayload == m_BGPPayload && p_Packet.m_ProtocolType == m_ProtocolType && p_Packet.m_TCPID == m_TCPID );
 }
 
 Packet& Packet::operator = (const Packet& p_Packet) {
     m_BGPPayload = p_Packet.m_BGPPayload;
     m_ProtocolType = p_Packet.m_ProtocolType;
+    m_TCPID = p_Packet.m_TCPID;
     initPDU();
     setPDU(p_Packet.m_PDU);
 

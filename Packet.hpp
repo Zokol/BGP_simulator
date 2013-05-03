@@ -31,6 +31,9 @@ using sc_dt::sc_bv;
 #define MTU 576
 #define TYPE_IP 0
 #define TYPE_BGP 1
+#define TYPE_TCP_SYN 2
+#define TYPE_TCP_SYN_ACK 3
+#define TYPE_TCP_ACK 4
 
 class Packet
 {
@@ -95,6 +98,14 @@ public:
      * \public
      */
     void setPDU(const unsigned char *p_PDU);
+
+    /*! \fn void setTCPID(int p_TCPID)
+     * \brief Sets the TCP ID
+     * \details
+     * @param [in] int p_TCPID
+     * \public
+     */
+    void setTCPID(int p_TCPID);
     
 
     /*! \fn void getPDU(unsigned char *p_PDU); 
@@ -120,6 +131,13 @@ public:
      * \public
      */
     int getProtocolType(void);
+
+    /*! \fn int getTCPID(void)
+     * \brief Get TCP ID
+     * \return \b int The value of the TCP
+     * \public
+     */
+    int getTCPID(void);
 
     /*!
      * \brief Overload of compare operator
@@ -150,7 +168,7 @@ public:
     inline friend ostream& operator << (ostream& os,  Packet const & p_Packet )
     {   
 
-        os  << "**********************" << endl << "BGP_Payload: " << p_Packet.m_BGPPayload << ", Protocol type: " << p_Packet.m_ProtocolType<< endl << "**********************" << endl << "PDU" << endl <<"----------------------";
+        os  << "**********************" << endl << "BGP_Payload: " << p_Packet.m_BGPPayload << ", Protocol type: " << p_Packet.m_ProtocolType<< endl << "TCP ID: " << p_Packet.m_TCPID << endl << "**********************" << endl << "PDU" << endl <<"----------------------";
 
         string l_out;
         string l_Result;
@@ -232,6 +250,12 @@ private:
      * \private
      */
     int m_ProtocolType;
+
+    /*! \property int m_TCPID
+     *  \brief carries the identification value used to identify the TCP session
+     *  \private
+     */
+    int m_TCPID;
 
     /*! \fn void initPDU(void) 
      * \brief Sets all the fields in m_PDU to zero
