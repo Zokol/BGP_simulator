@@ -61,7 +61,7 @@ class RouterModel(UIObject):
 
 	def update_ports(self):
 		x_left = 0
-		x_right = 300
+		x_right = 303
 		y = 37
 		for b in self.port_blocks:
 			self.router_logicblock.spritegroup.remove(b)
@@ -262,7 +262,7 @@ class SimulationUI:
 		#self.routers.append(self.init_routerobject)
 		self.add_router(None)
 		self.selected_router = self.routers[0]
-		self.routermodel = RouterModel(None, self.screen, (335, 5), self.routers[0])
+		self.routermodel = RouterModel(None, self.screen, (335, 25), self.routers[0])
 
 		##Socket
 		self.host = "localhost"
@@ -280,50 +280,77 @@ class SimulationUI:
 
 		##UI Elements
 		self.buttons = []
-		self.routerlist_con = UIContainer(None, (5,5), (210, 300), self.screen, False)
-		self.packetlist_con = UIContainer(None, (250,5), (210, 300), self.screen, False)
-		self.network_con = UIContainer(None, (750,5), (430, 300), self.screen, False)
-		self.routerlist_dialog = NameList(self.routerlist_con, (15,27), (184, 220), self.routers, selected = self.select_router)
-		self.console_dialog = TextList(None, (5,345), (300, 340), self.console.log)
-		self.packetlist_dialog = NameList(None, (260,32), (170, 268), self.packet_list)
+		self.control_con = UIContainer(None, (5,365), (210, 330), self.screen, False)
+		self.routerlist_con = UIContainer(None, (5,25), (210, 300), self.screen, False)
+		self.packetlist_con = UIContainer(None, (230,25), (210, 300), self.screen, False)
+		self.network_con = UIContainer(None, (750,25), (430, 300), self.screen, False)
+		self.routerlist_dialog = NameList(self.routerlist_con, (15,25), (184, 220), self.routers, selected = self.select_router)
+		self.console_dialog = TextList(None, (230,365), (300, 320), self.console.log)
+		self.packetlist_dialog = NameList(None, (237,32), (193, 237), self.packet_list)
 		self.ezfont = pygame.font.Font(FONT, int(15*FONTSCALE))
-		self.console_input = eztext.Input(None, (5, 680), (300, 15), maxlength=50, color=COLOR_FONT, prompt='cmd> ', font = self.ezfont, handle_enter = self.send_cmd)
+		self.console_input = eztext.Input(None, (230, 680), (300, 15), maxlength=50, color=COLOR_FONT, prompt='cmd> ', font = self.ezfont, handle_enter = self.send_cmd)
 		
-		self.routing_table_main_dialog = NameList(None, (320,345), (430, 340), self.main_routing_table)
-		self.routing_table_all_dialog = NameList(None, (755,345), (430, 340), self.all_routes)
+		self.routing_table_main_dialog = NameList(None, (545,365), (320, 330), self.main_routing_table)
+		self.routing_table_all_dialog = NameList(None, (875,365), (320, 330), self.all_routes)
 
 		self.texts = []
 		font = pygame.font.Font(FONT, int(25*FONTSCALE))
-		text = font.render("Routers by AS-id", True, COLOR_FONT)
+		text = font.render("Routerlist", True, COLOR_FONT)
 		rect = text.get_rect()
 		rect.centerx = 108
-		rect.y = 7
+		rect.y = 3
+		self.texts.append([text, rect])
+		text = font.render("AS ID", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 108
+		rect.y = 27
 		self.texts.append([text, rect])
 		text = font.render("Received packets", True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = 345 
-		rect.y = 7
+		rect.centerx = 335 
+		rect.y = 3
+		self.texts.append([text, rect])
+		text = font.render("Router conf", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 530
+		rect.y = 3
+		self.texts.append([text, rect])
+		text = font.render("Ports", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 690
+		rect.y = 3
+		self.texts.append([text, rect])
+		text = font.render("Network", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 970
+		rect.y = 3
 		self.texts.append([text, rect])
 
 		font = pygame.font.Font(FONT, int(30*FONTSCALE))
+		text = font.render("Controlpanel", True, COLOR_FONT)
+		rect = text.get_rect()
+		rect.centerx = 110
+		rect.y = 340
+		self.texts.append([text, rect])
 		text = font.render("Console", True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = 152
-		rect.y = 320
+		rect.centerx = 372
+		rect.y = 340
 		self.texts.append([text, rect])
 		text = font.render("Main routing table", True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = 535
-		rect.y = 320
+		rect.centerx = 710
+		rect.y = 340
 		self.texts.append([text, rect])
 		text = font.render("All routes", True, COLOR_FONT)
 		rect = text.get_rect()
-		rect.centerx = 970
-		rect.y = 320
+		rect.centerx = 1040
+		rect.y = 340
 		self.texts.append([text, rect])
 		
 		self.sprites = pygame.sprite.LayeredDirty(_time_threshold = 1000.0)
 		self.sprites.set_clip()
+		
 		self.sprites.add(self.routerlist_dialog)
 		self.sprites.add(self.console_dialog)
 		self.sprites.add(self.packetlist_dialog)
@@ -331,9 +358,12 @@ class SimulationUI:
 		self.sprites.add(self.routing_table_all_dialog)
 		self.sprites.add(self.console_input)
 		
-		btn = FuncButton(self.routerlist_con, self.routerlist_con.x + 10, self.routerlist_con.y + self.routerlist_con.height - 50, 180, 30, [["New router", None]], None, ICON_FONTSIZE, self.screen, 1, (self.add_router, None), True, False, True)
+		btn = FuncButton(self.routerlist_con, 15, self.routerlist_con.y + self.routerlist_con.height - 70, 180, 30, [["New router", None]], None, 25, self.screen, 1, (self.add_router, None), True, False, True)
 		self.buttons.append(btn)
 		self.routerlist_con.spritegroup.add(btn)
+		btn = FuncButton(self.packetlist_con, 15, self.packetlist_con.y + 230, 180, 30, [["Clear packets", None]], None, 25, self.screen, 1, (self.clear_packets, self.selected_router), True, False, True)
+		self.buttons.append(btn)
+		self.packetlist_con.spritegroup.add(btn)
 
 
 	def add_router(self, router):
@@ -344,6 +374,19 @@ class SimulationUI:
 		else:
 			self.log("Router added: " + router.name)
 			self.routers.append(router)
+
+	def clear_packets(self, router):
+		if self.sim_running:
+			for i in range(len(self.routers)):
+				if self.routers[i] == router:
+					cmd = "<CMD>CLEAR_PACKETS," + str(i) + "</CMD>"
+					print cmd
+					self.socket.send(cmd)
+					if not self.wait_for("ACK"):
+						self.log("Server returned an error, please try again.")
+						return 0
+					self.log("Packets cleared")
+					return 1
 
 	def send_cmd(self):
 		cmd = self.console_input.value
@@ -709,7 +752,7 @@ class SimulationUI:
 
 	def draw_network(self):
 		x = 968
-		y = 155
+		y = 175
 		max_x = 300
 		x_step = 40
 		y_step = 40
@@ -756,7 +799,7 @@ class SimulationUI:
 					for i in router_points:
 						if i[0] == p.client.as_id:	
 							coord_b = (i[1], i[2])
-							pygame.draw.line(self.screen, (0,0,0), coord_a, coord_b, 2)
+							pygame.draw.aaline(self.screen, (0,0,0), coord_a, coord_b, 2)
 							break
 		for c in router_points:	
 			pygame.draw.circle(self.screen, (255,255,255), (c[1], c[2]), radius)
