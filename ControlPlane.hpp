@@ -21,6 +21,7 @@
 #include "RoutingTable_If.hpp"
 #include "StringTools.hpp"
 #include "Output_If.hpp"
+#include "Interface_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -45,12 +46,18 @@ public:
      * \public
      */
     sc_in_clk port_Clk;
-   
+
     /*! \brief Forwarding port
      * \details Used to write BGP messages to the data plane
      * \public
      */
     sc_port<Output_If,0, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
+
+    /*! \brief NIC control port
+     * \details
+     * \public
+     */
+    sc_port<Interface_If,0, SC_ZERO_OR_MORE_BOUND> port_InterfaceControl;
    
     /*! \brief Routing Table's management port
      * \details Used to manage the routing table. Add, remove, update routes
@@ -165,6 +172,7 @@ private:
      * \private
      */
     StringTools m_Name;
+
 
 
 };

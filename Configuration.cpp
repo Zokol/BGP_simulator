@@ -92,6 +92,16 @@ void ControlPlaneConfig::setLocalPref(int p_LocalPref)
     m_LocalPref = p_LocalPref;
 }
 
+void ControlPlaneConfig::setNICMode(int p_Interface, int p_Mode)
+{
+	m_NICMode[p_Interface] = p_Mode;
+}
+
+bool ControlPlaneConfig::isClient(int p_Interface)
+{
+	return m_NICMode[p_Interface] == CLIENT?true:false;
+}
+
 ///Getters
 int ControlPlaneConfig::getNumberOfInterfaces(void){return m_NumberOfInterfaces;}
 
@@ -108,6 +118,8 @@ int ControlPlaneConfig::getASNumber(void){return m_ASNumber;}
 int ControlPlaneConfig::getMED(void){return m_MED;}
 
 int ControlPlaneConfig::getLocalPref(void){return m_LocalPref;}
+
+
 
 
 ControlPlaneConfig& ControlPlaneConfig::operator = (const ControlPlaneConfig& p_Original) {
@@ -131,38 +143,38 @@ Connection::Connection():m_NeighborInterfaceId(-1), m_NeighborRouterId(-1){}
 Connection::Connection(int p_NeighborInterfaceId, int p_NeighborRouterId):m_NeighborInterfaceId(p_NeighborInterfaceId), m_NeighborRouterId(p_NeighborRouterId)
 {
 
-    
+
 
 }
 
 void Connection::setNeighborRouterId(int p_NeighborRouterId)
 {
-    m_NeighborRouterId = p_NeighborRouterId;
+	m_NeighborRouterId = p_NeighborRouterId;
 }
 
 void Connection::setNeighborInterfaceId(int p_NeighborInterfaceId)
 {
-    m_NeighborInterfaceId = p_NeighborInterfaceId;
+	m_NeighborInterfaceId = p_NeighborInterfaceId;
 }
 
 int Connection::getNeighborRouterId(void)
 {
-    return m_NeighborRouterId;
+	return m_NeighborRouterId;
 }
 
 int Connection::getNeighborInterfaceId(void)
 {
-    return m_NeighborInterfaceId;
+	return m_NeighborInterfaceId;
 }
 bool Connection::hasConnection(void)
 {
-    return (m_NeighborRouterId < 0 || m_NeighborInterfaceId < 0)?false:true;
+	return (m_NeighborRouterId < 0 || m_NeighborInterfaceId < 0)?false:true;
 }
 
 string Connection::toString(void)
 {
-    StringTools cvr;
-    return "Neighbor router ID: " + cvr.iToS(m_NeighborRouterId) + "\nNeighbor interface ID: " + cvr.iToS(m_NeighborInterfaceId) + "\n----------------------\n";
+	StringTools cvr;
+	return "Neighbor router ID: " + cvr.iToS(m_NeighborRouterId) + "\nNeighbor interface ID: " + cvr.iToS(m_NeighborInterfaceId) + "\n----------------------\n";
 }
 
 /************* Implementation of RouterConfig *****************/
@@ -170,17 +182,22 @@ string Connection::toString(void)
 ///Constructors and Destructor
 
 RouterConfig::RouterConfig(int p_NumberOfInterfaces)
-    {
-        m_NeighborConnections = new Connection*[p_NumberOfInterfaces];
-        for(int i = 0; i < p_NumberOfInterfaces; i++)
-            m_NeighborConnections[i] = new Connection();
-        setNumberOfInterfaces(p_NumberOfInterfaces);
+{
+	m_NeighborConnections = new Connection*[p_NumberOfInterfaces];
+	m_NICMode = new int[p_NumberOfInterfaces];
+	for(int i = 0; i < p_NumberOfInterfaces; i++)
+	{
+		m_NeighborConnections[i] = new Connection();
+		m_NICMode[i] = SERVER;
+	}
+	setNumberOfInterfaces(p_NumberOfInterfaces);
 
-    }
+}
 
 RouterConfig::~RouterConfig()
 {
     delete [] m_NeighborConnections;
+    delete[] m_NICMode;
 }
 
 ///Setters

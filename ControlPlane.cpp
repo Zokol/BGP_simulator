@@ -68,11 +68,15 @@ void ControlPlane::controlPlaneMain(void)
             port_ToDataPlane->write(m_BGPMsg);
         }
 
+    for (int var = 0; var < m_BGPConfig->getNumberOfInterfaces()-1; var++) {
+    	cout<< name() << ": Interface " << var << " mode is " << m_BGPConfig->isClient(var) << endl << "Interface state is " << port_InterfaceControl[var]->isUp() << endl;
+	}
 
   //The main thread of the control plane starts
     while(true)
         {    
         wait();
+
         // cout << "MED is now: " << m_BGPConfig->getMED() << endl;
 
         //Check if there's messages in the input buffer

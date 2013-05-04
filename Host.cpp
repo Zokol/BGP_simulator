@@ -10,7 +10,7 @@
 #include "Host.hpp"
 #include "ReportGlobals.hpp"
 
-Host::Host(sc_module_name p_ModuleName, Connection *p_ConnectionConfig):sc_module(p_ModuleName), m_Encoder("Encoder"), m_Decoder("Decoder"), m_MsgBuffer(EMPTY)
+Host::Host(sc_module_name p_ModuleName, Connection *p_ConnectionConfig):sc_module(p_ModuleName), m_Encoder("Encoder"), m_Decoder("Decoder"), m_MsgBuffer(START)
 {
 	///StringTools instance for reporting
 	StringTools *l_Report = new StringTools(name());
@@ -88,12 +88,9 @@ void Host::hostMain()
 			//Handle only frames that carry IP
 			if(m_Frame.getProtocolType() == TYPE_IP)
 			{
-				cout << name() << " received a packet." << endl;
 				m_Decoder.processFrame(m_Frame);
-				if(m_MsgBuffer.compare(EMPTY) == 0)
-					m_MsgBuffer = m_Decoder.readIPPacket();
-				else
-					m_MsgBuffer += m_Decoder.readIPPacket();
+
+				appendMsgBuffer(m_Decoder.readIPPacket());
 			}
 
 		}
@@ -111,7 +108,7 @@ void Host::interfaceUp(void)
  */
 bool Host::sendMessage(string p_DestinationIP, string p_SourceIP, string p_Payload)
 {
-	cout << name() << " send a message:" << endl << "Destination: " << p_DestinationIP << endl << "Source: " << p_SourceIP << endl << "Payload: " << p_Payload << endl;
+//	cout << name() << " send a message:" << endl << "Destination: " << p_DestinationIP << endl << "Source: " << p_SourceIP << endl << "Payload: " << p_Payload << endl;
 	//build the IP packet
 	m_Frame = m_Encoder.buildIPPacket(p_DestinationIP, p_SourceIP, p_Payload);
 	//Set the protocol type to IP
@@ -125,15 +122,28 @@ bool Host::sendMessage(string p_DestinationIP, string p_SourceIP, string p_Paylo
  */
 string Host::reaMessageBuffer(void)
 {
-	cout << name() << " returns message buffer." << endl;
-	return m_MsgBuffer;
+	m_MsgBufferMutex.lock();
+	string l_Temp = m_MsgBuffer;
+	m_MsgBufferMutex.unlock();
+
+	return l_Temp + END;
 
 }
 
 /*! \sa Communication_If
  */
 void Host::clearMessageBuffer(void)
+{				cout << name() << " received a packet." << endl;
+
+	m_MsgBufferMutex.lock();
+	m_MsgBuffer = START;
+	m_MsgBufferMutex.unlock();
+}
+
+void Host::appendMsgBuffer(string p_SubString)
 {
-	m_MsgBuffer = EMPTY;
+	m_MsgBufferMutex.lock();
+	m_MsgBuffer += p_SubString;
+	m_MsgBufferMutex.unlock();
 }
 

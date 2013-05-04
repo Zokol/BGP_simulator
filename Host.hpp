@@ -27,8 +27,8 @@
 #include "PacketProcessor.hpp"
 #include "Communication_If.hpp"
 
-#define EMPTY "<EMPTY />"
-
+#define START "<TABLE>"
+#define END "</TABLE>"
 using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
@@ -67,6 +67,7 @@ public:
 
 private:
 
+   sc_mutex m_MsgBufferMutex;
 
     /*!
      * \property   const sc_time *clk_Periods
@@ -105,6 +106,8 @@ private:
     PacketProcessor m_Encoder;
 
     PacketProcessor m_Decoder;
+
+    void appendMsgBuffer(string p_SubString);
 
 
 
