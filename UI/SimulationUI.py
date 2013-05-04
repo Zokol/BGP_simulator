@@ -145,7 +145,7 @@ class Router:
 		if routing_table != None:
 			self.routing_table = routing_table
 		else:
-			self.routing_table = ["1,182.54.71.0,1,1947-2307-1676-0", "3,102.192.0.10,1,2001-3920-0293-0"]
+			self.routing_table = []
 		if preferred_routes != None:
 			self.preferred_routes = preferred_routes
 		else:
@@ -249,6 +249,8 @@ class SimulationUI:
 		##Simulation objects
 		self.next_routerID = 0
 		self.selected_router = None
+		self.connection_router1 = None
+		self.connection_router2 = None
 		self.all_routes = []
 		self.main_routing_table = []
 		self.packet_list = []
@@ -765,9 +767,9 @@ class SimulationUI:
 			rect.centerx = c[1]
 			rect.centery = c[2]
 			self.screen.blit(text, rect)
-			
 		#rect = pygame.Rect((777,32), (380, 250))
 		#ellipse = pygame.draw.ellipse(self.screen, (0,0,0), rect, 5)
+		return router_points, radius
 
 	def draw_selectdialogs(self):
 		self.sprites.update()
@@ -785,6 +787,22 @@ class SimulationUI:
 			if b.contains(*event.pos):
 				f = b.function[0]
 				f(b.function[1])
+		for p in range(len(self.topology_points)):
+			mouse_x, mouse_y = pygame.mouse.get_pos()
+			router_point = self.topology_points[p]
+			print mouse_x, mouse_y
+			print router_point
+			d = math.sqrt((mouse_x - router_point[1])**2 + (mouse_y - router_point[2])**2)
+			if d <= self.topology_radius:
+				if self.connection_router1 == None:
+					print "selected router ", p
+					self.connection_router1 = self.routers[p]
+				else:
+					print "selected router ", p
+					self.connection_router2 = self.routers[p]
+					self.log(self.connect((self.connection_router1, None), (self.connection_router2, None)))
+					self.connection_router1 = None
+					self.connection_router2 = None
 
 	"""
 	# \brief Simulation UI loop
@@ -809,7 +827,7 @@ class SimulationUI:
 		for t in self.texts:
 			self.screen.blit(t[0], t[1])
 		while not self.done:
-			self.draw_network()
+			self.topology_points, self.topology_radius = self.draw_network()
 			if self.sim_running:
 				self.update_routing_tables()
 			for event in pygame.event.get():
