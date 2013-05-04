@@ -33,7 +33,6 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
 
 
 	StringTools *l_HostName = new StringTools("Host");
-	cout << "here" << endl;
 	/// \li Initiate the Router modules as m_Router
 	for(int i = 0; i < m_SimuConfiguration->getNumberOfRouters(); i++)
 	{
