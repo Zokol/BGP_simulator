@@ -246,6 +246,9 @@ class SimulationUI:
 		self.fps = 30
 		self.clock = pygame.time.Clock()
 
+		self.sim_running = False
+		self.sim_stopped = False
+
 		##Simulation objects
 		self.next_routerID = 0
 		self.selected_router = None
@@ -364,6 +367,12 @@ class SimulationUI:
 		btn = FuncButton(self.packetlist_con, 15, self.packetlist_con.y + 230, 180, 30, [["Clear packets", None]], None, 25, self.screen, 1, (self.clear_packets, self.selected_router), True, False, True)
 		self.buttons.append(btn)
 		self.packetlist_con.spritegroup.add(btn)
+		btn = FuncButton(self.control_con, 10, 10, 190, 40, [["START", None]], None, 30, self.screen, 1, (self.start_sim, None), True, False, True)
+		self.buttons.append(btn)
+		self.control_con.spritegroup.add(btn)
+		btn = FuncButton(self.control_con, 10, 70, 190, 40, [["STOP", None]], None, 30, self.screen, 1, (self.stop_sim, None), True, False, True)
+		self.buttons.append(btn)
+		self.control_con.spritegroup.add(btn)
 
 
 	def add_router(self, router):
@@ -662,7 +671,7 @@ class SimulationUI:
 		#	if len(route) == 2:
 		#		self.all_routes.append(Route(route[1], route[2], route[3]))
 	
-	def start_sim(self):
+	def start_sim(self, none = None):
 		sim_conf = "<SIM_CONFIG>"
 		conf = []
 		for r in self.routers:
@@ -695,12 +704,19 @@ class SimulationUI:
 			self.log("Server returned an error, please try again.")
 			return 0
 		self.sim_running = True
+		self.draw_controlpanel()
 
-	def stop_sim(self):
+	def stop_sim(self, none = None):
 		self.socket.send("<CMD>STOP</CMD>")
+		###XXX Simulation does not send ACK, fix this when it does
+		"""
 		if not self.wait_for("ACK"):
 			self.log("Server returned an error, please try again.")
 			return 0
+		"""
+		self.sim_running = False
+		self.sim_stopped = True
+		self.draw_controlpanel()
 
 	#Debug-function, raw send and receive. Notice that receive length is fixed and this function does not wayt for any responce
 	def send_socket_cmd(self, cmd):
@@ -814,6 +830,63 @@ class SimulationUI:
 		#ellipse = pygame.draw.ellipse(self.screen, (0,0,0), rect, 5)
 		return router_points, radius
 
+	def draw_controlpanel(self):
+		self.control_con.draw()
+		color_run = (0,125,0)
+		color_wait = (20,20,20)
+		color_stop = (125,0,0)
+		if self.sim_running:
+			rect = pygame.Rect(self.control_con.x + 10, self.control_con.y + 120, 195, 205)
+			pygame.draw.rect(self.screen, color_run, rect, 0)
+			font = pygame.font.Font(FONT, 50)
+			text = font.render("Running", True, (100,100,100))
+			text = pygame.transform.rotate(text, 30)
+			rect = text.get_rect()
+			rect.centerx = 110
+			rect.centery = 580
+			self.screen.blit(text, rect)
+			font = pygame.font.Font(FONT, 49)
+			text = font.render("Running", True, (255,255,255))
+			text = pygame.transform.rotate(text, 30)
+			rect = text.get_rect()
+			rect.centerx = 110
+			rect.centery = 580
+			self.screen.blit(text, rect)
+		elif self.sim_stopped:
+			rect = pygame.Rect(self.control_con.x + 10, self.control_con.y + 120, 195, 205)
+			pygame.draw.rect(self.screen, color_stop, rect, 0)
+			font = pygame.font.Font(FONT, 50)
+			text = font.render("Stopped", True, (100,100,100))
+			text = pygame.transform.rotate(text, 30)
+			rect = text.get_rect()
+			rect.centerx = 110
+			rect.centery = 580
+			self.screen.blit(text, rect)
+			font = pygame.font.Font(FONT, 49)
+			text = font.render("Stopped", True, (255,255,255))
+			text = pygame.transform.rotate(text, 30)
+			rect = text.get_rect()
+			rect.centerx = 110
+			rect.centery = 580
+			self.screen.blit(text, rect)
+		else:
+			rect = pygame.Rect(self.control_con.x + 10, self.control_con.y + 120, 195, 205)
+			pygame.draw.rect(self.screen, color_wait, rect, 0)
+			font = pygame.font.Font(FONT, 50)
+			text = font.render("Waiting", True, (100,100,100))
+			text = pygame.transform.rotate(text, 30)
+			rect = text.get_rect()
+			rect.centerx = 110
+			rect.centery = 580
+			self.screen.blit(text, rect)
+			font = pygame.font.Font(FONT, 49)
+			text = font.render("Waiting", True, (255,255,255))
+			text = pygame.transform.rotate(text, 30)
+			rect = text.get_rect()
+			rect.centerx = 110
+			rect.centery = 580
+			self.screen.blit(text, rect)
+
 	def draw_selectdialogs(self):
 		self.sprites.update()
 		self.sprites._spritelist.sort(key = lambda sprite: sprite._layer)
@@ -862,28 +935,34 @@ class SimulationUI:
 	"""
 	def loop(self):
 		self.done = False
-		self.sim_running = False
 		self.screen.blit(self.background, (0,0))
+		#self.control_con.draw()
+		self.draw_controlpanel()
 		self.routerlist_con.draw()
 		self.packetlist_con.draw()
 		self.draw_network()
 		for t in self.texts:
 			self.screen.blit(t[0], t[1])
 		while not self.done:
-			self.topology_points, self.topology_radius = self.draw_network()
-			if self.sim_running:
-				self.update_routing_tables()
-			for event in pygame.event.get():
-				if event.type == pygame.MOUSEBUTTONDOWN:
-					if event.button == 1:
-						self.click(event)
-				for sprite in self.sprites:
-					if hasattr(sprite, 'event'):
-						sprite.event(event)
-				if event.type == pygame.QUIT:
-					self.done = True
-			self.draw()
-			self.draw_selectdialogs()
+			if not self.sim_stopped:
+				self.topology_points, self.topology_radius = self.draw_network()
+				if self.sim_running:
+					self.update_routing_tables()
+				for event in pygame.event.get():
+					if event.type == pygame.MOUSEBUTTONDOWN:
+						if event.button == 1:
+							self.click(event)
+					for sprite in self.sprites:
+						if hasattr(sprite, 'event'):
+							sprite.event(event)
+					if event.type == pygame.QUIT:
+						self.done = True
+				self.draw()
+				self.draw_selectdialogs()
+			else:
+				for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						self.done = True
 
 """
 # \brief Init and loop
