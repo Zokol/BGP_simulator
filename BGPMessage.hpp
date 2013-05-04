@@ -1,7 +1,7 @@
 /*! \file BGPMessage.hpp
  *  \brief     Header file of BGP message class
  *  \details   defines the BGPMessage class.
- *  \author    Antti Siirilä, 501449
+ *  \author    Antti Siirilï¿½, 501449
  *  \version   1.0
  *  \date      11.2.2013
  */
@@ -53,6 +53,21 @@ using sc_dt::sc_int;
  */
 #define KEEPALIVE 4
 
+/*! \def TCP_SYN
+ *  \brief Defines the TCP syn message type
+ */
+#define TCP_SYN 5
+
+/*! \def TCP_SYNACK
+ *  \brief Defines the TCP synack message type
+ */
+#define TCP_SYNACK 6
+
+/*! \def TCP_ACK
+ *  \brief Defines the TCP ack message type
+ */
+#define TCP_ACK 7
+
 class BGPMessage
 {
 public:
@@ -90,11 +105,12 @@ public:
      */
     string m_Message;
 
-    BGPMessage():m_Type(0), m_OutboundInterface(0){};
+    BGPMessage():m_Type(-1), m_OutboundInterface(-1){};
 
     ~BGPMessage(){};
 
     BGPMessage(BGPMessage& p_Msg);
+
 
 
 
