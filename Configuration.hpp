@@ -70,6 +70,14 @@ public:
      */
     void setHoldDownTimeFactor(int p_HoldDownTimeFactor);    
 
+    /*! \fn void setNICMode(int p_Interface, int p_Mode)
+     *  \brief Sets the interface mode used in TCP session establishment
+     *  @param[in] int p_Interface The interface id
+     *  @param[in] int p_Mode The mode value: SERVER || CLIENT
+     * \public
+     */
+    void setNICMode(int p_Interface, int p_Mode);
+
     /*! \fn int getKeepaliveTime(void); 
      *  \brief Returns the keepalive time
      *  \return integer value
@@ -90,6 +98,14 @@ public:
      * \public
      */
     int getHolDownTimeFactor(void);
+
+    /*! \fn bool isClient(int p_Interface)
+     *  \brief Checks whether the given interface is in the client mode
+     *  @param[in] int p_Interface The interface id
+     *  \return true: interface is in CLIENT-mode - false: interface is in SERVER-mode
+     * \public
+     */
+    bool isClient(int p_Interface);
 
     /*! \fn BGPSessionParameters& operator = (const BGPSessionParameters& p_Original);
      *  \brief clones the passed BGPSessionParameters object to this object
@@ -124,6 +140,11 @@ protected:
      * \protected
      */
     int m_HoldDownTimeFactor;
+
+    /*! \property int *m_NICMode
+     * \brief holds the network interface mode information
+     */
+    int *m_NICMode;
 
 private:
 
@@ -212,22 +233,6 @@ public:
      * \public
      */
     void setLocalPref(int p_LocalPref);
-
-    /*! \fn void setNICMode(int p_Interface, int p_Mode)
-     *  \brief Sets the interface mode used in TCP session establishment
-     *  @param[in] int p_Interface The interface id
-     *  @param[in] int p_Mode The mode value: SERVER || CLIENT
-     * \public
-     */
-    void setNICMode(int p_Interface, int p_Mode);
-
-    /*! \fn bool isClient(int p_Interface)
-     *  \brief Checks whether the given interface is in the client mode
-     *  @param[in] int p_Interface The interface id
-     *  \return true: interface is in CLIENT-mode - false: interface is in SERVER-mode
-     * \public
-     */
-    bool isClient(int p_Interface);
 
     /*! \fn int getNumberOfInterfaces(void); 
      *  \brief Returns the number of interface
@@ -331,11 +336,6 @@ protected:
      * \protected
      */
     int m_LocalPref;
-
-    /*! \property int *m_NICMode
-     * \brief holds the network interface mode information
-     */
-    int *m_NICMode;
 
 private:
 

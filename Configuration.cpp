@@ -51,6 +51,16 @@ void BGPSessionParameters::setHoldDownTime(void)
     m_HoldDownTime = m_KeepaliveTime * m_HoldDownTimeFactor;
 }
 
+void BGPSessionParameters::setNICMode(int p_Interface, int p_Mode)
+{
+	m_NICMode[p_Interface] = p_Mode;
+}
+
+bool BGPSessionParameters::isClient(int p_Interface)
+{
+	return m_NICMode[p_Interface] == CLIENT?true:false;
+}
+
     
 /************* Implementation of ControlPlaneConfig *****************/
 
@@ -90,16 +100,6 @@ void ControlPlaneConfig::setMED(int p_MED)
 void ControlPlaneConfig::setLocalPref(int p_LocalPref)
 {
     m_LocalPref = p_LocalPref;
-}
-
-void ControlPlaneConfig::setNICMode(int p_Interface, int p_Mode)
-{
-	m_NICMode[p_Interface] = p_Mode;
-}
-
-bool ControlPlaneConfig::isClient(int p_Interface)
-{
-	return m_NICMode[p_Interface] == CLIENT?true:false;
 }
 
 ///Getters
