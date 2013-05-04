@@ -444,7 +444,7 @@ int sc_main(int argc, char * argv [])
 cout << "START"<< endl;
 #if defined (_GUI) || defined(_GUI_TEST)
   sc_start();
-  GUISocket << "END";
+  GUISocket << "ACK";
 
   //  ptr_Router = NULL;
 #else
