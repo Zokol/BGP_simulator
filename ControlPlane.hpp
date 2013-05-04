@@ -57,7 +57,7 @@ public:
      * \details
      * \public
      */
-    sc_port<Interface_If,0, SC_ZERO_OR_MORE_BOUND> port_InterfaceControl;
+    sc_export<Interface_If> **export_InterfaceControl;
    
     /*! \brief Routing Table's management port
      * \details Used to manage the routing table. Add, remove, update routes
@@ -84,11 +84,14 @@ public:
     void before_end_of_elaboration()
     {
 
-        //inititate the session events
+
         for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
             {
                 //connect the session to the data plane
-                m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
+            m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
+            //bind the interfaces to the sessions
+            m_BGPSessions[i]->port_InterfaceControl.bind(*export_InterfaceControl[i]);
+
             }
 
 
@@ -157,12 +160,23 @@ private:
      */
     BGPSession **m_BGPSessions;
     
-    /*! \brief BGP message
+    /*! \brief BGP input message
      * \details 
      * \private
      */
-    BGPMessage m_BGPMsg;
+    BGPMessage m_BGPMsgIn;
 
+    /*! \brief BGP output message
+     * \details
+     * \private
+     */
+    BGPMessage m_BGPMsgOut;
+
+    /*! \property ControlPlaneConfig *m_BGPConfig
+     * \brief BGP configuration object
+     * \details
+     * \private
+     */
     ControlPlaneConfig *m_BGPConfig;
 
 
@@ -172,6 +186,7 @@ private:
      * \private
      */
     StringTools m_Name;
+
 
 
 
