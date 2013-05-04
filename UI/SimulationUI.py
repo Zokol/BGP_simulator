@@ -356,7 +356,10 @@ class SimulationUI:
 			if params[0] == "connect" and len(params) == 3:
 				r1 = params[1].split(':')
 				r2 = params[2].split(':')
-				self.log(self.connect((self.get_router(r1[0]), int(r1[1])), (self.get_router(r2[0]), int(r2[1]))))
+				if len(r1) == 2:
+					self.log(self.connect((self.get_router(r1[0]), int(r1[1])), (self.get_router(r2[0]), int(r2[1]))))
+				elif len(r1) == 1:
+					self.log(self.connect((self.get_router(r1[0]), None), (self.get_router(r2[0]), None)))
 			elif params[0] == "disconnect" and len(params) == 2:
 				tmp = params[1].split(':')
 				self.log(self.disconnect(tmp[0], tmp[1]))
@@ -413,7 +416,7 @@ class SimulationUI:
 		self.log("Set Local Pref: set_lp [LocalPref]")
 		self.log("Set Keepalive Time: set_kt [Keepalive]")
 		self.log("Set Hold Down Multiplier: set_hdm [multiplier]")
-		self.log("Connect routers: connect [AS1_ID]:[PORT_ID] [AS2_ID]:[PORT_ID]")
+		self.log("Connect routers: connect [AS1_ID]{:[PORT_ID]} [AS2_ID]{:[PORT_ID]}")
 		self.log("Disconnect routers: disconnect [AS_ID]:[port_num]")
 		self.log("Shutdown router: shutdown [AS_ID]")
 		self.log("Revive router: revive [AS_ID]")
@@ -431,15 +434,33 @@ class SimulationUI:
 		self.log("Send command to socket server: debug [CMD]")
 
 	def connect(self, router1, router2):
-		try:
-			port_a = router1[0].interfaces[router1[1]]
-			port_a.client = router2[0]
-			port_a.client_port = router2[1]
-			port_b = router2[0].interfaces[router2[1]]
-			port_b.client = router1[0]
-			port_b.client_port = router1[1]
-		except IndexError:
-			return "Error: Invalid router or port selected"
+		if router1[1] == None and router2[1] == None:
+			router1_port = self.next_free_port(router1[0])
+			print router1_port
+			if router1_port == -1:
+				return "No free ports, specify port to be reconnected"
+			router2_port = self.next_free_port(router2[0])
+			if router2_port == -1:
+				return "No free ports, specify port to be reconnected"
+			try:
+				port_a = router1[0].interfaces[router1_port]
+				port_a.client = router2[0]
+				port_a.client_port = router2_port
+				port_b = router2[0].interfaces[router2_port]
+				port_b.client = router1[0]
+				port_b.client_port = router1_port
+			except IndexError:
+				return "Error: Invalid router or port selected"
+		else:
+			try:
+				port_a = router1[0].interfaces[router1[1]]
+				port_a.client = router2[0]
+				port_a.client_port = router2[1]
+				port_b = router2[0].interfaces[router2[1]]
+				port_b.client = router1[0]
+				port_b.client_port = router1[1]
+			except IndexError:
+				return "Error: Invalid router or port selected"
 
 	def disconnect(self, router, port):
 		client = router.interfaces[port]
@@ -447,6 +468,13 @@ class SimulationUI:
 			if i.client == router:
 				i.client = None
 		router.interfaces[port] = None
+
+	def next_free_port(self, router):
+		for i in range(len(router.interfaces) - 1):
+			print router.interfaces[i].client
+			if router.interfaces[i].client == None:
+				return i
+		return -1
 
 	def add_route(self, router, route):
 		router.routing_table.add(route)
