@@ -12,6 +12,7 @@ import pygame
 from pygame.locals import *
 from UI import *
 from selectdialog import *
+from timeout import timeout
 import eztext
 import socket
 import math
@@ -129,9 +130,9 @@ class Route:
 		self.prefix = prefix
 		self.path = path
 		
-		@property
-		def name(self):
-			return self.target_as + " | " + self.prefix + " | " + self.path
+	@property
+	def name(self):
+		return self.target_as + " | " + self.prefix + " | " + self.path
 
 class Router:
 	def __init__(self, as_id = '0', prefix = '0.0.0.0/32', med = '0', localpref = '100', keepalivetime = '60', holddown_multiplier = '3', interfaces = None, routing_table = None, preferred_routes = None):
@@ -144,7 +145,7 @@ class Router:
 		if routing_table != None:
 			self.routing_table = routing_table
 		else:
-			self.routing_table = []
+			self.routing_table = ["1,182.54.71.0,1,1947-2307-1676-0", "3,102.192.0.10,1,2001-3920-0293-0"]
 		if preferred_routes != None:
 			self.preferred_routes = preferred_routes
 		else:
@@ -212,6 +213,18 @@ class RoutingTable:
 	def __init__(self):
 		self.table = []
 
+	def update_table(self, data):
+		self.table = []
+		#raw_table = data.split(";")
+		for row in data:
+			print row
+			route = row.split(',')
+			if len(route) == 4:
+				self.table.append(Route(route[1], route[2], route[3]))
+		print self.table
+		for t in self.table:
+			print t.name
+
 """
 # \brief SimulationUI
 # \details 
@@ -236,6 +249,9 @@ class SimulationUI:
 		##Simulation objects
 		self.next_routerID = 0
 		self.selected_router = None
+		self.all_routes = []
+		self.main_routing_table = []
+		self.packet_list = []
 		self.routers = []
 		self.console = Console()
 		self.routing_table_main = RoutingTable()
@@ -253,9 +269,9 @@ class SimulationUI:
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:
 			self.socket.connect((self.host, self.port))
-			self.socket.send('UI_INIT')
-			resp = self.socket.recv(self.size)
-			print resp
+			#self.socket.send('UI_INIT')
+			#resp = self.socket.recv(self.size)
+			#print resp
 		except socket.error:
 			print "No connection to server, please ensure that simulation server is running at ",self.host,":",self.port
 			sys.exit(1)
@@ -267,12 +283,12 @@ class SimulationUI:
 		self.network_con = UIContainer(None, (750,5), (430, 300), self.screen, False)
 		self.routerlist_dialog = NameList(self.routerlist_con, (15,27), (184, 220), self.routers, selected = self.select_router)
 		self.console_dialog = TextList(None, (5,345), (300, 340), self.console.log)
-		self.packetlist_dialog = NameList(None, (260,32), (170, 268), self.selected_router.as_packets)
+		self.packetlist_dialog = NameList(None, (260,32), (170, 268), self.packet_list)
 		self.ezfont = pygame.font.Font(FONT, int(15*FONTSCALE))
 		self.console_input = eztext.Input(None, (5, 680), (300, 15), maxlength=50, color=COLOR_FONT, prompt='cmd> ', font = self.ezfont, handle_enter = self.send_cmd)
 		
-		self.routing_table_main_dialog = TextList(None, (320,345), (430, 340), self.selected_router.preferred_routes)
-		self.routing_table_all_dialog = TextList(None, (755,345), (430, 340), self.selected_router.routing_table)
+		self.routing_table_main_dialog = NameList(None, (320,345), (430, 340), self.main_routing_table)
+		self.routing_table_all_dialog = NameList(None, (755,345), (430, 340), self.all_routes)
 
 		self.texts = []
 		font = pygame.font.Font(FONT, int(25*FONTSCALE))
@@ -381,6 +397,7 @@ class SimulationUI:
 				self.print_help()
 
 	def log(self, msg):
+		print msg
 		self.console.add_log(msg)
 
 	def print_help(self):
@@ -466,9 +483,16 @@ class SimulationUI:
 				router_index = i
 		table_str = ""
 		done = False
-		self.socket.send("READ_TABLE", str(router_index))
+		"""
+		print router_index, type(router_index)
+		cmd = "<CMD>READ_TABLE," + str(router_index) + "</CMD>"
+		self.socket.send(cmd)
+		if not self.wait_for("ACK"):
+			self.log("Server returned an error, please try again.")
+			return 0
 		while not done:
 			resp = self.socket.recv(self.size)
+			print resp
 			#self.log("Received: ", resp)
 			if resp.find("<TABLE>") != -1:
 				table_str += resp[resp.find("<TABLE>"):]
@@ -481,13 +505,38 @@ class SimulationUI:
 						break
 		table = table_str.split(";")
 		self.selected_router.preferred_routes = table
-		self.socket.send("READ_RAW_TABLE", str(router_index))
+		"""
+		#Main Routing table reading returns nothing
+		
+		cmd = "<CMD>READ_TABLE," + str(router_index) + "</CMD>"
+		print cmd
+		self.socket.send(cmd)
+		table = self.socket.recv(self.size)
+		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		table = table.split(";")
+		print table
+		del self.main_routing_table[:]
+		for row in table:
+			route = row.split(',')
+			if len(route) == 4:
+				self.main_routing_table.append(Route(route[1], route[2], route[3]))
+		
+		cmd = "<CMD>READ_RAW_TABLE," + str(router_index) + "</CMD>"
+		print cmd
+		self.socket.send(cmd)
+		###XXX Simulation does not send ACK, fix this later
+		#if not self.wait_for("ACK"):
+		#	self.log("Server returned an error, please try again.")
+		#	return 0
+		"""
 		while not done:
 			resp = self.socket.recv(self.size)
+			print resp
 			#self.log("Received: ", resp)
 			if resp.find("<TABLE>") != -1:
 				table_str += resp[resp.find("<TABLE>"):]
 				while True:
+					print table_str
 					resp = self.socket.recv(self.size)
 					if resp.find("</TABLE>") == -1:
 						table_str += resp
@@ -495,17 +544,30 @@ class SimulationUI:
 						table_str += resp[:resp.find("</TABLE>")]
 						break
 		table = table_str.split(";")
-		self.selected_router.routing_table = table
+		"""
+		table = self.socket.recv(self.size)
+		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		table = table.split(";")
+		del self.all_routes[:]
+		for row in table:
+			route = row.split(',')
+			if len(route) == 4:
+				self.all_routes.append(Route(route[1], route[2], route[3]))
 	
 	def update_packetlist(self):
 		for i in range(len(self.routers)):
-			if self.routers[i] == self.selected_router:
-				router_index = i
+				if self.routers[i] == self.selected_router:
+					router_index = i
 		table_str = ""
 		done = False
-		self.socket.send("READ_TABLE", str(router_index))
+		self.socket.send("<CMD>READ_TABLE," + str(router_index) + "</CMD>")
+		#if not self.wait_for("ACK"):
+		#	self.log("Server returned an error, please try again.")
+		#	return 0
+		"""
 		while not done:
 			resp = self.socket.recv(self.size)
+			print resp
 			#self.log("Received: ", resp)
 			if resp.find("<TABLE>") != -1:
 				table_str += resp[resp.find("<TABLE>"):]
@@ -516,8 +578,16 @@ class SimulationUI:
 					else:
 						table_str += resp[:resp.find("</TABLE>")]
 						break
-		table = table_str.split(";")
-		self.selected_router.as_packets = table
+		"""
+		table = self.socket.recv(self.size)
+		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		table = table.split(";")
+		del self.packet_list[:]
+		for row in table:
+			self.packet_list.append(row)
+		#	route = row.split(',')
+		#	if len(route) == 2:
+		#		self.all_routes.append(Route(route[1], route[2], route[3]))
 	
 	def start_sim(self):
 		sim_conf = "<SIM_CONFIG>"
@@ -543,26 +613,38 @@ class SimulationUI:
 		sim_conf += "</SIM_CONFIG>"
 		print sim_conf
 		self.socket.send(sim_conf)
-		self.wait_for("ACK")
-		self.socket.send("START")
+		if not self.wait_for("ACK"):
+			self.log("Server returned an error, please try again.")
+			return 0
+		print "<CMD>START</CMD>"
+		self.socket.send("<CMD>START</CMD>")
+		if not self.wait_for("ACK"):
+			self.log("Server returned an error, please try again.")
+			return 0
+		self.sim_running = True
 
 	def stop_sim(self):
-		self.socket.send("STOP")
-		resp = self.socket.recv(self.size)
-		return "Received: ", resp
+		self.socket.send("<CMD>STOP</CMD>")
+		if not self.wait_for("ACK"):
+			self.log("Server returned an error, please try again.")
+			return 0
 
 	#Debug-function, raw send and receive. Notice that receive length is fixed and this function does not wayt for any responce
 	def send_socket_cmd(self, cmd):
 		self.socket.send(cmd)
 		resp = self.socket.recv(self.size)
-		return "Received: ", resp
+		return "Received: " + resp
 
 	#Default function to use when setting config while simulation is running, waits for proper responce from server before continuing
 	def send_config(self, cmd):
 		self.socket.send(cmd)
 		resp = self.socket.recv(self.size)
-		self.wait_for("ACK")
+		if not self.wait_for("ACK"):
+			self.log("Server returned an error, please try again.")
+			return 0
 
+	#Function to use for waiting server responce
+	@timeout(5) # Timeout after 5 seconds.
 	def wait_for(self, cmd):
 		done = False
 		while not done:
@@ -570,7 +652,10 @@ class SimulationUI:
 			self.log(resp)
 			if resp.find(cmd) != -1:
 				done = True
-			self.log(cmd + " OK")
+			elif resp.find("NACK") != -1:
+				return False
+		return True
+		self.log(cmd + " OK")
 
 	def select_router(self, namelist, event):
 		sel = namelist.get_selected()
@@ -579,6 +664,8 @@ class SimulationUI:
 			self.log("Selected: " + router.name)
 			self.routermodel.select_router(router)
 			self.selected_router = router
+			#self.all_routes = self.selected_router.routing_table
+			#self.main_routing_table = self.selected_router.preferred_routes
 			#print router, router.name, router.as_id, router.prefix, router.interfaces, router.routing_table, router.preferred_routes
 		else:
 			# Unselect
