@@ -39,6 +39,7 @@
 #include "Configuration.hpp"
 #include "Output_If.hpp"
 #include "StringTools.hpp"
+#include "Interface_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -46,6 +47,16 @@ using namespace sc_dt;
 
 #ifndef _BGPSESSION_H_
 #define _BGPSESSION_H_
+
+/*!\enum enum BGP_States{IDLE, CONNECT, ACTIVE, OPEN_SENT, OPEN_CONFIRM, ESTABLISHED};
+ * \brief Defines the bgp states
+ */
+enum BGP_States{IDLE, CONNECT, ACTIVE, OPEN_SENT, OPEN_CONFIRM, ESTABLISHED};
+
+/*!\enum enum enum TCP_States{SYN, SYN_ACK, ACK};
+ * \brief Defines the tcp states
+ */
+enum TCP_States{SYN, SYN_ACK, ACK};
 
 
 
@@ -63,6 +74,11 @@ public:
      * \public
      */
     sc_port<Output_If> port_ToDataPlane;
+
+    /*! \brief Control port to the session NIC
+     * \public
+     */
+    sc_port<Interface_If> port_InterfaceControl;
 
     /*! \brief Elaborates the BGPSession module
      * \details 
@@ -105,6 +121,13 @@ public:
      * \public
      */
     void sessionInvalidation(void);
+
+    /*! \fn void retransmissionTimer(void)
+     *  \brief Defines the retransmission period
+     * \details The period length is set with m_Retransmission event
+     * \public
+     */
+    void retransmissionTimer(void);
 
     /*! \fn void resetHoldDown(void)
      *  \brief Resets the HoldDown timer
@@ -163,6 +186,30 @@ public:
      */
     void setPeerAS(int p_PeerAS);
 
+    /*! \fn void setBGPState(BGP_States p_State)
+     * \brief Current FSM state of the BGP session
+     * \details
+     * @param [in] BGP_State p_State
+     * \public
+     */
+    void setBGPState(BGP_States p_State);
+
+    /*! \fn void setBGPState(BGP_States p_State)
+     * \brief Current FSM state of the TCP connection
+     * \details
+     * @param [in] TCP_States p_State
+     * \public
+     */
+    void setConnectionState(TCP_States p_State);
+
+    /*! \fn void setTCPId(int p_Value)
+     * \brief Holds the value of TCP id
+     * \details
+     * @param [in] int p_Value
+     * \public
+     */
+    void setTCPId(int p_Value);
+
     /*! \fn bool isThisSession(string p_BGPIdentifier)
      *  \brief Checks whether this session is for the passed BGP Identifier
      * \details
@@ -173,6 +220,8 @@ public:
      * \public
      */
     bool isThisSession(string p_BGPIdentifier);
+
+    void idle();
 
     /*! \fn void resetKeepalive(void)
      *  \brief Resets the Keepalive timer
@@ -195,6 +244,20 @@ public:
      */
     virtual string getPeerIdentifier(void);
     
+    /*! /fn BGP_States getBGPState(void)
+     *  \brief Returns the current session state
+     */
+    BGP_States getBGPState(void);
+
+    /*! /fn TCP_States getConnectionState(void)
+     *  \brief Returns the current connection state
+     */
+    TCP_States getConnectionState(void);
+
+    /*! /fn int getTCPId(void)
+     *  \brief Returns the TCP ID
+     */
+    int getTCPId(void);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
@@ -218,6 +281,13 @@ private:
      * \private
      */
     sc_mutex m_KeepaliveMutex;
+
+    /*! \property sc_event m_Retransmission
+     *  \brief Retransmission event
+     * \details Used in CONNECT and OPEN_SENT states as a retransmission timer
+     * \private
+     */
+    sc_event m_Retransmission;
 
     /*! \property sc_event m_BGPKeepalive
      *  \brief BGP session keepalive timer
@@ -281,6 +351,10 @@ private:
      * \private
      */
     StringTools m_RTool;
+    BGP_States m_BGPState;
+    TCP_States m_ConnectionState;
+    int m_TCPId;
+
     /***************************Private functions*****************/
 
 

@@ -13,10 +13,15 @@
 BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam)
 {
 
+	m_BGPState = IDLE;
+	m_ConnectionState = SYN;
 
     m_RTool.setBaseName(name());
     m_RTool.setStampTime(true);
     
+    srand(time(NULL));
+    m_TCPId = rand()%0xFFFF;
+
     //Register sendKeepalive method to the SystemC kernel
     SC_THREAD(sendKeepalive);
     //    dont_initialize();
@@ -26,22 +31,25 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const
     SC_THREAD(sessionInvalidation);
     // dont_initialize();
     // sensitive << m_BGPHoldDown;
- 
+
+    //Register retransmissionTimer method to the SystemC kernel
+    SC_THREAD(retransmissionTimer);
+
 
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam)
 {
-    
+	m_BGPState = IDLE;
+	m_ConnectionState = SYN;
     m_RTool.setBaseName(name());
     m_RTool.setStampTime(true);
 
-    m_Config = p_SessionParam;
+m_Retransmission.notify(5, SC_SEC);
+    srand(time(NULL));
+    m_TCPId = rand()%0xFFFF;
 
-
-    //set the local interface index behind which the peer locates
-    m_PeeringInterface = p_PeeringInterface;
 
     //Register sendKeepalive method to the SystemC kernel
     SC_THREAD(sendKeepalive);
@@ -53,6 +61,8 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPS
     // dont_initialize();
     // sensitive << m_BGPHoldDown;
 
+    //Register retransmissionTimer method to the SystemC kernel
+    SC_THREAD(retransmissionTimer);
 
 }
 
@@ -102,6 +112,17 @@ void BGPSession::sessionInvalidation(void)
             SC_REPORT_INFO(g_ReportID, m_RTool.newReportString("Hold-down timer expired. Session is invalid."));
  
             sessionStop();
+        }
+
+}
+
+void BGPSession::retransmissionTimer(void)
+{
+
+    while(true)
+        {
+            wait(m_Retransmission);
+            cout << name() << " Server/client: " << m_Config->isClient(m_PeeringInterface) << endl;
         }
 
 }
@@ -156,6 +177,20 @@ void BGPSession::setPeerIdentifier(string p_BGPIdentifier)
     m_BGPIdentifierPeer = p_BGPIdentifier;
 }
 
+void BGPSession::setBGPState(BGP_States p_State)
+{
+	m_BGPState = p_State;
+}
+
+void BGPSession::setConnectionState(TCP_States p_State)
+{
+	m_ConnectionState = p_State;
+}
+
+void BGPSession::setTCPId(int p_Value)
+{
+	m_TCPId = p_Value;
+}
 
 /*! \sa BGPSession
  */
@@ -202,5 +237,20 @@ string BGPSession::getPeerIdentifier(void)
     
     //return
     return m_BGPIdentifierPeer;
+}
+
+BGP_States BGPSession::getBGPState()
+{
+	return m_BGPState;
+}
+
+TCP_States BGPSession::getConnectionState()
+{
+	return m_ConnectionState;
+}
+
+int BGPSession::getTCPId()
+{
+	return m_TCPId;
 }
 
