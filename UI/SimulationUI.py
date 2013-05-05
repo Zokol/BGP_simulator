@@ -405,53 +405,82 @@ class SimulationUI:
 		if cmd == 'help':
 			self.print_help()
 		else:
-			params = cmd.split(' ')
-			print params
-			if params[0] == "connect" and len(params) == 3:
-				r1 = params[1].split(':')
-				r2 = params[2].split(':')
-				if len(r1) == 2:
+			if self.sim_running:
+				params = cmd.split(' ')
+				print params
+				if params[0] == "connect" and len(params) == 2:
+					r1 = params[1].split(':')
 					self.log(self.connect((self.get_router(r1[0]), int(r1[1])), (self.get_router(r2[0]), int(r2[1]))))
-				elif len(r1) == 1:
-					self.log(self.connect((self.get_router(r1[0]), None), (self.get_router(r2[0]), None)))
-			elif params[0] == "disconnect" and len(params) == 2:
-				tmp = params[1].split(':')
-				self.log(self.disconnect(tmp[0], tmp[1]))
-			elif params[0] == "shutdown" and len(params) == 2:
-				self.log("No shutdown method created")
-			elif params[0] == "revive" and len(params) == 2:
-				self.log("No revive method created")
-			elif params[0] == "start" and len(params) == 1:
-				self.log(self.start_sim())
-			elif params[0] == "stop" and len(params) == 1:
-				self.log(self.stop_sim())
-			elif params[0] == "set_id" and len(params) == 2:
-				self.log(self.selected_router.set_id(str(params[1])))
-			elif params[0] == "set_prefix" and len(params) == 2:
-				self.log(self.selected_router.set_prefix(str(params[1])))
-			elif params[0] == "set_med" and len(params) == 2:
-				self.log(self.selected_router.set_med(str(params[1])))
-			elif params[0] == "set_lp" and len(params) == 2:
-				self.log(self.selected_router.set_lp(str(params[1])))
-			elif params[0] == "set_kt" and len(params) == 2:
-				self.log(self.selected_router.set_kt(str(params[1])))
-			elif params[0] == "set_hdm" and len(params) == 2:
-				self.log(self.selected_router.set_hdm(str(params[1])))
-			elif params[0] == "debug":
-				params = cmd.split(" ", 1)
-				self.log(self.send_socket_cmd(str(params[1])))
-			elif params[0] == "test":
-				print self.routers
-				print self.selected_router
-				print self.routers[int(params[1])]
-				self.log(self.routers[int(params[1])].as_id)
-				self.routers[int(params[1])].as_id = "testing"
-				self.log(self.routers[int(params[1])].as_id)
-			elif params[0] == "update_network" and len(params) == 1:
-				self.draw_network()
-			else:
-				self.log(str(params[0]) + ": command not found or invalid parameters")
-				self.print_help()
+				elif params[0] == "disconnect" and len(params) == 2:
+					tmp = params[1].split(':')
+					self.log(self.disconnect(tmp[0], tmp[1]))
+				elif params[0] == "send_packet" and len(params) == 2:
+					self.log("No packet method created")
+				elif params[0] == "kill_router" and len(params) == 2:
+					self.log("No revive method created")
+				elif params[0] == "revive_router" and len(params) == 2:
+					self.log("No revive method created")
+				elif params[0] == "reset_router" and len(params) == 2:
+					self.log("No revive method created")
+				elif params[0] == "start" and len(params) == 1:
+					self.log("Simulation is allready running")
+				elif params[0] == "stop" and len(params) == 1:
+					self.log(self.stop_sim())
+				elif params[0] == "debug":
+					params = cmd.split(" ", 1)
+					self.log(self.send_socket_cmd(str(params[1])))
+				else:
+					self.log(str(params[0]) + ": command not found or invalid parameters")
+					self.print_help()
+
+			elif not self.sim_stopped:
+				params = cmd.split(' ')
+				print params
+				if params[0] == "connect" and len(params) == 3:
+					r1 = params[1].split(':')
+					r2 = params[2].split(':')
+					if len(r1) == 2:
+						self.log(self.connect((self.get_router(r1[0]), int(r1[1])), (self.get_router(r2[0]), int(r2[1]))))
+					elif len(r1) == 1:
+						self.log(self.connect((self.get_router(r1[0]), None), (self.get_router(r2[0]), None)))
+				elif params[0] == "disconnect" and len(params) == 2:
+					tmp = params[1].split(':')
+					self.log(self.disconnect(tmp[0], tmp[1]))
+				elif params[0] == "shutdown" and len(params) == 2:
+					self.log("No shutdown method created")
+				elif params[0] == "revive" and len(params) == 2:
+					self.log("No revive method created")
+				elif params[0] == "start" and len(params) == 1:
+					self.log(self.start_sim())
+				elif params[0] == "stop" and len(params) == 1:
+					self.log("Run start-command first")
+				elif params[0] == "set_id" and len(params) == 2:
+					self.log(self.selected_router.set_id(str(params[1])))
+				elif params[0] == "set_prefix" and len(params) == 2:
+					self.log(self.selected_router.set_prefix(str(params[1])))
+				elif params[0] == "set_med" and len(params) == 2:
+					self.log(self.selected_router.set_med(str(params[1])))
+				elif params[0] == "set_lp" and len(params) == 2:
+					self.log(self.selected_router.set_lp(str(params[1])))
+				elif params[0] == "set_kt" and len(params) == 2:
+					self.log(self.selected_router.set_kt(str(params[1])))
+				elif params[0] == "set_hdm" and len(params) == 2:
+					self.log(self.selected_router.set_hdm(str(params[1])))
+				elif params[0] == "debug":
+					params = cmd.split(" ", 1)
+					self.log(self.send_socket_cmd(str(params[1])))
+				elif params[0] == "test":
+					print self.routers
+					print self.selected_router
+					print self.routers[int(params[1])]
+					self.log(self.routers[int(params[1])].as_id)
+					self.routers[int(params[1])].as_id = "testing"
+					self.log(self.routers[int(params[1])].as_id)
+				elif params[0] == "update_network" and len(params) == 1:
+					self.draw_network()
+				else:
+					self.log(str(params[0]) + ": command not found or invalid parameters")
+					self.print_help()
 
 	def log(self, msg):
 		print msg
