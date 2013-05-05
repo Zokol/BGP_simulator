@@ -118,6 +118,9 @@ class Packet:
 	def __init__(self, header, payload):
 		self.header = header
 		self.payload = payload
+	@property
+	def name(self):
+		return self.header + " | " + self.payload
 
 class Interface:
 	def __init__(self, client = None, port = None):
@@ -414,8 +417,8 @@ class SimulationUI:
 				elif params[0] == "disconnect" and len(params) == 2:
 					tmp = params[1].split(':')
 					self.log(self.disconnect(tmp[0], tmp[1]))
-				elif params[0] == "send_packet" and len(params) == 2:
-					self.log("No packet method created")
+				elif params[0] == "send_packet" and len(params) == 4:
+					self.send_packet(params[1], params[2], params[3])
 				elif params[0] == "kill_router" and len(params) == 2:
 					self.log("No revive method created")
 				elif params[0] == "revive_router" and len(params) == 2:
@@ -423,7 +426,7 @@ class SimulationUI:
 				elif params[0] == "reset_router" and len(params) == 2:
 					self.log("No revive method created")
 				elif params[0] == "start" and len(params) == 1:
-					self.log("Simulation is allready running")
+					self.log("Simulation is already running")
 				elif params[0] == "stop" and len(params) == 1:
 					self.log(self.stop_sim())
 				elif params[0] == "debug":
@@ -501,8 +504,6 @@ class SimulationUI:
 		self.log("Set Hold Down Multiplier: set_hdm [multiplier]")
 		self.log("Connect routers: connect [AS1_ID]{:[PORT_ID]} [AS2_ID]{:[PORT_ID]}")
 		self.log("Disconnect routers: disconnect [AS_ID]:[port_num]")
-		self.log("Shutdown router: shutdown [AS_ID]")
-		self.log("Revive router: revive [AS_ID]")
 		self.log("Start simulation: start")
 		self.log("Send command to socket server: debug [CMD]")
 
@@ -558,6 +559,14 @@ class SimulationUI:
 			if router.interfaces[i].client == None:
 				return i
 		return -1
+
+	def send_packet(self, prefix, target_as, payload):
+		cmd = "<CMD>SEND_PACKET," + prefix + "," + target_as + "," + payload + "</CMD>"
+		print cmd
+		self.socket.send(cmd)
+		if not self.wait_for("ACK"):
+			self.log("Server returned an error, please try again.")
+			return 0
 
 	def add_route(self, router, route):
 		router.routing_table.add(route)
@@ -620,12 +629,12 @@ class SimulationUI:
 		#Main Routing table reading returns nothing
 		
 		cmd = "<CMD>READ_TABLE," + str(router_index) + "</CMD>"
-		print cmd
+		#print cmd
 		self.socket.send(cmd)
 		table = self.socket.recv(self.size)
 		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
 		table = table.split(";")
-		print table
+		#print table
 		del self.main_routing_table[:]
 		for row in table:
 			route = row.split(',')
@@ -633,7 +642,7 @@ class SimulationUI:
 				self.main_routing_table.append(Route(route[1], route[2], route[3]))
 		
 		cmd = "<CMD>READ_RAW_TABLE," + str(router_index) + "</CMD>"
-		print cmd
+		#print cmd
 		self.socket.send(cmd)
 		###XXX Simulation does not send ACK, fix this later
 		#if not self.wait_for("ACK"):
@@ -671,7 +680,7 @@ class SimulationUI:
 					router_index = i
 		table_str = ""
 		done = False
-		self.socket.send("<CMD>READ_TABLE," + str(router_index) + "</CMD>")
+		self.socket.send("<CMD>READ_PACKET," + str(router_index) + "</CMD>")
 		#if not self.wait_for("ACK"):
 		#	self.log("Server returned an error, please try again.")
 		#	return 0
@@ -695,7 +704,7 @@ class SimulationUI:
 		table = table.split(";")
 		del self.packet_list[:]
 		for row in table:
-			self.packet_list.append(row)
+			self.packet_list.append(Packet(row, "Payload"))
 		#	route = row.split(',')
 		#	if len(route) == 2:
 		#		self.all_routes.append(Route(route[1], route[2], route[3]))
@@ -977,6 +986,7 @@ class SimulationUI:
 				self.topology_points, self.topology_radius = self.draw_network()
 				if self.sim_running:
 					self.update_routing_tables()
+					self.update_packetlist()
 				for event in pygame.event.get():
 					if event.type == pygame.MOUSEBUTTONDOWN:
 						if event.button == 1:
