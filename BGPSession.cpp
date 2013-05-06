@@ -10,7 +10,7 @@
 #include "BGPSession.hpp"
 #include "ReportGlobals.hpp"
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam), m_ReSend(false)
 {
 
 	m_BGPState = IDLE;
@@ -39,14 +39,14 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam), m_ReSend(false)
 {
 	m_BGPState = IDLE;
 	m_ConnectionState = SYN;
     m_RTool.setBaseName(name());
     m_RTool.setStampTime(true);
 
-m_Retransmission.notify(5, SC_SEC);
+
     srand(time(NULL));
     m_TCPId = rand()%0xFFFF;
 
@@ -122,10 +122,52 @@ void BGPSession::retransmissionTimer(void)
     while(true)
         {
             wait(m_Retransmission);
-            cout << name() << " Server/client: " << m_Config->isClient(m_PeeringInterface) << endl;
+            setReSend(true);
         }
 
 }
+
+void BGPSession::fsmRoutine(BGPMessage& p_Input)
+{
+
+
+	//BGP FSM starts
+	switch (m_BGPState)
+	{
+	case IDLE: //IDLE state
+		break;
+	case CONNECT:
+		switch (m_ConnectionState)
+		{
+		case SYN:
+			break;
+		case SYN_ACK:
+			break;
+		case ACK:
+			break;
+		default:
+			break;
+		}
+		break;
+		case ACTIVE:
+
+			break;
+		case OPEN_SENT:
+
+			break;
+		case OPEN_CONFIRM:
+
+			break;
+		case ESTABLISHED:
+
+			break;
+		default:
+			break;
+	}
+
+
+}
+
 
 void BGPSession::sessionStop(void)
 {
@@ -254,3 +296,18 @@ int BGPSession::getTCPId()
 	return m_TCPId;
 }
 
+void BGPSession::setRetransmissionTimer(int p_Delay)
+{
+	m_Retransmission.notify(p_Delay, SC_SEC);
+}
+
+void BGPSession::stopRetransmissionTimer(void)
+{
+	m_Retransmission.cancel();
+}
+void BGPSession::setReSend(bool p_Value)
+{
+	m_ReSendMutex.lock();
+	m_ReSend = p_Value;
+	m_ReSendMutex.unlock();
+}

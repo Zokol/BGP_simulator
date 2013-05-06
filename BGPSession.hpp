@@ -66,7 +66,7 @@ class BGPSession: public sc_module, public BGPSession_If
 
 public:
 
-    /*! \brief Output port for BGP messages
+    /*! \brief Output port to Data Plane module
      * \details The BGP session writes all the BGP messages to be send
      * to its neighbors into
      * this port. The port shall be bind to the Data Plane's.
@@ -74,6 +74,12 @@ public:
      * \public
      */
     sc_port<Output_If> port_ToDataPlane;
+
+    /*! \property sc_port<Output_If> port_ToRoutingTable
+     * \brief Output port to Routing Table module
+     * \public
+     */
+    sc_port<Output_If> port_ToRoutingTable;
 
     /*! \brief Control port to the session NIC
      * \public
@@ -128,6 +134,13 @@ public:
      * \public
      */
     void retransmissionTimer(void);
+
+    /*! \fn void fsmRoutine(BGPMessage& p_Input)
+     *  \brief Updates the session state
+     * \details
+     * \public
+     */
+    void fsmRoutine(BGPMessage& p_Input);
 
     /*! \fn void resetHoldDown(void)
      *  \brief Resets the HoldDown timer
@@ -221,7 +234,6 @@ public:
      */
     bool isThisSession(string p_BGPIdentifier);
 
-    void idle();
 
     /*! \fn void resetKeepalive(void)
      *  \brief Resets the Keepalive timer
@@ -354,11 +366,14 @@ private:
     BGP_States m_BGPState;
     TCP_States m_ConnectionState;
     int m_TCPId;
+    bool m_ReSend;
+    sc_mutex m_ReSendMutex;
 
     /***************************Private functions*****************/
 
-
-
+    void setRetransmissionTimer(int p_Delay);
+    void stopRetransmissionTimer(void);
+    void setReSend(bool p_Value);
 
 };
 
