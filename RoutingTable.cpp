@@ -20,8 +20,7 @@
 RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
 {
 
-    //make the inner bindings
-    export_ToRoutingTable(m_ReceivingBuffer); //export the receiving
+
     //buffer's input
 
     SC_THREAD(routingTableMain);
@@ -860,6 +859,13 @@ void RoutingTable::fillRoutingTable()
 
 }
 
-
+bool RoutingTable::write(BGPMessage p_BGPMsg)
+{
+	m_ReceivingBufferMutex.lock();
+	m_ReceivingBuffer.write(p_BGPMsg);
+	cout << name() << " Session is writing in my buffer" << endl;
+	m_ReceivingBufferMutex.unlock();
+	return true;
+}
 
 

@@ -39,7 +39,7 @@ struct Route
     Route * next;
 };
 
-class RoutingTable: public sc_module, public RoutingTable_If
+class RoutingTable: public sc_module, public RoutingTable_If, public Output_If
 {
 
 public:
@@ -51,12 +51,6 @@ public:
      */
     sc_in_clk port_Clk;
 
-    /*! \brief Input interface
-     * \details Allows data plane to write received BGP messages into
-     *  m_ReceivingBuffer-fifo
-     * \public
-     */
-    sc_export<sc_fifo_out_if<BGPMessage> > export_ToRoutingTable;
 
     /*! \brief Control port
      * \details Routing table can check through this port whether the
@@ -144,6 +138,8 @@ public:
     // Remove all the routes from raw routing table and update maintable as well after that
     void clearRoutingTables();
 
+    virtual bool write(BGPMessage p_BGPMsg);
+
 
 
 
@@ -152,7 +148,7 @@ public:
 
 private:
 
-
+    sc_mutex m_ReceivingBufferMutex;
 
     /*! \brief Receiving buffer
      * \details Data plain writes all the received BGP messages into
