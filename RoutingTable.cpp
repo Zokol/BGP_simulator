@@ -50,21 +50,68 @@ void RoutingTable::routingTableMain(void)
 
     fillRoutingTable(); // IIRO testing
 
+    // Initialize m_sessions
+    for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1;i++)
+        m_sessions.push_back(0);
+
 
     int count = 0;
     //The main thread of routing table module starts
     while(true)
         {
-
             wait();
 
-            ///Check the Interface states
+            /*
+            Check if some of the sessions has gone up or down
+            session up - was it up before?
+                Case 1. yes -> do nothing
+                Case 2. no -> get its RT
+            session down - was it down before?
+                Case 3. yes -> do nothing
+                Case 4. no -> remove from RTs and send withdraws
+            */
+
+            // First check is there new sessions and add them if so
+            if((unsigned)m_RTConfig->getNumberOfInterfaces()-1 > m_sessions.size())
+            {
+                int numberOfNewSessions = m_RTConfig->getNumberOfInterfaces() - 1 - m_sessions.size();
+                for(int i = 0; i < numberOfNewSessions; i++)
+                    m_sessions.push_back(0);
+            }
             for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
                 {
 					// cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << " and identifier: "<< port_Session[i]->getPeerIdentifier() << endl;
-                   if(!(port_Session[i]->isSessionValid()))
+                   if(port_Session[i]->isSessionValid())
                     {
-                        //deleteRoutes(i);
+                        if(m_sessions.at(i) == 1)   // Case 1
+                            continue;
+                        else if(m_sessions.at(i) == 0) // Case 2
+                            {
+                                // Change this session's state in m_sessions
+                                m_sessions.at(i) = 0;
+                                // Get RT from this new PEER
+                            }
+                    }
+                    else if(port_Session[i]->isSessionValid())
+                    {
+                        if(m_sessions.at(i) == 0)   // Case 3
+                            continue;
+                        else if(m_sessions.at(i) == 1) // Case 4
+                        {
+                            m_sessions.at(i) = 1;
+                            // Iterate through the RawTable and send withdraw message to peers if route's outputport is i
+                            m_iterator = m_headOfRawTable;
+                            while(m_iterator->next != 0)
+                            {
+                                if(m_iterator->OutputPort == i)
+                                    sendWithdraw(*m_iterator);
+                            }
+
+                            // Remove all the router from RawRoutingTable where outputport is i.
+                            deleteRoutes(i);
+
+                        }
+
                     }
                 }
 
@@ -82,6 +129,7 @@ void RoutingTable::routingTableMain(void)
 
             ///BGP notification and update output port
             // port_Output->write(m_BGPMsg);
+
 
             if((m_BGPMsg.m_Type = UPDATE))
             {
