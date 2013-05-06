@@ -103,6 +103,11 @@ const char* StringTools::newReportString(const char* p_ReportString)
     return getReportString();
 }
 
+const char* StringTools::newReportString(string p_ReportString)
+{
+	return newReportString(p_ReportString.c_str());
+}
+
 const char* StringTools::appendReportString(const string p_ReportString)
 {
 
