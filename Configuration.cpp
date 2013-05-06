@@ -41,6 +41,13 @@ int BGPSessionParameters::getHolDownTimeFactor(void){return m_HoldDownTimeFactor
 BGPSessionParameters& BGPSessionParameters::operator = (const BGPSessionParameters& p_Original) {
     m_KeepaliveTime = p_Original.m_KeepaliveTime;
     m_HoldDownTimeFactor = p_Original.m_HoldDownTimeFactor;
+    m_Prefix = p_Original.m_Prefix;
+    m_PrefixMask = p_Original.m_PrefixMask;
+    m_ASNumber = p_Original.m_ASNumber;
+    m_MED = p_Original.m_MED;
+    m_LocalPref = p_Original.m_LocalPref;
+    m_KeepaliveTime = p_Original.m_KeepaliveTime;
+    m_HoldDownTimeFactor = p_Original.m_HoldDownTimeFactor;
     return *this;
 }
 
@@ -61,7 +68,55 @@ bool BGPSessionParameters::isClient(int p_Interface)
 	return m_NICMode[p_Interface] == CLIENT?true:false;
 }
 
-    
+
+void BGPSessionParameters::setPrefix(string p_Prefix)
+{
+    m_Prefix = m_IPConverter.convertIPToBinary(p_Prefix);
+    m_PrefixMask = m_IPConverter.convertMaskToBinary(p_Prefix);
+}
+
+void BGPSessionParameters::setPrefix(sc_uint<32> p_Prefix)
+{
+    m_Prefix = p_Prefix;
+}
+
+void BGPSessionParameters::setPrefixMask(sc_uint<32> p_PrefixMask)
+{
+    m_PrefixMask = p_PrefixMask;
+}
+
+void BGPSessionParameters::setASNumber(int p_ASNumber)
+{
+    m_ASNumber = p_ASNumber;
+}
+
+void BGPSessionParameters::setMED(int p_MED)
+{
+    m_MED = p_MED;
+}
+
+void BGPSessionParameters::setLocalPref(int p_LocalPref)
+{
+    m_LocalPref = p_LocalPref;
+}
+
+
+string BGPSessionParameters::getIPAsString(void){return m_IPConverter.convertIPToString(m_Prefix);}
+
+string BGPSessionParameters::getIPMaskAsString(void){return m_IPConverter.convertMaskToString(m_PrefixMask);}
+
+sc_uint<32> BGPSessionParameters::getPrefix(void){return m_Prefix;}
+
+sc_uint<32> BGPSessionParameters::getPrefixMask(void){return m_PrefixMask;}
+
+int BGPSessionParameters::getASNumber(void){return m_ASNumber;}
+
+int BGPSessionParameters::getMED(void){return m_MED;}
+
+int BGPSessionParameters::getLocalPref(void){return m_LocalPref;}
+
+
+
 /************* Implementation of ControlPlaneConfig *****************/
 
 ///Setters
@@ -70,67 +125,12 @@ void ControlPlaneConfig::setNumberOfInterfaces(int p_NumberOfInterfaces)
 {
     m_NumberOfInterfaces = p_NumberOfInterfaces;
 }
-
-void ControlPlaneConfig::setPrefix(string p_Prefix)
-{
-    m_Prefix = m_IPConverter.convertIPToBinary(p_Prefix);
-    m_PrefixMask = m_IPConverter.convertMaskToBinary(p_Prefix);
-}
-
-void ControlPlaneConfig::setPrefix(sc_uint<32> p_Prefix)
-{
-    m_Prefix = p_Prefix;
-}
-
-void ControlPlaneConfig::setPrefixMask(sc_uint<32> p_PrefixMask)
-{
-    m_PrefixMask = p_PrefixMask;
-}
-
-void ControlPlaneConfig::setASNumber(int p_ASNumber)
-{
-    m_ASNumber = p_ASNumber;
-}
-
-void ControlPlaneConfig::setMED(int p_MED)
-{
-    m_MED = p_MED;
-}
-
-void ControlPlaneConfig::setLocalPref(int p_LocalPref)
-{
-    m_LocalPref = p_LocalPref;
-}
-
 ///Getters
 int ControlPlaneConfig::getNumberOfInterfaces(void){return m_NumberOfInterfaces;}
-
-string ControlPlaneConfig::getIPAsString(void){return m_IPConverter.convertIPToString(m_Prefix);}
-
-string ControlPlaneConfig::getIPMaskAsString(void){return m_IPConverter.convertMaskToString(m_PrefixMask);}
-
-sc_uint<32> ControlPlaneConfig::getPrefix(void){return m_Prefix;}
-
-sc_uint<32> ControlPlaneConfig::getPrefixMask(void){return m_PrefixMask;}
-
-int ControlPlaneConfig::getASNumber(void){return m_ASNumber;}
-
-int ControlPlaneConfig::getMED(void){return m_MED;}
-
-int ControlPlaneConfig::getLocalPref(void){return m_LocalPref;}
-
-
 
 
 ControlPlaneConfig& ControlPlaneConfig::operator = (const ControlPlaneConfig& p_Original) {
     m_NumberOfInterfaces = p_Original.m_NumberOfInterfaces;
-    m_Prefix = p_Original.m_Prefix;
-    m_PrefixMask = p_Original.m_PrefixMask;
-    m_ASNumber = p_Original.m_ASNumber;
-    m_MED = p_Original.m_MED;
-    m_LocalPref = p_Original.m_LocalPref;
-    m_KeepaliveTime = p_Original.m_KeepaliveTime;
-    m_HoldDownTimeFactor = p_Original.m_HoldDownTimeFactor;
     return *this;
 }
 

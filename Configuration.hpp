@@ -107,90 +107,6 @@ public:
      */
     bool isClient(int p_Interface);
 
-    /*! \fn BGPSessionParameters& operator = (const BGPSessionParameters& p_Original);
-     *  \brief clones the passed BGPSessionParameters object to this object
-     *  \return reference BGPSessionParameters& 
-     * \public
-     */
-    BGPSessionParameters& operator = (const BGPSessionParameters& p_Original);
-
-
-
-protected:
-
-    /*! \brief HoldDown time for this session
-     * \details Defines the keepalive time for this session. The default
-     * value needs to be set in the elaboration phase. After that the
-     * BGP session may negotiated a new value between the session peers
-     * \protected
-     */
-    int m_KeepaliveTime;
-    
-    /*! \brief HoldDown time for this session
-     * \details Defines the holdDown time for this session. The default
-     * value needs to be set in the elaboration phase. After that the
-     * BGP session may negotiated a new value between the session peers
-     * \protected
-     */
-    int m_HoldDownTime;
-
-    /*! \brief HoldDown time factor
-     * \details Defines the multiplier that determines the holdDown
-     * time by m_KeepaliveTime X m_HoldDownTimeFactor
-     * \protected
-     */
-    int m_HoldDownTimeFactor;
-
-    /*! \property int *m_NICMode
-     * \brief holds the network interface mode information
-     */
-    int *m_NICMode;
-
-private:
-
-    /*! \fn void setHoldDownTime(void)
-	 * \brief Calculates and set the Hold-down time
-     * \details The hold-down time is the product of hold-down multiplier and keepalive time
-     * \private
-     */
-    void setHoldDownTime(void);    
-
-    /*! \property sc_mutex mtx_Keepalive
-	 * \brief Arbitrates the setting of Keepalive time
-     * \details
-     * \private
-     */
-	sc_mutex mtx_Keepalive;
-
-    /*! \property sc_mutex mtx_HoldDownFactor
-	 * \brief Arbitrates the setting of hold-down factor
-     * \details
-     * \private
-     */
-	sc_mutex mtx_HoldDownFactor;
-};
-
-
-/*!
- * \class ControlPlaneConfig
- * \brief Holds the BGP parameters
- *  \details   
- */
-class ControlPlaneConfig: public BGPSessionParameters
-{
-
-public:
-    
-    inline ControlPlaneConfig(){};
-    inline virtual ~ControlPlaneConfig(){};
-
-    /*! \fn void setNumberOfInterfaces(int p_NumberOfInterfaces); 
-     *  \brief Sets the number of interfaces allocated in the router
-     *  @param[in] int p_NumberOfInterfaces The interface count
-     * \public
-     */
-    void setNumberOfInterfaces(int p_NumberOfInterfaces);
-
     /*! \fn void setPrefix(string p_Prefix);
      *  \brief Sets the prefix IP of the AS as string
      *  @param[in] string p_Prefix The IP prefix
@@ -233,13 +149,6 @@ public:
      * \public
      */
     void setLocalPref(int p_LocalPref);
-
-    /*! \fn int getNumberOfInterfaces(void); 
-     *  \brief Returns the number of interface
-     *  \return integer value
-     * \public
-     */
-    int getNumberOfInterfaces(void);
 
     /*! \fn string getIPAsString(void)
      *  \brief Returns the IP prefix as string
@@ -291,6 +200,135 @@ public:
      */
     int getLocalPref(void);
 
+    /*! \fn BGPSessionParameters& operator = (const BGPSessionParameters& p_Original);
+     *  \brief clones the passed BGPSessionParameters object to this object
+     *  \return reference BGPSessionParameters&
+     * \public
+     */
+    BGPSessionParameters& operator = (const BGPSessionParameters& p_Original);
+
+
+
+protected:
+
+    /*! \brief HoldDown time for this session
+     * \details Defines the keepalive time for this session. The default
+     * value needs to be set in the elaboration phase. After that the
+     * BGP session may negotiated a new value between the session peers
+     * \protected
+     */
+    int m_KeepaliveTime;
+
+    /*! \brief HoldDown time for this session
+     * \details Defines the holdDown time for this session. The default
+     * value needs to be set in the elaboration phase. After that the
+     * BGP session may negotiated a new value between the session peers
+     * \protected
+     */
+    int m_HoldDownTime;
+
+    /*! \brief HoldDown time factor
+     * \details Defines the multiplier that determines the holdDown
+     * time by m_KeepaliveTime X m_HoldDownTimeFactor
+     * \protected
+     */
+    int m_HoldDownTimeFactor;
+
+    /*! \property int *m_NICMode
+     * \brief holds the network interface mode information
+     */
+    int *m_NICMode;
+
+    /*! \brief The prefix of the AS connecting this router
+     * \details
+     * \protected
+     */
+    sc_uint<32> m_Prefix;
+
+    /*! \brief The mask defined by prefix /-notation
+     * \details
+     * \public
+     */
+    sc_uint<32> m_PrefixMask;
+
+    /*! \brief The AS number of this router
+     * \details
+     * \protected
+     */
+    int m_ASNumber;
+
+    /*! \brief BGP MED variable
+     * \details
+     * \protected
+     */
+    int m_MED;
+
+    /*! \brief BGP Local Preference variable
+     * \details
+     * \protected
+     */
+    int m_LocalPref;
+
+private:
+
+    /*! \fn void setHoldDownTime(void)
+	 * \brief Calculates and set the Hold-down time
+     * \details The hold-down time is the product of hold-down multiplier and keepalive time
+     * \private
+     */
+    void setHoldDownTime(void);
+
+    /*! \property sc_mutex mtx_Keepalive
+	 * \brief Arbitrates the setting of Keepalive time
+     * \details
+     * \private
+     */
+	sc_mutex mtx_Keepalive;
+
+    /*! \property sc_mutex mtx_HoldDownFactor
+	 * \brief Arbitrates the setting of hold-down factor
+     * \details
+     * \private
+     */
+	sc_mutex mtx_HoldDownFactor;
+
+
+    /*! \property StringTools m_IPConverter
+     *  \brief BGP Local Preference variable
+     * \details
+     * \private
+     */
+    StringTools m_IPConverter;
+};
+
+
+/*!
+ * \class ControlPlaneConfig
+ * \brief Holds the BGP parameters
+ *  \details
+ */
+class ControlPlaneConfig: public BGPSessionParameters
+{
+
+public:
+
+    inline ControlPlaneConfig(){};
+    inline virtual ~ControlPlaneConfig(){};
+
+    /*! \fn void setNumberOfInterfaces(int p_NumberOfInterfaces);
+     *  \brief Sets the number of interfaces allocated in the router
+     *  @param[in] int p_NumberOfInterfaces The interface count
+     * \public
+     */
+    void setNumberOfInterfaces(int p_NumberOfInterfaces);
+
+    /*! \fn int getNumberOfInterfaces(void);
+     *  \brief Returns the number of interface
+     *  \return integer value
+     * \public
+     */
+    int getNumberOfInterfaces(void);
+
     /*! \fn ControlPlaneConfig& operator = (const ControlPlaneConfig& p_Original);
      *  \brief clones the passed ControlplaneConfig object to this object
      *  \return reference ControlPlaneConfig& 
@@ -306,45 +344,6 @@ protected:
      * \protected
      */
     int m_NumberOfInterfaces;
-
-    /*! \brief The prefix of the AS connecting this router
-     * \details 
-     * \protected
-     */
-    sc_uint<32> m_Prefix;
-
-    /*! \brief The mask defined by prefix /-notation
-     * \details 
-     * \public
-     */
-    sc_uint<32> m_PrefixMask;
-
-    /*! \brief The AS number of this router
-     * \details 
-     * \protected
-     */
-    int m_ASNumber;
-
-    /*! \brief BGP MED variable
-     * \details 
-     * \protected
-     */
-    int m_MED;
-
-    /*! \brief BGP Local Preference variable
-     * \details 
-     * \protected
-     */
-    int m_LocalPref;
-
-private:
-
-    /*! \property StringTools m_IPConverter
-     *  \brief BGP Local Preference variable
-     * \details 
-     * \private
-     */
-    StringTools m_IPConverter;
 
 
 
