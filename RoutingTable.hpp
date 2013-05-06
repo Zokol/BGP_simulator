@@ -234,6 +234,9 @@ private:
     Route * m_headOfRoutingTable;
     Route * m_endOfRoutingTable;
 
+    // This is used to save the previous state of each session. 1 - UP , 0 - DOWN
+    vector<int> m_sessions;
+
 
 
     // Preferred ASes and their preference values are stored in here
