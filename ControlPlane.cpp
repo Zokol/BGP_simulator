@@ -22,10 +22,11 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
 
 
 	//initiate the BGPSession pointer arrays
-	m_BGPSessions = new BGPSession*[m_BGPConfig->getNumberOfInterfaces()];
+	m_BGPSessions = new BGPSession*[m_BGPConfig->getNumberOfInterfaces()-1];
 	//allocate reference array for receiving exports
-	export_Session = new sc_export<BGPSession_If>*[m_BGPConfig->getNumberOfInterfaces()];
-	export_InterfaceControl = new sc_export<Interface_If>*[m_BGPConfig->getNumberOfInterfaces()];
+	export_Session = new sc_export<BGPSession_If>*[m_BGPConfig->getNumberOfInterfaces()-1];
+	export_InterfaceControl = new sc_export<Interface_If>*[m_BGPConfig->getNumberOfInterfaces()-1];
+	export_RoutingTable = new sc_export<Output_If>*[m_BGPConfig->getNumberOfInterfaces()-1];
 
 	//inititate the sessions
 	for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
@@ -37,6 +38,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
 		export_Session[i] = new sc_export<BGPSession_If>;
 		export_Session[i]->bind(*m_BGPSessions[i]);
 		export_InterfaceControl[i] = new sc_export<Interface_If>;
+		export_RoutingTable[i] = new sc_export<Output_If>;
 	}
 
 	SC_THREAD(controlPlaneMain);
@@ -93,40 +95,7 @@ void ControlPlane::controlPlaneMain(void)
 		// process all the sessions
 		for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
 		{
-
-			//BGP FSM starts
-			switch (m_BGPSessions[i]->getBGPState())
-			{
-			case IDLE: //IDLE state
-				break;
-			case CONNECT:
-				switch (m_BGPSessions[i]->getConnectionState())
-				{
-				case SYN:
-					break;
-				case SYN_ACK:
-					break;
-				case ACK:
-					break;
-				default:
-					break;
-				}
-				break;
-				case ACTIVE:
-
-					break;
-				case OPEN_SENT:
-
-					break;
-				case OPEN_CONFIRM:
-
-					break;
-				case ESTABLISHED:
-
-					break;
-				default:
-					break;
-			}
+			m_BGPSessions[i]->fsmRoutine(m_BGPMsgIn);
 		}
 
 		//Check if there's messages in the input buffer

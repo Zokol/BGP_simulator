@@ -58,12 +58,14 @@ public:
      * \public
      */
     sc_export<Interface_If> **export_InterfaceControl;
-   
-    /*! \brief Routing Table's management port
-     * \details Used to manage the routing table. Add, remove, update routes
+
+    /*! \brief Routing table If
+     * \details exports the output_if of routing table for BGPSession
      * \public
      */
-    sc_port<sc_fifo_out_if<BGPMessage> ,1, SC_ZERO_OR_MORE_BOUND> port_ToRoutingTable;
+    sc_export<Output_If> **export_RoutingTable;
+   
+
    
     /*! \brief Input interface
      * \details Allows data plane to write received BGP messages into
@@ -91,6 +93,8 @@ public:
             m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
             //bind the interfaces to the sessions
             m_BGPSessions[i]->port_InterfaceControl.bind(*export_InterfaceControl[i]);
+            //bind the interfaces to the sessions
+            m_BGPSessions[i]->port_ToRoutingTable.bind(*export_RoutingTable[i]);
 
             }
 
