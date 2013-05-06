@@ -51,8 +51,6 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
     SC_REPORT_INFO(g_DebugID, l_Report->newReportString("Binding the routing table to the planes."));
 
-    //bind the control plane to routing table
-    m_Bgp.port_ToRoutingTable(m_RoutingTable.export_ToRoutingTable);
 
     //bind data plane to the routing table
     m_IP.port_ToRoutingTable(m_RoutingTable);
@@ -102,8 +100,13 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 			m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
 			m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
 			if(i < m_RouterConfiguration->getNumberOfInterfaces()-1)
+			{
 				//bind the interface to the control plane
 				m_Bgp.export_InterfaceControl[i]->bind(*m_NetworkInterface[i]);
+			    //bind the control plane to routing table
+			    m_Bgp.export_RoutingTable[i]->bind(m_RoutingTable);
+
+			}
 
         }
     //delete the StringTools object
