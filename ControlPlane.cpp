@@ -188,7 +188,7 @@ void ControlPlane::controlPlaneMain(void)
 
 
 
-bool ControlPlane::write(BGPMessage p_BGPMsg)
+bool ControlPlane::write(BGPMessage& p_BGPMsg)
 {
 
 	//enter to the critical region

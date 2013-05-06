@@ -33,7 +33,7 @@ using namespace sc_dt;
 
 
 
-class DataPlane: public sc_module, public Output_If
+class DataPlane: public sc_module, public Output_If<BGPMessage>
 {
 
 public:
@@ -86,7 +86,7 @@ public:
     void main(void);
 
 
-    virtual bool write(BGPMessage p_BGPMsg);
+    virtual bool write(BGPMessage& p_BGPMsg);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html

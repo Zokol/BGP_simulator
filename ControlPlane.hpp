@@ -35,7 +35,7 @@ using namespace sc_dt;
 
 
 
-class ControlPlane: public sc_module, public Output_If
+class ControlPlane: public sc_module, public Output_If<BGPMessage>
 {
 
 public:
@@ -51,7 +51,7 @@ public:
      * \details Used to write BGP messages to the data plane
      * \public
      */
-    sc_port<Output_If,0, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
+    sc_port<Output_If<BGPMessage> ,0, SC_ZERO_OR_MORE_BOUND> port_ToDataPlane;
 
     /*! \brief NIC control port
      * \details
@@ -63,7 +63,7 @@ public:
      * \details exports the output_if of routing table for BGPSession
      * \public
      */
-    sc_export<Output_If> **export_RoutingTable;
+    sc_export<Output_If<BGPMessage> > **export_RoutingTable;
    
 
    
@@ -81,7 +81,7 @@ public:
      * \details 
      * \public
      */
-    sc_export<Output_If > export_ToDataPlane;
+    sc_export<Output_If<BGPMessage> > export_ToDataPlane;
 
     void before_end_of_elaboration()
     {
@@ -125,7 +125,7 @@ public:
     /*! \sa Output_If
      * \public
      */
-    virtual bool write(BGPMessage p_BGPMsg);
+    virtual bool write(BGPMessage& p_BGPMsg);
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html

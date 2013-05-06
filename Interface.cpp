@@ -60,6 +60,11 @@ bool Interface::forward(Packet p_Packet)
     else
         return false;
 }
+bool Interface::write(Packet& p_Frame)
+{
+
+	return true;
+}
 
 void Interface::interfaceDown(void)
 {

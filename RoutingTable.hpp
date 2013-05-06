@@ -39,7 +39,7 @@ struct Route
     Route * next;
 };
 
-class RoutingTable: public sc_module, public RoutingTable_If, public Output_If
+class RoutingTable: public sc_module, public RoutingTable_If, public Output_If<BGPMessage>
 {
 
 public:
@@ -138,7 +138,7 @@ public:
     // Remove all the routes from raw routing table and update maintable as well after that
     void clearRoutingTables();
 
-    virtual bool write(BGPMessage p_BGPMsg);
+    virtual bool write(BGPMessage& p_BGPMsg);
 
 
 

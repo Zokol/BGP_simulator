@@ -859,7 +859,7 @@ void RoutingTable::fillRoutingTable()
 
 }
 
-bool RoutingTable::write(BGPMessage p_BGPMsg)
+bool RoutingTable::write(BGPMessage& p_BGPMsg)
 {
 	m_ReceivingBufferMutex.lock();
 	m_ReceivingBuffer.write(p_BGPMsg);

@@ -25,7 +25,7 @@ using namespace sc_dt;
 
 
 
-
+template <class T>
 class Output_If: virtual public sc_interface
 {
 
@@ -40,7 +40,7 @@ public:
    * \return bool True: if success is valid, False: if not success
    * \public
    */
-    virtual bool write(BGPMessage p_BGPMsg) = 0;
+    virtual bool write(T& ) = 0;
 
 
 

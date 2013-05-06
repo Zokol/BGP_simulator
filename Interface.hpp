@@ -18,6 +18,7 @@
 #include "Interface_If.hpp"
 #include "StringTools.hpp"
 #include "Configuration.hpp"
+#include "Output_If.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -35,7 +36,7 @@ using namespace sc_dt;
 
 
 
-class Interface: public sc_module, public Interface_If
+class Interface: public sc_module, public Interface_If, public Output_If<Packet>
 {
 
 public:
@@ -96,6 +97,9 @@ public:
      * \sa Interface_If
      */  
     virtual void resetInterface(void);
+
+    virtual bool write(Packet& p_Frame);
+
 
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html

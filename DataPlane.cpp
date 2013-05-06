@@ -84,7 +84,7 @@ void DataPlane::main(void)
         }
 }
 
-bool DataPlane::write(BGPMessage p_BGPMsg)
+bool DataPlane::write(BGPMessage& p_BGPMsg)
 {
     //enter to the critical region
     m_BGPForwardingBufferMutex.lock();

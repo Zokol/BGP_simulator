@@ -73,13 +73,13 @@ public:
      * receiving FIFO
      * \public
      */
-    sc_port<Output_If> port_ToDataPlane;
+    sc_port<Output_If<BGPMessage> > port_ToDataPlane;
 
     /*! \property sc_port<Output_If> port_ToRoutingTable
      * \brief Output port to Routing Table module
      * \public
      */
-    sc_port<Output_If> port_ToRoutingTable;
+    sc_port<Output_If<BGPMessage> > port_ToRoutingTable;
 
     /*! \brief Control port to the session NIC
      * \public
