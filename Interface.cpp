@@ -63,8 +63,11 @@ bool Interface::write(Packet& p_Frame)
 	if(isUp())
 	{
 		m_ForwardingBuffer.write(p_Frame);
+		return true;
 	}
-	return true;
+	else
+		return false;
+
 }
 
 void Interface::interfaceDown(void)
