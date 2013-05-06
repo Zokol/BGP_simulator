@@ -13,7 +13,7 @@
 BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0)
 {
 
-	m_BGPCurrentState = IDLE;
+	setBGPCurrentState(IDLE);
 	m_BGPPreviousState = ACTIVE;
 	m_ConnectionCurrentState = SYN;
 	m_ConnectionPreviousState = ACK;
@@ -45,7 +45,7 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const
 BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0)
 {
 
-	m_BGPCurrentState = IDLE;
+	setBGPCurrentState(IDLE);
 	m_BGPPreviousState = ACTIVE;
 	m_ConnectionCurrentState = SYN;
 	m_ConnectionPreviousState = ACK;
@@ -119,8 +119,8 @@ void BGPSession::sessionInvalidation(void)
             wait(m_BGPHoldDown);
 
             SC_REPORT_INFO(g_ReportID, m_RTool.newReportString("Hold-down timer expired. Session is invalid."));
- 
-            sessionStop();
+            setBGPCurrentState(IDLE);
+
         }
 
 }
@@ -146,11 +146,14 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 	{
 	case IDLE: //IDLE state
 		fsmReportRoutineBGP("BGP state: IDLE");
+
+		//make sure that the session is stopped
+		sessionStop();
 		//if the session interface is up transition to the CONNECT state
 		if(port_InterfaceControl->isUp())
 		{
 			m_RetransmissonCount = 0;
-			m_BGPCurrentState = CONNECT;
+			setBGPCurrentState(CONNECT);
 			m_ConnectionCurrentState = SYN;
 			setRetransmissionTimer(TCP_RT_DELAY);
 
@@ -193,7 +196,7 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 					}
 				}
 				else if(m_ReSend)
-					m_BGPCurrentState = ACTIVE;
+					setBGPCurrentState(ACTIVE);
 			}
 			break;
 		case ACK:
@@ -211,13 +214,13 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 							m_BGPOut = m_BGPIn;
 							m_BGPOut.m_Type = TCP_ACK;
 							port_ToDataPlane->write(m_BGPOut);
-							m_BGPCurrentState = OPEN_SENT;
+							setBGPCurrentState(OPEN_SENT);
 						}
 
 					}
 				}
 				else if(m_ReSend)
-					m_BGPCurrentState = ACTIVE;
+					setBGPCurrentState(ACTIVE);
 
 			}
 			else
@@ -231,15 +234,24 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 						if (m_BGPIn.m_AS == m_TCPId)
 						{
 							stopRetransmissionTimer();
-							m_BGPCurrentState = OPEN_SENT;
 						}
 
 					}
 				}
 				else if(m_ReSend)
-					m_BGPCurrentState = ACTIVE;
+					setBGPCurrentState(ACTIVE);
 
 			}
+			break;
+		case OPEN_SEND:
+			if(m_Config->isClient(m_PeeringInterface))
+				fsmReportRoutineConnection("Connection state: CLIENT OPEN_SEND");
+			else
+				fsmReportRoutineConnection("Connection state: SERVER OPEN_SEND");
+			//build the open message
+			m_BGPOut.m_HoldDownTime = m_Config->getHoldDownTime();
+			setBGPCurrentState(OPEN_SENT);
+
 			break;
 		default:
 
@@ -254,7 +266,7 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 					fsmReportRoutineBGP("BGP state: ACTIVE after CONNECT");
 					m_RetransmissonCount++;
 					m_ConnectionCurrentState = SYN;
-					m_BGPCurrentState = CONNECT;
+					setBGPCurrentState(CONNECT);
 					setReSend(false);
 				}
 				else if(m_BGPPreviousState == OPEN_SENT)
@@ -265,12 +277,12 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 				else
 				{
 					fsmReportRoutineBGP("BGP state: ACTIVE after UNKNOWN");
-					m_BGPCurrentState = IDLE;
+					setBGPCurrentState(IDLE);
 				}
 			}
 			else
 			{
-				m_BGPCurrentState = IDLE;
+				setBGPCurrentState(IDLE);
 			}
 
 			break;
@@ -296,7 +308,6 @@ void BGPSession::sessionStop(void)
 {
     m_BGPHoldDown.cancel();
     m_BGPKeepalive.cancel();
-    SC_REPORT_INFO(g_ReportID, m_RTool.newReportString("Session stopped."));
     m_SessionValidity = false;
 }
 
@@ -344,7 +355,9 @@ void BGPSession::setPeerIdentifier(string p_BGPIdentifier)
 
 void BGPSession::setBGPCurrentState(BGP_States p_State)
 {
+	m_BGPCurrentStateMutex.lock();
 	m_BGPCurrentState = p_State;
+	m_BGPCurrentStateMutex.unlock();
 }
 
 void BGPSession::setConnectionCurrentState(TCP_States p_State)

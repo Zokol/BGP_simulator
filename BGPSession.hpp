@@ -59,7 +59,7 @@ enum BGP_States{IDLE, CONNECT, ACTIVE, OPEN_SENT, OPEN_CONFIRM, ESTABLISHED};
 /*!\enum enum enum TCP_States{SYN, SYN_ACK, ACK};
  * \brief Defines the tcp states
  */
-enum TCP_States{SYN, SYN_ACK, ACK};
+enum TCP_States{SYN, ACK, OPEN_SEND};
 
 
 
@@ -390,6 +390,7 @@ private:
     bool m_ReSend;
     sc_mutex m_ReSendMutex;
     int m_RetransmissonCount;
+    sc_mutex m_BGPCurrentStateMutex;
 
     /***************************Private functions*****************/
 

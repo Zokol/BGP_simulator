@@ -98,6 +98,8 @@ public:
      */
     int m_AS;
     
+    int m_HoldDownTime;
+
     /*! \property string m_Message 
      * \brief BGP message fields
      * \details 
