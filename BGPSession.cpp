@@ -135,6 +135,7 @@ void BGPSession::fsmRoutine(BGPMessage& p_Input)
 	switch (m_BGPState)
 	{
 	case IDLE: //IDLE state
+		port_ToRoutingTable->write(p_Input);
 		break;
 	case CONNECT:
 		switch (m_ConnectionState)
