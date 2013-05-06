@@ -10,13 +10,16 @@
 #include "BGPSession.hpp"
 #include "ReportGlobals.hpp"
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam), m_ReSend(false)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0)
 {
 
-	m_BGPState = IDLE;
-	m_ConnectionState = SYN;
+	m_BGPCurrentState = IDLE;
+	m_BGPPreviousState = ACTIVE;
+	m_ConnectionCurrentState = SYN;
+	m_ConnectionPreviousState = ACK;
 
-    m_RTool.setBaseName(name());
+
+	m_RTool.setBaseName(name());
     m_RTool.setStampTime(true);
     
     srand(time(NULL));
@@ -39,11 +42,18 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam), m_ReSend(false)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0)
 {
-	m_BGPState = IDLE;
-	m_ConnectionState = SYN;
-    m_RTool.setBaseName(name());
+
+	m_BGPCurrentState = IDLE;
+	m_BGPPreviousState = ACTIVE;
+	m_ConnectionCurrentState = SYN;
+	m_ConnectionPreviousState = ACK;
+
+	m_BGPOut.m_OutboundInterface = m_PeeringInterface;
+
+
+	m_RTool.setBaseName(name());
     m_RTool.setStampTime(true);
 
 
@@ -63,7 +73,6 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPS
 
     //Register retransmissionTimer method to the SystemC kernel
     SC_THREAD(retransmissionTimer);
-
 }
 
 BGPSession::~BGPSession()
@@ -130,30 +139,143 @@ void BGPSession::retransmissionTimer(void)
 void BGPSession::fsmRoutine(BGPMessage& p_Input)
 {
 
+	m_BGPIn = p_Input;
 
 	//BGP FSM starts
-	switch (m_BGPState)
+	switch (m_BGPCurrentState)
 	{
 	case IDLE: //IDLE state
-		port_ToRoutingTable->write(p_Input);
+		fsmReportRoutineBGP("BGP state: IDLE");
+		//if the session interface is up transition to the CONNECT state
+		if(port_InterfaceControl->isUp())
+		{
+			m_RetransmissonCount = 0;
+			m_BGPCurrentState = CONNECT;
+			m_ConnectionCurrentState = SYN;
+			setRetransmissionTimer(TCP_RT_DELAY);
+
+		}
 		break;
 	case CONNECT:
-		switch (m_ConnectionState)
+		fsmReportRoutineBGP("BGP state: CONNECT");
+		switch (m_ConnectionCurrentState)
 		{
 		case SYN:
-			break;
-		case SYN_ACK:
+			if(m_Config->isClient(m_PeeringInterface)) //client does
+			{
+
+					fsmReportRoutineConnection("Connection state: CLIENT SYN");
+					stopRetransmissionTimer();
+					//build the syn message
+					m_BGPOut.m_Type = TCP_SYN;
+					m_BGPOut.m_AS = m_TCPId;
+					port_ToDataPlane->write(m_BGPOut);
+					setRetransmissionTimer(TCP_RT_DELAY);
+					m_ConnectionCurrentState = ACK;
+
+			}
+			else
+			{
+				fsmReportRoutineConnection("Connection state: SERVER SYN");
+
+				//handle only if the input is for this session
+				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+				{
+					if(m_BGPIn.m_Type == TCP_SYN)
+					{
+						stopRetransmissionTimer();
+						m_TCPId = m_BGPIn.m_AS;
+						m_BGPOut = m_BGPIn;
+						m_BGPOut.m_Type = TCP_SYNACK;
+						port_ToDataPlane->write(m_BGPOut);
+						setRetransmissionTimer(TCP_RT_DELAY);
+						m_ConnectionCurrentState = ACK;
+					}
+				}
+				else if(m_ReSend)
+					m_BGPCurrentState = ACTIVE;
+			}
 			break;
 		case ACK:
+			if(m_Config->isClient(m_PeeringInterface))
+			{
+				fsmReportRoutineConnection("Connection state: CLIENT ACK");
+				//handle only if the input is for this session
+				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+				{
+					if(m_BGPIn.m_Type == TCP_SYNACK)
+					{
+						if (m_BGPIn.m_AS == m_TCPId)
+						{
+							stopRetransmissionTimer();
+							m_BGPOut = m_BGPIn;
+							m_BGPOut.m_Type = TCP_ACK;
+							port_ToDataPlane->write(m_BGPOut);
+							m_BGPCurrentState = OPEN_SENT;
+						}
+
+					}
+				}
+				else if(m_ReSend)
+					m_BGPCurrentState = ACTIVE;
+
+			}
+			else
+			{
+				fsmReportRoutineConnection("Connection state: SERVER ACK");
+
+				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+				{
+					if(m_BGPIn.m_Type == TCP_ACK)
+					{
+						if (m_BGPIn.m_AS == m_TCPId)
+						{
+							stopRetransmissionTimer();
+							m_BGPCurrentState = OPEN_SENT;
+						}
+
+					}
+				}
+				else if(m_ReSend)
+					m_BGPCurrentState = ACTIVE;
+
+			}
 			break;
 		default:
+
 			break;
 		}
 		break;
 		case ACTIVE:
+			if( m_RetransmissonCount == 0)
+			{
+				if(m_BGPPreviousState == CONNECT)
+				{
+					fsmReportRoutineBGP("BGP state: ACTIVE after CONNECT");
+					m_RetransmissonCount++;
+					m_ConnectionCurrentState = SYN;
+					m_BGPCurrentState = CONNECT;
+					setReSend(false);
+				}
+				else if(m_BGPPreviousState == OPEN_SENT)
+				{
+					fsmReportRoutineBGP("BGP state: ACTIVE after OPEN_SENT");
+
+				}
+				else
+				{
+					fsmReportRoutineBGP("BGP state: ACTIVE after UNKNOWN");
+					m_BGPCurrentState = IDLE;
+				}
+			}
+			else
+			{
+				m_BGPCurrentState = IDLE;
+			}
 
 			break;
 		case OPEN_SENT:
+			fsmReportRoutineBGP("BGP state: OPEN_SENT");
 
 			break;
 		case OPEN_CONFIRM:
@@ -220,14 +342,14 @@ void BGPSession::setPeerIdentifier(string p_BGPIdentifier)
     m_BGPIdentifierPeer = p_BGPIdentifier;
 }
 
-void BGPSession::setBGPState(BGP_States p_State)
+void BGPSession::setBGPCurrentState(BGP_States p_State)
 {
-	m_BGPState = p_State;
+	m_BGPCurrentState = p_State;
 }
 
-void BGPSession::setConnectionState(TCP_States p_State)
+void BGPSession::setConnectionCurrentState(TCP_States p_State)
 {
-	m_ConnectionState = p_State;
+	m_ConnectionCurrentState = p_State;
 }
 
 void BGPSession::setTCPId(int p_Value)
@@ -282,14 +404,14 @@ string BGPSession::getPeerIdentifier(void)
     return m_BGPIdentifierPeer;
 }
 
-BGP_States BGPSession::getBGPState()
+BGP_States BGPSession::getBGPCurrentState()
 {
-	return m_BGPState;
+	return m_BGPCurrentState;
 }
 
-TCP_States BGPSession::getConnectionState()
+TCP_States BGPSession::getConnectionCurrentState()
 {
-	return m_ConnectionState;
+	return m_ConnectionCurrentState;
 }
 
 int BGPSession::getTCPId()
@@ -300,6 +422,7 @@ int BGPSession::getTCPId()
 void BGPSession::setRetransmissionTimer(int p_Delay)
 {
 	m_Retransmission.notify(p_Delay, SC_SEC);
+	setReSend(false);
 }
 
 void BGPSession::stopRetransmissionTimer(void)
@@ -311,4 +434,19 @@ void BGPSession::setReSend(bool p_Value)
 	m_ReSendMutex.lock();
 	m_ReSend = p_Value;
 	m_ReSendMutex.unlock();
+}
+
+void BGPSession::fsmReportRoutineBGP(string p_Report)
+{
+	if(m_BGPCurrentState != m_BGPPreviousState)
+		SC_REPORT_INFO(g_ReportID, m_RTool.newReportString(p_Report));
+	m_BGPPreviousState = m_BGPCurrentState;
+
+}
+
+void BGPSession::fsmReportRoutineConnection(string p_Report)
+{
+	if(m_ConnectionCurrentState != m_ConnectionPreviousState)
+		SC_REPORT_INFO(g_ReportID, m_RTool.newReportString(p_Report));
+	m_ConnectionPreviousState = m_ConnectionCurrentState;
 }

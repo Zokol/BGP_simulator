@@ -95,6 +95,7 @@ void ControlPlane::controlPlaneMain(void)
 		// process all the sessions
 		for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
 		{
+
 			m_BGPSessions[i]->fsmRoutine(m_BGPMsgIn);
 		}
 

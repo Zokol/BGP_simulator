@@ -48,6 +48,9 @@ using namespace sc_dt;
 #ifndef _BGPSESSION_H_
 #define _BGPSESSION_H_
 
+#define TCP_RT_DELAY 10
+#define OPENSEND_RT_DELAY 10
+
 /*!\enum enum BGP_States{IDLE, CONNECT, ACTIVE, OPEN_SENT, OPEN_CONFIRM, ESTABLISHED};
  * \brief Defines the bgp states
  */
@@ -199,21 +202,21 @@ public:
      */
     void setPeerAS(int p_PeerAS);
 
-    /*! \fn void setBGPState(BGP_States p_State)
+    /*! \fn void setBGPCurrentState(BGP_States p_State)
      * \brief Current FSM state of the BGP session
      * \details
      * @param [in] BGP_State p_State
      * \public
      */
-    void setBGPState(BGP_States p_State);
+    void setBGPCurrentState(BGP_States p_State);
 
-    /*! \fn void setBGPState(BGP_States p_State)
+    /*! \fn void setConnectionCurrentState(TCP_States p_State)
      * \brief Current FSM state of the TCP connection
      * \details
      * @param [in] TCP_States p_State
      * \public
      */
-    void setConnectionState(TCP_States p_State);
+    void setConnectionCurrentState(TCP_States p_State);
 
     /*! \fn void setTCPId(int p_Value)
      * \brief Holds the value of TCP id
@@ -256,15 +259,15 @@ public:
      */
     virtual string getPeerIdentifier(void);
     
-    /*! /fn BGP_States getBGPState(void)
+    /*! /fn BGP_States getBGPCurrentState(void)
      *  \brief Returns the current session state
      */
-    BGP_States getBGPState(void);
+    BGP_States getBGPCurrentState(void);
 
-    /*! /fn TCP_States getConnectionState(void)
+    /*! /fn TCP_States getConnectionCurrentState(void)
      *  \brief Returns the current connection state
      */
-    TCP_States getConnectionState(void);
+    TCP_States getConnectionCurrentState(void);
 
     /*! /fn int getTCPId(void)
      *  \brief Returns the TCP ID
@@ -343,6 +346,20 @@ private:
      */
     BGPMessage m_KeepaliveMsg;
 
+    /*! \property BGPMessage m_BGPIn
+     *  \brief BGP message object
+     * \details The input for fsmRoutine
+     * \private
+     */
+    BGPMessage m_BGPIn;
+
+    /*! \property BGPMessage m_BGPOut
+     *  \brief BGP message object
+     * \details The output of fsmRoutine
+     * \private
+     */
+    BGPMessage m_BGPOut;
+
     /*! \property string m_BGPIdentifierPeer
      *  \brief The BGP identifier of the session peer
      * \details 
@@ -363,17 +380,24 @@ private:
      * \private
      */
     StringTools m_RTool;
-    BGP_States m_BGPState;
-    TCP_States m_ConnectionState;
+    BGP_States m_BGPCurrentState;
+    BGP_States m_BGPPreviousState;
+
+    TCP_States m_ConnectionCurrentState;
+    TCP_States m_ConnectionPreviousState;
+
     int m_TCPId;
     bool m_ReSend;
     sc_mutex m_ReSendMutex;
+    int m_RetransmissonCount;
 
     /***************************Private functions*****************/
 
     void setRetransmissionTimer(int p_Delay);
     void stopRetransmissionTimer(void);
     void setReSend(bool p_Value);
+    void fsmReportRoutineBGP(string p_Report);
+    void fsmReportRoutineConnection(string p_Report);
 
 };
 
