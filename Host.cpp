@@ -114,7 +114,7 @@ bool Host::sendMessage(string p_DestinationIP, string p_SourceIP, string p_Paylo
 	//Set the protocol type to IP
 	m_Frame.setProtocolType(TYPE_IP);
 	//write the frame to the interface
-	m_NetworkInterface[0]->export_FromDataPlane->write(m_Frame);
+	m_NetworkInterface[0]->write(m_Frame);
 	return true;
 }
 

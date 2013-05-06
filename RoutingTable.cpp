@@ -863,7 +863,6 @@ bool RoutingTable::write(BGPMessage& p_BGPMsg)
 {
 	m_ReceivingBufferMutex.lock();
 	m_ReceivingBuffer.write(p_BGPMsg);
-	cout << name() << " Session is writing in my buffer" << endl;
 	m_ReceivingBufferMutex.unlock();
 	return true;
 }

@@ -38,7 +38,7 @@ void DataPlane::main(void)
     while(true)
         {
             wait();
- 
+
             //check all the interfaces
             for (int i = 0; i < m_InterfaceCount; i++)
                 {

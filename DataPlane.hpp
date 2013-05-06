@@ -65,7 +65,7 @@ public:
      * \details
      * \public
      */
-    sc_port<sc_fifo_out_if<Packet>,0, SC_ZERO_OR_MORE_BOUND> port_ToInterface;
+    sc_port<Output_If<Packet>,0, SC_ZERO_OR_MORE_BOUND> port_ToInterface;
 
     /*! \brief Clock signal
      * \details 

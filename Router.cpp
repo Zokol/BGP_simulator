@@ -98,7 +98,7 @@ Router::Router(sc_module_name p_ModuleName, RouterConfig * const p_RouterConfigu
 
 			//bind the interfaces to the data plane
 			m_IP.port_FromInterface(m_NetworkInterface[i]->export_ToDataPlane);
-			m_IP.port_ToInterface(m_NetworkInterface[i]->export_FromDataPlane);
+			m_IP.port_ToInterface(*m_NetworkInterface[i]);
 			if(i < m_RouterConfiguration->getNumberOfInterfaces()-1)
 			{
 				//bind the interface to the control plane

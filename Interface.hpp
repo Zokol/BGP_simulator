@@ -50,7 +50,6 @@ public:
 
     sc_port<Interface_If,1, SC_ZERO_OR_MORE_BOUND> port_Output;
 
-    sc_export<sc_fifo_out_if<Packet> > export_FromDataPlane;
 
     sc_export<sc_fifo_in_if<Packet> > export_ToDataPlane;
 

@@ -14,9 +14,7 @@
 Interface::Interface(sc_module_name p_ModName, Connection *p_IfConfig):sc_module(p_ModName), m_IfConfig(p_IfConfig)
 {
   //make the inner bindings
-    export_FromDataPlane(m_ForwardingBuffer); //export the forwarding buffer's input interface for the protocol engine
-    export_ToDataPlane(m_ReceivingBuffer); // //export the forwarding buffer's input interface for the protocol engine
-
+    export_ToDataPlane(m_ReceivingBuffer);
     m_InterfaceState = DOWN;
     m_Report.setBaseName(name());
 
@@ -62,7 +60,10 @@ bool Interface::forward(Packet p_Packet)
 }
 bool Interface::write(Packet& p_Frame)
 {
-
+	if(isUp())
+	{
+		m_ForwardingBuffer.write(p_Frame);
+	}
 	return true;
 }
 
