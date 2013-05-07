@@ -100,6 +100,8 @@ public:
     
     int m_HoldDownTime;
 
+    unsigned long m_MsgId;
+
     /*! \property string m_Message 
      * \brief BGP message fields
      * \details 
