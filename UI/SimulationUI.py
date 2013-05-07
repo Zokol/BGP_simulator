@@ -631,8 +631,29 @@ class SimulationUI:
 		cmd = "<CMD>READ_TABLE," + str(router_index) + "</CMD>"
 		#print cmd
 		self.socket.send(cmd)
-		table = self.socket.recv(self.size)
-		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		#table = self.socket.recv(self.size)
+		table = ""
+		start_tag = False
+		while not done:
+			resp = self.socket.recv(self.size)
+			if resp.find("<TABLE>") != -1:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp[(resp.find("<TABLE>")+7):]
+					start_tag = True
+			if resp.find("</TABLE>") != -1:
+				table += resp[:resp.find("</TABLE>")]
+				done = True
+			elif start_tag:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp
+		#table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		
 		table = table.split(";")
 		#print table
 		del self.main_routing_table[:]
@@ -666,8 +687,30 @@ class SimulationUI:
 						break
 		table = table_str.split(";")
 		"""
-		table = self.socket.recv(self.size)
-		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		table = ""
+		start_tag = False
+		done = False
+		#table = self.socket.recv(self.size)
+		#table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		while not done:
+			resp = self.socket.recv(self.size)
+			if resp.find("<TABLE>") != -1:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp[(resp.find("<TABLE>")+7):]
+					start_tag = True
+			if resp.find("</TABLE>") != -1:
+				table += resp[:resp.find("</TABLE>")]
+				done = True
+			elif start_tag:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp
+		print table
 		table = table.split(";")
 		del self.all_routes[:]
 		self.all_routes.append(Route("TARGET_PREFIX", "TARGET", "ROUTE"))
@@ -841,7 +884,7 @@ class SimulationUI:
 		else:
 			radius = max_radius
 		for r in self.routers:
-			router_points.append([r.as_id, int(x + a*math.cos(d*i)), int(y + b*math.sin(d*i))])
+			router_points.append([r.as_id, r.prefix, int(x + a*math.cos(d*i)), int(y + b*math.sin(d*i))])
 			i += 1
 			#Find out next coords. Implement Elliptic-curve/line intersection here
 			"""
@@ -853,22 +896,28 @@ class SimulationUI:
 			"""
 		for r_id in range(len(self.routers)):
 			r = self.routers[r_id]
-			coord_a = (router_points[r_id][1], router_points[r_id][2])
+			coord_a = (router_points[r_id][2], router_points[r_id][3])
 			for p in r.interfaces:
 				if p.client != None:
 					for i in router_points:
-						if i[0] == p.client.as_id:	
-							coord_b = (i[1], i[2])
+						if i[0] == p.client.as_id:
+							coord_b = (i[2], i[3])
 							pygame.draw.aaline(self.screen, (0,0,0), coord_a, coord_b, 2)
 							break
 		for c in router_points:	
-			pygame.draw.circle(self.screen, (255,255,255), (c[1], c[2]), radius)
-			pygame.draw.circle(self.screen, (0,0,100), (c[1], c[2]), radius-2)
+			pygame.draw.circle(self.screen, (255,255,255), (c[2], c[3]), radius)
+			pygame.draw.circle(self.screen, (0,0,100), (c[2], c[3]), radius-2)
 			font = pygame.font.Font(FONT, int(r_fontsize*FONTSCALE))
 			text = font.render(c[0], True, (255,255,255))
 			rect = text.get_rect()
-			rect.centerx = c[1]
-			rect.centery = c[2]
+			rect.centerx = c[2]
+			rect.centery = c[3]
+			self.screen.blit(text, rect)
+			font = pygame.font.Font(FONT, int(r_fontsize*(FONTSCALE / 1.2)))
+			text = font.render(c[1], True, (255,255,255))
+			rect = text.get_rect()
+			rect.centerx = c[2]
+			rect.centery = c[3] + 20
 			self.screen.blit(text, rect)
 		#rect = pygame.Rect((777,32), (380, 250))
 		#ellipse = pygame.draw.ellipse(self.screen, (0,0,0), rect, 5)
@@ -952,7 +1001,7 @@ class SimulationUI:
 			router_point = self.topology_points[p]
 			print mouse_x, mouse_y
 			print router_point
-			d = math.sqrt((mouse_x - router_point[1])**2 + (mouse_y - router_point[2])**2)
+			d = math.sqrt((mouse_x - router_point[2])**2 + (mouse_y - router_point[3])**2)
 			if d <= self.topology_radius:
 				if self.connection_router1 == None:
 					print "selected router ", p
