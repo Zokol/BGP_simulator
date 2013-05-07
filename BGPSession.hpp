@@ -48,8 +48,8 @@ using namespace sc_dt;
 #ifndef _BGPSESSION_H_
 #define _BGPSESSION_H_
 
-#define TCP_RT_DELAY 10
-#define OPENSEND_RT_DELAY 10
+#define TCP_RT_DELAY 20
+#define OPENSEND_RT_DELAY 20
 
 /*!\enum enum BGP_States{IDLE, CONNECT, ACTIVE, OPEN_SENT, OPEN_CONFIRM, ESTABLISHED};
  * \brief Defines the bgp states
@@ -68,6 +68,12 @@ class BGPSession: public sc_module, public BGPSession_If
 {
 
 public:
+
+    /*! \brief System clock signal
+     * \details The router's internal clock
+     * \public
+     */
+    sc_in_clk port_Clk;
 
     /*! \brief Output port to Data Plane module
      * \details The BGP session writes all the BGP messages to be send
@@ -88,6 +94,16 @@ public:
      * \public
      */
     sc_port<Interface_If> port_InterfaceControl;
+
+    sc_fifo<BGPMessage> m_FsmInputBuffer;
+
+
+    void before_end_of_elaboration()
+    {
+
+        m_Client = m_Config->isClient(m_PeeringInterface);
+
+    }
 
     /*! \brief Elaborates the BGPSession module
      * \details 
@@ -117,12 +133,12 @@ public:
      */
     ~BGPSession();
 
-    /*! \fn void sendKeepalive(void)
+    /*! \fn void keepaliveTimer(void)
      *  \brief Send a keepalive message to the peer
      * \details A SystemC method, which is sensitive to m_BGPKeepalive event
      * \public
      */
-    void sendKeepalive(void);
+    void keepaliveTimer(void);
 
     /*! \fn void sessionInvalidation(void)
      *  \brief Invalidates this session
@@ -138,12 +154,12 @@ public:
      */
     void retransmissionTimer(void);
 
-    /*! \fn void fsmRoutine(BGPMessage& p_Input)
+    /*! \fn void fsmRoutine(void)
      *  \brief Updates the session state
      * \details
      * \public
      */
-    void fsmRoutine(BGPMessage& p_Input);
+    void fsmRoutine(void);
 
     /*! \fn void resetHoldDown(void)
      *  \brief Resets the HoldDown timer
@@ -391,6 +407,11 @@ private:
     sc_mutex m_ReSendMutex;
     int m_RetransmissonCount;
     sc_mutex m_BGPCurrentStateMutex;
+    bool m_KeepaliveFlag;
+    sc_mutex m_KeepaliveFlagMutex;
+   bool m_Client;
+   bool m_BeeingHere;
+
 
     /***************************Private functions*****************/
 
@@ -399,7 +420,9 @@ private:
     void setReSend(bool p_Value);
     void fsmReportRoutineBGP(string p_Report);
     void fsmReportRoutineConnection(string p_Report);
-
+    void setKeepaliveFlag(bool p_Value);
+    bool isKeepaliveTime(void);
+    void sendKeepalive(void);
 };
 
 
