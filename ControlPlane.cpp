@@ -79,7 +79,7 @@ void ControlPlane::controlPlaneMain(void)
 		}
 	}
 
-	delete l_Temp;
+
 }
 
 
