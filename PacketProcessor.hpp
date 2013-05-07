@@ -118,14 +118,14 @@ public:
      */
     string getDestination(void);
 
-    /*! \fn bool forward(Packet& p_Frame); 
+    /*! \fn bool forward(Packet *p_Frame);
      * \brief copies the processed frame to the passed reference
      * \details decrements the TTL and recalculates the checksum using the incremental method
      * @param[out] Packet& p_Frame Reference to the object in which the processed frame should be copied 
      * \return bool true: packet is ready to be forwarded - false: packet was dropped
      * \public
      */
-    bool forward(Packet& p_Frame);
+    bool forward(Packet *p_Frame);
     
 private:
 

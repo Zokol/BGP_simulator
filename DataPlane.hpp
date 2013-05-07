@@ -22,6 +22,7 @@
 #include "RoutingTable_If.hpp"
 #include "Configuration.hpp"
 #include "StringTools.hpp"
+#include "PacketProcessor.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -110,6 +111,7 @@ private:
 
     StringTools m_Rpt;
 
+    PacketProcessor m_Forwarder;
 };
 
 
