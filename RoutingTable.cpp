@@ -49,7 +49,6 @@ void RoutingTable::routingTableMain(void)
     SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting") );
 
     fillRoutingTable(); // IIRO testing
-
     // Initialize m_sessions
     for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1;i++)
         m_sessions.push_back(0);
@@ -123,9 +122,7 @@ void RoutingTable::routingTableMain(void)
                 }
 
 
-            //m_ReceivingBuffer.read(m_BGPMsg);
-            m_BGPMsg.m_Type = UPDATE;
-            m_BGPMsg.m_Message = "1,100.251.0.0,16,999-888-777";
+            m_ReceivingBuffer.read(m_BGPMsg);
             if(!(count%20))
                 {
                     l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
