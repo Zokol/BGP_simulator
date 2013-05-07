@@ -59,30 +59,9 @@ ControlPlane::~ControlPlane()
 
 void ControlPlane::controlPlaneMain(void)
 {
-//
-//	m_Name.setBaseName(name());
-//
-	StringTools *l_Temp = new StringTools(name());
-	SC_REPORT_INFO(g_ReportID,l_Temp->newReportString("starting"));
-
-//	int count = 0;
-//	///build and send the OPEN messages to all local interfaces except
-//	///the last one. The last local interface is the AS interface.
-//	for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
-//	{
-//		m_BGPMsg.m_BGPIdentifier = m_BGPConfig->getIPAsString();
-//		m_BGPMsg.m_AS = m_BGPConfig->getASNumber();
-//		m_BGPMsg.m_Type = OPEN;
-//		m_BGPMsg.m_OutboundInterface = i;
-//		port_ToDataPlane->write(m_BGPMsg);
-//	}
-//
-//	for (int var = 0; var < m_BGPConfig->getNumberOfInterfaces()-1; var++) {
-//		cout<< name() << ": Interface " << var << " mode is " << m_BGPConfig->isClient(var) << endl << "Interface state is " << port_InterfaceControl[var]->isUp() << endl;
-//	}
 	srand(time(NULL));
 
-unsigned MsgCount = 0, fsmCount = 0;
+
 	//The main thread of the control plane starts
 	while(true)
 	{
@@ -94,94 +73,10 @@ unsigned MsgCount = 0, fsmCount = 0;
 			m_ReceivingBuffer.read(m_BGPMsgIn);
 
 //			cout << name() << ": Session: " << m_BGPMsgIn.m_OutboundInterface << " MSG_TYPE: " << m_BGPMsgIn.m_Type << " @ " << sc_time_stamp() << endl;
-			MsgCount++;
-			m_BGPSessions[m_BGPMsgIn.m_OutboundInterface]->m_FsmInputBuffer.write(m_BGPMsgIn);
-			fsmCount++;
-		}
 
-		//Check if there's messages in the input buffer
-		//		if(m_ReceivingBuffer.num_available() > 0)     //Antti: laitto
-		//			//takas >, kun
-		//			//simu hetti
-		//			//segmentation faultia19.3.2013. IIRO testi, if lause vaihdettu ">" --> "=="
-		//		{
-		//
-		//			m_ReceivingBuffer.read(m_BGPMsg);
-		//
-		//
-		//			// IIRO testailuu - message structure: prefix;mask;ASes
-		//			// TODO from where is OutputPort coming? vs. create Route class and pass them? NOT bcoz BGPmessages differ so much
-		//			m_BGPMsg.m_Message = "100.200.85;8;1-2-3-4-5";
-		//
-		//
-		//			//check whether the session is valid
-		//			if (m_BGPSessions[m_BGPMsg.m_OutboundInterface]->isSessionValid())
-		//			{
-		//
-		//				// determine which type of message this is
-		//				switch(m_BGPMsg.m_Type)
-		//				{
-		//				case KEEPALIVE:
-		//					// KEEPALIVE received, reset KeepAlive timer for this session
-		//					// TODO is OutboudInterface correct way to identify the session's index?
-		//					SC_REPORT_INFO(g_DebugCPID,m_Name.newReportString("KEEPALIVE received"));
-		//					m_BGPSessions[m_BGPMsg.m_OutboundInterface]->resetHoldDown();
-		//					m_BGPMsg.m_Type = -1;
-		//					break;
-		//				case UPDATE:
-		//					// Just forward to routingtable?
-		//					// port_ToRoutingTable->write(m_BGPMsg);
-		//
-		//					break;
-		//				case NOTIFICATION:
-		//					// Forward to routingtable, ...
-		//					break;
-		//				case OPEN:
-		//					// Session is already open, what to do
-		//					// if OPEN-message is received? Antti: The session is closed and
-		//					// the message is dropped.
-		//					break;
-		//				default:
-		//					SC_REPORT_INFO(g_DebugCPID,m_Name.newReportString("unknown received"));
-		//					break;
-		//				}
-		//
-		//			}
-		//
-		//			//if the session was not valid but this is an OPEN message
-		//			else if (m_BGPMsg.m_Type == OPEN && m_BGPMsg.m_AS != m_BGPConfig->getASNumber())
-		//			{
-		//				//start new session for the session index
-		//				//corresponding the interface index to which the
-		//				//peer is connected
-		//				m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerIdentifier(m_BGPMsg.m_BGPIdentifier);
-		//				m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeeringInterface(m_BGPMsg.m_OutboundInterface);
-		//				m_BGPSessions[m_BGPMsg.m_OutboundInterface]->setPeerAS(m_BGPMsg.m_AS);
-		//				//start the session
-		//				m_BGPSessions[m_BGPMsg.m_OutboundInterface]->sessionStart();
-		//
-		//			}
-		//			//Ohterwise
-		//			else
-		//			{
-		//				//drop
-		//
-		//			}
-		//		}
-		//
-		//		//To send a message to data plane
-		//		// write(m_BGPMsg);
-		//
-		//
-		//		port_ToRoutingTable->write(m_BGPMsg);
-		//
-		//		if(!(count%20))
-		//		{
-		//			l_Temp->newReportString("wrote to RT: ");
-		//			SC_REPORT_INFO(g_DebugID, l_Temp->appendReportString(m_BGPMsg.m_OutboundInterface));
-		//
-		//		}               //Handle the message here
-		//		count++;
+			m_BGPSessions[m_BGPMsgIn.m_OutboundInterface]->m_FsmInputBuffer.write(m_BGPMsgIn);
+
+		}
 	}
 
 	delete l_Temp;
