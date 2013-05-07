@@ -88,7 +88,7 @@ int main ( int argc, char **argv )
 				{
 
 					std::cout << "Received: " << reply << std::endl;
-					if(reply.compare("ACK") == 0)
+					if(reply.compare("ACK") == 0 && l_SInput.compare("STOP") == 0)
 						flag = false;
 					if(reply.compare("STOP") == 0)
 						cout << "Simulation terminates." << endl;

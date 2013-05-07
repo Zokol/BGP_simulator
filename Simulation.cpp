@@ -97,7 +97,7 @@ void Simulation::simulationMain(void)
 	m_Name.resetReportString();
 	m_Name.setBaseName(name());
 	SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Starts"));
-
+cout << "Simulation main starts" << endl;
 #ifdef _GUI_TEST
 
 	bool state = true;
