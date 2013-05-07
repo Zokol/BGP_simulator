@@ -387,6 +387,7 @@ void BGPSession::fsmRoutine(void)
 						//send updates to RT
 						if(m_BGPIn.m_Type == UPDATE)
 						{
+//							cout<< endl << name() << " @ " << sc_time_stamp() << m_BGPIn << endl;
 							//reset hold-down timer
 							resetHoldDown();
 							port_ToRoutingTable->write(m_BGPIn);

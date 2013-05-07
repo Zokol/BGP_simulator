@@ -17,8 +17,12 @@
 
 
 
-RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig)
+RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig), limit(300, SC_SEC)
 {
+
+	m_UpdateOut.m_AS = m_RTConfig->getASNumber();
+	m_UpdateOut.m_BGPIdentifier = m_RTConfig->getBGPIdentifier();
+	m_UpdateOut.m_HoldDownTime = m_RTConfig->getHoldDownTime();
 
 
     //buffer's input
@@ -164,7 +168,6 @@ void RoutingTable::routingTableMain(void)
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
                     //      antti oti pois kun buffaa muistia.
 
-                	cout << m_BGPMsg << endl;
                 	if(!addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface))
                 	{
 
@@ -209,9 +212,17 @@ void RoutingTable::routingTableMain(void)
 
                 cout << "Main table: " << endl;
                 printRoutingTable();
-                */
-    }
 
+
+                */
+
+
+//            if(sc_time_stamp() == limit)
+//            {
+//            	printRoutingTable();
+//
+//            }
+    }
 
 }
 
@@ -480,6 +491,8 @@ string RoutingTable::routeToString(Route p_route)
 // Print the RoutingTable
 void RoutingTable::printRoutingTable()
 {
+	cout << name() << endl;
+
     // Set the iterator in the beginning of table
     m_iterator = m_headOfRoutingTable;
 
@@ -575,21 +588,25 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
 
-
+//cout << "IPAddress: " << IPAddress << "mask: " << Mask << " ASes: " << ASes << endl;
     if(p_outputPort != m_RTConfig->getNumberOfInterfaces()-1)
     {
     	string l_AS;
     	position = 0;
-    	//Check if own AS exist in the path
+       	ASes_end = ASes.find("-",position);
+   	//Check if own AS exist in the path
     	while(ASes_end != string::npos)
     	{
     		l_AS = ASes.substr(position, ASes_end-position);
-        	cout << " as from the message: " << ASes<< endl;
         	//if own as was found, just return false
     		if(l_AS.compare(m_RTConfig->getASNumberAsString()) == 0)
-    			return false;
+    		{
+//            	cout << " as from the message: " << ASes<< endl;
+            	return false;
+    		}
     		position = ASes_end + 1;
         	ASes_end = ASes.find("-",position);
+
     	}
 		// Add own AS in AS-path
 		ASes.append("-");
@@ -597,7 +614,7 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 		ss << m_RTConfig->getASNumber();
 		ASes.append(ss.str());
     }
-//=======
+ //=======
 //
 //    stringstream ss;
 //    // Add own AS in AS-path
@@ -937,16 +954,17 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
 //    routeAsString.append("-");
 //    routeAsString.append(m_RTConfig->getASNumberAsString());
 
-    BGPMessage * l_message = new BGPMessage;
-    l_message->m_Message = routeAsString;
-    l_message->m_Type = UPDATE;
+    m_UpdateOut.m_Message = routeAsString;
+    m_UpdateOut.m_Type = UPDATE;
 
-    l_message->m_OutboundInterface = p_Outputport;
-    if(l_message->m_OutboundInterface != m_RTConfig->getNumberOfInterfaces()-1)
+    m_UpdateOut.m_OutboundInterface = p_Outputport;
+
+    //do not advertise to the local as port
+    if(m_UpdateOut.m_OutboundInterface != m_RTConfig->getNumberOfInterfaces()-1)
     {
-    	port_Output->write(*l_message);
+    	port_Output->write(m_UpdateOut);
     }
-    	delete l_message;
+
 
 }
 

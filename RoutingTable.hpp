@@ -274,6 +274,8 @@ private:
 
     BGPMessage m_UpdateOut;
 
+    sc_time limit;
+
 };
 
 
