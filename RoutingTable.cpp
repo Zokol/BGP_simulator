@@ -48,7 +48,7 @@ void RoutingTable::routingTableMain(void)
     //debugging
     SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting") );
 
-    fillRoutingTable(); // IIRO testing
+    // fillRoutingTable(); // IIRO testing
     // Initialize m_sessions
     for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1;i++)
         m_sessions.push_back(0);
@@ -150,8 +150,12 @@ void RoutingTable::routingTableMain(void)
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
                     //      antti oti pois kun buffaa muistia.
                     addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+                    updateRoutingTable();
                     //      antti oti pois kun buffaa muistia.
-                    advertiseRoute(m_endOfRawTable);
+                    for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
+                    {
+                        advertiseRoute(m_endOfRawTable,i);
+                    }
                 }
                 else
                 {
@@ -832,7 +836,7 @@ void RoutingTable::removeLocalPref(int p_AS)
 }
 
 // Advertise this route to peers
-void RoutingTable::advertiseRoute(Route * p_route)
+void RoutingTable::advertiseRoute(Route * p_route, int p_outPutIf)
 {
     stringstream ss;
     string routeAsString = "1,";  // It's advertisement, not withdraw, so string begins by "1"
@@ -846,7 +850,7 @@ void RoutingTable::advertiseRoute(Route * p_route)
     BGPMessage * l_message = new BGPMessage;
     l_message->m_Message = routeAsString;
     l_message->m_Type = UPDATE;
-    l_message->m_OutboundInterface = p_route->OutputPort;
+    l_message->m_OutboundInterface = p_outPutIf;
     port_Output->write(*l_message);
 
 }
@@ -859,7 +863,7 @@ void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
     while(l_route->next != 0)
     {
         l_route = l_route->next;
-        advertiseRoute(l_route);
+        advertiseRoute(l_route,p_outputPort);
     }
 }
 
