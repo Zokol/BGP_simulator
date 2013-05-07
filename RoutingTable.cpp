@@ -92,7 +92,7 @@ void RoutingTable::routingTableMain(void)
                                 // Get RT from this new PEER
                             }
                     }
-                    else if(port_Session[i]->isSessionValid())
+                    else if(!(port_Session[i]->isSessionValid()))
                     {
                         if(m_sessions.at(i) == 0)   // Case 3
                             continue;
@@ -114,9 +114,6 @@ void RoutingTable::routingTableMain(void)
 
                     }
                 }
-
-
-
 
 
             m_ReceivingBuffer.read(m_BGPMsg);
@@ -692,10 +689,13 @@ void RoutingTable::handleWithdraw(string p_message)
             Route * removedRoute = new Route;
             removedRoute->prefix = l_iterator->prefix;
             removedRoute->mask = l_iterator->mask;
-            // Clear ss and then read own AS number in there
+
+            l_ASpath.append("-");
             ss.str("");
+            // Add own AS-number to AS-path
             ss << m_RTConfig->getASNumber();
-            removedRoute->ASes = ss.str();   // TODO add own AS to AS-path
+            l_ASpath.append(ss.str());
+            removedRoute->ASes = l_ASpath;
             sendWithdraw(*removedRoute);
 
             // Now remove this route from RawRoutingTable
@@ -706,12 +706,23 @@ void RoutingTable::handleWithdraw(string p_message)
 
 
 }
-// Send withdraw-message to all peers
+/*
+    Send withdraw-message to all peers. If this message is created in this router write peer's and own AS-number to p_route.ASes.
+    Otherwise p_route.ASes should already include this router's AS, since it's added in handleWithdraw()
+*/
 void RoutingTable::sendWithdraw(Route p_route)
 {
     stringstream ss;
-    p_route.ASes = "";
+    if(p_route.ASes.size() == 0)
+    {
+        // This withdraw message is created in this router, so get peer AS-number and own AS-number
+        string peerAS = port_Session[p_route.OutputPort]->getPeerAS();
+        int ownAS = m_RTConfig->getASNumber();
+        ss << peerAS << "-" << ownAS;
+        p_route.ASes = ss.str();
+        ss.str("");
 
+    }
     // Construct the message here
 
     // This is withdraw-message so it begins with "0"
@@ -721,12 +732,6 @@ void RoutingTable::sendWithdraw(Route p_route)
     ss << p_route.mask;
     l_message.append(ss.str());
     l_message.append(",");
-    // TODO add peer router and own router
-
-    ss.str("");
-    ss << m_RTConfig->getASNumber();
-    l_message.append(ss.str());
-
 
     // Create new BGPMessage
     BGPMessage * l_msg = new BGPMessage;
@@ -812,6 +817,7 @@ void RoutingTable::removeLocalPref(int p_AS)
             // AS found, remove that and its preference value
             preferredASes.erase(preferredASes.begin() + i);
             preferredASes.erase(preferredASes.begin()+ i+1);
+            return;
         }
 
     }
