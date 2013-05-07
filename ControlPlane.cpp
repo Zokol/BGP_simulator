@@ -11,7 +11,7 @@
 #include "ReportGlobals.hpp"
 
 
-ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const p_BGPConfig):sc_module(p_ModName),m_BGPConfig(p_BGPConfig), m_Name("BGP_Session")
+ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const p_BGPConfig):sc_module(p_ModName),m_BGPConfig(p_BGPConfig), m_Name("BGP_Session"), m_MsgId(0)
 {
 
 	//make the inner bindings
@@ -89,6 +89,7 @@ bool ControlPlane::write(BGPMessage& p_BGPMsg)
 
 	//enter to the critical region
 	mutex_Write.lock();
+	p_BGPMsg.m_MsgId = m_MsgId++;
 	//reset the corresponding keepalive timer
 	m_BGPSessions[p_BGPMsg.m_OutboundInterface]->resetKeepalive();
 	//write message to the DataPlane

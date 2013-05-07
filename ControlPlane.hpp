@@ -90,7 +90,7 @@ public:
         for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
             {
                 //connect the session to the data plane
-            m_BGPSessions[i]->port_ToDataPlane.bind(export_ToDataPlane);
+            m_BGPSessions[i]->port_ToDataPlane.bind(*this);
             //bind the interfaces to the sessions
             m_BGPSessions[i]->port_InterfaceControl.bind(*export_InterfaceControl[i]);
             //bind the interfaces to the sessions
@@ -191,7 +191,7 @@ private:
      */
     StringTools m_Name;
 
-
+    unsigned long m_MsgId;
 
 
 };

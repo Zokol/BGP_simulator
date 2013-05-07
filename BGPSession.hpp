@@ -290,6 +290,7 @@ public:
      */
     int getTCPId(void);
 
+
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
      * \public
@@ -418,7 +419,7 @@ private:
     sc_mutex m_KeepaliveFlagMutex;
    bool m_Client;
    bool m_BeeingHere;
-   unsigned long m_MsgId;
+
    bool m_NewFsmInput;
 
 
