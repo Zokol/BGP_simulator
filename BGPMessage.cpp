@@ -1,7 +1,7 @@
 /*! \file BGPMessage.cpp
  *  \brief     Implementation of BGPMessage class.
  *  \details
- *  \author    Antti Siirilä, 501449
+ *  \author    Antti Siirilï¿½, 501449
  *  \version   1.0
  *  \date      11.2.2013
  */
@@ -24,6 +24,7 @@ BGPMessage& BGPMessage::operator = (const BGPMessage& p_Msg)
     m_OutboundInterface = p_Msg.m_OutboundInterface;
     m_Message = p_Msg.m_Message;
 	m_AS = p_Msg.m_AS;
+	m_HoldDownTime = p_Msg.m_HoldDownTime;
 
 
     return *this;
@@ -32,5 +33,5 @@ BGPMessage& BGPMessage::operator = (const BGPMessage& p_Msg)
 
 
 bool BGPMessage::operator == (const BGPMessage& p_Msg) const {
-    return (m_Type == p_Msg.m_Type && m_BGPIdentifier == p_Msg.m_BGPIdentifier && m_OutboundInterface == p_Msg.m_OutboundInterface && m_Message == p_Msg.m_Message && m_AS == p_Msg.m_AS);
+    return (m_Type == p_Msg.m_Type && m_BGPIdentifier == p_Msg.m_BGPIdentifier && m_OutboundInterface == p_Msg.m_OutboundInterface && m_Message == p_Msg.m_Message && m_AS == p_Msg.m_AS && m_HoldDownTime == p_Msg.m_HoldDownTime);
 }
