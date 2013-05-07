@@ -62,6 +62,8 @@ public:
      */
     void setKeepaliveTime(int p_KeepaliveTime);    
 
+    void setHoldDownTime(int p_HoldDownTime);
+
     /*! \fn void setHoldDownTimeFactor(int p_HoldDownTimeFactor);
      *  \brief Sets the HoldDown time factor
      *  @param[in] int p_HoldDownTimeFactor The multiplier that defines
@@ -156,6 +158,14 @@ public:
      * \public
      */
     string getIPAsString(void);
+
+    /*! \fn string getBGPIdentifier(void)
+     *  \brief Returns the BGP identifier IP
+     *  \return string value
+     * \public
+     */
+    string getBGPIdentifier(void);
+
 
     /*! \fn string getIPMaskAsString(void);
      *  \brief Returns the prefix mask value: the number of bits set
@@ -284,6 +294,13 @@ private:
      * \private
      */
 	sc_mutex mtx_Keepalive;
+
+    /*! \property sc_mutex mtx_HoldDown
+	 * \brief Arbitrates the setting of Hold-down time
+     * \details
+     * \private
+     */
+	sc_mutex mtx_HoldDown;
 
     /*! \property sc_mutex mtx_HoldDownFactor
 	 * \brief Arbitrates the setting of hold-down factor

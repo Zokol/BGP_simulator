@@ -56,6 +56,16 @@ void BGPSessionParameters::setHoldDownTime(void)
 {
 
     m_HoldDownTime = m_KeepaliveTime * m_HoldDownTimeFactor;
+
+}
+
+void BGPSessionParameters::setHoldDownTime(int p_HoldDownTime)
+{
+	mtx_HoldDown.lock();
+	m_HoldDownTime = p_HoldDownTime;
+
+	m_KeepaliveTime = m_HoldDownTime/m_HoldDownTimeFactor;
+    mtx_HoldDown.unlock();
 }
 
 void BGPSessionParameters::setNICMode(int p_Interface, int p_Mode)
@@ -102,6 +112,8 @@ void BGPSessionParameters::setLocalPref(int p_LocalPref)
 
 
 string BGPSessionParameters::getIPAsString(void){return m_IPConverter.convertIPToString(m_Prefix);}
+
+string BGPSessionParameters::getBGPIdentifier(void){return m_IPConverter.setIPLowOctet(m_IPConverter.convertIPToString(m_Prefix), 1); }
 
 string BGPSessionParameters::getIPMaskAsString(void){return m_IPConverter.convertMaskToString(m_PrefixMask);}
 
