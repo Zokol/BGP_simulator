@@ -631,8 +631,29 @@ class SimulationUI:
 		cmd = "<CMD>READ_TABLE," + str(router_index) + "</CMD>"
 		#print cmd
 		self.socket.send(cmd)
-		table = self.socket.recv(self.size)
-		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		#table = self.socket.recv(self.size)
+		table = ""
+		start_tag = False
+		while not done:
+			resp = self.socket.recv(self.size)
+			if resp.find("<TABLE>") != -1:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp[(resp.find("<TABLE>")+7):]
+					start_tag = True
+			if resp.find("</TABLE>") != -1:
+				table += resp[:resp.find("</TABLE>")]
+				done = True
+			elif start_tag:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp
+		#table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		
 		table = table.split(";")
 		#print table
 		del self.main_routing_table[:]
@@ -666,8 +687,30 @@ class SimulationUI:
 						break
 		table = table_str.split(";")
 		"""
-		table = self.socket.recv(self.size)
-		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		table = ""
+		start_tag = False
+		done = False
+		#table = self.socket.recv(self.size)
+		#table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
+		while not done:
+			resp = self.socket.recv(self.size)
+			if resp.find("<TABLE>") != -1:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp[(resp.find("<TABLE>")+7):]
+					start_tag = True
+			if resp.find("</TABLE>") != -1:
+				table += resp[:resp.find("</TABLE>")]
+				done = True
+			elif start_tag:
+				if resp.find("</TABLE>") != -1:
+					table = resp[(resp.find("<TABLE>")+7):table.find("</TABLE>")]
+					done = True
+				else:
+					table += resp
+		print table
 		table = table.split(";")
 		del self.all_routes[:]
 		self.all_routes.append(Route("TARGET_PREFIX", "TARGET", "ROUTE"))
