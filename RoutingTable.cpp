@@ -544,6 +544,7 @@ bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
     }
+    updateRoutingTable();
     return true;
 }
 
