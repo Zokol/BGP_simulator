@@ -179,13 +179,13 @@ string PacketProcessor::getDestination(void)
 
 /*! \sa PacketProcessor
  */
-bool PacketProcessor::forward(Packet& p_Frame)
+bool PacketProcessor::forward(Packet *p_Frame)
 {
 
 
     if(incrementalCheckSumUpdate())
         {
-            p_Frame.setPDU(m_PacketBuffer);
+            p_Frame->setPDU(m_PacketBuffer);
             resetPacketBuffer();
             return true;
         }
