@@ -369,6 +369,13 @@ private:
      */
     BGPMessage m_BGPIn;
 
+    /*! \property BGPMessage m_BGPInPrevious
+     *  \brief BGP message object
+     * \details The input for fsmRoutine
+     * \private
+     */
+    BGPMessage m_BGPInPrevious;
+
     /*! \property BGPMessage m_BGPOut
      *  \brief BGP message object
      * \details The output of fsmRoutine
@@ -411,6 +418,9 @@ private:
     sc_mutex m_KeepaliveFlagMutex;
    bool m_Client;
    bool m_BeeingHere;
+   unsigned long m_MsgId;
+   bool m_NewFsmInput;
+
 
 
     /***************************Private functions*****************/

@@ -10,7 +10,7 @@
 #include "BGPSession.hpp"
 #include "ReportGlobals.hpp"
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0), m_KeepaliveFlag(false), m_Client(false)
+BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(0), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0), m_KeepaliveFlag(false), m_Client(false), m_MsgId(0), m_NewFsmInput(false)
 {
 
 	setBGPCurrentState(IDLE);
@@ -46,7 +46,7 @@ BGPSession::BGPSession(sc_module_name p_ModuleName, BGPSessionParameters * const
 
 }
 
-BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0), m_KeepaliveFlag(false), m_Client(false)
+BGPSession::BGPSession(sc_module_name p_ModuleName, int p_PeeringInterface, BGPSessionParameters * const p_SessionParam):sc_module(p_ModuleName), m_PeerAS(-1), m_PeeringInterface(p_PeeringInterface), m_Config(p_SessionParam), m_ReSend(false), m_RetransmissonCount(0), m_KeepaliveFlag(false), m_Client(false), m_MsgId(0), m_NewFsmInput(false)
 {
 
 	setBGPCurrentState(IDLE);
@@ -124,6 +124,7 @@ bool BGPSession::isKeepaliveTime(void)
 
 void BGPSession::sendKeepalive(void)
 {
+	m_KeepaliveMsg.m_MsgId = m_MsgId++;
 	port_ToDataPlane->write(m_KeepaliveMsg);
 
 }
@@ -161,8 +162,16 @@ void BGPSession::fsmRoutine(void)
 
 		wait();
 		if(m_FsmInputBuffer.num_available() > 0)
+		{
+			m_BGPInPrevious = m_BGPIn;
 			m_FsmInputBuffer.read(m_BGPIn);
-
+			if(m_BGPInPrevious == m_BGPIn)
+				m_NewFsmInput = false;
+			else
+				m_NewFsmInput = true;
+		}
+		else
+			m_NewFsmInput = false;
 
 		//BGP FSM starts
 		switch (m_BGPCurrentState)
@@ -188,7 +197,7 @@ void BGPSession::fsmRoutine(void)
 			switch (m_ConnectionCurrentState)
 			{
 			case SYN:
-				if(m_Client && !m_BeeingHere) //client does
+				if(m_Client) //client does
 				{
 
 					fsmReportRoutineConnection("Connection state: CLIENT SYN");
@@ -196,6 +205,7 @@ void BGPSession::fsmRoutine(void)
 					//build the syn message
 					m_BGPOut.m_Type = TCP_SYN;
 					m_BGPOut.m_AS = m_TCPId;
+					m_BGPOut.m_MsgId = m_MsgId++;
 					port_ToDataPlane->write(m_BGPOut);
 					setRetransmissionTimer(TCP_RT_DELAY);
 					m_ConnectionCurrentState = ACK;
@@ -207,7 +217,7 @@ void BGPSession::fsmRoutine(void)
 					fsmReportRoutineConnection("Connection state: SERVER SYN");
 
 					//handle only if the input is for this session
-					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
 					{
 						if(m_BGPIn.m_Type == TCP_SYN)
 						{
@@ -215,6 +225,7 @@ void BGPSession::fsmRoutine(void)
 							m_TCPId = m_BGPIn.m_AS;
 							m_BGPOut = m_BGPIn;
 							m_BGPOut.m_Type = TCP_SYNACK;
+							m_BGPOut.m_MsgId = m_MsgId++;
 							port_ToDataPlane->write(m_BGPOut);
 							setRetransmissionTimer(TCP_RT_DELAY);
 							m_ConnectionCurrentState = ACK;
@@ -229,7 +240,7 @@ void BGPSession::fsmRoutine(void)
 				{
 					fsmReportRoutineConnection("Connection state: CLIENT ACK");
 					//handle only if the input is for this session
-					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
 					{
 						if(m_BGPIn.m_Type == TCP_SYNACK)
 						{
@@ -238,6 +249,7 @@ void BGPSession::fsmRoutine(void)
 								stopRetransmissionTimer();
 								m_BGPOut = m_BGPIn;
 								m_BGPOut.m_Type = TCP_ACK;
+								m_BGPOut.m_MsgId = m_MsgId++;
 								port_ToDataPlane->write(m_BGPOut);
 								m_ConnectionCurrentState = OPEN_SEND;
 							}
@@ -252,7 +264,7 @@ void BGPSession::fsmRoutine(void)
 				{
 					fsmReportRoutineConnection("Connection state: SERVER ACK");
 
-					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
 					{
 						if(m_BGPIn.m_Type == TCP_ACK)
 						{
@@ -282,6 +294,7 @@ void BGPSession::fsmRoutine(void)
 				m_BGPOut.m_AS = m_Config->getASNumber();
 				m_BGPOut.m_OutboundInterface = m_PeeringInterface;
 				//cout << name() << " peering interface is " << m_BGPOut.m_OutboundInterface << endl;
+				m_BGPOut.m_MsgId = m_MsgId++;
 				port_ToDataPlane->write(m_BGPOut);
 				setRetransmissionTimer(OPENSEND_RT_DELAY);
 				setBGPCurrentState(OPEN_SENT);
@@ -323,7 +336,7 @@ void BGPSession::fsmRoutine(void)
 			case OPEN_SENT:
 				fsmReportRoutineBGP("BGP state: OPEN_SENT");
 
-				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
 				{
 					//				cout << name() << ":: received an open message from bgp id:" << m_BGPIn.m_BGPIdentifier << ", type: " << m_BGPIn.m_Type << ":@ "<< sc_time_stamp() << endl;
 					if(m_BGPIn.m_Type == OPEN)
@@ -346,7 +359,7 @@ void BGPSession::fsmRoutine(void)
 			case OPEN_CONFIRM:
 				fsmReportRoutineBGP("BGP state: OPEN_CONFIRM");
 
-				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
 				{
 					if(m_BGPIn.m_Type == KEEPALIVE)
 					{
@@ -363,17 +376,49 @@ void BGPSession::fsmRoutine(void)
 			case ESTABLISHED:
 				fsmReportRoutineBGP("BGP state: ESTABLISHED");
 
-				if(m_BGPIn.m_OutboundInterface == m_PeeringInterface)
+				//verify that the peering interface is up
+				if(port_InterfaceControl->isUp())
 				{
-					resetHoldDown();
-				}
 
-				if(isKeepaliveTime())
-				{
-					sendKeepalive();
-					resetKeepalive();
-				}
+					//verify that the message is for this session and that it is not a duplicate
+					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
+					{
+						//reset hold-down timer
+						resetHoldDown();
+						//send updates to RT
+						if(m_BGPIn.m_Type == UPDATE)
+						{
+							port_ToRoutingTable->write(m_BGPIn);
 
+						}
+						//transition to IDLE state in case of notification
+						else if(m_BGPIn.m_Type == NOTIFICATION)
+						{
+							setBGPCurrentState(IDLE);
+						}
+						//in any other case send a notificaton to the peer and transition to the IDLE state
+						else
+						{
+//							m_BGPOut.m_Type = NOTIFICATION;
+//							m_BGPOut.m_BGPIdentifier = m_Config->getBGPIdentifier();
+//							m_BGPOut.m_AS = m_Config->getASNumber();
+//							m_BGPOut.m_OutboundInterface = m_PeeringInterface;
+//							m_BGPOut.m_MsgId = m_MsgId++;
+//							port_ToDataPlane->write(m_BGPOut);
+//							setBGPCurrentState(IDLE);
+						}
+					}
+
+					if(isKeepaliveTime())
+					{
+						sendKeepalive();
+						resetKeepalive();
+					}
+
+
+				}
+				else
+					setBGPCurrentState(IDLE);
 
 				break;
 			default:
