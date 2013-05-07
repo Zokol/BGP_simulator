@@ -79,6 +79,8 @@ public:
 
     int sToI(string p_Value);
 
+    unsigned sToU(string p_Value);
+
     sc_uint<32> convertIPToBinary(string p_Prefix);
 
     sc_uint<32> convertMaskToBinary(string p_Prefix);
@@ -88,6 +90,8 @@ public:
     string convertIPToString(sc_uint<32> p_IP);
 
     string convertMaskToString(sc_uint<32> p_Mask);
+
+    string setIPLowOctet(string p_IP, unsigned char p_Value);
 
     /*! \fn bool ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress); 
      * \brief Converts string type IPAddress to binary form in four element unsigned char array

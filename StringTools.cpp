@@ -167,6 +167,14 @@ int StringTools::sToI(string p_Value)
 	return l_Rtn;
 }
 
+unsigned StringTools::sToU(string p_Value)
+{
+
+	unsigned l_Rtn;
+	istringstream(p_Value) >> l_Rtn;
+	return l_Rtn;
+}
+
 
 sc_uint<32> StringTools::convertIPToBinary(string p_Prefix)
 {
@@ -256,7 +264,17 @@ string StringTools::convertMaskToString(sc_uint<32> p_Mask)
     return convert.str();
 }
 
+string StringTools::setIPLowOctet(string p_IP, unsigned char p_Value)
+{
+	int l_Ind = 0;
 
+	string l_IP = "";
+	l_Ind = p_IP.find_last_of(".",0);
+	l_IP = p_IP.substr(0, l_Ind);
+	l_IP += uToS(p_Value);
+	return l_IP;
+
+}
 /*! \sa StringTools
  */
 bool StringTools::ipToUChar(string p_IPAddress, unsigned char *p_IPBinAddress)
