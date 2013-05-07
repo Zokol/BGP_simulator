@@ -861,6 +861,7 @@ void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
     l_route = m_headOfRawTable;
     while(l_route->next != 0)
     {
+        l_route = l_route->next;
         advertiseRoute(l_route);
     }
 }
