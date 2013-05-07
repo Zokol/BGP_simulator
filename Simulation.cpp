@@ -149,7 +149,7 @@ void Simulation::simulationMain(void)
 #elif defined (_GUI)
 
 		if(prev_State != enum_State)
-//			//cout << "Current state is " << enum_State << endl;
+			cout << "Current state is " << enum_State << endl;
 
 		prev_State = enum_State;
 		///START:FSM of the socket server
