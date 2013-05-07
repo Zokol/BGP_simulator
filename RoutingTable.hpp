@@ -160,8 +160,12 @@ private:
     void addLocalRoute(Route *p_route);
 
     // Advertise this route to peers
+
     void advertiseRoute(Route * p_route, int p_Outputport);
 
+//=======
+//    void advertiseRoute(Route * p_route, int p_outPutIf);
+//>>>>>>> 4ee3ed4b07096339af037a9f7c39dbd08e896861
 
     // Construct new route from p_msg.
     bool createRoute(string p_msg,int p_outputPort, Route * p_route);

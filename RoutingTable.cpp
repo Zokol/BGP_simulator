@@ -57,6 +57,7 @@ void RoutingTable::routingTableMain(void)
     SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting") );
 
     //fillRoutingTable(); // IIRO testing
+
     // Initialize m_sessions
     for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1;i++)
         m_sessions.push_back(0);
@@ -165,6 +166,7 @@ void RoutingTable::routingTableMain(void)
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
                     //      antti oti pois kun buffaa muistia.
 
+
                 	if(!addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface))
                 	{
 
@@ -180,7 +182,24 @@ void RoutingTable::routingTableMain(void)
                 else
                 {
                     // Message was incorrectly constructed. Send NOTIFICATION
+//=======
+//                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+//                    updateRoutingTable();
+//                    //      antti oti pois kun buffaa muistia.
+//
+//                    for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
+//                    {
+//                        advertiseRoute(m_endOfRawTable,i);
+//                    }
+//>>>>>>> 4ee3ed4b07096339af037a9f7c39dbd08e896861
                 }
+            }
+            else if(m_BGPMsg.m_Type == NOTIFICATION && m_NewInputMsg)
+            {
+                cout << "In notification handling" << endl;
+                handleNotification(m_BGPMsg);
+            }
+
 /*
                 updateRoutingTable();
 
@@ -190,13 +209,9 @@ void RoutingTable::routingTableMain(void)
                 cout << "Main table: " << endl;
                 printRoutingTable();
                 */
-            }
-            else if(m_BGPMsg.m_Type == NOTIFICATION && m_NewInputMsg)
-            {
-                cout << "In notification handling" << endl;
-                handleNotification(m_BGPMsg);
-            }
-        }
+    }
+
+
 }
 
 /*
@@ -558,6 +573,7 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
 
+
     if(p_outputPort != m_RTConfig->getNumberOfInterfaces()-1)
     {
     	string l_AS;
@@ -567,7 +583,7 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     	{
     		l_AS = ASes.substr(position, ASes_end-position);
         	cout << " as from the message: " << ASes<< endl;
-
+        	//if own as was found, just return false
     		if(l_AS.compare(m_RTConfig->getASNumberAsString()) == 0)
     			return false;
     		position = ASes_end + 1;
@@ -579,6 +595,25 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 		ss << m_RTConfig->getASNumber();
 		ASes.append(ss.str());
     }
+//=======
+//
+//    stringstream ss;
+//    // Add own AS in AS-path
+//    if(ASes.size() == 0)
+//    {
+//        // Add own as without "-" in the beginning since this is the first AS-number
+//        ss << m_RTConfig->getASNumber();
+//        ASes.append(ss.str());
+//
+//    }
+//    else
+//    {
+//        ASes.append("-");
+//        ss << m_RTConfig->getASNumber();
+//        ASes.append(ss.str());
+//    }
+//
+//>>>>>>> 4ee3ed4b07096339af037a9f7c39dbd08e896861
 
     // Set the values to Route pointer
     p_route->prefix = IPAddress;
@@ -886,6 +921,7 @@ void RoutingTable::addLocalRoute(Route *p_route)
 }
 
 // Advertise this route to peers
+
 void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
 {
     stringstream ss;
@@ -900,6 +936,7 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
     BGPMessage * l_message = new BGPMessage;
     l_message->m_Message = routeAsString;
     l_message->m_Type = UPDATE;
+
     l_message->m_OutboundInterface = p_Outputport;
     if(l_message->m_OutboundInterface != m_RTConfig->getNumberOfInterfaces()-1)
     {
@@ -917,10 +954,12 @@ void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
     while(l_route->next != 0)
     {
         l_route = l_route->next;
+
     	if(l_route->OutputPort != p_outputPort)
     	{
     		advertiseRoute(l_route, p_outputPort);
     	}
+
     }
 }
 
