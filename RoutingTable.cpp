@@ -48,7 +48,7 @@ void RoutingTable::routingTableMain(void)
     //debugging
     SC_REPORT_INFO(g_ReportID, l_Report->newReportString("starting") );
 
-    fillRoutingTable(); // IIRO testing
+    //fillRoutingTable(); // IIRO testing
     // Initialize m_sessions
     for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1;i++)
         m_sessions.push_back(0);
@@ -121,8 +121,15 @@ void RoutingTable::routingTableMain(void)
                     }
                 }
 
+            if(m_ReceivingBuffer.num_available() > 0)
+            {
+            	cout << "update received" << endl;
+            	m_ReceivingBuffer.read(m_BGPMsg);
+            	m_NewInputMsg = true;
+            }
+            else
+            	m_NewInputMsg = false;
 
-            m_ReceivingBuffer.read(m_BGPMsg);
             if(!(count%20))
                 {
                     l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
@@ -134,7 +141,7 @@ void RoutingTable::routingTableMain(void)
             // port_Output->write(m_BGPMsg);
 
 
-            if((m_BGPMsg.m_Type = UPDATE))
+            if((m_BGPMsg.m_Type = UPDATE) && m_NewInputMsg)
             {
 
                // Read the first integer of the m_BGPMsg.m_Message. That indicates if this UPDATE-message is an advertise or a withdraw
@@ -167,7 +174,7 @@ void RoutingTable::routingTableMain(void)
                 printRoutingTable();
                 */
             }
-            else if(m_BGPMsg.m_Type == NOTIFICATION)
+            else if(m_BGPMsg.m_Type == NOTIFICATION && m_NewInputMsg)
             {
                 cout << "In notification handling" << endl;
                 handleNotification(m_BGPMsg);

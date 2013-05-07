@@ -261,7 +261,7 @@ private:
     //  */
     // bool updateRoute(void);
 
-
+    bool m_NewInputMsg;
 
 };
 
