@@ -61,23 +61,25 @@ void DataPlane::main(void)
                                 {
                                     m_BGPMsg = m_Packet.getBGPPayload();
                                     m_BGPMsg.m_OutboundInterface = i;
-									//cout << name() << "    received BGP message: AS " << m_BGPMsg.m_AS << " Interface " << m_BGPMsg.m_OutboundInterface << endl;
+                                    if(i < 2)
+									//cout << name() << ": received BGP message: Type " << m_BGPMsg.m_Type << " Interface " << m_BGPMsg.m_OutboundInterface << " @" << sc_time_stamp() << endl;
                                    port_ToControlPlane->write(m_BGPMsg);                            
                                 }
                         }
-                }     
 
-            if (m_BGPForwardingBuffer.num_available() > 0)
-                {
-                    
-                    // SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("Sending BGP message"));
-                    m_BGPForwardingBuffer.read(m_BGPMsg);
-					//cout << name() << "    sending BGP message: AS " << m_BGPMsg.m_AS << " Interface " << m_BGPMsg.m_OutboundInterface << endl;
-                    m_Packet.setBGPPayload(m_BGPMsg);
-                    m_Packet.setProtocolType(TYPE_BGP);
-                    port_ToInterface[m_BGPMsg.m_OutboundInterface]->write(m_Packet);
+
+                    if (m_BGPForwardingBuffer.num_available() > 0)
+                    {
+
+                    	//cout << name() << ":: num_available in session buffer: " << m_BGPForwardingBuffer.num_available() << endl;
+                    	// SC_REPORT_INFO(g_ReportID, m_Rpt.newReportString("Sending BGP message"));
+                    	m_BGPForwardingBuffer.read(m_BGPMsg);
+                    	//cout << name() << "    sending BGP message: AS " << m_BGPMsg.m_AS << " Interface " << m_BGPMsg.m_OutboundInterface << endl;
+                    	m_Packet.setBGPPayload(m_BGPMsg);
+                    	m_Packet.setProtocolType(TYPE_BGP);
+                    	port_ToInterface[m_BGPMsg.m_OutboundInterface]->write(m_Packet);
+                    }
                 }
-
             //Example how to resolve a route
             //port_ToRoutingTable->resolveRoute(1);
 
