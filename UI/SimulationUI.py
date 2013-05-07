@@ -636,6 +636,7 @@ class SimulationUI:
 		table = table.split(";")
 		#print table
 		del self.main_routing_table[:]
+		self.main_routing_table.append(Route("TARGET_PREFIX", "TARGET", "ROUTE"))
 		for row in table:
 			route = row.split(',')
 			if len(route) == 4:
@@ -669,6 +670,7 @@ class SimulationUI:
 		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
 		table = table.split(";")
 		del self.all_routes[:]
+		self.all_routes.append(Route("TARGET_PREFIX", "TARGET", "ROUTE"))
 		for row in table:
 			route = row.split(',')
 			if len(route) == 4:
@@ -703,8 +705,12 @@ class SimulationUI:
 		table = table[(table.find("<TABLE>")+7):table.find("</TABLE>")]
 		table = table.split(";")
 		del self.packet_list[:]
+		self.packet_list.append(Packet("SOURCE | TARGET", "PAYLOAD"))
 		for row in table:
-			self.packet_list.append(Packet(row, "Payload"))
+			print row
+			packet = row.split(',')
+			if len(packet) == 16:
+				self.packet_list.append(Packet(packet[13] + "|" + packet[14], packet[15]))
 		#	route = row.split(',')
 		#	if len(route) == 2:
 		#		self.all_routes.append(Route(route[1], route[2], route[3]))
