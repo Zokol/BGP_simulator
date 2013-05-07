@@ -384,11 +384,11 @@ void BGPSession::fsmRoutine(void)
 					//verify that the message is for this session and that it is not a duplicate
 					if(m_BGPIn.m_OutboundInterface == m_PeeringInterface && m_NewFsmInput)
 					{
-						//reset hold-down timer
-						resetHoldDown();
 						//send updates to RT
 						if(m_BGPIn.m_Type == UPDATE)
 						{
+							//reset hold-down timer
+							resetHoldDown();
 							port_ToRoutingTable->write(m_BGPIn);
 
 						}
@@ -397,15 +397,20 @@ void BGPSession::fsmRoutine(void)
 						{
 							setBGPCurrentState(IDLE);
 						}
+						else if(m_BGPIn.m_Type == KEEPALIVE)
+						{
+							//reset hold-down timer
+							resetHoldDown();
+						}
 						//in any other case send a notificaton to the peer and transition to the IDLE state
 						else
 						{
-//							m_BGPOut.m_Type = NOTIFICATION;
-//							m_BGPOut.m_BGPIdentifier = m_Config->getBGPIdentifier();
-//							m_BGPOut.m_AS = m_Config->getASNumber();
-//							m_BGPOut.m_OutboundInterface = m_PeeringInterface;
-//							port_ToDataPlane->write(m_BGPOut);
-//							setBGPCurrentState(IDLE);
+							m_BGPOut.m_Type = NOTIFICATION;
+							m_BGPOut.m_BGPIdentifier = m_Config->getBGPIdentifier();
+							m_BGPOut.m_AS = m_Config->getASNumber();
+							m_BGPOut.m_OutboundInterface = m_PeeringInterface;
+							port_ToDataPlane->write(m_BGPOut);
+							setBGPCurrentState(IDLE);
 						}
 					}
 
