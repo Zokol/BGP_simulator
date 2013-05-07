@@ -194,6 +194,8 @@ bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p
 
             p_TargetRouter->port_ForwardingInterface[p_TargetInterface]->bind(*(export_ReceivingInterface[p_LocalInterface]));
             m_RouterConfiguration->setNICMode(p_LocalInterface, CLIENT);
+            cout << name() << ", interface: " << p_LocalInterface << " connects to " << p_TargetRouter->name() << ", interface: " << p_TargetInterface << endl;
+            cout << name() << " interface " << p_LocalInterface << " is the client" << endl;
             interfaceUp(p_LocalInterface);
             p_TargetRouter->interfaceUp(p_TargetInterface);
             return true;

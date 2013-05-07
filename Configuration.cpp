@@ -73,6 +73,12 @@ void BGPSessionParameters::setNICMode(int p_Interface, int p_Mode)
 	m_NICMode[p_Interface] = p_Mode;
 }
 
+int BGPSessionParameters::getNICMode(int p_Interface)
+{
+  return m_NICMode[p_Interface];
+}
+
+
 bool BGPSessionParameters::isClient(int p_Interface)
 {
 	return m_NICMode[p_Interface] == CLIENT?true:false;
@@ -292,7 +298,14 @@ string RouterConfig::toString(void)
 }
 
 
-
+void RouterConfig::printNICModes(void)
+{
+	string l_Mode = "";
+	for (int i = 0; i < m_NumberOfInterfaces; i++) {
+		l_Mode = getNICMode(i)?"CLIENT":"SERVER";
+		cout << "Interface " << i << " has mode: " << l_Mode << endl;
+	}
+}
 
 /************* Implementation of SimulationConfig *****************/
 
@@ -379,7 +392,15 @@ SimulationConfig& SimulationConfig::operator = (const SimulationConfig& p_Origin
         }
     return *this;
 }
-
+void SimulationConfig::ifModes()
+{
+	cout << endl;
+	for (int i = 0; i < m_NumberOfRouters; i++) {
+		cout << "NIC modes of Router " << i << endl;
+		m_RouterConfiguration[i]->printNICModes();
+		cout << endl;
+	}
+}
 string SimulationConfig::toString(void)
 {
 

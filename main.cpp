@@ -94,6 +94,9 @@ int sc_main(int argc, char * argv [])
     bool setupLoop = true, retrans = false;
     cout << "Receiving from the GUI..." << endl;
 
+    //Simulation loop
+//    while(true)
+//    {
     ///Start receiving from the GUI
     while(setupLoop)
         {
@@ -335,7 +338,9 @@ int sc_main(int argc, char * argv [])
 
         }//End of receiving loop
 
-    cout << l_Config.toString().c_str() << endl;
+    //cout << l_Config.toString().c_str() << endl;
+
+    l_Config.ifModes();
     //Sync with the test client
     GUISocket << ACK;
     setupLoop = true;
@@ -500,6 +505,8 @@ cout << "START"<< endl;
 //  cout << l_Frame.outputPDU();
 //
   SC_REPORT_INFO(g_ReportID, StringTools("Main").newReportString("Simulation ends"));
-
+//#if defined (_GUI) || defined(_GUI_TEST)
+//    }
+//#endif
 return 0;
 }//end of main

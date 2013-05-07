@@ -61,7 +61,7 @@ void DataPlane::main(void)
                                 {
                                     m_BGPMsg = m_Packet.getBGPPayload();
                                     m_BGPMsg.m_OutboundInterface = i;
-                                    if(i < 2)
+//                                    if(i < 2)
 									//cout << name() << ": received BGP message: Type " << m_BGPMsg.m_Type << " Interface " << m_BGPMsg.m_OutboundInterface << " @" << sc_time_stamp() << endl;
                                    port_ToControlPlane->write(m_BGPMsg);                            
                                 }

@@ -165,9 +165,15 @@ void BGPSession::fsmRoutine(void)
 			m_BGPInPrevious = m_BGPIn;
 			m_FsmInputBuffer.read(m_BGPIn);
 			if(m_BGPInPrevious == m_BGPIn)
+			{
+				cout << name() << ": Received a duplicated message" << endl;
 				m_NewFsmInput = false;
+			}
 			else
+			{
 				m_NewFsmInput = true;
+//				cout << name() << ": received from if: " << m_BGPIn.m_OutboundInterface << endl;
+			}
 		}
 		else
 			m_NewFsmInput = false;
@@ -574,14 +580,21 @@ void BGPSession::setReSend(bool p_Value)
 void BGPSession::fsmReportRoutineBGP(string p_Report)
 {
 	if(m_BGPCurrentState != m_BGPPreviousState)
+	{
+//		if(m_BGPCurrentState == ACTIVE || m_BGPCurrentState == OPEN_SENT || m_BGPCurrentState == ESTABLISHED)
+//			cout << name() << " in BGP state " << m_BGPCurrentState << " @ " << sc_time_stamp() << endl;
 		SC_REPORT_INFO(g_ReportID, m_RTool.newReportString(p_Report));
+	}
 	m_BGPPreviousState = m_BGPCurrentState;
 
 }
 
 void BGPSession::fsmReportRoutineConnection(string p_Report)
 {
-	if(m_ConnectionCurrentState != m_ConnectionPreviousState && m_PeeringInterface == 0)
+	if(m_ConnectionCurrentState != m_ConnectionPreviousState)
+	{
+//		cout << name() << " in connection state: " << m_ConnectionCurrentState <<  " @ " << sc_time_stamp() << endl;
 		SC_REPORT_INFO(g_ReportID, m_RTool.newReportString(p_Report));
+	}
 	m_ConnectionPreviousState = m_ConnectionCurrentState;
 }

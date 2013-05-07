@@ -80,6 +80,8 @@ public:
      */
     void setNICMode(int p_Interface, int p_Mode);
 
+    int getNICMode(int p_Interface);
+
     /*! \fn int getKeepaliveTime(void); 
      *  \brief Returns the keepalive time
      *  \return integer value
@@ -434,8 +436,10 @@ public:
 
     Connection *getConnection(int p_ConnectionId);
 
+    void printNICModes(void);
 
     string toString(void);
+
 
     /*! \fn RouterConfig& operator = (const RouterConfig& p_Original);
      *  \brief clones the passed RouterConfig object to this object
@@ -509,6 +513,8 @@ public:
 
 
     SimulationConfig& operator = (const SimulationConfig& p_Original);
+
+    void ifModes(void);
 
     string toString(void);
 

@@ -73,7 +73,8 @@ Simulation::Simulation(sc_module_name p_ModuleName, ServerSocket& p_GUISocket, S
 
 	}
 
-	cout << "Simulation elaboration finished" << endl;
+	m_SimuConfiguration->ifModes();
+	//cout << "Simulation elaboration finished" << endl;
 	SC_THREAD(simulationMain);
 	sensitive << port_Clk.pos();
 
@@ -97,7 +98,7 @@ void Simulation::simulationMain(void)
 	m_Name.resetReportString();
 	m_Name.setBaseName(name());
 	SC_REPORT_INFO(g_DebugID, m_Name.newReportString("Starts"));
-cout << "Simulation main starts" << endl;
+//cout << "Simulation main starts" << endl;
 #ifdef _GUI_TEST
 
 	bool state = true;
@@ -129,13 +130,13 @@ cout << "Simulation main starts" << endl;
 			}
 			catch(SocketException e)
 			{
-				//cout << e.description() << endl;
+				////cout << e.description() << endl;
 				continue;
 			}
 
 			if(m_Word != "")
 			{
-				cout << "Received: " << m_Word << endl;
+				//cout << "Received: " << m_Word << endl;
 				m_GUISocket << m_Word;
 				if(m_Word.compare("STOP") == 0)
 					sc_stop();
@@ -143,12 +144,12 @@ cout << "Simulation main starts" << endl;
 		}
 
 		if(!(m_GUISocket.is_valid()))
-			cout << "socket not valid" << endl;
+			//cout << "socket not valid" << endl;
 
 #elif defined (_GUI)
 
 		if(prev_State != enum_State)
-			cout << "Current state is " << enum_State << endl;
+//			//cout << "Current state is " << enum_State << endl;
 
 		prev_State = enum_State;
 		///START:FSM of the socket server
@@ -216,7 +217,7 @@ void Simulation::socketRoutine(void)
 			m_Word = m_Word.substr(5);
 			m_Word = m_Word.substr(0,m_Word.find("</CMD>",0));
 
-			cout << "Word without tags: " << m_Word << endl;
+			//cout << "Word without tags: " << m_Word << endl;
 			unsigned l_Pos = m_Word.find(",",0);
 
 			if(l_Pos == string::npos)
@@ -282,7 +283,7 @@ void Simulation::socketRoutine(void)
 			//get the router ID
 			fieldRoutine(1);
 			//TODO: add readMessages() method into Router module
-			cout << "Reading packet" << endl;
+			//cout << "Reading packet" << endl;
 			m_Word = m_Host[m_IntBuffer[0]]->reaMessageBuffer();
 			//set next server state to SEND
 			enum_State = SEND;
@@ -385,7 +386,7 @@ void Simulation::socketRoutine(void)
 			//get the router ID
 			fieldRoutine(2);
 			//get pointer to the correct configuration object
-			cout << "0: " << m_IntBuffer[0] << "\n1: " << m_IntBuffer[1] << endl;
+			//cout << "0: " << m_IntBuffer[0] << "\n1: " << m_IntBuffer[1] << endl;
 
 			RouterConfig *l_RConfig = m_SimuConfiguration->getRouterConfigurationPtr(m_IntBuffer[0]);
 			l_RConfig->setKeepaliveTime(m_IntBuffer[1]);
@@ -486,7 +487,7 @@ bool Simulation::fieldRoutine(int p_NumOfFields)
 
 	bufferToInt(p_NumOfFields);
 
-	cout << i << " field(s) was(were) read." << endl;
+	//cout << i << " field(s) was(were) read." << endl;
 	return true;
 }
 
