@@ -33,15 +33,23 @@ RoutingTable::~RoutingTable()
 }
 
 
-
 void RoutingTable::routingTableMain(void)
 {
     m_headOfRawTable = new Route();
     m_endOfRawTable = new Route();
     m_iterator = new Route();
-
+    Route *l_LocalRoute = new Route();
+    l_LocalRoute->id = 1;
+    l_LocalRoute->prefix = m_RTConfig->getIPAsString();
+    l_LocalRoute->mask = StringTools().sToI(m_RTConfig->getIPMaskAsString());
+    l_LocalRoute->ASes = StringTools().iToS(m_RTConfig->getASNumber());
+    l_LocalRoute->OutputPort = m_RTConfig->getNumberOfInterfaces()-1;
+ //   l_LocalRoute->next = 0;
     m_headOfRoutingTable = new Route();
     m_endOfRoutingTable = new Route();
+
+    addLocalRoute(l_LocalRoute);
+
 
     StringTools *l_Report = new StringTools(name());
 
@@ -86,8 +94,9 @@ void RoutingTable::routingTableMain(void)
                             continue;
                         else if(m_sessions.at(i) == 0) // Case 2
                             {
+                        	cout << "mainostan kun sessio tuli ylös" << endl;
                                 // Change this session's state in m_sessions
-                                m_sessions.at(i) = 0;
+                                m_sessions.at(i) = 1;
                                 // Send own RT to peer
                                 advertiseRawRoutingTable(i);
 
@@ -123,7 +132,6 @@ void RoutingTable::routingTableMain(void)
 
             if(m_ReceivingBuffer.num_available() > 0)
             {
-            	cout << "update received" << endl;
             	m_ReceivingBuffer.read(m_BGPMsg);
             	m_NewInputMsg = true;
             }
@@ -156,9 +164,18 @@ void RoutingTable::routingTableMain(void)
 
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
                     //      antti oti pois kun buffaa muistia.
-                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+
+                	if(!addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface))
+                	{
+
+                		continue;
+                	}
                     //      antti oti pois kun buffaa muistia.
-                    advertiseRoute(m_endOfRawTable);
+                    for (int k = 0; k < m_RTConfig->getNumberOfInterfaces()-1; k++) {
+                    	if(m_BGPMsg.m_OutboundInterface != k)
+                    		advertiseRoute(m_endOfRawTable, k);
+
+					}
                }
                 else
                 {
@@ -484,34 +501,35 @@ void RoutingTable::printOneRoute(Route p_route)
 /*
     Add new route to RawRoutingTable
 */
-void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
+bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 {
+
     Route * newRoute = new Route();
 
     // Get ID for this new route
     newRoute->id = (m_endOfRawTable->id)+1;
 
     // Set data to newRoute in CreateRoute(...)
-    createRoute(p_msg,OutputPort,newRoute);
-
-
+   if(!createRoute(p_msg,OutputPort,newRoute))
+	   return false;
     // Add new Route object to the RoutingTable
 
     // Check if the RoutingTable is empty
     if(m_headOfRawTable->next == 0)
     {
-        // RoutinTable was empty. Add the first item in it. It's also the last item of it.
+       // RoutinTable was empty. Add the first item in it. It's also the last item of it.
         m_headOfRawTable->next = newRoute;
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
     }
     else
     {
-        // RoutinTable wasn't empty. Add new Route object in it. Add it to the end.
+       // RoutinTable wasn't empty. Add new Route object in it. Add it to the end.
         m_endOfRawTable->next = newRoute;
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
     }
+    return true;
 }
 
 /*
@@ -519,11 +537,11 @@ void RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
     0 or 1,IP,Mask,ASes(e.g. 1,10.255.0.100,8,550-7564-4)
     Parse message and collect IP,Mask,ASes which are separated by ","-mark
 */
-void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
+bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 {
     // Use these to collect data separetad by semicolon
     int position = 2;
-    int IP_end,Mask_end, ASes_end;
+    unsigned IP_end,Mask_end, ASes_end;
 
     for(int i=0;i<3;i++)
     {
@@ -540,18 +558,34 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
 
-    // Add own AS in AS-path
-    ASes.append("-");
-    stringstream ss;
-    ss << m_RTConfig->getASNumber();
-    ASes.append(ss.str());
+    if(p_outputPort != m_RTConfig->getNumberOfInterfaces()-1)
+    {
+    	string l_AS;
+    	position = 0;
+    	//Check if own AS exist in the path
+    	while(ASes_end != string::npos)
+    	{
+    		l_AS = ASes.substr(position, ASes_end-position);
+        	cout << " as from the message: " << ASes<< endl;
 
+    		if(l_AS.compare(m_RTConfig->getASNumberAsString()) == 0)
+    			return false;
+    		position = ASes_end + 1;
+        	ASes_end = ASes.find("-",position);
+    	}
+		// Add own AS in AS-path
+		ASes.append("-");
+		stringstream ss;
+		ss << m_RTConfig->getASNumber();
+		ASes.append(ss.str());
+    }
 
     // Set the values to Route pointer
     p_route->prefix = IPAddress;
     p_route->mask = atoi(Mask.c_str());
     p_route->ASes = ASes;
     p_route->OutputPort = p_outputPort;
+    return true;
 }
 
 /*
@@ -837,9 +871,22 @@ void RoutingTable::removeLocalPref(int p_AS)
 
     }
 }
+void RoutingTable::addLocalRoute(Route *p_route)
+{
+    stringstream ss;
+    string routeAsString = "1,";  // It's advertisement, not withdraw, so string begins by "1"
+    routeAsString.append(p_route->prefix);
+    routeAsString.append(",");
+    ss << p_route->mask;
+    routeAsString.append(ss.str());
+    routeAsString.append(",");
+    routeAsString.append(p_route->ASes);
+    addRouteToRawTable(routeAsString, p_route->OutputPort);
+
+}
 
 // Advertise this route to peers
-void RoutingTable::advertiseRoute(Route * p_route)
+void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
 {
     stringstream ss;
     string routeAsString = "1,";  // It's advertisement, not withdraw, so string begins by "1"
@@ -853,23 +900,27 @@ void RoutingTable::advertiseRoute(Route * p_route)
     BGPMessage * l_message = new BGPMessage;
     l_message->m_Message = routeAsString;
     l_message->m_Type = UPDATE;
-    l_message->m_OutboundInterface = p_route->OutputPort;
-    cout << "HERE: " << l_message->m_OutboundInterface << endl;				// cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << " and identifier: "<< port_Session[i]->getPeerIdentifier() << endl;
-
-    port_Output->write(*l_message);
-    delete l_message;
+    l_message->m_OutboundInterface = p_Outputport;
+    if(l_message->m_OutboundInterface != m_RTConfig->getNumberOfInterfaces()-1)
+    {
+    	port_Output->write(*l_message);
+    }
+    	delete l_message;
 
 }
 
 // Advertise the whole table to given peer
 void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
 {
-    Route * l_route = new Route;
+    Route * l_route;
     l_route = m_headOfRawTable;
     while(l_route->next != 0)
     {
         l_route = l_route->next;
-        advertiseRoute(l_route);
+    	if(l_route->OutputPort != p_outputPort)
+    	{
+    		advertiseRoute(l_route, p_outputPort);
+    	}
     }
 }
 

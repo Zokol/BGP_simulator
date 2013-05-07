@@ -114,7 +114,7 @@ public:
      */
     SC_HAS_PROCESS(RoutingTable);
 
-    void addRouteToRawTable(string p_msg, int p_outputPort);
+    bool addRouteToRawTable(string p_msg, int p_outputPort);
     //void setMED(int p_routeId,)
 
     // Give preferred AS and some preference value to it.
@@ -157,11 +157,14 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
+    void addLocalRoute(Route *p_route);
+
     // Advertise this route to peers
-    void advertiseRoute(Route * p_route);
+    void advertiseRoute(Route * p_route, int p_Outputport);
+
 
     // Construct new route from p_msg.
-    void createRoute(string p_msg,int p_outputPort, Route * p_route);
+    bool createRoute(string p_msg,int p_outputPort, Route * p_route);
 
     // Handle NOTIFICATION message type
     void handleNotification (BGPMessage NOTIFICATION_message);

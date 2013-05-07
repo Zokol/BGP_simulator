@@ -198,6 +198,8 @@ public:
      */
     int getASNumber(void);
 
+    string getASNumberAsString(void);
+
     /*! \fn int getMED(void);
      *  \brief Returns the Multi-exit discriminator value
      *  \return integer value

@@ -129,6 +129,8 @@ sc_uint<32> BGPSessionParameters::getPrefixMask(void){return m_PrefixMask;}
 
 int BGPSessionParameters::getASNumber(void){return m_ASNumber;}
 
+string BGPSessionParameters::getASNumberAsString(void){ return m_IPConverter.iToS(m_ASNumber);}
+
 int BGPSessionParameters::getMED(void){return m_MED;}
 
 int BGPSessionParameters::getLocalPref(void){return m_LocalPref;}
