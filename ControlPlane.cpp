@@ -37,8 +37,10 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
 		//Export the session interface for RT
 		export_Session[i] = new sc_export<BGPSession_If>;
 		export_Session[i]->bind(*m_BGPSessions[i]);
+		m_BGPSessions[i]->port_Clk(port_Clk);
 		export_InterfaceControl[i] = new sc_export<Interface_If>;
 		export_RoutingTable[i] = new sc_export<Output_If>;
+
 	}
 
 	SC_THREAD(controlPlaneMain);
@@ -80,7 +82,7 @@ void ControlPlane::controlPlaneMain(void)
 //	}
 	srand(time(NULL));
 
-
+unsigned MsgCount = 0, fsmCount = 0;
 	//The main thread of the control plane starts
 	while(true)
 	{
@@ -90,13 +92,11 @@ void ControlPlane::controlPlaneMain(void)
 		if(m_ReceivingBuffer.num_available() > 0)
 		{
 			m_ReceivingBuffer.read(m_BGPMsgIn);
-		}
 
-		// process all the sessions
-		for (int i = 0; i < m_BGPConfig->getNumberOfInterfaces()-1; i++)
-		{
-
-			m_BGPSessions[i]->fsmRoutine(m_BGPMsgIn);
+//			cout << name() << ": Session: " << m_BGPMsgIn.m_OutboundInterface << " MSG_TYPE: " << m_BGPMsgIn.m_Type << " @ " << sc_time_stamp() << endl;
+			MsgCount++;
+			m_BGPSessions[m_BGPMsgIn.m_OutboundInterface]->m_FsmInputBuffer.write(m_BGPMsgIn);
+			fsmCount++;
 		}
 
 		//Check if there's messages in the input buffer
