@@ -167,6 +167,12 @@ void RoutingTable::routingTableMain(void)
                     }
                 }
             }
+            else if(m_BGPMsg.m_Type == NOTIFICATION && m_NewInputMsg)
+            {
+                cout << "In notification handling" << endl;
+                handleNotification(m_BGPMsg);
+            }
+
 /*
                 updateRoutingTable();
 
@@ -178,13 +184,7 @@ void RoutingTable::routingTableMain(void)
                 */
     }
 
-            }
-            else if(m_BGPMsg.m_Type == NOTIFICATION && m_NewInputMsg)
-            {
-                cout << "In notification handling" << endl;
-                handleNotification(m_BGPMsg);
-            }
-        }
+
 }
 
 /*
