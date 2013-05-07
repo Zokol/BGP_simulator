@@ -55,6 +55,7 @@ void RoutingTable::routingTableMain(void)
 
 
     int count = 0;
+
     //The main thread of routing table module starts
     while(true)
         {
@@ -79,7 +80,6 @@ void RoutingTable::routingTableMain(void)
             }
             for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
                 {
-					// cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << " and identifier: "<< port_Session[i]->getPeerIdentifier() << endl;
                    if(port_Session[i]->isSessionValid())
                     {
                         if(m_sessions.at(i) == 1)   // Case 1
@@ -137,7 +137,7 @@ void RoutingTable::routingTableMain(void)
             if((m_BGPMsg.m_Type = UPDATE))
             {
 
-                // Read the first integer of the m_BGPMsg.m_Message. That indicates if this UPDATE-message is an advertise or a withdraw
+               // Read the first integer of the m_BGPMsg.m_Message. That indicates if this UPDATE-message is an advertise or a withdraw
 
                 if(m_BGPMsg.m_Message.substr(0,1) == "0")
                 {
@@ -152,15 +152,13 @@ void RoutingTable::routingTableMain(void)
                     addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
                     updateRoutingTable();
                     //      antti oti pois kun buffaa muistia.
+
                     for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
                     {
                         advertiseRoute(m_endOfRawTable,i);
                     }
                 }
-                else
-                {
-                    // Message was incorrectly constructed. Send NOTIFICATION
-                }
+            }
 /*
                 updateRoutingTable();
 
@@ -170,13 +168,8 @@ void RoutingTable::routingTableMain(void)
                 cout << "Main table: " << endl;
                 printRoutingTable();
                 */
-            }
-            else if(m_BGPMsg.m_Type == NOTIFICATION)
-            {
-                cout << "In notification handling" << endl;
-                handleNotification(m_BGPMsg);
-            }
-        }
+    }
+
 }
 
 /*
@@ -537,11 +530,22 @@ void RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string Mask = p_msg.substr((IP_end+1),(Mask_end-IP_end-1));  // -1 to remove ";"-sign
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
 
-    // Add own AS in AS-path
-    ASes.append("-");
+
     stringstream ss;
-    ss << m_RTConfig->getASNumber();
-    ASes.append(ss.str());
+    // Add own AS in AS-path
+    if(ASes.size() == 0)
+    {
+        // Add own as without "-" in the beginning since this is the first AS-number
+        ss << m_RTConfig->getASNumber();
+        ASes.append(ss.str());
+
+    }
+    else
+    {
+        ASes.append("-");
+        ss << m_RTConfig->getASNumber();
+        ASes.append(ss.str());
+    }
 
 
     // Set the values to Route pointer
@@ -851,7 +855,10 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_outPutIf)
     l_message->m_Message = routeAsString;
     l_message->m_Type = UPDATE;
     l_message->m_OutboundInterface = p_outPutIf;
+    cout << "HERE: " << l_message->m_OutboundInterface << endl;				// cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << " and identifier: "<< port_Session[i]->getPeerIdentifier() << endl;
+
     port_Output->write(*l_message);
+    delete l_message;
 
 }
 
