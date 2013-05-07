@@ -270,6 +270,10 @@ private:
 
     bool m_NewInputMsg;
 
+    BGPMessage m_PreviousInput;
+
+    BGPMessage m_UpdateOut;
+
 };
 
 

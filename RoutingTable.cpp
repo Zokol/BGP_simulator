@@ -38,16 +38,18 @@ void RoutingTable::routingTableMain(void)
     m_headOfRawTable = new Route();
     m_endOfRawTable = new Route();
     m_iterator = new Route();
+
+ //   l_LocalRoute->next = 0;
+    m_headOfRoutingTable = new Route();
+    m_endOfRoutingTable = new Route();
+
+    //add local AS route in the routing table
     Route *l_LocalRoute = new Route();
     l_LocalRoute->id = 1;
     l_LocalRoute->prefix = m_RTConfig->getIPAsString();
     l_LocalRoute->mask = StringTools().sToI(m_RTConfig->getIPMaskAsString());
     l_LocalRoute->ASes = StringTools().iToS(m_RTConfig->getASNumber());
     l_LocalRoute->OutputPort = m_RTConfig->getNumberOfInterfaces()-1;
- //   l_LocalRoute->next = 0;
-    m_headOfRoutingTable = new Route();
-    m_endOfRoutingTable = new Route();
-
     addLocalRoute(l_LocalRoute);
 
 
@@ -63,7 +65,6 @@ void RoutingTable::routingTableMain(void)
         m_sessions.push_back(0);
 
 
-    int count = 0;
 
     //The main thread of routing table module starts
     while(true)
@@ -133,18 +134,15 @@ void RoutingTable::routingTableMain(void)
 
             if(m_ReceivingBuffer.num_available() > 0)
             {
+//            	cout << name() << " receiving buffer has: " << m_ReceivingBuffer.num_available() << endl;
             	m_ReceivingBuffer.read(m_BGPMsg);
-            	m_NewInputMsg = true;
+            	if(m_PreviousInput == m_BGPMsg)
+            		m_NewInputMsg = false;
+            	else
+            		m_NewInputMsg = true;
             }
             else
             	m_NewInputMsg = false;
-
-            if(!(count%20))
-                {
-                    l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
-                    SC_REPORT_INFO(g_DebugID, l_Report->appendReportString(m_BGPMsg.m_OutboundInterface) );
-                }
-            count++;
 
             ///BGP notification and update output port
             // port_Output->write(m_BGPMsg);
@@ -166,7 +164,7 @@ void RoutingTable::routingTableMain(void)
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
                     //      antti oti pois kun buffaa muistia.
 
-
+                	cout << m_BGPMsg << endl;
                 	if(!addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface))
                 	{
 
@@ -174,9 +172,12 @@ void RoutingTable::routingTableMain(void)
                 	}
                     //      antti oti pois kun buffaa muistia.
                     for (int k = 0; k < m_RTConfig->getNumberOfInterfaces()-1; k++) {
-                    	if(m_BGPMsg.m_OutboundInterface != k)
+                    	if(m_BGPMsg.m_OutboundInterface != k && port_Session[k]->isSessionValid())
+                    	{
+//                    		cout << name() << " advertises to the peer in interface: " << k << endl;
                     		advertiseRoute(m_endOfRawTable, k);
 
+                    	}
 					}
                }
                 else
@@ -933,6 +934,8 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
     routeAsString.append(ss.str());
     routeAsString.append(",");
     routeAsString.append(p_route->ASes);
+//    routeAsString.append("-");
+//    routeAsString.append(m_RTConfig->getASNumberAsString());
 
     BGPMessage * l_message = new BGPMessage;
     l_message->m_Message = routeAsString;

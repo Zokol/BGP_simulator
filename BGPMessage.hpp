@@ -84,6 +84,8 @@ public:
      * \public
      */
     string m_BGPIdentifier;
+    //    routeAsString.append("-");
+    //    routeAsString.append(m_RTConfig->getASNumberAsString());
 
     /*! \brief The originator's BGP identifier
      * \details
@@ -133,7 +135,7 @@ public:
     inline friend ostream& operator << (ostream& os,  BGPMessage const & p_Msg )
     {
 
-        os  << " BGP type: " << p_Msg.m_Type  << " BGP identifier: " << p_Msg.m_BGPIdentifier  << " BGP session interface: " << p_Msg.m_OutboundInterface  << " AS number: " << p_Msg.m_AS  << " Message: " << p_Msg.m_Message;
+        os  << " BGP type: " << p_Msg.m_Type  << " BGP identifier: " << p_Msg.m_BGPIdentifier  << " BGP session interface: " << p_Msg.m_OutboundInterface  << " AS number: " << p_Msg.m_AS  << endl <<"MsgId: " << p_Msg.m_MsgId << " Hold-down: " << p_Msg.m_HoldDownTime << " Message: " << p_Msg.m_Message;
         return os;
     }
 
