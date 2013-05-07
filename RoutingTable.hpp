@@ -211,6 +211,9 @@ private:
     // Return the length of the table
     int tableLength();
 
+    // Advertise the whole RawRoutingTable to one peer
+    void advertiseRawRoutingTable(int p_outputPort);
+
 
     // Just for testing?
     void printRoutingTable();

@@ -65,7 +65,7 @@ void RoutingTable::routingTableMain(void)
             Check if some of the sessions has gone up or down
             session up - was it up before?
                 Case 1. yes -> do nothing
-                Case 2. no -> get its RT
+                Case 2. no -> send own RT to this new lovely peer
             session down - was it down before?
                 Case 3. yes -> do nothing
                 Case 4. no -> remove from RTs and send withdraws
@@ -89,7 +89,11 @@ void RoutingTable::routingTableMain(void)
                             {
                                 // Change this session's state in m_sessions
                                 m_sessions.at(i) = 0;
-                                // Get RT from this new PEER
+                                // Send own RT to peer
+                                advertiseRawRoutingTable(i);
+
+
+
                             }
                     }
                     else if(!(port_Session[i]->isSessionValid()))
@@ -104,9 +108,12 @@ void RoutingTable::routingTableMain(void)
                             while(m_iterator->next != 0)
                             {
                                 if(m_iterator->OutputPort == i)
+                                {
+                                    // Clear m_iterator->ASpath for sendWithdraw.
+                                    m_iterator->ASes = "";
                                     sendWithdraw(*m_iterator);
+                                }
                             }
-
                             // Remove all the router from RawRoutingTable where outputport is i.
                             deleteRoutes(i);
 
@@ -116,7 +123,9 @@ void RoutingTable::routingTableMain(void)
                 }
 
 
-            m_ReceivingBuffer.read(m_BGPMsg);
+            //m_ReceivingBuffer.read(m_BGPMsg);
+            m_BGPMsg.m_Type = UPDATE;
+            m_BGPMsg.m_Message = "1,100.251.0.0,16,999-888-777";
             if(!(count%20))
                 {
                     l_Report->newReportString("Received BGP message from CP with outbound interface set to ");
@@ -142,8 +151,10 @@ void RoutingTable::routingTableMain(void)
                 {
 
                     // This is an advertise-message. Add it to own RawTable, add own AS in AS-path and then forward the message to peers
-                    //      antti oti pois kun buffaa muistia              addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
-                    //      antti oti pois kun buffaa muistia              advertiseRoute(m_endOfRawTable);
+                    //      antti oti pois kun buffaa muistia.
+                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
+                    //      antti oti pois kun buffaa muistia.
+                    advertiseRoute(m_endOfRawTable);
                 }
                 else
                 {
@@ -826,7 +837,32 @@ void RoutingTable::removeLocalPref(int p_AS)
 // Advertise this route to peers
 void RoutingTable::advertiseRoute(Route * p_route)
 {
+    stringstream ss;
+    string routeAsString = "1,";  // It's advertisement, not withdraw, so string begins by "1"
+    routeAsString.append(p_route->prefix);
+    routeAsString.append(",");
+    ss << p_route->mask;
+    routeAsString.append(ss.str());
+    routeAsString.append(",");
+    routeAsString.append(p_route->ASes);
 
+    BGPMessage * l_message = new BGPMessage;
+    l_message->m_Message = routeAsString;
+    l_message->m_Type = UPDATE;
+    l_message->m_OutboundInterface = p_route->OutputPort;
+    port_Output->write(*l_message);
+
+}
+
+// Advertise the whole table to given peer
+void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
+{
+    Route * l_route = new Route;
+    l_route = m_headOfRawTable;
+    while(l_route->next != 0)
+    {
+        advertiseRoute(l_route);
+    }
 }
 
 
