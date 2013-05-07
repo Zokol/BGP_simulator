@@ -56,6 +56,7 @@ void RoutingTable::routingTableMain(void)
 
 
     int count = 0;
+
     //The main thread of routing table module starts
     while(true)
         {
@@ -80,7 +81,6 @@ void RoutingTable::routingTableMain(void)
             }
             for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
                 {
-					// cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << " and identifier: "<< port_Session[i]->getPeerIdentifier() << endl;
                    if(port_Session[i]->isSessionValid())
                     {
                         if(m_sessions.at(i) == 1)   // Case 1
@@ -140,7 +140,7 @@ void RoutingTable::routingTableMain(void)
             if((m_BGPMsg.m_Type = UPDATE))
             {
 
-                // Read the first integer of the m_BGPMsg.m_Message. That indicates if this UPDATE-message is an advertise or a withdraw
+               // Read the first integer of the m_BGPMsg.m_Message. That indicates if this UPDATE-message is an advertise or a withdraw
 
                 if(m_BGPMsg.m_Message.substr(0,1) == "0")
                 {
@@ -155,7 +155,7 @@ void RoutingTable::routingTableMain(void)
                     addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
                     //      antti oti pois kun buffaa muistia.
                     advertiseRoute(m_endOfRawTable);
-                }
+               }
                 else
                 {
                     // Message was incorrectly constructed. Send NOTIFICATION
@@ -850,7 +850,10 @@ void RoutingTable::advertiseRoute(Route * p_route)
     l_message->m_Message = routeAsString;
     l_message->m_Type = UPDATE;
     l_message->m_OutboundInterface = p_route->OutputPort;
+    cout << "HERE: " << l_message->m_OutboundInterface << endl;				// cout<< name() << " ----    ----  Session " << i << " has AS number: " << port_Session[i]->getPeerAS()  << " and identifier: "<< port_Session[i]->getPeerIdentifier() << endl;
+
     port_Output->write(*l_message);
+    delete l_message;
 
 }
 
