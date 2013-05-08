@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define CONF_STR "<SIM_CONFIG>1,192.168.1.0/24,80,90,60,3,0_0_1;2,192.168.2.0/24,80,90,60,3,0_0_0</SIM_CONFIG>" 
+#define CONF_STR "<SIM_CONFIG>101,1.1.1.0/24,0,100,60,3,0_0_1;201,2.2.2.0/24,0,100,60,3,0_0_0,1_0_2;301,3.1.0.0/16,0,100,60,3,0_1_1</SIM_CONFIG>"
 
 
 int main ( int argc, char **argv )
@@ -87,7 +87,50 @@ int main ( int argc, char **argv )
 				if(reply != "")
 				{
 
-					std::cout << "Received: " << reply << std::endl;
+					if(reply.find("<TABLE>") != string::npos)
+
+					{
+
+						if(l_SInput.substr(0,10).compare("READ_TABLE") == 0)
+						{
+
+						unsigned start = 7, end = 0, starT = 0, enD = 0, count = 0;
+
+						cout << endl << "Routing table of router " << l_SInput.substr(11) << endl << "*********************************" << endl;
+						string line = "", field = "";;
+						do {
+							end = reply.find(";", start);
+							line = reply.substr(start,end-start);
+//							cout << line << endl;
+							if(line.compare("</TABLE>") == 0)
+								break;
+							enD = 0;
+							count = 0;
+							do
+							{
+								enD = line.find(",", starT);
+								field = line.substr(starT,enD-starT);
+								starT = enD + 1;
+								if(count == 0)
+									cout << "ID: " << field;
+								else if(count == 1)
+									cout << " | Prefix: " << field;
+								else if(count == 2)
+									cout << "/" << field;
+								else if(count == 3)
+									cout << " | AS_path: " << field << endl;
+								count++;
+							}while(enD != string::npos);
+
+							 start = end+1;
+
+						}while(end != string::npos);
+						cout << endl << "*********************************" << endl;
+						}
+					}
+					else
+						std::cout << "Received: " << reply << std::endl;
+
 					if(reply.compare("ACK") == 0 && l_SInput.compare("STOP") == 0)
 						flag = false;
 					if(reply.compare("STOP") == 0)
