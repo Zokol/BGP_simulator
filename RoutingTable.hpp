@@ -20,6 +20,7 @@
 #include "Configuration.hpp"
 #include "BGPSession_If.hpp"
 #include "Output_If.hpp"
+#include "StringTools.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -28,6 +29,8 @@ using namespace sc_dt;
 
 #ifndef _ROUTINGTABLE_H_
 #define _ROUTINGTABLE_H_
+
+#define AS_EMPTY "#"
 
 struct Route
 {
@@ -275,6 +278,10 @@ private:
     BGPMessage m_UpdateOut;
 
     sc_time limit;
+
+    StringTools m_Reporter;
+
+    string m_AS;
 
 };
 

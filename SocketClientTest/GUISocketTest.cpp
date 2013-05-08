@@ -74,7 +74,7 @@ int main ( int argc, char **argv )
 
 				l_Cmd += l_SInput;
 				l_Cmd += "</CMD>";
-				cout << "Command: " << l_Cmd << endl;
+//				cout << "Command: " << l_Cmd << endl;
 				client_socket << l_Cmd;
 				state = false;
 			}
@@ -92,11 +92,13 @@ int main ( int argc, char **argv )
 						string line = "", field = "";
 						unsigned start = 7, end = 0, starT = 0, enD = 0, count = 0;
 
-						if(l_SInput.substr(0,10).compare("READ_TABLE") == 0)
+						if(l_SInput.substr(0,10).compare("READ_TABLE") == 0 || l_SInput.substr(0,14).compare("READ_RAW_TABLE") == 0)
 						{
 
-
-						cout << endl << "Routing table of router " << l_SInput.substr(11) << endl << "*********************************" << endl;
+							if(l_SInput.substr(0,10).compare("READ_TABLE") == 0)
+								cout << endl << "Routing table of router " << l_SInput.substr(11) << endl << "*********************************" << endl;
+							else
+								cout << endl << "Raw table of router " << l_SInput.substr(15) << endl << "*********************************" << endl;
 
 						do {
 							end = reply.find(";", start);

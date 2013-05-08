@@ -310,7 +310,7 @@ void Simulation::socketRoutine(void)
 			//get the router ID
 			fieldRoutine(3);
 
-			if(m_Host[m_IntBuffer[1]]->sendMessage(m_FieldBuffer[0],m_SimuConfiguration->getRouterConfiguration(m_IntBuffer[1]).getIPAsString(), m_FieldBuffer[2]))
+			if(m_Host[m_IntBuffer[1]]->sendMessage(m_FieldBuffer[0],m_SimuConfiguration->getRouterConfiguration(m_IntBuffer[1]).getBGPIdentifier(), m_FieldBuffer[2]))
 				m_Word = ACK;
 			else
 				m_Word = NACK;

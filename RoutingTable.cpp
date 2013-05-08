@@ -10,25 +10,27 @@
 
 
 #include "RoutingTable.hpp"
-#include "StringTools.hpp"
 #include "ReportGlobals.hpp"
 #include <algorithm>
 
 
 
 
-RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig), limit(300, SC_SEC)
+RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig), limit(300, SC_SEC), m_Reporter(""), m_AS("")
 {
 
 	m_UpdateOut.m_AS = m_RTConfig->getASNumber();
 	m_UpdateOut.m_BGPIdentifier = m_RTConfig->getBGPIdentifier();
 	m_UpdateOut.m_HoldDownTime = m_RTConfig->getHoldDownTime();
 
-
+	m_Reporter.setBaseName(name());
     //buffer's input
 
+	m_AS = m_RTConfig->getASNumberAsString();
     SC_THREAD(routingTableMain);
     sensitive << port_Clk.pos();
+    SC_REPORT_INFO(g_DebugRTID, m_Reporter.newReportString("Elaborated"));
+    cout << name() << ": my AS: " << m_AS << endl;
 }
 
 RoutingTable::~RoutingTable()
@@ -52,7 +54,7 @@ void RoutingTable::routingTableMain(void)
     l_LocalRoute->id = 1;
     l_LocalRoute->prefix = m_RTConfig->getIPAsString();
     l_LocalRoute->mask = StringTools().sToI(m_RTConfig->getIPMaskAsString());
-    l_LocalRoute->ASes = StringTools().iToS(m_RTConfig->getASNumber());
+    l_LocalRoute->ASes = AS_EMPTY;
     l_LocalRoute->OutputPort = m_RTConfig->getNumberOfInterfaces()-1;
     addLocalRoute(l_LocalRoute);
 
@@ -100,7 +102,6 @@ void RoutingTable::routingTableMain(void)
                             continue;
                         else if(m_sessions.at(i) == 0) // Case 2
                             {
-                        	cout << "mainostan kun sessio tuli ylös" << endl;
                                 // Change this session's state in m_sessions
                                 m_sessions.at(i) = 1;
                                 // Send own RT to peer
@@ -178,7 +179,7 @@ void RoutingTable::routingTableMain(void)
                     	if(m_BGPMsg.m_OutboundInterface != k && port_Session[k]->isSessionValid())
                     	{
 //                    		cout << name() << " advertises to the peer in interface: " << k << endl;
-                    		advertiseRoute(m_endOfRawTable, k);
+                    		advertiseRoute(m_endOfRoutingTable, k);
 
                     	}
 					}
@@ -530,8 +531,13 @@ bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 
     // Set data to newRoute in CreateRoute(...)
    if(!createRoute(p_msg,OutputPort,newRoute))
+   {
+	   m_Reporter.newReportString(" Route was not add to raw table: ");
+		SC_REPORT_INFO(g_DebugRTID, m_Reporter.appendReportString(p_msg));
+
 	   return false;
-    // Add new Route object to the RoutingTable
+   }
+	   // Add new Route object to the RoutingTable
 
     // Check if the RoutingTable is empty
     if(m_headOfRawTable->next == 0)
@@ -579,9 +585,44 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     string ASes = p_msg.substr((Mask_end+1),(ASes_end-Mask_end-1));
 
 //cout << "IPAddress: " << IPAddress << "mask: " << Mask << " ASes: " << ASes << endl;
-    if(p_outputPort != m_RTConfig->getNumberOfInterfaces()-1)
+	string l_AS;
+    if(ASes.compare(AS_EMPTY) == 0)//local route is to be created
     {
-    	string l_AS;
+    	if(p_outputPort == m_RTConfig->getNumberOfInterfaces()-1)
+    	{
+    		ASes = m_RTConfig->getASNumberAsString();
+    		SC_REPORT_INFO(g_DebugRTID, m_Reporter.newReportString(" Local route was created"));
+   	}
+    	else
+    	{
+    	    SC_REPORT_WARNING(g_DebugRTID, m_Reporter.newReportString(" Wrong output port for local route"));
+    	    return false;
+    	}
+    }
+    else if(ASes.find("-") == string::npos) // route that is advertised an adjacent router
+    {
+    	if(ASes.compare(m_AS) == 0) //create route only if it is not from this router
+    	{
+
+    		m_Reporter.newReportString(" Local route advertisement received, advertised AS: ");
+    		m_Reporter.appendReportString(ASes);
+    		m_Reporter.appendReportString(" Local AS: ");
+    		SC_REPORT_WARNING(g_DebugRTID, m_Reporter.appendReportString(m_AS));
+    	    return false;
+    	}
+    	else
+    	{
+        	l_AS = m_AS + "-";
+    		// Add own AS in AS-path
+    		l_AS += ASes;
+    		ASes = l_AS;
+    		m_Reporter.newReportString(" Adjacent AS route created, AS: ");
+    	    SC_REPORT_INFO(g_DebugRTID, m_Reporter.appendReportString(ASes));
+
+    	}
+    }
+    else //other
+    {
     	position = 0;
        	ASes_end = ASes.find("-",position);
    	//Check if own AS exist in the path
@@ -589,7 +630,7 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     	{
     		l_AS = ASes.substr(position, ASes_end-position);
         	//if own as was found, just return false
-    		if(l_AS.compare(m_RTConfig->getASNumberAsString()) == 0)
+    		if(l_AS.compare(m_AS) == 0)
     		{
 //            	cout << " as from the message: " << ASes<< endl;
             	return false;
@@ -598,11 +639,13 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
         	ASes_end = ASes.find("-",position);
 
     	}
+    	l_AS = m_AS + "-";
 		// Add own AS in AS-path
-		ASes.append("-");
-		stringstream ss;
-		ss << m_RTConfig->getASNumber();
-		ASes.append(ss.str());
+		l_AS += ASes;
+		ASes = l_AS;
+		m_Reporter.newReportString(" More than one hop route created, AS: ");
+	    SC_REPORT_INFO(g_DebugRTID, m_Reporter.appendReportString(ASes));
+
     }
  //=======
 //

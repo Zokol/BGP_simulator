@@ -34,6 +34,7 @@ const char* g_DebugID = "Level_debug:";
 const char* g_ReportID = "Level_info:";
 const char *g_DebugCPID = "Level_debug_CP";
 const char *g_DebugBSID = "Level_debug_BS";
+const char *g_DebugRTID = "Level_debug_RT";
 const char *g_ErrorID = "Level_error";
 const char* g_SimulationVersion = "Test run";
 
@@ -74,6 +75,8 @@ int sc_main(int argc, char * argv [])
     sc_report_handler::set_actions(g_DebugCPID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for BGPSession
     sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DO_NOTHING);
+    //debugging flag for RoutringTable
+    sc_report_handler::set_actions(g_DebugRTID, SC_INFO, SC_DISPLAY);
     //debuggin flag for this file
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file
