@@ -6,7 +6,28 @@
 
 using namespace std;
 
-#define CONF_STR "<SIM_CONFIG>101,1.1.1.0/24,0,100,60,3,0_0_1;201,2.2.2.0/24,0,100,60,3,0_0_0,1_0_2;301,3.1.0.0/16,0,100,60,3,0_1_1</SIM_CONFIG>"
+/*
+* 101<->201<->301
+*/
+#define CONF_STR_3 "<SIM_CONFIG>101,1.1.1.0/24,0,100,60,3,0_0_1;201,2.2.2.0/24,0,100,60,3,0_0_0,1_0_2;301,3.1.0.0/16,0,100,60,3,0_1_1</SIM_CONFIG>"
+
+/*
+ * 		 501
+ * 		  |
+ * 		 401
+ *		  |
+ * 101<->201<->301
+ */
+#define CONF_STR_5 "<SIM_CONFIG>101,1.1.1.0/24,0,100,60,3,0_0_1;201,2.2.2.0/24,0,100,60,3,0_0_0,1_0_2,2_0_3;301,3.1.0.0/16,0,100,60,3,0_1_1;401,4.1.0.0/16,0,100,60,3,0_2_1,1_0_4;501,5.1.0.0/16,0,100,60,3,0_1_3</SIM_CONFIG>"
+
+/*
+ * 		 501
+ * 		  |
+ * 		 401_
+ *		  |  \
+ * 101<->201<->301
+ */
+#define CONF_STR_5_1 "<SIM_CONFIG>101,1.1.1.0/24,0,100,60,3,0_0_1;201,2.2.2.0/24,0,100,60,3,0_0_0,1_0_2,2_0_3;301,3.1.0.0/16,0,100,60,3,0_1_1,1_2_3;401,4.1.0.0/16,0,100,60,3,0_2_1,1_0_4,2_1_2;501,5.1.0.0/16,0,100,60,3,0_1_3</SIM_CONFIG>"
 
 
 int main ( int argc, char **argv )
@@ -16,7 +37,7 @@ int main ( int argc, char **argv )
 
 	ClientSocket client_socket ( "localhost", 50000 );
 	// client_socket.set_non_blocking(true);
-	cout << "Client sends the following configuration to the simulation:" << endl << CONF_STR << endl;
+	cout << "Client sends the following configuration to the simulation:" << endl << CONF_STR_5_1 << endl;
 
 	std::string reply = "";
 	while(flag){
@@ -24,7 +45,7 @@ int main ( int argc, char **argv )
 		{
 			if(state)
 			{
-				client_socket << CONF_STR;
+				client_socket << CONF_STR_5_1;
 				state = false;
 			}
 

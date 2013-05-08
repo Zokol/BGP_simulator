@@ -205,7 +205,7 @@ bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p
 void Router::killRouter(void)
 {
     //TODO: kill RT
-
+	m_RoutingTable.clearRoutingTables();
     //TODO: kill ControlPlane
 
     //TODO: kill DataPlane

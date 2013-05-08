@@ -127,6 +127,12 @@ public:
      */
     virtual bool write(BGPMessage& p_BGPMsg);
 
+    void killControlPlane(void);
+
+    void setUp(bool p_Value);
+
+    bool isRunning(void);
+
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
      * \public
@@ -192,6 +198,10 @@ private:
     StringTools m_Name;
 
     unsigned long m_MsgId;
+
+    bool m_Up;
+
+    sc_mutex m_UpMutex;
 
 
 };

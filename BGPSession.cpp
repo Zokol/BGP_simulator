@@ -439,6 +439,8 @@ void BGPSession::sessionStop(void)
 {
     m_BGPHoldDown.cancel();
     m_BGPKeepalive.cancel();
+    while(m_FsmInputBuffer.num_available() > 0)
+    	m_FsmInputBuffer.read(m_BGPIn);
     m_SessionValidity = false;
 }
 

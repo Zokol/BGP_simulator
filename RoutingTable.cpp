@@ -119,22 +119,28 @@ void RoutingTable::routingTableMain(void)
                         {
                             m_sessions.at(i) = 0;
                             // Iterate through the RawTable and send withdraw message to peers if route's outputport is i
-//                            m_iterator = m_headOfRawTable;
-//                            while(m_iterator->next != 0)
-//                            {
-//                                if(m_iterator->OutputPort == i)
-//                                {
-//                                    // Clear m_iterator->ASpath for sendWithdraw.
-//                                    m_iterator->ASes = "";
-//                                    sendWithdraw(*m_iterator);
-//                                }
-//                            }
+                            m_iterator = m_headOfRawTable;
+                            while(m_iterator->next != 0)
+                            {
+                                m_iterator= m_iterator->next;
+                              if(m_iterator->OutputPort == i)
+                                {
+                                    // Clear m_iterator->ASpath for sendWithdraw.
+                                    m_iterator->ASes = "";
+                                    for (int j = 0; j < m_RTConfig->getNumberOfInterfaces()-1; j++) {
+                                    	if(j != i)
+                                    		sendWithdraw(*m_iterator,j);
+
+									}
+                                }
+                            }
                             // Remove all the router from RawRoutingTable where outputport is i.
-//                            deleteRoutes(i);
+                            deleteRoutes(i);
 
                         }
 
                     }
+
                 }
 
             if(m_ReceivingBuffer.num_available() > 0)
@@ -195,9 +201,9 @@ void RoutingTable::routingTableMain(void)
                 handleNotification(m_BGPMsg);
             }
 
-/*
-                updateRoutingTable();
 
+                updateRoutingTable();
+                /*
                 cout << "Raw table: " << endl;
                 printRawRoutingTable();
 
@@ -520,6 +526,7 @@ void RoutingTable::printOneRoute(Route p_route)
 
 /*
     Add new route to RawRoutingTable
+    TODO: check why this is being called continuesly
 */
 bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 {
@@ -554,6 +561,8 @@ bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
     }
+
+   // SC_REPORT_INFO(g_DebugRTID, m_Reporter.newReportString("Routing table update after a route is added into the raw table"));
     updateRoutingTable();
     return true;
 }
@@ -741,6 +750,7 @@ void RoutingTable::clearRoutingTables()
     }
     l_deleteRoute = m_iterator;
     removeFromRawTable(l_deleteRoute->id);
+	SC_REPORT_INFO(g_DebugRTID,m_Reporter.newReportString("Routing table is being updated after clearRoutingTables was called"));
     updateRoutingTable();
 }
 
@@ -759,7 +769,13 @@ void RoutingTable::deleteRoutes(int p_outputPort)
         if(m_iterator->OutputPort == p_outputPort)
         {
             // Same output port so delete the route from RawTable and send UPDATE-withdraw message to all peers
-            sendWithdraw(*m_iterator);
+
+            for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++) {
+
+            	if(p_outputPort != i)
+            		sendWithdraw(*m_iterator, i);
+            }
+
 
             removeFromRawTable(m_iterator->id);
             routesDeleted = true;
@@ -767,7 +783,10 @@ void RoutingTable::deleteRoutes(int p_outputPort)
     }
     // If RawTable was modified update MainRoutingTable
     if(routesDeleted)
+    {
+    	SC_REPORT_INFO(g_DebugRTID,m_Reporter.newReportString("Routing table is being updated after delete routes was called"));
         updateRoutingTable();
+    }
 }
 
 // Handle withdraw-message. Remove given route from RawRoutingTable, update MainRoutingTable and forward this message
@@ -812,6 +831,7 @@ void RoutingTable::handleWithdraw(string p_message)
 
     ss.str("");
     Route * l_iterator = new Route;
+    Route * removedRoute = new Route;
     l_iterator = m_headOfRawTable;
     while(l_iterator->next != 0)
     {
@@ -822,7 +842,7 @@ void RoutingTable::handleWithdraw(string p_message)
         if(l_iterator->prefix == l_prefix && ss.str() == l_mask && l_iterator->ASes == l_ASpath)
         {
             // Same, so remove this route from own RawRoutingTable and send advertise to peers
-            Route * removedRoute = new Route;
+
             removedRoute->prefix = l_iterator->prefix;
             removedRoute->mask = l_iterator->mask;
 
@@ -832,33 +852,42 @@ void RoutingTable::handleWithdraw(string p_message)
             ss << m_RTConfig->getASNumber();
             l_ASpath.append(ss.str());
             removedRoute->ASes = l_ASpath;
-            sendWithdraw(*removedRoute);
 
+            for (int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++) {
+
+            	if(removedRoute->OutputPort != i)
+            		sendWithdraw(*removedRoute, i);
+            }
             // Now remove this route from RawRoutingTable
             removeFromRawTable(l_iterator->id);
         }
         ss.str("");
     }
 
-
+    delete l_iterator;
+    delete removedRoute;
 }
 /*
     Send withdraw-message to all peers. If this message is created in this router write peer's and own AS-number to p_route.ASes.
     Otherwise p_route.ASes should already include this router's AS, since it's added in handleWithdraw()
 */
-void RoutingTable::sendWithdraw(Route p_route)
+void RoutingTable::sendWithdraw(Route p_route, int p_OutputPort)
 {
-    stringstream ss;
-    if(p_route.ASes.size() == 0)
-    {
-        // This withdraw message is created in this router, so get peer AS-number and own AS-number
-        string peerAS = port_Session[p_route.OutputPort]->getPeerAS();
-        int ownAS = m_RTConfig->getASNumber();
-        ss << peerAS << "-" << ownAS;
-        p_route.ASes = ss.str();
-        ss.str("");
+	//return if this the session that the withdraw is to be sent is down
+    if(!port_Session[p_OutputPort]->isSessionValid())
+    	return;
 
-    }
+    stringstream ss;
+//    if(p_route.ASes.size() == 0)
+//    {
+//        // This withdraw message is created in this router, so get peer AS-number and own AS-number
+//        string peerAS = port_Session[p_route.OutputPort]->getPeerAS();
+//        int ownAS = m_RTConfig->getASNumber();
+//        ss << peerAS << "-" << ownAS;
+//        p_route.ASes = ss.str();
+//        ss.str("");
+//
+//    }
     // Construct the message here
 
     // This is withdraw-message so it begins with "0"
@@ -869,13 +898,14 @@ void RoutingTable::sendWithdraw(Route p_route)
     l_message.append(ss.str());
     l_message.append(",");
 
-    // Create new BGPMessage
-    BGPMessage * l_msg = new BGPMessage;
-    l_msg->m_Type = UPDATE;
-    l_msg->m_Message = l_message;
+
+    m_UpdateOut.m_Type = UPDATE;
+    m_UpdateOut.m_Message = l_message;
+    m_UpdateOut.m_OutboundInterface = p_OutputPort;
 
     // Send the message
-    port_Output->write(*l_msg);
+
+    port_Output->write(m_UpdateOut);
 }
 
 void RoutingTable::handleNotification(BGPMessage p_msg)

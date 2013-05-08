@@ -213,7 +213,7 @@ private:
     void deleteRoutes(int p_outputPort);
 
     // Send withdraw-message to all peers
-    void sendWithdraw(Route p_route);
+    void sendWithdraw(Route p_route, int p_OutputPort);
 
     // Handle received withdraw message
     void handleWithdraw(string p_message);

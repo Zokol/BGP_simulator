@@ -42,7 +42,7 @@ ControlPlane::ControlPlane(sc_module_name p_ModName, ControlPlaneConfig * const 
 		export_RoutingTable[i] = new sc_export<Output_If>;
 
 	}
-
+	setUp(true);
 	SC_THREAD(controlPlaneMain);
 	sensitive << port_Clk.pos();
 }
@@ -66,15 +66,17 @@ void ControlPlane::controlPlaneMain(void)
 	while(true)
 	{
 		wait();
-
+		if(!isRunning())
+			continue;
 		//read input message from the buffer if available
 		if(m_ReceivingBuffer.num_available() > 0)
 		{
 			m_ReceivingBuffer.read(m_BGPMsgIn);
 
 //			cout << name() << ": Session: " << m_BGPMsgIn.m_OutboundInterface << " MSG_TYPE: " << m_BGPMsgIn.m_Type << " @ " << sc_time_stamp() << endl;
-
-			m_BGPSessions[m_BGPMsgIn.m_OutboundInterface]->m_FsmInputBuffer.write(m_BGPMsgIn);
+			//write only if the session is not in IDLE
+			if(m_BGPSessions[m_BGPMsgIn.m_OutboundInterface]->getBGPCurrentState() != IDLE)
+				m_BGPSessions[m_BGPMsgIn.m_OutboundInterface]->m_FsmInputBuffer.write(m_BGPMsgIn);
 
 		}
 	}
@@ -82,6 +84,29 @@ void ControlPlane::controlPlaneMain(void)
 
 }
 
+void ControlPlane::killControlPlane()
+{
+	while(m_ReceivingBuffer.num_available() > 0)
+		m_ReceivingBuffer.read(m_BGPMsgIn);
+
+}
+
+void ControlPlane::setUp(bool p_Value)
+{
+	m_UpMutex.lock();
+	m_Up = p_Value;
+	m_UpMutex.unlock();
+}
+
+bool ControlPlane::isRunning(void)
+{
+	bool currentV;
+	m_UpMutex.lock();
+	currentV = m_Up;
+	m_UpMutex.unlock();
+	return currentV;
+
+}
 
 
 bool ControlPlane::write(BGPMessage& p_BGPMsg)
