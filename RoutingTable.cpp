@@ -116,20 +116,20 @@ void RoutingTable::routingTableMain(void)
                             continue;
                         else if(m_sessions.at(i) == 1) // Case 4
                         {
-                            m_sessions.at(i) = 1;
+                            m_sessions.at(i) = 0;
                             // Iterate through the RawTable and send withdraw message to peers if route's outputport is i
-                            m_iterator = m_headOfRawTable;
-                            while(m_iterator->next != 0)
-                            {
-                                if(m_iterator->OutputPort == i)
-                                {
-                                    // Clear m_iterator->ASpath for sendWithdraw.
-                                    m_iterator->ASes = "";
-                                    sendWithdraw(*m_iterator);
-                                }
-                            }
+//                            m_iterator = m_headOfRawTable;
+//                            while(m_iterator->next != 0)
+//                            {
+//                                if(m_iterator->OutputPort == i)
+//                                {
+//                                    // Clear m_iterator->ASpath for sendWithdraw.
+//                                    m_iterator->ASes = "";
+//                                    sendWithdraw(*m_iterator);
+//                                }
+//                            }
                             // Remove all the router from RawRoutingTable where outputport is i.
-                            deleteRoutes(i);
+//                            deleteRoutes(i);
 
                         }
 
@@ -185,17 +185,7 @@ void RoutingTable::routingTableMain(void)
                }
                 else
                 {
-                    // Message was incorrectly constructed. Send NOTIFICATION
-//=======
-//                    addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface);
-//                    updateRoutingTable();
-//                    //      antti oti pois kun buffaa muistia.
-//
-//                    for(int i = 0; i < m_RTConfig->getNumberOfInterfaces()-1; i++)
-//                    {
-//                        advertiseRoute(m_endOfRawTable,i);
-//                    }
-//>>>>>>> 4ee3ed4b07096339af037a9f7c39dbd08e896861
+
                 }
             }
             else if(m_BGPMsg.m_Type == NOTIFICATION && m_NewInputMsg)
@@ -972,7 +962,7 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
 void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
 {
     Route * l_route;
-    l_route = m_headOfRawTable;
+    l_route = m_headOfRoutingTable;
     while(l_route->next != 0)
     {
         l_route = l_route->next;
