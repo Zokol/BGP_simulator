@@ -98,14 +98,6 @@ public:
      * \public
      */
     void setPDU(const unsigned char *p_PDU);
-
-    /*! \fn void setTCPID(int p_TCPID)
-     * \brief Sets the TCP ID
-     * \details
-     * @param [in] int p_TCPID
-     * \public
-     */
-    void setTCPID(int p_TCPID);
     
 
     /*! \fn void getPDU(unsigned char *p_PDU); 
@@ -131,13 +123,6 @@ public:
      * \public
      */
     int getProtocolType(void);
-
-    /*! \fn int getTCPID(void)
-     * \brief Get TCP ID
-     * \return \b int The value of the TCP
-     * \public
-     */
-    int getTCPID(void);
 
     /*!
      * \brief Overload of compare operator
@@ -168,7 +153,7 @@ public:
     inline friend ostream& operator << (ostream& os,  Packet const & p_Packet )
     {   
 
-        os  << "**********************" << endl << "BGP_Payload: " << p_Packet.m_BGPPayload << ", Protocol type: " << p_Packet.m_ProtocolType<< endl << "TCP ID: " << p_Packet.m_TCPID << endl << "**********************" << endl << "PDU" << endl <<"----------------------";
+        os  << "**********************" << endl << "BGP_Payload: " << p_Packet.m_BGPPayload << ", Protocol type: " << p_Packet.m_ProtocolType<< endl << "**********************" << endl << "PDU" << endl <<"----------------------";
 
         string l_out;
         string l_Result;
@@ -228,6 +213,8 @@ public:
   
     string outputPDU(void);
 
+    void clearPacket(void);
+
 
 private:
 
@@ -251,11 +238,6 @@ private:
      */
     int m_ProtocolType;
 
-    /*! \property int m_TCPID
-     *  \brief carries the identification value used to identify the TCP session
-     *  \private
-     */
-    int m_TCPID;
 
     /*! \fn void initPDU(void) 
      * \brief Sets all the fields in m_PDU to zero

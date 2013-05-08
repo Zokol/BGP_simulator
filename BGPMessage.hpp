@@ -175,6 +175,7 @@ public:
      */
     bool operator == (const BGPMessage& p_Msg) const;
 
+    void clearMessage(void);
 private:
 
 

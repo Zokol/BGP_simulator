@@ -204,16 +204,15 @@ bool Router::connectInterface(Router *p_TargetRouter,int p_LocalInterface, int p
 
 void Router::killRouter(void)
 {
-    //TODO: kill RT
-	m_RoutingTable.clearRoutingTables();
-    //TODO: kill ControlPlane
-
-    //TODO: kill DataPlane
-
-    //TODO: kill BGP
-
     //kill interfaces
     killInterfaces();
+    // kill DataPlane
+	m_IP.killDataPlane();
+	// kill RT
+	m_RoutingTable.killRoutingTable();
+    //kill ControlPlane
+	m_Bgp.killControlPlane();
+
 }
 
 void Router::resetRouter(void)
@@ -226,12 +225,13 @@ void Router::resetRouter(void)
 
 void Router::reviveRouter(void)
 {
-    //TODO: start RT
 
-    //TODO: start ControlPlane
-
-    //TODO: start DataPane
-
+    //start ControlPlane
+	m_Bgp.reviveControlPlane();
+    //start RT
+	m_RoutingTable.reviveRoutingTable();
+    //start DataPane
+	m_IP.reviveDataPlane();
     //connect interfaces()
     connectInterfaces();
 }

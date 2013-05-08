@@ -19,6 +19,8 @@
 RoutingTable::RoutingTable(sc_module_name p_ModName, ControlPlaneConfig * const p_RTConfig):sc_module(p_ModName), m_RTConfig(p_RTConfig), limit(300, SC_SEC), m_Reporter(""), m_AS("")
 {
 
+	setUp(true);
+
 	m_UpdateOut.m_AS = m_RTConfig->getASNumber();
 	m_UpdateOut.m_BGPIdentifier = m_RTConfig->getBGPIdentifier();
 	m_UpdateOut.m_HoldDownTime = m_RTConfig->getHoldDownTime();
@@ -49,14 +51,7 @@ void RoutingTable::routingTableMain(void)
     m_headOfRoutingTable = new Route();
     m_endOfRoutingTable = new Route();
 
-    //add local AS route in the routing table
-    Route *l_LocalRoute = new Route();
-    l_LocalRoute->id = 1;
-    l_LocalRoute->prefix = m_RTConfig->getIPAsString();
-    l_LocalRoute->mask = StringTools().sToI(m_RTConfig->getIPMaskAsString());
-    l_LocalRoute->ASes = AS_EMPTY;
-    l_LocalRoute->OutputPort = m_RTConfig->getNumberOfInterfaces()-1;
-    addLocalRoute(l_LocalRoute);
+    addLocalRoute();
 
 
     StringTools *l_Report = new StringTools(name());
@@ -76,6 +71,9 @@ void RoutingTable::routingTableMain(void)
     while(true)
         {
             wait();
+
+    		if(!isRunning())
+    			continue;
 
             /*
             Check if some of the sessions has gone up or down
@@ -689,8 +687,8 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 */
 void RoutingTable::removeFromRawTable(int p_routeId)
 {
-    Route * deleteRoute = new Route();
-    Route * tempRoute = new Route();
+    Route * deleteRoute;
+    Route * tempRoute;
     deleteRoute = m_headOfRawTable;
     while(deleteRoute->next != 0)
     {
@@ -703,6 +701,7 @@ void RoutingTable::removeFromRawTable(int p_routeId)
                 m_endOfRoutingTable = tempRoute;
             }
             tempRoute->next = deleteRoute->next;
+            delete deleteRoute;
             return;
         }
     }
@@ -740,7 +739,7 @@ void RoutingTable::clearRoutingTables()
     if(m_headOfRawTable->next == 0)
         return;
     m_iterator = m_headOfRawTable->next;
-    Route * l_deleteRoute = new Route;
+    Route * l_deleteRoute;
 
     while(m_iterator->next != 0)
     {
@@ -797,12 +796,9 @@ void RoutingTable::handleWithdraw(string p_message)
         If own AS is found from AS-path --> do nothing since the package has made a circle and this router has already handled this packege
     */
     stringstream ss;
-    int int_ownAS = m_RTConfig->getASNumber();
 
-    ss << int_ownAS;
-    string str_ownAS = ss.str();
 
-    if(p_message.find(str_ownAS) == string::npos)
+    if(p_message.find(m_AS) == string::npos)
     {
         // Own AS number was found from AS-path so exit from this method
         return;
@@ -826,7 +822,7 @@ void RoutingTable::handleWithdraw(string p_message)
     string l_mask = p_message.substr((pos_prefix+1),(pos_mask-pos_prefix-1));  // -1 to remove ","-sign
     string l_ASpath = p_message.substr((pos_mask+1),(pos_ASes-pos_mask-1));
 
-//    cout << "|Prefix|" << l_prefix << "|Mask|" << l_mask << "|ASes|" << l_ASpath << "|end|" << endl;
+//   cout << "|Prefix|" << l_prefix << "|Mask|" << l_mask << "|ASes|" << l_ASpath << "|end|" << endl;
 
 
     ss.str("");
@@ -961,9 +957,18 @@ int RoutingTable::matchLength(Route * p_route, string p_IP)
 */
 int RoutingTable::resolveRoute(string p_IPAddress)
 {
+	if(!isRunning())
+		return -1;
+
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
     Route * foundRoute = findRoute(p_IPAddress);
-    return foundRoute->OutputPort;
+
+
+
+    if(foundRoute->OutputPort < m_RTConfig->getNumberOfInterfaces() && foundRoute->OutputPort >= 0)
+    	return foundRoute->OutputPort;
+    else
+    	return -1;
 }
 
 // Add new AS to the preferred ASes vector
@@ -988,17 +993,25 @@ void RoutingTable::removeLocalPref(int p_AS)
 
     }
 }
-void RoutingTable::addLocalRoute(Route *p_route)
+void RoutingTable::addLocalRoute()
 {
+    //add local AS route in the routing table
+    Route *l_LocalRoute = new Route();
+    l_LocalRoute->id = 1;
+    l_LocalRoute->prefix = m_RTConfig->getIPAsString();
+    l_LocalRoute->mask = StringTools().sToI(m_RTConfig->getIPMaskAsString());
+    l_LocalRoute->ASes = AS_EMPTY;
+    l_LocalRoute->OutputPort = m_RTConfig->getNumberOfInterfaces()-1;
+
     stringstream ss;
     string routeAsString = "1,";  // It's advertisement, not withdraw, so string begins by "1"
-    routeAsString.append(p_route->prefix);
+    routeAsString.append(l_LocalRoute->prefix);
     routeAsString.append(",");
-    ss << p_route->mask;
+    ss << l_LocalRoute->mask;
     routeAsString.append(ss.str());
     routeAsString.append(",");
-    routeAsString.append(p_route->ASes);
-    addRouteToRawTable(routeAsString, p_route->OutputPort);
+    routeAsString.append(l_LocalRoute->ASes);
+    addRouteToRawTable(routeAsString, l_LocalRoute->OutputPort);
 
 }
 
@@ -1135,9 +1148,46 @@ void RoutingTable::fillRoutingTable()
 bool RoutingTable::write(BGPMessage& p_BGPMsg)
 {
 	m_ReceivingBufferMutex.lock();
-	m_ReceivingBuffer.write(p_BGPMsg);
+	if(isRunning())
+		m_ReceivingBuffer.write(p_BGPMsg);
 	m_ReceivingBufferMutex.unlock();
 	return true;
+}
+
+
+void RoutingTable::killRoutingTable(void)
+{
+	setUp(false);
+	clearRoutingTables();
+	while(m_ReceivingBuffer.num_available() > 0)
+		m_ReceivingBuffer.read(m_BGPMsg);
+
+	m_BGPMsg.clearMessage();
+
+
+}
+
+void RoutingTable::reviveRoutingTable(void)
+{
+	addLocalRoute();
+	setUp(true);
+}
+
+void RoutingTable::setUp(bool p_Value)
+{
+	m_UpMutex.lock();
+	m_Up = p_Value;
+	m_UpMutex.unlock();
+}
+
+bool RoutingTable::isRunning(void)
+{
+	bool currentV;
+	m_UpMutex.lock();
+	currentV = m_Up;
+	m_UpMutex.unlock();
+	return currentV;
+
 }
 
 

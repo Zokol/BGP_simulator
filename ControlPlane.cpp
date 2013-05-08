@@ -86,9 +86,18 @@ void ControlPlane::controlPlaneMain(void)
 
 void ControlPlane::killControlPlane()
 {
+	setUp(false);
 	while(m_ReceivingBuffer.num_available() > 0)
 		m_ReceivingBuffer.read(m_BGPMsgIn);
 
+	m_MsgId = 0;
+	m_BGPMsgIn.clearMessage();
+
+}
+
+void ControlPlane::reviveControlPlane(void)
+{
+	setUp(true);
 }
 
 void ControlPlane::setUp(bool p_Value)
@@ -114,7 +123,7 @@ bool ControlPlane::write(BGPMessage& p_BGPMsg)
 
 	//enter to the critical region
 	mutex_Write.lock();
-	p_BGPMsg.m_MsgId = m_MsgId++;
+	p_BGPMsg.m_MsgId = ++m_MsgId;
 	//reset the corresponding keepalive timer
 	m_BGPSessions[p_BGPMsg.m_OutboundInterface]->resetKeepalive();
 	//write message to the DataPlane

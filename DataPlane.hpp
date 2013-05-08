@@ -89,6 +89,15 @@ public:
 
     virtual bool write(BGPMessage& p_BGPMsg);
 
+    void killDataPlane(void);
+
+    void setUp(bool p_Value);
+
+    bool isRunning(void);
+
+    void reviveDataPlane(void);
+
+
     /*! \brief Indicate the systemC producer that this module has a process.
      * \sa http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html
      * \public
@@ -112,6 +121,12 @@ private:
     StringTools m_Rpt;
 
     PacketProcessor m_Forwarder;
+
+    bool m_Up;
+
+    sc_mutex m_UpMutex;
+
+    int m_OutputPort;
 };
 
 

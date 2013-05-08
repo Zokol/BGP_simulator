@@ -131,6 +131,8 @@ public:
 
     void setUp(bool p_Value);
 
+    void reviveControlPlane(void);
+
     bool isRunning(void);
 
     /*! \brief Indicate the systemC producer that this module has a process.
@@ -176,11 +178,6 @@ private:
      */
     BGPMessage m_BGPMsgIn;
 
-    /*! \brief BGP output message
-     * \details
-     * \private
-     */
-    BGPMessage m_BGPMsgOut;
 
     /*! \property ControlPlaneConfig *m_BGPConfig
      * \brief BGP configuration object

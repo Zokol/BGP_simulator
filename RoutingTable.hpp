@@ -144,6 +144,15 @@ public:
     virtual bool write(BGPMessage& p_BGPMsg);
 
 
+    void killRoutingTable(void);
+
+    void reviveRoutingTable(void);
+
+    void setUp(bool p_Value);
+
+    bool isRunning(void);
+
+
 
 
 
@@ -160,7 +169,7 @@ private:
      */
     sc_fifo<BGPMessage> m_ReceivingBuffer;
 
-    void addLocalRoute(Route *p_route);
+    void addLocalRoute(void);
 
     // Advertise this route to peers
 
@@ -282,6 +291,11 @@ private:
     StringTools m_Reporter;
 
     string m_AS;
+
+    bool m_Up;
+
+    sc_mutex m_UpMutex;
+
 
 };
 

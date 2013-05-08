@@ -441,6 +441,7 @@ void BGPSession::sessionStop(void)
     m_BGPKeepalive.cancel();
     while(m_FsmInputBuffer.num_available() > 0)
     	m_FsmInputBuffer.read(m_BGPIn);
+    m_BGPIn.clearMessage();
     m_SessionValidity = false;
 }
 

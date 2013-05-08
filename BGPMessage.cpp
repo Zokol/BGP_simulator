@@ -36,3 +36,17 @@ BGPMessage& BGPMessage::operator = (const BGPMessage& p_Msg)
 bool BGPMessage::operator == (const BGPMessage& p_Msg) const {
     return (m_Type == p_Msg.m_Type && m_BGPIdentifier == p_Msg.m_BGPIdentifier && m_OutboundInterface == p_Msg.m_OutboundInterface && m_Message == p_Msg.m_Message && m_AS == p_Msg.m_AS && m_HoldDownTime == p_Msg.m_HoldDownTime && m_MsgId == p_Msg.m_MsgId);
 }
+
+void BGPMessage::clearMessage(void)
+{
+
+	m_Type = -1;
+    m_OutboundInterface = 0;
+    m_Message = "";
+	m_MsgId = 0;
+    m_BGPIdentifier = "";
+	m_AS = -1;
+	m_HoldDownTime = 0;
+
+
+}

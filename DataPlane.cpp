@@ -12,8 +12,9 @@
 
 
 
-DataPlane::DataPlane(sc_module_name p_ModuleName, ControlPlaneConfig * const p_Config):sc_module(p_ModuleName), m_Config(p_Config), m_Forwarder("-Forwarder")
+DataPlane::DataPlane(sc_module_name p_ModuleName, ControlPlaneConfig * const p_Config):sc_module(p_ModuleName), m_Config(p_Config), m_Forwarder("-Forwarder"), m_OutputPort(-1)
 {
+	setUp(true);
 	m_Rpt.setBaseName(name());
 	m_InterfaceCount = m_Config->getNumberOfInterfaces();
 	SC_THREAD(main);
@@ -39,6 +40,8 @@ void DataPlane::main(void)
 	{
 		wait();
 
+		if(!isRunning())
+			continue;
 		//check all the interfaces
 		for (int i = 0; i < m_InterfaceCount; i++)
 		{
@@ -56,11 +59,16 @@ void DataPlane::main(void)
 					if(m_Forwarder.processFrame(m_Packet))
 					{
 						//update the TTL field and re-calculate the checksum
-						if(m_Forwarder.forward(&m_Packet))
+						if(m_Forwarder.forward(&m_Packet))//forward only if TTL was not 0
 						{
 
-							//forward only if TTL was not 0
-							port_ToInterface[port_ToRoutingTable->resolveRoute(m_Forwarder.getDestination())]->write(m_Packet);
+							//resolve route
+							m_OutputPort = port_ToRoutingTable->resolveRoute(m_Forwarder.getDestination());
+
+							//check that the route is found
+							if(m_OutputPort >= 0)
+
+								port_ToInterface[m_OutputPort]->write(m_Packet);
 						}
 					}
 
@@ -69,8 +77,8 @@ void DataPlane::main(void)
 				{
 					m_BGPMsg = m_Packet.getBGPPayload();
 					m_BGPMsg.m_OutboundInterface = i;
-					//                                    if(i < 2)
-						//cout << name() << ": received BGP message: Type " << m_BGPMsg.m_Type << " Interface " << m_BGPMsg.m_OutboundInterface << " @" << sc_time_stamp() << endl;
+
+					//cout << name() << ": received BGP message: Type " << m_BGPMsg.m_Type << " Interface " << m_BGPMsg.m_OutboundInterface << " @" << sc_time_stamp() << endl;
 					port_ToControlPlane->write(m_BGPMsg);
 				}
 			}
@@ -94,12 +102,49 @@ void DataPlane::main(void)
 	}
 }
 
+void DataPlane::killDataPlane(void)
+{
+	setUp(false);
+	m_Packet.clearPacket();
+	m_OutputPort = -1;
+	while(m_BGPForwardingBuffer.num_available() > 0)
+		m_BGPForwardingBuffer.read(m_BGPMsg);
+
+	m_BGPMsg.clearMessage();
+
+
+}
+
+void DataPlane::reviveDataPlane(void)
+{
+
+	setUp(true);
+}
+
+void DataPlane::setUp(bool p_Value)
+{
+	m_UpMutex.lock();
+	m_Up = p_Value;
+	m_UpMutex.unlock();
+}
+
+bool DataPlane::isRunning(void)
+{
+	bool currentV;
+	m_UpMutex.lock();
+	currentV = m_Up;
+	m_UpMutex.unlock();
+	return currentV;
+
+}
+
 bool DataPlane::write(BGPMessage& p_BGPMsg)
 {
 	//enter to the critical region
 	m_BGPForwardingBufferMutex.lock();
 	//write the message to the buffer
-	m_BGPForwardingBuffer.write(p_BGPMsg);
+	if(isRunning())
+		m_BGPForwardingBuffer.write(p_BGPMsg);
 	//exit from the critical region
 	m_BGPForwardingBufferMutex.unlock();
 	return true;
