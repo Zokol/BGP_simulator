@@ -88,22 +88,23 @@ int main ( int argc, char **argv )
 				{
 
 					if(reply.find("<TABLE>") != string::npos)
-
 					{
+						string line = "", field = "";
+						unsigned start = 7, end = 0, starT = 0, enD = 0, count = 0;
 
 						if(l_SInput.substr(0,10).compare("READ_TABLE") == 0)
 						{
 
-						unsigned start = 7, end = 0, starT = 0, enD = 0, count = 0;
 
 						cout << endl << "Routing table of router " << l_SInput.substr(11) << endl << "*********************************" << endl;
-						string line = "", field = "";;
+
 						do {
 							end = reply.find(";", start);
 							line = reply.substr(start,end-start);
 //							cout << line << endl;
 							if(line.compare("</TABLE>") == 0)
 								break;
+							starT = 0;
 							enD = 0;
 							count = 0;
 							do
@@ -126,6 +127,66 @@ int main ( int argc, char **argv )
 
 						}while(end != string::npos);
 						cout << endl << "*********************************" << endl;
+						}
+						else
+						{
+							unsigned counT = 1;
+							cout << endl << "Packet buffer of router " << l_SInput.substr(12) << endl << "*********************************" << endl;
+
+							do {
+								end = reply.find(";", start);
+								line = reply.substr(start,end-start);
+	//							cout << line << endl;
+								if(line.compare("</TABLE>") == 0)
+									break;
+								starT = 0;
+								enD = 0;
+								count = 0;
+								do
+								{
+									enD = line.find(",", starT);
+									field = line.substr(starT,enD-starT);
+									starT = enD + 1;
+									if(count == 0)
+										cout << "Packet: " << counT++ << endl << "#################################" << endl << "Version: " << field;
+									else if(count == 1)
+										cout << " | IHL: " << field;
+									else if(count == 2)
+										cout << " | DSCP: " << field;
+									else if(count == 3)
+										cout << " | ECN: " << field;
+									else if(count == 4)
+										cout << " | TOTAL LENGTH: " << field << endl;
+									else if(count == 5)
+										cout << "IDENTIFICATION: " << field;
+									else if(count == 6)
+										cout << " | FLAGS: [" << field;
+									else if(count == 7)
+										cout << "][" << field;
+									else if(count == 8)
+										cout << "][" << field << "]";
+									else if(count == 9)
+										cout << " | FRAGMENT OFFSET: " << field << endl;
+									else if(count == 10)
+										cout << "TTL: " << field;
+									else if(count == 11)
+										cout << " | PROTOCOL: " << field;
+									else if(count == 12)
+										cout << " | HEADER CHECKSUM: " << field << endl;
+									else if(count == 13)
+										cout << "SOURCE IP: " << field << endl;
+									else if(count == 14)
+										cout << "DESTINATION IP: " << field << endl;
+									else if(count == 15)
+										cout << "---------------------------------" << endl << "PAYLOAD:"  << endl << field << endl<< "#################################" << endl;
+									count++;
+								}while(enD != string::npos);
+
+								 start = end+1;
+
+							}while(end != string::npos);
+							cout << endl << "*********************************" << endl;
+
 						}
 					}
 					else
