@@ -43,13 +43,13 @@ RoutingTable::~RoutingTable()
 
 void RoutingTable::routingTableMain(void)
 {
-    m_headOfRawTable = new Route();
-    m_endOfRawTable = new Route();
-    m_iterator = new Route();
+    m_headOfRawTable = new struct_Route();
+    m_endOfRawTable = new struct_Route();
+    m_iterator = new struct_Route();
 
  //   l_LocalRoute->next = 0;
-    m_headOfRoutingTable = new Route();
-    m_endOfRoutingTable = new Route();
+    m_headOfRoutingTable = new struct_Route();
+    m_endOfRoutingTable = new struct_Route();
 
     addLocalRoute();
 
@@ -175,7 +175,8 @@ void RoutingTable::routingTableMain(void)
 
                 	if(!addRouteToRawTable(m_BGPMsg.m_Message,m_BGPMsg.m_OutboundInterface))
                 	{
-
+cout << "Oma as: " << m_AS << "  ei lisätty raw tableen: " << m_BGPMsg.m_Message << endl;
+printRawRoutingTable();
                 		continue;
                 	}
                     //      antti oti pois kun buffaa muistia.
@@ -230,7 +231,7 @@ void RoutingTable::routingTableMain(void)
 void RoutingTable::updateRoutingTable()
 {
     // 1. Verify that every route in RawRT is found from MainRT
-    Route * l_iteratorRaw = m_headOfRawTable;
+    struct_Route * l_iteratorRaw = m_headOfRawTable;
 
     bool l_routeInBothTables;   // Used to check that every route in RawTable exists in MainRoutingTable
 
@@ -293,7 +294,7 @@ void RoutingTable::updateRoutingTable()
         }
         if(!foundFromRawTable)
         {
-            // Route didin't exist in RawRT so remove it from MainTable
+            // struct_Route didin't exist in RawRT so remove it from MainTable
             removeFromRoutingTable(m_iterator->id);
         }
     }
@@ -305,7 +306,7 @@ void RoutingTable::updateRoutingTable()
 /*
     Compare two routes and return true if they are the same
 */
-bool RoutingTable::sameRoutes(Route p_route1, Route p_route2)
+bool RoutingTable::sameRoutes(struct_Route p_route1, struct_Route p_route2)
 {
     if(p_route1.prefix == p_route2.prefix && p_route1.mask == p_route2.mask)
         return true;
@@ -314,7 +315,7 @@ bool RoutingTable::sameRoutes(Route p_route1, Route p_route2)
 }
 
 // Return the AS Path length
-int RoutingTable::ASpathLength(Route p_route)
+int RoutingTable::ASpathLength(struct_Route p_route)
 {
     int ASCount = count(p_route.ASes.begin(), p_route.ASes.end(), '-') + 1;
     return ASCount;
@@ -323,9 +324,9 @@ int RoutingTable::ASpathLength(Route p_route)
 /*
     Add new route to MainRoutingTable
 */
-void RoutingTable::setRoute(Route p_route)
+void RoutingTable::setRoute(struct_Route p_route)
 {
-    Route * newRoute = new Route();
+    struct_Route * newRoute = new struct_Route();
 
     newRoute->id = (m_endOfRoutingTable->id)+1;
     newRoute->prefix = p_route.prefix;
@@ -336,7 +337,7 @@ void RoutingTable::setRoute(Route p_route)
 
     if(m_headOfRoutingTable->next == 0)
     {
-        // RoutingTable is empty. So add the first Route in it
+        // RoutingTable is empty. So add the first struct_Route in it
         m_headOfRoutingTable->next = newRoute;
         m_endOfRoutingTable = newRoute;
         newRoute->next = 0;
@@ -357,7 +358,7 @@ void RoutingTable::setRoute(Route p_route)
     p_route1 is already in MainRoutingTable, so do nothing if that route is preferred over p_route2.
 
 */
-void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
+void RoutingTable::addPreferredRoute(struct_Route p_route1, struct_Route p_route2)
 {
     /*
         Add preferred route to routing table according to policies. Policies:
@@ -376,7 +377,7 @@ void RoutingTable::addPreferredRoute(Route p_route1, Route p_route2)
     unsigned newPosition = 0;
     unsigned oldPosition = 0;
 
-    // 1. Iterate through preferredASes and check if other Route has preferred AS on its ASpath
+    // 1. Iterate through preferredASes and check if other struct_Route has preferred AS on its ASpath
     for(unsigned i = 0;i<preferredASes.size();i = i+2)
     {
         while(newPosition < p_route1.ASes.size())
@@ -453,7 +454,7 @@ string RoutingTable::getRawRoutingTable()
     Iterate through the routing table, beginning from p_route.
     Create a string from the routes and return that string.
 */
-string RoutingTable::routingTableToString(Route * p_route)
+string RoutingTable::routingTableToString(struct_Route * p_route)
 {
     m_iterator = p_route;
     string table;
@@ -474,11 +475,11 @@ string RoutingTable::routingTableToString(Route * p_route)
     Create string from given route. Prefix, Mask, Routers and ASes are included in the string.
     Syntax: ID,Prefix,Mask,ASes (e.g. 5,100100200050,8,100-4212-231-22)
 */
-string RoutingTable::routeToString(Route p_route)
+string RoutingTable::routeToString(struct_Route p_route)
 {
     stringstream ss;
     ss.str("");
-    ss << p_route.id  << "," << p_route.prefix << "," << p_route.mask << "," << p_route.ASes;
+    ss << p_route.id  << "," << p_route.prefix << "," << p_route.mask << "," << p_route.ASes << "," << p_route.OutputPort;
     return ss.str();
 }
 
@@ -514,7 +515,7 @@ void RoutingTable::printRawRoutingTable()
 }
 
 
-void RoutingTable::printOneRoute(Route p_route)
+void RoutingTable::printOneRoute(struct_Route p_route)
 {
     stringstream ss;
     ss << "Id:" << p_route.id <<" Prefix: " <<  p_route.prefix << " Mask: " <<  p_route.mask << " Output port: " << p_route.OutputPort << " ASes: " << p_route.ASes;
@@ -529,7 +530,7 @@ void RoutingTable::printOneRoute(Route p_route)
 bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 {
 
-    Route * newRoute = new Route();
+    struct_Route * newRoute = new struct_Route();
 
     // Get ID for this new route
     newRoute->id = (m_endOfRawTable->id)+1;
@@ -539,10 +540,10 @@ bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
    {
 	   m_Reporter.newReportString(" Route was not add to raw table: ");
 		SC_REPORT_INFO(g_DebugRTID, m_Reporter.appendReportString(p_msg));
-
+cout << "ei lisätty reittiä" << endl;
 	   return false;
    }
-	   // Add new Route object to the RoutingTable
+	   // Add new struct_Route object to the RoutingTable
 
     // Check if the RoutingTable is empty
     if(m_headOfRawTable->next == 0)
@@ -554,7 +555,7 @@ bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
     }
     else
     {
-       // RoutinTable wasn't empty. Add new Route object in it. Add it to the end.
+       // RoutinTable wasn't empty. Add new struct_Route object in it. Add it to the end.
         m_endOfRawTable->next = newRoute;
         m_endOfRawTable = newRoute;
         newRoute->next = 0;
@@ -566,11 +567,11 @@ bool RoutingTable::addRouteToRawTable(string p_msg,int OutputPort)
 }
 
 /*
-    Create a Route object from p_msg. p_msg must be constructed as follows:
+    Create a struct_Route object from p_msg. p_msg must be constructed as follows:
     0 or 1,IP,Mask,ASes(e.g. 1,10.255.0.100,8,550-7564-4)
     Parse message and collect IP,Mask,ASes which are separated by ","-mark
 */
-bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
+bool RoutingTable::createRoute(string p_msg,int p_outputPort ,struct_Route * p_route)
 {
     // Use these to collect data separetad by semicolon
     int position = 2;
@@ -608,9 +609,10 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
     }
     else if(ASes.find("-") == string::npos) // route that is advertised an adjacent router
     {
+
     	if(ASes.compare(m_AS) == 0) //create route only if it is not from this router
     	{
-
+    		cout << "AS found from the path" << endl;
     		m_Reporter.newReportString(" Local route advertisement received, advertised AS: ");
     		m_Reporter.appendReportString(ASes);
     		m_Reporter.appendReportString(" Local AS: ");
@@ -639,6 +641,7 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
         	//if own as was found, just return false
     		if(l_AS.compare(m_AS) == 0)
     		{
+    			cout << "AS PATH: " << ASes << " My path: " << m_AS << endl;
 //            	cout << " as from the message: " << ASes<< endl;
             	return false;
     		}
@@ -673,8 +676,8 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 //    }
 //
 //>>>>>>> 4ee3ed4b07096339af037a9f7c39dbd08e896861
-
-    // Set the values to Route pointer
+//cout << name() << ": struct_Route added: " << ASes << " @ " << sc_time_stamp() << endl;
+    // Set the values to struct_Route pointer
     p_route->prefix = IPAddress;
     p_route->mask = atoi(Mask.c_str());
     p_route->ASes = ASes;
@@ -687,8 +690,8 @@ bool RoutingTable::createRoute(string p_msg,int p_outputPort ,Route * p_route)
 */
 void RoutingTable::removeFromRawTable(int p_routeId)
 {
-    Route * deleteRoute;
-    Route * tempRoute;
+    struct_Route * deleteRoute;
+    struct_Route * tempRoute;
     deleteRoute = m_headOfRawTable;
     while(deleteRoute->next != 0)
     {
@@ -712,8 +715,8 @@ void RoutingTable::removeFromRawTable(int p_routeId)
 */
 void RoutingTable::removeFromRoutingTable(int p_routeId)
 {
-    Route * deleteRoute = new Route();
-    Route * tempRoute = new Route();
+    struct_Route * deleteRoute = new struct_Route();
+    struct_Route * tempRoute = new struct_Route();
     deleteRoute = m_headOfRoutingTable;
     while(deleteRoute->next != 0)
     {
@@ -739,7 +742,7 @@ void RoutingTable::clearRoutingTables()
     if(m_headOfRawTable->next == 0)
         return;
     m_iterator = m_headOfRawTable->next;
-    Route * l_deleteRoute;
+    struct_Route * l_deleteRoute;
 
     while(m_iterator->next != 0)
     {
@@ -826,8 +829,8 @@ void RoutingTable::handleWithdraw(string p_message)
 
 
     ss.str("");
-    Route * l_iterator = new Route;
-    Route * removedRoute = new Route;
+    struct_Route * l_iterator;
+    struct_Route * removedRoute = new struct_Route;
     l_iterator = m_headOfRawTable;
     while(l_iterator->next != 0)
     {
@@ -860,14 +863,13 @@ void RoutingTable::handleWithdraw(string p_message)
         ss.str("");
     }
 
-    delete l_iterator;
     delete removedRoute;
 }
 /*
     Send withdraw-message to all peers. If this message is created in this router write peer's and own AS-number to p_route.ASes.
     Otherwise p_route.ASes should already include this router's AS, since it's added in handleWithdraw()
 */
-void RoutingTable::sendWithdraw(Route p_route, int p_OutputPort)
+void RoutingTable::sendWithdraw(struct_Route p_route, int p_OutputPort)
 {
 	//return if this the session that the withdraw is to be sent is down
     if(!port_Session[p_OutputPort]->isSessionValid())
@@ -909,13 +911,13 @@ void RoutingTable::handleNotification(BGPMessage p_msg)
 }
 
 /*
-    Find Route object from RoutingTable by given IPAddress.
+    Find struct_Route object from RoutingTable by given IPAddress.
     Iterate through the RoutingTable and find the longest match with the given IPAddress.
-    Then return pointer to the Route object that had the longest match
+    Then return pointer to the struct_Route object that had the longest match
 */
-Route * RoutingTable::findRoute(string p_prefix)
+struct_Route * RoutingTable::findRoute(string p_prefix)
 {
-    Route * l_route = new Route();
+    struct_Route * l_route = new struct_Route();
     int l_longestMatch = 0;
     int l_matchLength;
     m_iterator = m_headOfRoutingTable;
@@ -935,7 +937,7 @@ Route * RoutingTable::findRoute(string p_prefix)
 }
 
 // Return how many "bits" from prefix match with IP address.
-int RoutingTable::matchLength(Route * p_route, string p_IP)
+int RoutingTable::matchLength(struct_Route * p_route, string p_IP)
 {
     int matchLength = 0;
     string routePrefix = p_route->prefix;
@@ -961,7 +963,7 @@ int RoutingTable::resolveRoute(string p_IPAddress)
 		return -1;
 
     SC_REPORT_INFO(g_DebugID, StringTools(name()).appendReportString("resolveRoute-method was called.") );
-    Route * foundRoute = findRoute(p_IPAddress);
+    struct_Route * foundRoute = findRoute(p_IPAddress);
 
 
 
@@ -996,7 +998,7 @@ void RoutingTable::removeLocalPref(int p_AS)
 void RoutingTable::addLocalRoute()
 {
     //add local AS route in the routing table
-    Route *l_LocalRoute = new Route();
+    struct_Route *l_LocalRoute = new struct_Route();
     l_LocalRoute->id = 1;
     l_LocalRoute->prefix = m_RTConfig->getIPAsString();
     l_LocalRoute->mask = StringTools().sToI(m_RTConfig->getIPMaskAsString());
@@ -1017,7 +1019,7 @@ void RoutingTable::addLocalRoute()
 
 // Advertise this route to peers
 
-void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
+void RoutingTable::advertiseRoute(struct_Route * p_route, int p_Outputport)
 {
     stringstream ss;
     string routeAsString = "1,";  // It's advertisement, not withdraw, so string begins by "1"
@@ -1027,6 +1029,7 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
     routeAsString.append(ss.str());
     routeAsString.append(",");
     routeAsString.append(p_route->ASes);
+    cout << name() << " advertising route: " << routeAsString << " @ " << sc_time_stamp() << endl;
 //    routeAsString.append("-");
 //    routeAsString.append(m_RTConfig->getASNumberAsString());
 
@@ -1034,20 +1037,21 @@ void RoutingTable::advertiseRoute(Route * p_route, int p_Outputport)
     m_UpdateOut.m_Type = UPDATE;
 
     m_UpdateOut.m_OutboundInterface = p_Outputport;
-
     //do not advertise to the local as port
     if(m_UpdateOut.m_OutboundInterface != m_RTConfig->getNumberOfInterfaces()-1)
     {
+    	if(m_Previous == m_UpdateOut)
+    		cout << "Same message was send" << endl;
     	port_Output->write(m_UpdateOut);
     }
-
+m_Previous = m_UpdateOut;
 
 }
 
 // Advertise the whole table to given peer
 void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
 {
-    Route * l_route;
+    struct_Route * l_route;
     l_route = m_headOfRoutingTable;
     while(l_route->next != 0)
     {
@@ -1068,7 +1072,7 @@ void RoutingTable::advertiseRawRoutingTable(int p_outputPort)
 int RoutingTable::tableLength()
 {
     int length = 0;
-    Route * l_iterator = new Route;
+    struct_Route * l_iterator = new struct_Route;
     l_iterator = m_headOfRoutingTable;
     while(l_iterator->next!=0)
     {

@@ -68,7 +68,7 @@ int sc_main(int argc, char * argv [])
     //SC_DISPLAY turns on the reportting for the specified flag
 
     //general reporting flag
-    sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_ReportID, SC_INFO, SC_DO_NOTHING);
     //general debugging flag
     sc_report_handler::set_actions(g_DebugID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for ControlPlane
@@ -76,7 +76,7 @@ int sc_main(int argc, char * argv [])
     //debugging flag for BGPSession
     sc_report_handler::set_actions(g_DebugBSID, SC_INFO, SC_DO_NOTHING);
     //debugging flag for RoutringTable
-    sc_report_handler::set_actions(g_DebugRTID, SC_INFO, SC_DISPLAY);
+    sc_report_handler::set_actions(g_DebugRTID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file
     sc_report_handler::set_actions(g_DebugMainID, SC_INFO, SC_DO_NOTHING);
     //debuggin flag for this file

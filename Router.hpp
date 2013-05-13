@@ -10,7 +10,9 @@
 /*!
  * \class Router
  * \brief Router module
- *  \details
+ *  \details The module combines DataPlane, ControlPlane, RoutingTable, and Interface modules to a single Router module.
+ *  In addition, the router module offer a set of methods to extract data from the submodules. The router builds the submodules and binds their ports.
+ *  The number of interfaces in the router is defined in the configuration object that is passed to the router as constructor argument.
  */
 
 
@@ -183,22 +185,6 @@ public:
      * \public
      */
     void removeLocalPref(int p_AS);
-
-    /*! \fn bool send(Packet& p_Packet)
-     *  \brief Writes the passed packet into the routers AS interface
-     *  @param[in] Packet& p_Packet Reference to the packet object to be sent
-     * \return bool true: success false: failure
-     *  \public
-     */
-    bool send(Packet& p_Packet);
-
-    /*! \fn bool receive(Packet& p_Packet)
-     *  \brief Writes the passed packet into the routers AS interface
-     *  @param[in] Packet& p_Packet Reference to the packet object to be received
-     * \return bool true: success false: failure
-     *  \public
-     */
-    bool receive(Packet& p_Packet);
 
 private:
 

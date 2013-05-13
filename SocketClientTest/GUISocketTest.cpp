@@ -142,7 +142,9 @@ int main ( int argc, char **argv )
 								else if(count == 2)
 									cout << "/" << field;
 								else if(count == 3)
-									cout << " | AS_path: " << field << endl;
+									cout << " | AS_path: " << field;
+								else if(count == 4)
+									cout << " | Output_IF: " << field << endl;
 								count++;
 							}while(enD != string::npos);
 

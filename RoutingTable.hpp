@@ -32,14 +32,14 @@ using namespace sc_dt;
 
 #define AS_EMPTY "#"
 
-struct Route
+struct struct_Route
 {
     int id;
     string prefix;
     int mask;
     string ASes;
     int OutputPort;
-    Route * next;
+    struct_Route * next;
 };
 
 class RoutingTable: public sc_module, public RoutingTable_If, public Output_If<BGPMessage>
@@ -173,32 +173,32 @@ private:
 
     // Advertise this route to peers
 
-    void advertiseRoute(Route * p_route, int p_Outputport);
+    void advertiseRoute(struct_Route * p_route, int p_Outputport);
 
 //=======
-//    void advertiseRoute(Route * p_route, int p_outPutIf);
+//    void advertiseRoute(struct_Route * p_route, int p_outPutIf);
 //>>>>>>> 4ee3ed4b07096339af037a9f7c39dbd08e896861
 
     // Construct new route from p_msg.
-    bool createRoute(string p_msg,int p_outputPort, Route * p_route);
+    bool createRoute(string p_msg,int p_outputPort, struct_Route * p_route);
 
     // Handle NOTIFICATION message type
     void handleNotification (BGPMessage NOTIFICATION_message);
 
-    // Return Route which prefix is p_prefix
-    Route * findRoute(string p_prefix);
+    // Return struct_Route which prefix is p_prefix
+    struct_Route * findRoute(string p_prefix);
 
     // Return how many bits are the same from p_route and p_IP. Used for deciding which route to use
-    int matchLength(Route * p_route, string p_IP);
+    int matchLength(struct_Route * p_route, string p_IP);
 
     // Update MainRoutingTable. Iterate through the RawRoutingTable and pick the preferred routes from there to MainRoutingTable
     void updateRoutingTable();
 
     // Take two routes as a parameter and add the more preferred one to MainRoutingTable
-    void addPreferredRoute(Route p_route1, Route p_route2);
+    void addPreferredRoute(struct_Route p_route1, struct_Route p_route2);
 
     // Add p_route to MainRoutingTable
-    void setRoute(Route p_route);
+    void setRoute(struct_Route p_route);
 
     // Remove route from RawRoutingTable
     void removeFromRawTable(int p_routeId);
@@ -207,22 +207,22 @@ private:
     void removeFromRoutingTable(int p_routeId);
 
     // Return true if p_route1 and p_route2 has the same prefix&mask combination
-    bool sameRoutes(Route p_route1, Route p_route2);
+    bool sameRoutes(struct_Route p_route1, struct_Route p_route2);
 
     // Return the ASPathLength of p_route
-    int ASpathLength(Route p_route);
+    int ASpathLength(struct_Route p_route);
 
     // Convert p_route to string. Syntax: ID,Prefix,Mask,Routers,ASes (e.g. 5,100100200050,8,2-4-6-7,100-4212-231-22)
-    string routeToString(Route p_route);
+    string routeToString(struct_Route p_route);
 
     // Convert the hole RoutingTable to string. Start from p_route
-    string routingTableToString(Route * p_route);
+    string routingTableToString(struct_Route * p_route);
 
     // Delete routes from RawRoutingTable with given output port
     void deleteRoutes(int p_outputPort);
 
     // Send withdraw-message to all peers
-    void sendWithdraw(Route p_route, int p_OutputPort);
+    void sendWithdraw(struct_Route p_route, int p_OutputPort);
 
     // Handle received withdraw message
     void handleWithdraw(string p_message);
@@ -237,7 +237,7 @@ private:
     // Just for testing?
     void printRoutingTable();
     void printRawRoutingTable();
-    void printOneRoute(Route p_route);
+    void printOneRoute(struct_Route p_route);
     void fillRoutingTable();
 
     ControlPlaneConfig *m_RTConfig;
@@ -249,12 +249,12 @@ private:
     BGPMessage m_BGPMsg;
 
     // Pointer to the heads and ends of the tables
-    Route * m_headOfRawTable;
-    Route * m_endOfRawTable;
-    Route * m_iterator;
+    struct_Route * m_headOfRawTable;
+    struct_Route * m_endOfRawTable;
+    struct_Route * m_iterator;
 
-    Route * m_headOfRoutingTable;
-    Route * m_endOfRoutingTable;
+    struct_Route * m_headOfRoutingTable;
+    struct_Route * m_endOfRoutingTable;
 
     // This is used to save the previous state of each session. 1 - UP , 0 - DOWN
     vector<int> m_sessions;
@@ -295,6 +295,8 @@ private:
     bool m_Up;
 
     sc_mutex m_UpMutex;
+
+    BGPMessage m_Previous;
 
 
 };

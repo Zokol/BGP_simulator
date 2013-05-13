@@ -302,16 +302,6 @@ void Router::removeLocalPref(int p_AS)
     m_RoutingTable.removeLocalPref(p_AS);
 }
 
-bool Router::send(Packet& p_Packet)
-{
-	return m_NetworkInterface[m_RouterConfiguration->getNumberOfInterfaces()-1]->forward(p_Packet);
-}
-
-bool Router::receive(Packet& p_Packet)
-{
-	return true;
-}
-
 
 
 
