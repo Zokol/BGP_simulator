@@ -1,0 +1,176 @@
+\hypertarget{main_8cpp}{\section{/home/antipant/\-Protocol\-P\-\_\-\-Project/main.cpp File Reference}
+\label{main_8cpp}\index{/home/antipant/\-Protocol\-P\-\_\-\-Project/main.\-cpp@{/home/antipant/\-Protocol\-P\-\_\-\-Project/main.\-cpp}}
+}
+
+
+The sc\-\_\-main.  
+
+
+{\ttfamily \#include \char`\"{}Simulation.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Configuration.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}G\-U\-I\-Protocol\-Tags.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Packet\-Processor.\-hpp\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{main_8cpp_a82266acdd954cb0398aa91e591db9b99}{sc\-\_\-main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ \hyperlink{main_8cpp_ae22c4a7a55b37621bfefd4b13f9d1bfe}{g\-\_\-\-Debug\-Main\-I\-D} = \char`\"{}Level\-\_\-debug\-\_\-main\-:\char`\"{}
+\begin{DoxyCompactList}\small\item\em System\-C main function. \end{DoxyCompactList}\item 
+\hypertarget{main_8cpp_ab62c6dcc4d616817631369a4e68cb2b8}{const char $\ast$ {\bfseries g\-\_\-\-Debug\-I\-D} = \char`\"{}Level\-\_\-debug\-:\char`\"{}}\label{main_8cpp_ab62c6dcc4d616817631369a4e68cb2b8}
+
+\item 
+\hypertarget{main_8cpp_a12ffd647b9873da3f21f6b912b1b486d}{const char $\ast$ {\bfseries g\-\_\-\-Report\-I\-D} = \char`\"{}Level\-\_\-info\-:\char`\"{}}\label{main_8cpp_a12ffd647b9873da3f21f6b912b1b486d}
+
+\item 
+\hypertarget{main_8cpp_ad668dfbeeeee24a4f6e7a34bd43bf915}{const char $\ast$ {\bfseries g\-\_\-\-Debug\-C\-P\-I\-D} = \char`\"{}Level\-\_\-debug\-\_\-\-C\-P\char`\"{}}\label{main_8cpp_ad668dfbeeeee24a4f6e7a34bd43bf915}
+
+\item 
+\hypertarget{main_8cpp_a018fdae6f70c6953b3dcdc3f039dfb91}{const char $\ast$ {\bfseries g\-\_\-\-Debug\-B\-S\-I\-D} = \char`\"{}Level\-\_\-debug\-\_\-\-B\-S\char`\"{}}\label{main_8cpp_a018fdae6f70c6953b3dcdc3f039dfb91}
+
+\item 
+\hypertarget{main_8cpp_aec25eb1ecb909c23f9d6f51359b98e4c}{const char $\ast$ {\bfseries g\-\_\-\-Debug\-R\-T\-I\-D} = \char`\"{}Level\-\_\-debug\-\_\-\-R\-T\char`\"{}}\label{main_8cpp_aec25eb1ecb909c23f9d6f51359b98e4c}
+
+\item 
+\hypertarget{main_8cpp_a51a61c4ceb0e1f0ca23c1004844355f0}{const char $\ast$ {\bfseries g\-\_\-\-Error\-I\-D} = \char`\"{}Level\-\_\-error\char`\"{}}\label{main_8cpp_a51a61c4ceb0e1f0ca23c1004844355f0}
+
+\item 
+\hypertarget{main_8cpp_a124933b886b91983824da5850236f173}{const char $\ast$ {\bfseries g\-\_\-\-Simulation\-Version} = \char`\"{}Test run\char`\"{}}\label{main_8cpp_a124933b886b91983824da5850236f173}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The sc\-\_\-main. Start point of the simulation. \begin{DoxyAuthor}{Author}
+Antti Siirilä, 501449 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\-0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+28.\-1.\-2013 
+\end{DoxyDate}
+
+
+Definition in file \hyperlink{main_8cpp_source}{main.\-cpp}.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{main_8cpp_a82266acdd954cb0398aa91e591db9b99}{\index{main.\-cpp@{main.\-cpp}!sc\-\_\-main@{sc\-\_\-main}}
+\index{sc\-\_\-main@{sc\-\_\-main}!main.cpp@{main.\-cpp}}
+\subsubsection[{sc\-\_\-main}]{\setlength{\rightskip}{0pt plus 5cm}int sc\-\_\-main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_a82266acdd954cb0398aa91e591db9b99}
+field parsing states
+
+Initiate a Server socket and bind it to port
+
+Declare a Server socket for the G\-U\-I connection
+
+Instantiate a \hyperlink{classSimulationConfig}{Simulation\-Config} object to store simulation configuration received from the G\-U\-I
+
+Accept the G\-U\-I connection
+
+Set the socket A\-P\-I to non-\/blocking mode
+
+String buffer for received data
+
+Start receiving from the G\-U\-I
+
+Try to receive
+
+If the socket was empty continue receiving
+
+Find the start tag
+
+start tag found. Continue to parse the configuration string
+
+Set the string index
+
+find the end tag
+
+check that end tag was found
+
+If end tag was not found, send N\-A\-C\-K to G\-U\-I and continue receiving
+
+Determine the number of routers
+
+set the number of routers
+
+reset the i\-\_\-\-Start
+
+define an index and initiate it to zero
+
+Parse the fields of all the routers
+
+declare and set the end and start indeices for router parameters
+
+find the end of the router field
+
+set the state to A\-S\-\_\-\-I\-D
+
+Init router configuration object for this
+
+refer to the previous
+
+parse until all the fields are extracted
+
+parse the fields one by one
+
+check the exception cases
+
+this is the end of the router field
+
+get the field
+
+store the field
+
+store the sub field
+
+Store each sub field into a temporary array
+
+update the index for the next iteration
+
+Store the connection parameters to the connection confi object
+
+Report error to the G\-U\-I
+
+Continue receiving
+
+Try to receive
+
+If the socket was empty continue receiving
+
+Output received configuration
+
+initiate the simulation
+
+connect the clock
+
+run the simulation 
+
+Definition at line 41 of file main.\-cpp.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{main_8cpp_ae22c4a7a55b37621bfefd4b13f9d1bfe}{\index{main.\-cpp@{main.\-cpp}!g\-\_\-\-Debug\-Main\-I\-D@{g\-\_\-\-Debug\-Main\-I\-D}}
+\index{g\-\_\-\-Debug\-Main\-I\-D@{g\-\_\-\-Debug\-Main\-I\-D}!main.cpp@{main.\-cpp}}
+\subsubsection[{g\-\_\-\-Debug\-Main\-I\-D}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ g\-\_\-\-Debug\-Main\-I\-D = \char`\"{}Level\-\_\-debug\-\_\-main\-:\char`\"{}}}\label{main_8cpp_ae22c4a7a55b37621bfefd4b13f9d1bfe}
+
+
+System\-C main function. 
+
+\begin{DoxyItemize}
+\item Establishes a T\-C\-P connection with the G\-U\-I program \item Reads the simulation configuration from the G\-U\-I \item Initiates the \hyperlink{classSimulation}{Simulation} module \item Starts the simulation \end{DoxyItemize}
+
+
+Definition at line 32 of file main.\-cpp.
+

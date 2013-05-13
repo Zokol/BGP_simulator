@@ -1,0 +1,84 @@
+\hypertarget{classInterface__If}{\section{Interface\-\_\-\-If Class Reference}
+\label{classInterface__If}\index{Interface\-\_\-\-If@{Interface\-\_\-\-If}}
+}
+Inheritance diagram for Interface\-\_\-\-If\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classInterface__If}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classInterface__If_ac646e14d69d69c1e91e7054c649ad571}{forward} (\hyperlink{classPacket}{Packet} p\-\_\-\-Packet)=0
+\begin{DoxyCompactList}\small\item\em Writes the p\-\_\-\-Packet to the receiving buffer of N\-I\-C that implements this I\-F. \end{DoxyCompactList}\item 
+\hypertarget{classInterface__If_a9c7bc36e9daf6597ee108d398e63b990}{virtual void \hyperlink{classInterface__If_a9c7bc36e9daf6597ee108d398e63b990}{interface\-Down} (void)=0}\label{classInterface__If_a9c7bc36e9daf6597ee108d398e63b990}
+
+\begin{DoxyCompactList}\small\item\em Sets the N\-I\-C down. \end{DoxyCompactList}\item 
+\hypertarget{classInterface__If_aa371c5e16c68e8cedcfcc7aef9dcd308}{virtual bool \hyperlink{classInterface__If_aa371c5e16c68e8cedcfcc7aef9dcd308}{interface\-Up} (void)=0}\label{classInterface__If_aa371c5e16c68e8cedcfcc7aef9dcd308}
+
+\begin{DoxyCompactList}\small\item\em Sets the N\-I\-C up. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classInterface__If_a0a289537769bd38e98e45ff6bd8f510a}{is\-Up} (void)=0
+\begin{DoxyCompactList}\small\item\em Checks if the N\-I\-C is up or down. \end{DoxyCompactList}\item 
+\hypertarget{classInterface__If_affd4f6a8757c1e6ce94eea6307e81b17}{virtual void \hyperlink{classInterface__If_affd4f6a8757c1e6ce94eea6307e81b17}{kill\-Interface} (void)=0}\label{classInterface__If_affd4f6a8757c1e6ce94eea6307e81b17}
+
+\begin{DoxyCompactList}\small\item\em Sets the interface down and empties the receiving and forwarding buffers. \end{DoxyCompactList}\item 
+\hypertarget{classInterface__If_af97df01939e55f731963d2f82529af39}{virtual void \hyperlink{classInterface__If_af97df01939e55f731963d2f82529af39}{reset\-Interface} (void)=0}\label{classInterface__If_af97df01939e55f731963d2f82529af39}
+
+\begin{DoxyCompactList}\small\item\em Kills the interface and reconnects it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 30 of file Interface\-\_\-\-If.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classInterface__If_ac646e14d69d69c1e91e7054c649ad571}{\index{Interface\-\_\-\-If@{Interface\-\_\-\-If}!forward@{forward}}
+\index{forward@{forward}!Interface_If@{Interface\-\_\-\-If}}
+\subsubsection[{forward}]{\setlength{\rightskip}{0pt plus 5cm}bool Interface\-\_\-\-If\-::forward (
+\begin{DoxyParamCaption}
+\item[{{\bf Packet}}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classInterface__If_ac646e14d69d69c1e91e7054c649ad571}
+
+
+Writes the p\-\_\-\-Packet to the receiving buffer of N\-I\-C that implements this I\-F. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classPacket}{Packet}} & p\-\_\-\-Packet The network frame carring B\-G\-P msg or I\-P packet \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true\-: success false\-: N\-I\-C down or the buffer is full 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classInterface_aea72dc6085e96d5a69d770277738802b}{Interface}.
+
+\hypertarget{classInterface__If_a0a289537769bd38e98e45ff6bd8f510a}{\index{Interface\-\_\-\-If@{Interface\-\_\-\-If}!is\-Up@{is\-Up}}
+\index{is\-Up@{is\-Up}!Interface_If@{Interface\-\_\-\-If}}
+\subsubsection[{is\-Up}]{\setlength{\rightskip}{0pt plus 5cm}bool Interface\-\_\-\-If\-::is\-Up (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classInterface__If_a0a289537769bd38e98e45ff6bd8f510a}
+
+
+Checks if the N\-I\-C is up or down. 
+
+\begin{DoxyReturn}{Returns}
+bool true\-: N\-I\-C is up -\/ false\-: N\-I\-C is down 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classInterface_a99298b5fd1fbec6d8da500a356921652}{Interface}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Interface__If_8hpp}{Interface\-\_\-\-If.\-hpp}\end{DoxyCompactItemize}

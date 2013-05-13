@@ -1,0 +1,221 @@
+\hypertarget{classRoutingTable}{\section{Routing\-Table Class Reference}
+\label{classRoutingTable}\index{Routing\-Table@{Routing\-Table}}
+}
+
+
+\hyperlink{classRoutingTable}{Routing\-Table} module.  
+
+
+
+
+{\ttfamily \#include $<$Routing\-Table.\-hpp$>$}
+
+Inheritance diagram for Routing\-Table\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classRoutingTable}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRoutingTable_a71a78835bd82f883251e5937cd3d9bcc}{\hyperlink{classRoutingTable_a71a78835bd82f883251e5937cd3d9bcc}{Routing\-Table} (sc\-\_\-module\-\_\-name p\-\_\-\-Module\-Name, \hyperlink{classControlPlaneConfig}{Control\-Plane\-Config} $\ast$const p\-\_\-\-R\-T\-Config)}\label{classRoutingTable_a71a78835bd82f883251e5937cd3d9bcc}
+
+\begin{DoxyCompactList}\small\item\em Elaborates the \hyperlink{classRoutingTable}{Routing\-Table} module. \end{DoxyCompactList}\item 
+\hyperlink{classRoutingTable_abe5b508511742899600b98401af7c761}{$\sim$\-Routing\-Table} ()
+\begin{DoxyCompactList}\small\item\em Destructor of the \hyperlink{classRoutingTable}{Routing\-Table} module. \end{DoxyCompactList}\item 
+void \hyperlink{classRoutingTable_a9cde93247eb0ec479d085c427e8c040d}{routing\-Table\-Main} (void)
+\begin{DoxyCompactList}\small\item\em The main process of Control Plane module. \end{DoxyCompactList}\item 
+\hypertarget{classRoutingTable_a15cac9bbc532546c14ce29d5b19772bc}{virtual int \hyperlink{classRoutingTable_a15cac9bbc532546c14ce29d5b19772bc}{resolve\-Route} (string p\-\_\-\-I\-P\-Address)}\label{classRoutingTable_a15cac9bbc532546c14ce29d5b19772bc}
+
+\begin{DoxyCompactList}\small\item\em Set new route to the Routing \hyperlink{classTable}{Table}. \end{DoxyCompactList}\item 
+\hyperlink{classRoutingTable_a6672fa1eeba99406384473815b27b6ea}{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S} (\hyperlink{classRoutingTable}{Routing\-Table})
+\begin{DoxyCompactList}\small\item\em Indicate the system\-C producer that this module has a process. \end{DoxyCompactList}\item 
+\hypertarget{classRoutingTable_a2d64d4f1e7d3a8cbb209633c1f50cae2}{bool {\bfseries add\-Route\-To\-Raw\-Table} (string p\-\_\-msg, int p\-\_\-output\-Port)}\label{classRoutingTable_a2d64d4f1e7d3a8cbb209633c1f50cae2}
+
+\item 
+\hypertarget{classRoutingTable_acb0fef81a119d5aa54367bbb817390bb}{void {\bfseries set\-Local\-Preference} (int p\-\_\-\-A\-S, int p\-\_\-preference\-Value)}\label{classRoutingTable_acb0fef81a119d5aa54367bbb817390bb}
+
+\item 
+\hypertarget{classRoutingTable_abb0e727faa93499d36b3f234664df133}{void {\bfseries remove\-Local\-Pref} (int p\-\_\-\-A\-S)}\label{classRoutingTable_abb0e727faa93499d36b3f234664df133}
+
+\item 
+\hypertarget{classRoutingTable_a5e3c7b755bbc5788388a47d5b3d53e1e}{void {\bfseries delete\-Route} (int p\-\_\-router1, int p\-\_\-router2)}\label{classRoutingTable_a5e3c7b755bbc5788388a47d5b3d53e1e}
+
+\item 
+\hypertarget{classRoutingTable_a63a0efbe82ccd53c0e6baa0259c7b10d}{string {\bfseries get\-Routing\-Table} ()}\label{classRoutingTable_a63a0efbe82ccd53c0e6baa0259c7b10d}
+
+\item 
+\hypertarget{classRoutingTable_aadac68ca579fe85ce4328d42acbd3e0d}{string {\bfseries get\-Raw\-Routing\-Table} ()}\label{classRoutingTable_aadac68ca579fe85ce4328d42acbd3e0d}
+
+\item 
+\hypertarget{classRoutingTable_af938852f430a4483c28e7956136fa2ab}{void {\bfseries clear\-Routing\-Tables} ()}\label{classRoutingTable_af938852f430a4483c28e7956136fa2ab}
+
+\item 
+virtual bool \hyperlink{classRoutingTable_ac54104a090c70c3f23799af1f30113e7}{write} (\hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-B\-G\-P\-Msg)
+\begin{DoxyCompactList}\small\item\em Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. \end{DoxyCompactList}\item 
+\hypertarget{classRoutingTable_a2d688b3f2ced6fa02995086cd7a72872}{void {\bfseries kill\-Routing\-Table} (void)}\label{classRoutingTable_a2d688b3f2ced6fa02995086cd7a72872}
+
+\item 
+\hypertarget{classRoutingTable_ad765fbb07c6fdec4e1028a6a75b0762d}{void {\bfseries revive\-Routing\-Table} (void)}\label{classRoutingTable_ad765fbb07c6fdec4e1028a6a75b0762d}
+
+\item 
+\hypertarget{classRoutingTable_a9a796af2479afeecf336670f9aaaebd8}{void {\bfseries set\-Up} (bool p\-\_\-\-Value)}\label{classRoutingTable_a9a796af2479afeecf336670f9aaaebd8}
+
+\item 
+\hypertarget{classRoutingTable_a528839c68336d265c100de1fab267f8f}{bool {\bfseries is\-Running} (void)}\label{classRoutingTable_a528839c68336d265c100de1fab267f8f}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+sc\-\_\-in\-\_\-clk \hyperlink{classRoutingTable_a3f57617a0dbdfabc34534eda6731da74}{port\-\_\-\-Clk}
+\begin{DoxyCompactList}\small\item\em System clock signal. \end{DoxyCompactList}\item 
+sc\-\_\-port$<$ \hyperlink{classBGPSession__If}{B\-G\-P\-Session\-\_\-\-If}, \\*
+0, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ \hyperlink{classRoutingTable_af24047fc955ca1e81caee0468f70f62c}{port\-\_\-\-Session}
+\begin{DoxyCompactList}\small\item\em Control port. \end{DoxyCompactList}\item 
+sc\-\_\-port$<$ \hyperlink{classOutput__If}{Output\-\_\-\-If} $>$ \hyperlink{classRoutingTable_ac463a755c9a322a1641ae0422ee845e3}{port\-\_\-\-Output}
+\begin{DoxyCompactList}\small\item\em Output port for B\-G\-P messages. \end{DoxyCompactList}\item 
+bool \hyperlink{classRoutingTable_a4a4945747e35355545c416e5965b83bc}{m\-\_\-\-New\-Input\-Msg}
+\begin{DoxyCompactList}\small\item\em Set new route to the Routing \hyperlink{classTable}{Table}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classRoutingTable}{Routing\-Table} module. 
+
+Routing \hyperlink{classTable}{Table} contains B\-G\-P routes and offers methods to manage, and access them 
+
+Definition at line 45 of file Routing\-Table.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classRoutingTable_abe5b508511742899600b98401af7c761}{\index{Routing\-Table@{Routing\-Table}!$\sim$\-Routing\-Table@{$\sim$\-Routing\-Table}}
+\index{$\sim$\-Routing\-Table@{$\sim$\-Routing\-Table}!RoutingTable@{Routing\-Table}}
+\subsubsection[{$\sim$\-Routing\-Table}]{\setlength{\rightskip}{0pt plus 5cm}Routing\-Table\-::$\sim$\-Routing\-Table (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classRoutingTable_abe5b508511742899600b98401af7c761}
+
+
+Destructor of the \hyperlink{classRoutingTable}{Routing\-Table} module. 
+
+Free's all the dynamically allocated memory 
+
+Definition at line 38 of file Routing\-Table.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classRoutingTable_a9cde93247eb0ec479d085c427e8c040d}{\index{Routing\-Table@{Routing\-Table}!routing\-Table\-Main@{routing\-Table\-Main}}
+\index{routing\-Table\-Main@{routing\-Table\-Main}!RoutingTable@{Routing\-Table}}
+\subsubsection[{routing\-Table\-Main}]{\setlength{\rightskip}{0pt plus 5cm}void Routing\-Table\-::routing\-Table\-Main (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classRoutingTable_a9cde93247eb0ec479d085c427e8c040d}
+
+
+The main process of Control Plane module. 
+
+\begin{DoxyItemize}
+\item Reads B\-G\-P messages from the m\-\_\-\-Receiving\-Buffer.\item performs the route resolution process accoriding to B\-G\-P protocol. \item Generates the required update messages.\item Keeps track on different B\-G\-P sessions. \end{DoxyItemize}
+B\-G\-P notification and update output port 
+
+Definition at line 44 of file Routing\-Table.\-cpp.
+
+\hypertarget{classRoutingTable_a6672fa1eeba99406384473815b27b6ea}{\index{Routing\-Table@{Routing\-Table}!S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}}
+\index{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}!RoutingTable@{Routing\-Table}}
+\subsubsection[{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}]{\setlength{\rightskip}{0pt plus 5cm}Routing\-Table\-::\-S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S (
+\begin{DoxyParamCaption}
+\item[{{\bf Routing\-Table}}]{}
+\end{DoxyParamCaption}
+)}}\label{classRoutingTable_a6672fa1eeba99406384473815b27b6ea}
+
+
+Indicate the system\-C producer that this module has a process. 
+
+\begin{DoxySeeAlso}{See Also}
+\href{http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html}{\tt http\-://www.\-iro.\-umontreal.\-ca/$\sim$lablasso/docs/\-System\-C2.\-0.\-1/html/classproducer.\-html} 
+\end{DoxySeeAlso}
+\hypertarget{classRoutingTable_ac54104a090c70c3f23799af1f30113e7}{\index{Routing\-Table@{Routing\-Table}!write@{write}}
+\index{write@{write}!RoutingTable@{Routing\-Table}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}bool Routing\-Table\-::write (
+\begin{DoxyParamCaption}
+\item[{{\bf B\-G\-P\-Message} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classRoutingTable_ac54104a090c70c3f23799af1f30113e7}
+
+
+Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. 
+
+The method shall implement a mutex that takes care of the arbitraton between sessions 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classBGPMessage}{B\-G\-P\-Message}} & p\-\_\-\-B\-G\-P\-Msg The B\-G\-P message to be send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True\-: if success is valid, False\-: if not success 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classOutput__If_aeef0f3dff2d02e85375e914e83140602}{Output\-\_\-\-If$<$ B\-G\-P\-Message $>$}.
+
+
+
+Definition at line 1152 of file Routing\-Table.\-cpp.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{classRoutingTable_a4a4945747e35355545c416e5965b83bc}{\index{Routing\-Table@{Routing\-Table}!m\-\_\-\-New\-Input\-Msg@{m\-\_\-\-New\-Input\-Msg}}
+\index{m\-\_\-\-New\-Input\-Msg@{m\-\_\-\-New\-Input\-Msg}!RoutingTable@{Routing\-Table}}
+\subsubsection[{m\-\_\-\-New\-Input\-Msg}]{\setlength{\rightskip}{0pt plus 5cm}bool Routing\-Table\-::m\-\_\-\-New\-Input\-Msg}}\label{classRoutingTable_a4a4945747e35355545c416e5965b83bc}
+
+
+Set new route to the Routing \hyperlink{classTable}{Table}. 
+
+Set new route to the Routing \hyperlink{classTable}{Table} 
+
+Definition at line 283 of file Routing\-Table.\-hpp.
+
+\hypertarget{classRoutingTable_a3f57617a0dbdfabc34534eda6731da74}{\index{Routing\-Table@{Routing\-Table}!port\-\_\-\-Clk@{port\-\_\-\-Clk}}
+\index{port\-\_\-\-Clk@{port\-\_\-\-Clk}!RoutingTable@{Routing\-Table}}
+\subsubsection[{port\-\_\-\-Clk}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-in\-\_\-clk Routing\-Table\-::port\-\_\-\-Clk}}\label{classRoutingTable_a3f57617a0dbdfabc34534eda6731da74}
+
+
+System clock signal. 
+
+The router's internal clock 
+
+Definition at line 55 of file Routing\-Table.\-hpp.
+
+\hypertarget{classRoutingTable_ac463a755c9a322a1641ae0422ee845e3}{\index{Routing\-Table@{Routing\-Table}!port\-\_\-\-Output@{port\-\_\-\-Output}}
+\index{port\-\_\-\-Output@{port\-\_\-\-Output}!RoutingTable@{Routing\-Table}}
+\subsubsection[{port\-\_\-\-Output}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-port$<${\bf Output\-\_\-\-If}$>$ Routing\-Table\-::port\-\_\-\-Output}}\label{classRoutingTable_ac463a755c9a322a1641ae0422ee845e3}
+
+
+Output port for B\-G\-P messages. 
+
+The \hyperlink{classRoutingTable}{Routing\-Table} writes all the B\-G\-P messages to be send to its neighbors into this port. The port should be bind to the Data Plane's. receiving F\-I\-F\-O 
+
+Definition at line 72 of file Routing\-Table.\-hpp.
+
+\hypertarget{classRoutingTable_af24047fc955ca1e81caee0468f70f62c}{\index{Routing\-Table@{Routing\-Table}!port\-\_\-\-Session@{port\-\_\-\-Session}}
+\index{port\-\_\-\-Session@{port\-\_\-\-Session}!RoutingTable@{Routing\-Table}}
+\subsubsection[{port\-\_\-\-Session}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-port$<${\bf B\-G\-P\-Session\-\_\-\-If}, 0, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D$>$ Routing\-Table\-::port\-\_\-\-Session}}\label{classRoutingTable_af24047fc955ca1e81caee0468f70f62c}
+
+
+Control port. 
+
+Routing table can check through this port whether the network interfaces are up or not. 
+
+Definition at line 63 of file Routing\-Table.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{RoutingTable_8hpp}{Routing\-Table.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{RoutingTable_8cpp}{Routing\-Table.\-cpp}\end{DoxyCompactItemize}

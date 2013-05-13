@@ -1,0 +1,141 @@
+\hypertarget{classHost}{\section{Host Class Reference}
+\label{classHost}\index{Host@{Host}}
+}
+
+
+\hyperlink{classHost}{Host} module.  
+
+
+
+
+{\ttfamily \#include $<$Host.\-hpp$>$}
+
+Inheritance diagram for Host\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classHost}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHost_a2b50e87ea08877ce1f618f0305cfcc30}{void {\bfseries host\-Main} (void)}\label{classHost_a2b50e87ea08877ce1f618f0305cfcc30}
+
+\item 
+\hyperlink{classHost_a8c8159669a97b7d2e7aeca227c1c0e97}{Host} (sc\-\_\-module\-\_\-name p\-\_\-\-Module\-Name, \hyperlink{classConnection}{Connection} $\ast$p\-\_\-\-Connection\-Config)
+\item 
+\hypertarget{classHost_abbb2fd8a913de123b33160c140d54c71}{void {\bfseries interface\-Up} (void)}\label{classHost_abbb2fd8a913de123b33160c140d54c71}
+
+\item 
+virtual bool \hyperlink{classHost_a56eb630fcf00ef1184d5df27f66a9b9e}{send\-Message} (string p\-\_\-\-Destination\-I\-P, string p\-\_\-\-Source\-I\-P, string p\-\_\-\-Payload)
+\item 
+virtual string \hyperlink{classHost_a4393bc6a6521e084d9f2663f8d0564bb}{rea\-Message\-Buffer} (void)
+\item 
+virtual void \hyperlink{classHost_aa70d91a0fd3b482f001909569b3396be}{clear\-Message\-Buffer} (void)
+\item 
+\hypertarget{classHost_adc2e7e8bd896b96767b11c3f3da61ec6}{{\bfseries S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S} (\hyperlink{classHost}{Host})}\label{classHost_adc2e7e8bd896b96767b11c3f3da61ec6}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHost_a88a2578209c583dd5715d07a84b6c6c6}{sc\-\_\-export$<$ \hyperlink{classInterface__If}{Interface\-\_\-\-If} $>$ $\ast$$\ast$ {\bfseries export\-\_\-\-Receiving\-Interface}}\label{classHost_a88a2578209c583dd5715d07a84b6c6c6}
+
+\item 
+\hypertarget{classHost_a14ccfead574709c66f4495b3b5840957}{sc\-\_\-port$<$ \hyperlink{classInterface__If}{Interface\-\_\-\-If}, \\*
+1, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ $\ast$$\ast$ {\bfseries port\-\_\-\-Forwarding\-Interface}}\label{classHost_a14ccfead574709c66f4495b3b5840957}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classHost}{Host} module. 
+
+Definition at line 38 of file Host.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classHost_a8c8159669a97b7d2e7aeca227c1c0e97}{\index{Host@{Host}!Host@{Host}}
+\index{Host@{Host}!Host@{Host}}
+\subsubsection[{Host}]{\setlength{\rightskip}{0pt plus 5cm}Host\-::\-Host (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-module\-\_\-name}]{p\-\_\-\-Module\-Name, }
+\item[{{\bf Connection} $\ast$}]{p\-\_\-\-Connection\-Config}
+\end{DoxyParamCaption}
+)}}\label{classHost_a8c8159669a97b7d2e7aeca227c1c0e97}
+\hyperlink{classStringTools}{String\-Tools} instance for reporting
+
+\begin{DoxyItemize}
+\item define clock period for \hyperlink{classRouter}{Router}\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Allocate clock for the Routers using the previously allocated period \end{DoxyItemize}
+
+
+Definition at line 13 of file Host.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classHost_aa70d91a0fd3b482f001909569b3396be}{\index{Host@{Host}!clear\-Message\-Buffer@{clear\-Message\-Buffer}}
+\index{clear\-Message\-Buffer@{clear\-Message\-Buffer}!Host@{Host}}
+\subsubsection[{clear\-Message\-Buffer}]{\setlength{\rightskip}{0pt plus 5cm}void Host\-::clear\-Message\-Buffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classHost_aa70d91a0fd3b482f001909569b3396be}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classCommunication__If}{Communication\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classCommunication__If_ad0a41ea2bebc146be6ee6db89d49486d}{Communication\-\_\-\-If}.
+
+
+
+Definition at line 135 of file Host.\-cpp.
+
+\hypertarget{classHost_a4393bc6a6521e084d9f2663f8d0564bb}{\index{Host@{Host}!rea\-Message\-Buffer@{rea\-Message\-Buffer}}
+\index{rea\-Message\-Buffer@{rea\-Message\-Buffer}!Host@{Host}}
+\subsubsection[{rea\-Message\-Buffer}]{\setlength{\rightskip}{0pt plus 5cm}string Host\-::rea\-Message\-Buffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classHost_a4393bc6a6521e084d9f2663f8d0564bb}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classCommunication__If}{Communication\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classCommunication__If_a6a6083e9f88d3bd0897ccd1c6448f9c8}{Communication\-\_\-\-If}.
+
+
+
+Definition at line 123 of file Host.\-cpp.
+
+\hypertarget{classHost_a56eb630fcf00ef1184d5df27f66a9b9e}{\index{Host@{Host}!send\-Message@{send\-Message}}
+\index{send\-Message@{send\-Message}!Host@{Host}}
+\subsubsection[{send\-Message}]{\setlength{\rightskip}{0pt plus 5cm}bool Host\-::send\-Message (
+\begin{DoxyParamCaption}
+\item[{string}]{p\-\_\-\-Destination\-I\-P, }
+\item[{string}]{p\-\_\-\-Source\-I\-P, }
+\item[{string}]{p\-\_\-\-Payload}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classHost_a56eb630fcf00ef1184d5df27f66a9b9e}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classCommunication__If}{Communication\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classCommunication__If_ab9c0279d64e4ce15b2f54c0df6d8ee3a}{Communication\-\_\-\-If}.
+
+
+
+Definition at line 109 of file Host.\-cpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Host_8hpp}{Host.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Host_8cpp}{Host.\-cpp}\end{DoxyCompactItemize}

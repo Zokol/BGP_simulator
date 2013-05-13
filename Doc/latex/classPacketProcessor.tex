@@ -1,0 +1,176 @@
+\hypertarget{classPacketProcessor}{\section{Packet\-Processor Class Reference}
+\label{classPacketProcessor}\index{Packet\-Processor@{Packet\-Processor}}
+}
+
+
+\hyperlink{classPacketProcessor}{Packet\-Processor} class.  
+
+
+
+
+{\ttfamily \#include $<$Packet\-Processor.\-hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPacketProcessor_a291d46ed0984263adeafb8468fcc73c6}{{\bfseries Packet\-Processor} (const char $\ast$p\-\_\-\-Name)}\label{classPacketProcessor_a291d46ed0984263adeafb8468fcc73c6}
+
+\item 
+\hyperlink{classPacket}{Packet} \& \hyperlink{classPacketProcessor_a2e64f01458bcc7fbe2b1fd922e1e4340}{build\-I\-P\-Packet} (string p\-\_\-\-Destination\-I\-P, string p\-\_\-\-Source\-I\-P, string p\-\_\-\-Payload)
+\begin{DoxyCompactList}\small\item\em Builds an I\-P packet using the passed fields as data. \end{DoxyCompactList}\item 
+string \hyperlink{classPacketProcessor_aa47781f9d17becf245930e46470261ff}{read\-I\-P\-Packet} (void)
+\begin{DoxyCompactList}\small\item\em Outputs the contents of an I\-P packet. \end{DoxyCompactList}\item 
+bool \hyperlink{classPacketProcessor_af9e66fdf37bfe00a3c71497dda969a56}{process\-Frame} (\hyperlink{classPacket}{Packet} \&p\-\_\-\-Packet)
+\begin{DoxyCompactList}\small\item\em Validates an I\-P packet. \end{DoxyCompactList}\item 
+string \hyperlink{classPacketProcessor_ac998c53191d575509fc2aa5298a1f90b}{get\-Destination} (void)
+\begin{DoxyCompactList}\small\item\em Returns the destination of the processed packet. \end{DoxyCompactList}\item 
+bool \hyperlink{classPacketProcessor_a631b0bd17d767c2d822cec00642402e5}{forward} (\hyperlink{classPacket}{Packet} $\ast$p\-\_\-\-Frame)
+\begin{DoxyCompactList}\small\item\em copies the processed frame to the passed reference \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classPacketProcessor}{Packet\-Processor} class. 
+
+Performs all the tasks related to I\-P packet processing.
+
+Allows to send, reiceve, and forward I\-P packets 
+
+Definition at line 77 of file Packet\-Processor.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPacketProcessor_a2e64f01458bcc7fbe2b1fd922e1e4340}{\index{Packet\-Processor@{Packet\-Processor}!build\-I\-P\-Packet@{build\-I\-P\-Packet}}
+\index{build\-I\-P\-Packet@{build\-I\-P\-Packet}!PacketProcessor@{Packet\-Processor}}
+\subsubsection[{build\-I\-P\-Packet}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\-Processor\-::build\-I\-P\-Packet (
+\begin{DoxyParamCaption}
+\item[{string}]{p\-\_\-\-Destination\-I\-P, }
+\item[{string}]{p\-\_\-\-Source\-I\-P, }
+\item[{string}]{p\-\_\-\-Payload}
+\end{DoxyParamCaption}
+)}}\label{classPacketProcessor_a2e64f01458bcc7fbe2b1fd922e1e4340}
+
+
+Builds an I\-P packet using the passed fields as data. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classPacketProcessor}{Packet\-Processor}
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Destination\-I\-P \\
+\hline
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Source\-I\-P \\
+\hline
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Payload \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{classPacket}{Packet}\& reference to the frame that contains the built packet 
+\end{DoxyReturn}
+
+
+Definition at line 199 of file Packet\-Processor.\-cpp.
+
+\hypertarget{classPacketProcessor_a631b0bd17d767c2d822cec00642402e5}{\index{Packet\-Processor@{Packet\-Processor}!forward@{forward}}
+\index{forward@{forward}!PacketProcessor@{Packet\-Processor}}
+\subsubsection[{forward}]{\setlength{\rightskip}{0pt plus 5cm}bool Packet\-Processor\-::forward (
+\begin{DoxyParamCaption}
+\item[{{\bf Packet} $\ast$}]{p\-\_\-\-Frame}
+\end{DoxyParamCaption}
+)}}\label{classPacketProcessor_a631b0bd17d767c2d822cec00642402e5}
+
+
+copies the processed frame to the passed reference 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classPacketProcessor}{Packet\-Processor}
+\end{DoxySeeAlso}
+decrements the T\-T\-L and recalculates the checksum using the incremental method 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Packet\&} & p\-\_\-\-Frame Reference to the object in which the processed frame should be copied \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true\-: packet is ready to be forwarded -\/ false\-: packet was dropped 
+\end{DoxyReturn}
+
+
+Definition at line 182 of file Packet\-Processor.\-cpp.
+
+\hypertarget{classPacketProcessor_ac998c53191d575509fc2aa5298a1f90b}{\index{Packet\-Processor@{Packet\-Processor}!get\-Destination@{get\-Destination}}
+\index{get\-Destination@{get\-Destination}!PacketProcessor@{Packet\-Processor}}
+\subsubsection[{get\-Destination}]{\setlength{\rightskip}{0pt plus 5cm}string Packet\-Processor\-::get\-Destination (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classPacketProcessor_ac998c53191d575509fc2aa5298a1f90b}
+
+
+Returns the destination of the processed packet. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classPacketProcessor}{Packet\-Processor}
+\end{DoxySeeAlso}
+\begin{DoxyReturn}{Returns}
+string\-: the destination I\-P address as string 
+\end{DoxyReturn}
+
+
+Definition at line 173 of file Packet\-Processor.\-cpp.
+
+\hypertarget{classPacketProcessor_af9e66fdf37bfe00a3c71497dda969a56}{\index{Packet\-Processor@{Packet\-Processor}!process\-Frame@{process\-Frame}}
+\index{process\-Frame@{process\-Frame}!PacketProcessor@{Packet\-Processor}}
+\subsubsection[{process\-Frame}]{\setlength{\rightskip}{0pt plus 5cm}bool Packet\-Processor\-::process\-Frame (
+\begin{DoxyParamCaption}
+\item[{{\bf Packet} \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)}}\label{classPacketProcessor_af9e66fdf37bfe00a3c71497dda969a56}
+
+
+Validates an I\-P packet. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classPacketProcessor}{Packet\-Processor}
+\end{DoxySeeAlso}
+Check whether the passed packet is a valid I\-P packet. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classPacket}{Packet}} & p\-\_\-\-Packet I\-P packet to be processed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool\-: true == \hyperlink{classPacket}{Packet} is valid $|$$|$ false == \hyperlink{classPacket}{Packet} is not valid 
+\end{DoxyReturn}
+
+
+Definition at line 96 of file Packet\-Processor.\-cpp.
+
+\hypertarget{classPacketProcessor_aa47781f9d17becf245930e46470261ff}{\index{Packet\-Processor@{Packet\-Processor}!read\-I\-P\-Packet@{read\-I\-P\-Packet}}
+\index{read\-I\-P\-Packet@{read\-I\-P\-Packet}!PacketProcessor@{Packet\-Processor}}
+\subsubsection[{read\-I\-P\-Packet}]{\setlength{\rightskip}{0pt plus 5cm}string Packet\-Processor\-::read\-I\-P\-Packet (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classPacketProcessor_aa47781f9d17becf245930e46470261ff}
+
+
+Outputs the contents of an I\-P packet. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classPacketProcessor}{Packet\-Processor}
+\end{DoxySeeAlso}
+The header and payload is written in the return string \begin{DoxyReturn}{Returns}
+string\-: the complete I\-P packet as a string 
+\end{DoxyReturn}
+R\-E\-A\-D H\-E\-A\-D\-E\-R F\-I\-E\-L\-D\-S
+
+R\-E\-A\-D P\-A\-Y\-L\-O\-A\-D 
+
+Definition at line 26 of file Packet\-Processor.\-cpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{PacketProcessor_8hpp}{Packet\-Processor.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{PacketProcessor_8cpp}{Packet\-Processor.\-cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,54 @@
+\hypertarget{classOutput__If}{\section{Output\-\_\-\-If$<$ T $>$ Class Template Reference}
+\label{classOutput__If}\index{Output\-\_\-\-If$<$ T $>$@{Output\-\_\-\-If$<$ T $>$}}
+}
+Inheritance diagram for Output\-\_\-\-If$<$ T $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classOutput__If}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classOutput__If_aeef0f3dff2d02e85375e914e83140602}{write} (T \&)=0
+\begin{DoxyCompactList}\small\item\em Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T$>$class Output\-\_\-\-If$<$ T $>$}
+
+
+
+Definition at line 29 of file Output\-\_\-\-If.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classOutput__If_aeef0f3dff2d02e85375e914e83140602}{\index{Output\-\_\-\-If@{Output\-\_\-\-If}!write@{write}}
+\index{write@{write}!Output_If@{Output\-\_\-\-If}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ virtual bool {\bf Output\-\_\-\-If}$<$ T $>$\-::write (
+\begin{DoxyParamCaption}
+\item[{T \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classOutput__If_aeef0f3dff2d02e85375e914e83140602}
+
+
+Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. 
+
+The method shall implement a mutex that takes care of the arbitraton between sessions 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classBGPMessage}{B\-G\-P\-Message}} & p\-\_\-\-B\-G\-P\-Msg The B\-G\-P message to be send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True\-: if success is valid, False\-: if not success 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classRoutingTable_ac54104a090c70c3f23799af1f30113e7}{Routing\-Table}, \hyperlink{classControlPlane_a602bc55e4d99aab6e0b38468afecdc1f}{Control\-Plane}, \hyperlink{classInterface_a38e700c787ec1927f1dfcbecf6d5e67e}{Interface}, and \hyperlink{classDataPlane_a5ffc92484ff41f3ec1a2998ac598fe2f}{Data\-Plane}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Output__If_8hpp}{Output\-\_\-\-If.\-hpp}\end{DoxyCompactItemize}

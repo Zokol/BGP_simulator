@@ -1,0 +1,133 @@
+\hypertarget{classSimulationConfig}{\section{Simulation\-Config Class Reference}
+\label{classSimulationConfig}\index{Simulation\-Config@{Simulation\-Config}}
+}
+
+
+Holds all the simulation parameters received from G\-U\-I.  
+
+
+
+
+{\ttfamily \#include $<$Configuration.\-hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSimulationConfig_ab3138278034afec998556d14f962279d}{{\bfseries Simulation\-Config} (int p\-\_\-\-Number\-Of\-Routers)}\label{classSimulationConfig_ab3138278034afec998556d14f962279d}
+
+\item 
+\hypertarget{classSimulationConfig_a33a33ed001652269877187a5dba500e8}{void {\bfseries init} (int p\-\_\-\-Number\-Of\-Routers)}\label{classSimulationConfig_a33a33ed001652269877187a5dba500e8}
+
+\item 
+\hypertarget{classSimulationConfig_a4d3f7e7012dae6304dd35e1c2f8fba60}{void {\bfseries add\-Router\-Config} (int p\-\_\-\-Router\-Id, int p\-\_\-\-Number\-Of\-Interfaces)}\label{classSimulationConfig_a4d3f7e7012dae6304dd35e1c2f8fba60}
+
+\item 
+\hypertarget{classSimulationConfig_a05a2f2aa506808c1d65c21beeb91d875}{void {\bfseries add\-Connection\-Config} (int p\-\_\-\-Local\-Router\-Id, int p\-\_\-\-Local\-Interface\-Id, int p\-\_\-\-Neighbor\-Interface\-Id, int p\-\_\-\-Neighbor\-Router\-Id)}\label{classSimulationConfig_a05a2f2aa506808c1d65c21beeb91d875}
+
+\item 
+\hypertarget{classSimulationConfig_ad270719409152a88ce192dbb7f3cbff2}{void {\bfseries add\-B\-G\-P\-Session\-Parameters} (int p\-\_\-\-Local\-Router\-Id, int p\-\_\-\-Keepalive\-Time, int p\-\_\-\-Hold\-Down\-Time\-Factor)}\label{classSimulationConfig_ad270719409152a88ce192dbb7f3cbff2}
+
+\item 
+void \hyperlink{classSimulationConfig_aa7665120bc7e38768ec483e5c1daada7}{set\-Number\-Of\-Routers} (int p\-\_\-\-Number\-Of\-Routers)
+\begin{DoxyCompactList}\small\item\em Sets the number of routers used in this simulation. \end{DoxyCompactList}\item 
+int \hyperlink{classSimulationConfig_a5523c4c41cdd0b094dc3d84e0c310058}{get\-Number\-Of\-Routers} (void)
+\begin{DoxyCompactList}\small\item\em Returns the number of routers in the simulation. \end{DoxyCompactList}\item 
+\hyperlink{classRouterConfig}{Router\-Config} \& \hyperlink{classSimulationConfig_a66aa890c0bdae066484b14adc6e056e7}{get\-Router\-Configuration} (int p\-\_\-\-Router\-Id)
+\begin{DoxyCompactList}\small\item\em Returns the reference to the Router\-Config-\/object defined by p\-\_\-\-Router\-Id. \end{DoxyCompactList}\item 
+\hypertarget{classSimulationConfig_a753beeec5358a2fb222588801d31b24e}{\hyperlink{classRouterConfig}{Router\-Config} $\ast$ {\bfseries get\-Router\-Configuration\-Ptr} (int p\-\_\-\-Router\-Id)}\label{classSimulationConfig_a753beeec5358a2fb222588801d31b24e}
+
+\item 
+\hypertarget{classSimulationConfig_a6e8ea0a98f3e04be129501eb2a024310}{\hyperlink{classConnection}{Connection} $\ast$ {\bfseries get\-Host\-Configuration\-Ptr} (int p\-\_\-\-Router\-Id)}\label{classSimulationConfig_a6e8ea0a98f3e04be129501eb2a024310}
+
+\item 
+\hypertarget{classSimulationConfig_a824111112a0ddc0cd9bfc532cce663fc}{\hyperlink{classSimulationConfig}{Simulation\-Config} \& \hyperlink{classSimulationConfig_a824111112a0ddc0cd9bfc532cce663fc}{operator=} (const \hyperlink{classSimulationConfig}{Simulation\-Config} \&p\-\_\-\-Original)}\label{classSimulationConfig_a824111112a0ddc0cd9bfc532cce663fc}
+
+\begin{DoxyCompactList}\small\item\em Operators. \end{DoxyCompactList}\item 
+\hypertarget{classSimulationConfig_adbc183975c7dfca169c53647e276998c}{void {\bfseries if\-Modes} (void)}\label{classSimulationConfig_adbc183975c7dfca169c53647e276998c}
+
+\item 
+\hypertarget{classSimulationConfig_aa4c6f7793fc34671aa0a1a277d187525}{string {\bfseries to\-String} (void)}\label{classSimulationConfig_aa4c6f7793fc34671aa0a1a277d187525}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSimulationConfig_ae984d530f8e326656bb1736880c0156f}{int \hyperlink{classSimulationConfig_ae984d530f8e326656bb1736880c0156f}{m\-\_\-\-Number\-Of\-Routers}}\label{classSimulationConfig_ae984d530f8e326656bb1736880c0156f}
+
+\begin{DoxyCompactList}\small\item\em Number of routers that this simulation should allocate. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Holds all the simulation parameters received from G\-U\-I. 
+
+\hyperlink{classSimulationConfig}{Simulation\-Config}
+
+Used to build up the simulatin environment 
+
+Definition at line 471 of file Configuration.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classSimulationConfig_a5523c4c41cdd0b094dc3d84e0c310058}{\index{Simulation\-Config@{Simulation\-Config}!get\-Number\-Of\-Routers@{get\-Number\-Of\-Routers}}
+\index{get\-Number\-Of\-Routers@{get\-Number\-Of\-Routers}!SimulationConfig@{Simulation\-Config}}
+\subsubsection[{get\-Number\-Of\-Routers}]{\setlength{\rightskip}{0pt plus 5cm}int Simulation\-Config\-::get\-Number\-Of\-Routers (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classSimulationConfig_a5523c4c41cdd0b094dc3d84e0c310058}
+
+
+Returns the number of routers in the simulation. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 369 of file Configuration.\-cpp.
+
+\hypertarget{classSimulationConfig_a66aa890c0bdae066484b14adc6e056e7}{\index{Simulation\-Config@{Simulation\-Config}!get\-Router\-Configuration@{get\-Router\-Configuration}}
+\index{get\-Router\-Configuration@{get\-Router\-Configuration}!SimulationConfig@{Simulation\-Config}}
+\subsubsection[{get\-Router\-Configuration}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Router\-Config} \& Simulation\-Config\-::get\-Router\-Configuration (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Router\-Id}
+\end{DoxyParamCaption}
+)}}\label{classSimulationConfig_a66aa890c0bdae066484b14adc6e056e7}
+
+
+Returns the reference to the Router\-Config-\/object defined by p\-\_\-\-Router\-Id. 
+
+\begin{DoxyReturn}{Returns}
+reference to \hyperlink{classRouterConfig}{Router\-Config} object 
+\end{DoxyReturn}
+
+
+Definition at line 371 of file Configuration.\-cpp.
+
+\hypertarget{classSimulationConfig_aa7665120bc7e38768ec483e5c1daada7}{\index{Simulation\-Config@{Simulation\-Config}!set\-Number\-Of\-Routers@{set\-Number\-Of\-Routers}}
+\index{set\-Number\-Of\-Routers@{set\-Number\-Of\-Routers}!SimulationConfig@{Simulation\-Config}}
+\subsubsection[{set\-Number\-Of\-Routers}]{\setlength{\rightskip}{0pt plus 5cm}void Simulation\-Config\-::set\-Number\-Of\-Routers (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Number\-Of\-Routers}
+\end{DoxyParamCaption}
+)}}\label{classSimulationConfig_aa7665120bc7e38768ec483e5c1daada7}
+
+
+Sets the number of routers used in this simulation. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Number\-Of\-Routers The router count \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 364 of file Configuration.\-cpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Configuration_8hpp}{Configuration.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/Configuration.\-cpp\end{DoxyCompactItemize}

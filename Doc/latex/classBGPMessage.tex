@@ -1,0 +1,164 @@
+\hypertarget{classBGPMessage}{\section{B\-G\-P\-Message Class Reference}
+\label{classBGPMessage}\index{B\-G\-P\-Message@{B\-G\-P\-Message}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classBGPMessage_adc6bbac9250b1d246111183f8322f25f}{{\bfseries B\-G\-P\-Message} (\hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-Msg)}\label{classBGPMessage_adc6bbac9250b1d246111183f8322f25f}
+
+\item 
+\hyperlink{classBGPMessage}{B\-G\-P\-Message} \& \hyperlink{classBGPMessage_ac24ad07e2e991aa00aca3b60ed15b869}{operator=} (const \hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-Msg)
+\begin{DoxyCompactList}\small\item\em Overload of assign operator. \end{DoxyCompactList}\item 
+bool \hyperlink{classBGPMessage_a0bb89ae6df629fd0718ddd08453c1b61}{operator==} (const \hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-Msg) const 
+\begin{DoxyCompactList}\small\item\em Overload of compare operator. \end{DoxyCompactList}\item 
+\hypertarget{classBGPMessage_a36db34985c63befc284448f562bab316}{void {\bfseries clear\-Message} (void)}\label{classBGPMessage_a36db34985c63befc284448f562bab316}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classBGPMessage_a9710a231150dd9d3dffde8dabce92fb8}{int \hyperlink{classBGPMessage_a9710a231150dd9d3dffde8dabce92fb8}{m\-\_\-\-Type}}\label{classBGPMessage_a9710a231150dd9d3dffde8dabce92fb8}
+
+\begin{DoxyCompactList}\small\item\em Holds the B\-G\-P message type value. \end{DoxyCompactList}\item 
+\hypertarget{classBGPMessage_a4771242e2f77745ed88421240817d85f}{string \hyperlink{classBGPMessage_a4771242e2f77745ed88421240817d85f}{m\-\_\-\-B\-G\-P\-Identifier}}\label{classBGPMessage_a4771242e2f77745ed88421240817d85f}
+
+\begin{DoxyCompactList}\small\item\em The originator's B\-G\-P identifier. \end{DoxyCompactList}\item 
+\hypertarget{classBGPMessage_aa6d0e6ed2b166f769d57c255c0cb551a}{int \hyperlink{classBGPMessage_aa6d0e6ed2b166f769d57c255c0cb551a}{m\-\_\-\-Outbound\-Interface}}\label{classBGPMessage_aa6d0e6ed2b166f769d57c255c0cb551a}
+
+\begin{DoxyCompactList}\small\item\em The originator's B\-G\-P identifier. \end{DoxyCompactList}\item 
+\hypertarget{classBGPMessage_aaaa12a50a5b5a53bb7235a3f8462d8b1}{int \hyperlink{classBGPMessage_aaaa12a50a5b5a53bb7235a3f8462d8b1}{m\-\_\-\-A\-S}}\label{classBGPMessage_aaaa12a50a5b5a53bb7235a3f8462d8b1}
+
+\begin{DoxyCompactList}\small\item\em A\-S identifier. \end{DoxyCompactList}\item 
+\hypertarget{classBGPMessage_aa0928ff15ae83782dc580717bd9e1d8d}{int {\bfseries m\-\_\-\-Hold\-Down\-Time}}\label{classBGPMessage_aa0928ff15ae83782dc580717bd9e1d8d}
+
+\item 
+\hypertarget{classBGPMessage_ab556609df97434b77390af0ec1b582ea}{unsigned long {\bfseries m\-\_\-\-Msg\-Id}}\label{classBGPMessage_ab556609df97434b77390af0ec1b582ea}
+
+\item 
+\hypertarget{classBGPMessage_ae608943915516251f617ee85b232d979}{string \hyperlink{classBGPMessage_ae608943915516251f617ee85b232d979}{m\-\_\-\-Message}}\label{classBGPMessage_ae608943915516251f617ee85b232d979}
+
+\begin{DoxyCompactList}\small\item\em B\-G\-P message fields. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Related Functions}
+(Note that these are not member functions.) \begin{DoxyCompactItemize}
+\item 
+ostream \& \hyperlink{classBGPMessage_ace73025b1f5f8e0b2ea9be4f48da7cd7}{operator$<$$<$} (ostream \&os, \hyperlink{classBGPMessage}{B\-G\-P\-Message} const \&p\-\_\-\-Msg)
+\begin{DoxyCompactList}\small\item\em Overload stream operator. \end{DoxyCompactList}\item 
+void \hyperlink{classBGPMessage_a2c02e57efce9755d0f691fc39e0cde40}{sc\-\_\-trace} (sc\-\_\-trace\-\_\-file $\ast$p\-\_\-\-Trace\-File\-Pointer, const \hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-Msg, const string \&p\-\_\-\-Trace\-Object\-Name)
+\begin{DoxyCompactList}\small\item\em Set trace file for this packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 71 of file B\-G\-P\-Message.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classBGPMessage_ac24ad07e2e991aa00aca3b60ed15b869}{\index{B\-G\-P\-Message@{B\-G\-P\-Message}!operator=@{operator=}}
+\index{operator=@{operator=}!BGPMessage@{B\-G\-P\-Message}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf B\-G\-P\-Message} \& B\-G\-P\-Message\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf B\-G\-P\-Message} \&}]{p\-\_\-\-Msg}
+\end{DoxyParamCaption}
+)}}\label{classBGPMessage_ac24ad07e2e991aa00aca3b60ed15b869}
+
+
+Overload of assign operator. 
+
+Copy the data fields of given B\-G\-P\-Message-\/object to the this. Return a reference to this. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classPacket}{Packet}} & p\-\_\-\-B\-G\-P\-Message Reference to a Packet-\/object, which member values is to be assigned to the member fields of this object accordingly \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\bfseries } $<$\-Packet$>$ Reference to this object 
+\end{DoxyReturn}
+
+
+Definition at line 19 of file B\-G\-P\-Message.\-cpp.
+
+\hypertarget{classBGPMessage_a0bb89ae6df629fd0718ddd08453c1b61}{\index{B\-G\-P\-Message@{B\-G\-P\-Message}!operator==@{operator==}}
+\index{operator==@{operator==}!BGPMessage@{B\-G\-P\-Message}}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool B\-G\-P\-Message\-::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf B\-G\-P\-Message} \&}]{p\-\_\-\-Msg}
+\end{DoxyParamCaption}
+) const}}\label{classBGPMessage_a0bb89ae6df629fd0718ddd08453c1b61}
+
+
+Overload of compare operator. 
+
+Compare the data fields of this pkt-\/object to the onces in the given pkt-\/object. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classBGPMessage}{B\-G\-P\-Message}} & p\-\_\-\-Msg Reference to a B\-G\-P\-Message-\/object to be compared with this object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\bfseries } $<$bool$>$ true if the member fields of both objects match otherwise false. 
+\end{DoxyReturn}
+
+
+Definition at line 36 of file B\-G\-P\-Message.\-cpp.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\hypertarget{classBGPMessage_ace73025b1f5f8e0b2ea9be4f48da7cd7}{\index{B\-G\-P\-Message@{B\-G\-P\-Message}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!BGPMessage@{B\-G\-P\-Message}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}ostream\& operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{ostream \&}]{os, }
+\item[{{\bf B\-G\-P\-Message} const \&}]{p\-\_\-\-Msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}}\label{classBGPMessage_ace73025b1f5f8e0b2ea9be4f48da7cd7}
+
+
+Overload stream operator. 
+
+Write data members into given output stream. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em os} & Reference to outputstream in which the member field values is to be written. \\
+\hline
+\mbox{\tt in}  & {\em p\-\_\-\-Msg} & Reference to B\-G\-P\-Message-\/object, which member fields is to be written into outputstream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\bfseries } $<$ostream$>$ Reference to the outputstream containing the written values 
+\end{DoxyReturn}
+
+
+Definition at line 135 of file B\-G\-P\-Message.\-hpp.
+
+\hypertarget{classBGPMessage_a2c02e57efce9755d0f691fc39e0cde40}{\index{B\-G\-P\-Message@{B\-G\-P\-Message}!sc\-\_\-trace@{sc\-\_\-trace}}
+\index{sc\-\_\-trace@{sc\-\_\-trace}!BGPMessage@{B\-G\-P\-Message}}
+\subsubsection[{sc\-\_\-trace}]{\setlength{\rightskip}{0pt plus 5cm}void sc\-\_\-trace (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-trace\-\_\-file $\ast$}]{p\-\_\-\-Trace\-File\-Pointer, }
+\item[{const {\bf B\-G\-P\-Message} \&}]{p\-\_\-\-Msg, }
+\item[{const string \&}]{p\-\_\-\-Trace\-Object\-Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}}\label{classBGPMessage_a2c02e57efce9755d0f691fc39e0cde40}
+
+
+Set trace file for this packet. 
+
+All the member fields shall be traced. Allow system\-C library to access the private members of this class by declaring the function as friend 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em sc\-\_\-trace\-\_\-file} & p\-\_\-\-Trace\-File\-Pointer Pointer to sc\-\_\-trace\-\_\-file-\/object \\
+\hline
+\mbox{\tt in}  & {\em \hyperlink{classBGPMessage}{B\-G\-P\-Message}} & p\-\_\-\-Msg Reference to B\-G\-P\-Message-\/object to be traced \\
+\hline
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Trace\-Object\-Name Name of the Packet-\/object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 151 of file B\-G\-P\-Message.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{BGPMessage_8hpp}{B\-G\-P\-Message.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{BGPMessage_8cpp}{B\-G\-P\-Message.\-cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,222 @@
+\hypertarget{classInterface}{\section{Interface Class Reference}
+\label{classInterface}\index{Interface@{Interface}}
+}
+
+
+\hyperlink{classInterface}{Interface} module inside a \hyperlink{classRouter}{Router} module.  
+
+
+
+
+{\ttfamily \#include $<$Interface.\-hpp$>$}
+
+Inheritance diagram for Interface\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classInterface}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classInterface_a258ac26b1adb34b35eb5bd5fa7a6561c}{\hyperlink{classInterface_a258ac26b1adb34b35eb5bd5fa7a6561c}{Interface} (sc\-\_\-module\-\_\-name p\-\_\-\-Module\-Name, \hyperlink{classConnection}{Connection} $\ast$p\-\_\-\-If\-Config)}\label{classInterface_a258ac26b1adb34b35eb5bd5fa7a6561c}
+
+\begin{DoxyCompactList}\small\item\em Network interface constructor. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classInterface_aea72dc6085e96d5a69d770277738802b}{forward} (\hyperlink{classPacket}{Packet} p\-\_\-\-Packet)
+\item 
+\hypertarget{classInterface_ad0382d42ebfe88d2c947744a6fe139c8}{void \hyperlink{classInterface_ad0382d42ebfe88d2c947744a6fe139c8}{interface\-Main} (void)}\label{classInterface_ad0382d42ebfe88d2c947744a6fe139c8}
+
+\begin{DoxyCompactList}\small\item\em The System\-C process of the \hyperlink{classInterface}{Interface} module. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classInterface_a5398e14244e698b28c060429fa5ea433}{interface\-Down} (void)
+\item 
+virtual bool \hyperlink{classInterface_a28a060b50df99dacb3268b4a16d980e3}{interface\-Up} (void)
+\item 
+virtual bool \hyperlink{classInterface_a99298b5fd1fbec6d8da500a356921652}{is\-Up} (void)
+\item 
+virtual void \hyperlink{classInterface_ada8771473963bc48e4ae54263a109a25}{kill\-Interface} (void)
+\item 
+virtual void \hyperlink{classInterface_a788362ad5da987a5113f0cf02428bd89}{reset\-Interface} (void)
+\item 
+virtual bool \hyperlink{classInterface_a38e700c787ec1927f1dfcbecf6d5e67e}{write} (\hyperlink{classPacket}{Packet} \&p\-\_\-\-Frame)
+\begin{DoxyCompactList}\small\item\em Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. \end{DoxyCompactList}\item 
+\hyperlink{classInterface_a28ace3f1bba508032ddaf36c3c304b62}{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S} (\hyperlink{classInterface}{Interface})
+\begin{DoxyCompactList}\small\item\em Indicate the system\-C producer that this module has a process. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classInterface_a08e2ad865ffff72fac70f2df4181ba63}{sc\-\_\-in\-\_\-clk \hyperlink{classInterface_a08e2ad865ffff72fac70f2df4181ba63}{port\-\_\-\-Clk}}\label{classInterface_a08e2ad865ffff72fac70f2df4181ba63}
+
+\begin{DoxyCompactList}\small\item\em Clock signal. \end{DoxyCompactList}\item 
+\hypertarget{classInterface_ad974df84697109d6d81615c413cd9fbd}{sc\-\_\-port$<$ \hyperlink{classInterface__If}{Interface\-\_\-\-If}, \\*
+1, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ {\bfseries port\-\_\-\-Output}}\label{classInterface_ad974df84697109d6d81615c413cd9fbd}
+
+\item 
+\hypertarget{classInterface_af40b9d9bf57e6ad965c4c98a6e525dd9}{sc\-\_\-export$<$ sc\-\_\-fifo\-\_\-in\-\_\-if\\*
+$<$ \hyperlink{classPacket}{Packet} $>$ $>$ {\bfseries export\-\_\-\-To\-Data\-Plane}}\label{classInterface_af40b9d9bf57e6ad965c4c98a6e525dd9}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classInterface}{Interface} module inside a \hyperlink{classRouter}{Router} module. 
+
+Definition at line 39 of file Interface.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classInterface_aea72dc6085e96d5a69d770277738802b}{\index{Interface@{Interface}!forward@{forward}}
+\index{forward@{forward}!Interface@{Interface}}
+\subsubsection[{forward}]{\setlength{\rightskip}{0pt plus 5cm}bool Interface\-::forward (
+\begin{DoxyParamCaption}
+\item[{{\bf Packet}}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_aea72dc6085e96d5a69d770277738802b}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classInterface__If_ac646e14d69d69c1e91e7054c649ad571}{Interface\-\_\-\-If}.
+
+
+
+Definition at line 44 of file Interface.\-cpp.
+
+\hypertarget{classInterface_a5398e14244e698b28c060429fa5ea433}{\index{Interface@{Interface}!interface\-Down@{interface\-Down}}
+\index{interface\-Down@{interface\-Down}!Interface@{Interface}}
+\subsubsection[{interface\-Down}]{\setlength{\rightskip}{0pt plus 5cm}void Interface\-::interface\-Down (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_a5398e14244e698b28c060429fa5ea433}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classInterface__If_a9c7bc36e9daf6597ee108d398e63b990}{Interface\-\_\-\-If}.
+
+
+
+Definition at line 73 of file Interface.\-cpp.
+
+\hypertarget{classInterface_a28a060b50df99dacb3268b4a16d980e3}{\index{Interface@{Interface}!interface\-Up@{interface\-Up}}
+\index{interface\-Up@{interface\-Up}!Interface@{Interface}}
+\subsubsection[{interface\-Up}]{\setlength{\rightskip}{0pt plus 5cm}bool Interface\-::interface\-Up (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_a28a060b50df99dacb3268b4a16d980e3}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classInterface__If_aa371c5e16c68e8cedcfcc7aef9dcd308}{Interface\-\_\-\-If}.
+
+
+
+Definition at line 80 of file Interface.\-cpp.
+
+\hypertarget{classInterface_a99298b5fd1fbec6d8da500a356921652}{\index{Interface@{Interface}!is\-Up@{is\-Up}}
+\index{is\-Up@{is\-Up}!Interface@{Interface}}
+\subsubsection[{is\-Up}]{\setlength{\rightskip}{0pt plus 5cm}bool Interface\-::is\-Up (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_a99298b5fd1fbec6d8da500a356921652}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classInterface__If_a0a289537769bd38e98e45ff6bd8f510a}{Interface\-\_\-\-If}.
+
+
+
+Definition at line 93 of file Interface.\-cpp.
+
+\hypertarget{classInterface_ada8771473963bc48e4ae54263a109a25}{\index{Interface@{Interface}!kill\-Interface@{kill\-Interface}}
+\index{kill\-Interface@{kill\-Interface}!Interface@{Interface}}
+\subsubsection[{kill\-Interface}]{\setlength{\rightskip}{0pt plus 5cm}void Interface\-::kill\-Interface (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_ada8771473963bc48e4ae54263a109a25}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classInterface__If_affd4f6a8757c1e6ce94eea6307e81b17}{Interface\-\_\-\-If}.
+
+
+
+Definition at line 111 of file Interface.\-cpp.
+
+\hypertarget{classInterface_a788362ad5da987a5113f0cf02428bd89}{\index{Interface@{Interface}!reset\-Interface@{reset\-Interface}}
+\index{reset\-Interface@{reset\-Interface}!Interface@{Interface}}
+\subsubsection[{reset\-Interface}]{\setlength{\rightskip}{0pt plus 5cm}void Interface\-::reset\-Interface (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_a788362ad5da987a5113f0cf02428bd89}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classInterface__If_af97df01939e55f731963d2f82529af39}{Interface\-\_\-\-If}.
+
+
+
+Definition at line 117 of file Interface.\-cpp.
+
+\hypertarget{classInterface_a28ace3f1bba508032ddaf36c3c304b62}{\index{Interface@{Interface}!S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}}
+\index{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}!Interface@{Interface}}
+\subsubsection[{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}]{\setlength{\rightskip}{0pt plus 5cm}Interface\-::\-S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S (
+\begin{DoxyParamCaption}
+\item[{{\bf Interface}}]{}
+\end{DoxyParamCaption}
+)}}\label{classInterface_a28ace3f1bba508032ddaf36c3c304b62}
+
+
+Indicate the system\-C producer that this module has a process. 
+
+\begin{DoxySeeAlso}{See Also}
+\href{http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html}{\tt http\-://www.\-iro.\-umontreal.\-ca/$\sim$lablasso/docs/\-System\-C2.\-0.\-1/html/classproducer.\-html} 
+\end{DoxySeeAlso}
+\hypertarget{classInterface_a38e700c787ec1927f1dfcbecf6d5e67e}{\index{Interface@{Interface}!write@{write}}
+\index{write@{write}!Interface@{Interface}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}bool Interface\-::write (
+\begin{DoxyParamCaption}
+\item[{{\bf Packet} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classInterface_a38e700c787ec1927f1dfcbecf6d5e67e}
+
+
+Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. 
+
+The method shall implement a mutex that takes care of the arbitraton between sessions 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classBGPMessage}{B\-G\-P\-Message}} & p\-\_\-\-B\-G\-P\-Msg The B\-G\-P message to be send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True\-: if success is valid, False\-: if not success 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classOutput__If_aeef0f3dff2d02e85375e914e83140602}{Output\-\_\-\-If$<$ Packet $>$}.
+
+
+
+Definition at line 61 of file Interface.\-cpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Interface_8hpp}{Interface.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Interface_8cpp}{Interface.\-cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,250 @@
+\hypertarget{classLink}{\section{Link Class Reference}
+\label{classLink}\index{Link@{Link}}
+}
+
+
+\hyperlink{classLink}{Link} between to routers.  
+
+
+
+
+{\ttfamily \#include $<$link.\-hpp$>$}
+
+Inheritance diagram for Link\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classLink}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classLink_a6e071660c3218389183bc50e944aad75}{\hyperlink{classLink_a6e071660c3218389183bc50e944aad75}{Link} (sc\-\_\-module\-\_\-name p\-\_\-\-Name)}\label{classLink_a6e071660c3218389183bc50e944aad75}
+
+\begin{DoxyCompactList}\small\item\em Constructor for a Channel module. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classLink_a0903f9afe6c65ac518eb3f44aa565cff}{write0} (addressed\-Pkt p\-\_\-\-Packet)
+\item 
+virtual bool \hyperlink{classLink_ac28c9d60284a02196992ea063f375cd0}{write1} (addressed\-Pkt p\-\_\-\-Packet)
+\item 
+virtual bool \hyperlink{classLink_a3a56178230de2c4a8ca2409f6f1e55bb}{read0} (addressed\-Pkt \&p\-\_\-\-Packet)
+\item 
+virtual bool \hyperlink{classLink_ac6cb4a6569a46f21ff2b1c7e60c27e22}{read1} (addressed\-Pkt \&p\-\_\-\-Packet)
+\item 
+virtual bool \hyperlink{classLink_adde13066127564c38d314f37c1ccfdd4}{brake\-Link} ()
+\item 
+virtual bool \hyperlink{classLink_a01b360a20843d5efca09d70a6a328951}{fix\-Link} ()
+\item 
+virtual sc\-\_\-event \& \hyperlink{classLink_a32184a40c508f744fb7f2f9c3b7211e8}{read0\-\_\-event} ()
+\item 
+virtual sc\-\_\-event \& \hyperlink{classLink_a87842ba06901c709fa7b2460fdf29041}{read1\-\_\-event} ()
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classLink_a6dc662e66d2955d93b2097e3b76a293c}{sc\-\_\-port$<$ \hyperlink{classLink0If}{Link0\-If} $>$ \hyperlink{classLink_a6dc662e66d2955d93b2097e3b76a293c}{pt\-\_\-\-Link0}}\label{classLink_a6dc662e66d2955d93b2097e3b76a293c}
+
+\begin{DoxyCompactList}\small\item\em The 0-\/end of the link. \end{DoxyCompactList}\item 
+\hypertarget{classLink_a937ffa502e7eb0d15e26b8fe5d8fac59}{sc\-\_\-port$<$ \hyperlink{classLink1If}{Link1\-If} $>$ \hyperlink{classLink_a937ffa502e7eb0d15e26b8fe5d8fac59}{pt\-\_\-\-Link1}}\label{classLink_a937ffa502e7eb0d15e26b8fe5d8fac59}
+
+\begin{DoxyCompactList}\small\item\em The 1-\/end of the link. \end{DoxyCompactList}\item 
+\hypertarget{classLink_a135ddeaf0e024e2076edbe9ea1c6bc95}{sc\-\_\-port$<$ \hyperlink{classLinkSimIf}{Link\-Sim\-If} $>$ \hyperlink{classLink_a135ddeaf0e024e2076edbe9ea1c6bc95}{pt\-\_\-\-Link\-Sim}}\label{classLink_a135ddeaf0e024e2076edbe9ea1c6bc95}
+
+\begin{DoxyCompactList}\small\item\em The 1-\/end of the link. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Related Functions}
+(Note that these are not member functions.) \begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classLink_aa7508ea81181860cc78972e60217e4d1}{sc\-\_\-trace} (sc\-\_\-trace\-\_\-file $\ast$trace\-File, const \hyperlink{classLink}{Link} \&p\-\_\-\-Link, const string \&p\-\_\-\-Link\-Name)
+\begin{DoxyCompactList}\small\item\em Set trace file for this packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classLink}{Link} between to routers. 
+
+Packets can be send and received through the link. The link can be set to be broken and fix it. 
+
+Definition at line 26 of file link.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classLink_adde13066127564c38d314f37c1ccfdd4}{\index{Link@{Link}!brake\-Link@{brake\-Link}}
+\index{brake\-Link@{brake\-Link}!Link@{Link}}
+\subsubsection[{brake\-Link}]{\setlength{\rightskip}{0pt plus 5cm}bool Link\-::brake\-Link (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_adde13066127564c38d314f37c1ccfdd4}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLinkSimIf}{Link\-Sim\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLinkSimIf_a071cb3d3cbfbac72bc8c473aaafcf83b}{Link\-Sim\-If}.
+
+
+
+Definition at line 66 of file link.\-cpp.
+
+\hypertarget{classLink_a01b360a20843d5efca09d70a6a328951}{\index{Link@{Link}!fix\-Link@{fix\-Link}}
+\index{fix\-Link@{fix\-Link}!Link@{Link}}
+\subsubsection[{fix\-Link}]{\setlength{\rightskip}{0pt plus 5cm}bool Link\-::fix\-Link (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_a01b360a20843d5efca09d70a6a328951}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLinkSimIf}{Link\-Sim\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLinkSimIf_aadbf498d9c332b27745b92fea4137728}{Link\-Sim\-If}.
+
+
+
+Definition at line 73 of file link.\-cpp.
+
+\hypertarget{classLink_a3a56178230de2c4a8ca2409f6f1e55bb}{\index{Link@{Link}!read0@{read0}}
+\index{read0@{read0}!Link@{Link}}
+\subsubsection[{read0}]{\setlength{\rightskip}{0pt plus 5cm}bool Link\-::read0 (
+\begin{DoxyParamCaption}
+\item[{addressed\-Pkt \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_a3a56178230de2c4a8ca2409f6f1e55bb}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLink0If}{Link0\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLink0If_a5f5b3e589ccba326e64658b3e58f621e}{Link0\-If}.
+
+
+
+Definition at line 59 of file link.\-cpp.
+
+\hypertarget{classLink_a32184a40c508f744fb7f2f9c3b7211e8}{\index{Link@{Link}!read0\-\_\-event@{read0\-\_\-event}}
+\index{read0\-\_\-event@{read0\-\_\-event}!Link@{Link}}
+\subsubsection[{read0\-\_\-event}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-event \& Link\-::read0\-\_\-event (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_a32184a40c508f744fb7f2f9c3b7211e8}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLink0If}{Link0\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLink0If_a689fa9b8ec98a1aba98dde64f8c63eee}{Link0\-If}.
+
+
+
+Definition at line 53 of file link.\-cpp.
+
+\hypertarget{classLink_ac6cb4a6569a46f21ff2b1c7e60c27e22}{\index{Link@{Link}!read1@{read1}}
+\index{read1@{read1}!Link@{Link}}
+\subsubsection[{read1}]{\setlength{\rightskip}{0pt plus 5cm}bool Link\-::read1 (
+\begin{DoxyParamCaption}
+\item[{addressed\-Pkt \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_ac6cb4a6569a46f21ff2b1c7e60c27e22}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLink1If}{Link1\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLink1If_aed95671720ed114162dfa5b8ad8864c8}{Link1\-If}.
+
+
+
+Definition at line 35 of file link.\-cpp.
+
+\hypertarget{classLink_a87842ba06901c709fa7b2460fdf29041}{\index{Link@{Link}!read1\-\_\-event@{read1\-\_\-event}}
+\index{read1\-\_\-event@{read1\-\_\-event}!Link@{Link}}
+\subsubsection[{read1\-\_\-event}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-event \& Link\-::read1\-\_\-event (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_a87842ba06901c709fa7b2460fdf29041}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLink1If}{Link1\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLink1If_a921db0c6c77ef9363aa5e6d880606c86}{Link1\-If}.
+
+
+
+Definition at line 29 of file link.\-cpp.
+
+\hypertarget{classLink_a0903f9afe6c65ac518eb3f44aa565cff}{\index{Link@{Link}!write0@{write0}}
+\index{write0@{write0}!Link@{Link}}
+\subsubsection[{write0}]{\setlength{\rightskip}{0pt plus 5cm}bool Link\-::write0 (
+\begin{DoxyParamCaption}
+\item[{addressed\-Pkt}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_a0903f9afe6c65ac518eb3f44aa565cff}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLink0If}{Link0\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLink0If_ab93e2071be429d5199d4918f5962f729}{Link0\-If}.
+
+
+
+Definition at line 18 of file link.\-cpp.
+
+\hypertarget{classLink_ac28c9d60284a02196992ea063f375cd0}{\index{Link@{Link}!write1@{write1}}
+\index{write1@{write1}!Link@{Link}}
+\subsubsection[{write1}]{\setlength{\rightskip}{0pt plus 5cm}bool Link\-::write1 (
+\begin{DoxyParamCaption}
+\item[{addressed\-Pkt}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLink_ac28c9d60284a02196992ea063f375cd0}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classLink1If}{Link1\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classLink1If_ac0213a341d9809331509690a5c13b0ac}{Link1\-If}.
+
+
+
+Definition at line 42 of file link.\-cpp.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\hypertarget{classLink_aa7508ea81181860cc78972e60217e4d1}{\index{Link@{Link}!sc\-\_\-trace@{sc\-\_\-trace}}
+\index{sc\-\_\-trace@{sc\-\_\-trace}!Link@{Link}}
+\subsubsection[{sc\-\_\-trace}]{\setlength{\rightskip}{0pt plus 5cm}void sc\-\_\-trace (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-trace\-\_\-file $\ast$}]{trace\-File, }
+\item[{const {\bf Link} \&}]{p\-\_\-\-Link, }
+\item[{const string \&}]{p\-\_\-\-Link\-Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}}\label{classLink_aa7508ea81181860cc78972e60217e4d1}
+
+
+Set trace file for this packet. 
+
+Trace the packets written through this channel. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em trace\-File} & Pointer to sc\-\_\-trace\-\_\-file-\/object \\
+\hline
+\mbox{\tt in}  & {\em p\-\_\-\-Link} & Reference to Link-\/object to be traced \\
+\hline
+\mbox{\tt in}  & {\em p\-\_\-\-Link\-Name} & Name of the Channel-\/object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyItemize}
+\item Just call the trace method of addressed\-Pkt with the packet reference in Channel module. The m\-\_\-\-Pkt will is updated when ever some module is writing through the channel. \end{DoxyItemize}
+
+
+Definition at line 110 of file link.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\-Not\-Much\-To\-Tell\-About/\hyperlink{link_8hpp}{link.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\-Not\-Much\-To\-Tell\-About/\hyperlink{link_8cpp}{link.\-cpp}\end{DoxyCompactItemize}

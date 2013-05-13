@@ -1,0 +1,158 @@
+\hypertarget{classDataPlane}{\section{Data\-Plane Class Reference}
+\label{classDataPlane}\index{Data\-Plane@{Data\-Plane}}
+}
+
+
+Protocol Engine module.  
+
+
+
+
+{\ttfamily \#include $<$Data\-Plane.\-hpp$>$}
+
+Inheritance diagram for Data\-Plane\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classDataPlane}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classDataPlane_a7b191716d490d613fed8a7b206fc5be2}{Data\-Plane} (sc\-\_\-module\-\_\-name p\-\_\-\-Module\-Name, \hyperlink{classControlPlaneConfig}{Control\-Plane\-Config} $\ast$const p\-\_\-\-Config)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classDataPlane_a4ac1f9b5b0673d8fe0156d887c105f09}{void \hyperlink{classDataPlane_a4ac1f9b5b0673d8fe0156d887c105f09}{main} (void)}\label{classDataPlane_a4ac1f9b5b0673d8fe0156d887c105f09}
+
+\begin{DoxyCompactList}\small\item\em This is where the B\-G\-P will sit on. Now there is only a simple example, which shows that the connections work. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classDataPlane_a5ffc92484ff41f3ec1a2998ac598fe2f}{write} (\hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-B\-G\-P\-Msg)
+\begin{DoxyCompactList}\small\item\em Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. \end{DoxyCompactList}\item 
+\hypertarget{classDataPlane_aff4c6aaf53f34f1df596985d3552600d}{void {\bfseries kill\-Data\-Plane} (void)}\label{classDataPlane_aff4c6aaf53f34f1df596985d3552600d}
+
+\item 
+\hypertarget{classDataPlane_a2b94563f9a9019377c9f80b58061f422}{void {\bfseries set\-Up} (bool p\-\_\-\-Value)}\label{classDataPlane_a2b94563f9a9019377c9f80b58061f422}
+
+\item 
+\hypertarget{classDataPlane_abdda943b9badc67126b2c6a2e5cf4133}{bool {\bfseries is\-Running} (void)}\label{classDataPlane_abdda943b9badc67126b2c6a2e5cf4133}
+
+\item 
+\hypertarget{classDataPlane_ad4a0d13e0d6d73ddbbfdd9609a4940ab}{void {\bfseries revive\-Data\-Plane} (void)}\label{classDataPlane_ad4a0d13e0d6d73ddbbfdd9609a4940ab}
+
+\item 
+\hyperlink{classDataPlane_ae73b68600990f70ac98e35c19f01fab5}{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S} (\hyperlink{classDataPlane}{Data\-Plane})
+\begin{DoxyCompactList}\small\item\em Indicate the system\-C producer that this module has a process. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDataPlane_ab4e32e4ecbe4ec6e448f30c4ea629ad7}{sc\-\_\-port$<$ \hyperlink{classRoutingTable__If}{Routing\-Table\-\_\-\-If} $>$ \hyperlink{classDataPlane_ab4e32e4ecbe4ec6e448f30c4ea629ad7}{port\-\_\-\-To\-Routing\-Table}}\label{classDataPlane_ab4e32e4ecbe4ec6e448f30c4ea629ad7}
+
+\begin{DoxyCompactList}\small\item\em Export the B\-G\-P forwarding buffer's interface for Control Plane. \end{DoxyCompactList}\item 
+sc\-\_\-port$<$ sc\-\_\-fifo\-\_\-out\-\_\-if\\*
+$<$ \hyperlink{classBGPMessage}{B\-G\-P\-Message} $>$\\*
+, 1, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ \hyperlink{classDataPlane_a3e86cb0494125c28df71313925463b61}{port\-\_\-\-To\-Control\-Plane}
+\begin{DoxyCompactList}\small\item\em Output port for B\-G\-P messages. \end{DoxyCompactList}\item 
+\hypertarget{classDataPlane_ab734b3906787bd215422ffa7e8ce61d5}{sc\-\_\-port$<$ sc\-\_\-fifo\-\_\-in\-\_\-if$<$ \hyperlink{classPacket}{Packet} $>$\\*
+, 0, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ \hyperlink{classDataPlane_ab734b3906787bd215422ffa7e8ce61d5}{port\-\_\-\-From\-Interface}}\label{classDataPlane_ab734b3906787bd215422ffa7e8ce61d5}
+
+\begin{DoxyCompactList}\small\item\em Neighbor writes to the receiving buffer. \end{DoxyCompactList}\item 
+\hypertarget{classDataPlane_ae60298408ddadaf00f0d3405d00af6cd}{sc\-\_\-port$<$ \hyperlink{classOutput__If}{Output\-\_\-\-If}$<$ \hyperlink{classPacket}{Packet} $>$\\*
+, 0, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ \hyperlink{classDataPlane_ae60298408ddadaf00f0d3405d00af6cd}{port\-\_\-\-To\-Interface}}\label{classDataPlane_ae60298408ddadaf00f0d3405d00af6cd}
+
+\begin{DoxyCompactList}\small\item\em Forward to the neighbor. \end{DoxyCompactList}\item 
+\hypertarget{classDataPlane_a2eba52aa73168c99e96cfb9b0b6ebb05}{sc\-\_\-in\-\_\-clk \hyperlink{classDataPlane_a2eba52aa73168c99e96cfb9b0b6ebb05}{port\-\_\-\-Clk}}\label{classDataPlane_a2eba52aa73168c99e96cfb9b0b6ebb05}
+
+\begin{DoxyCompactList}\small\item\em Clock signal. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Protocol Engine module. 
+
+Definition at line 37 of file Data\-Plane.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classDataPlane_a7b191716d490d613fed8a7b206fc5be2}{\index{Data\-Plane@{Data\-Plane}!Data\-Plane@{Data\-Plane}}
+\index{Data\-Plane@{Data\-Plane}!DataPlane@{Data\-Plane}}
+\subsubsection[{Data\-Plane}]{\setlength{\rightskip}{0pt plus 5cm}Data\-Plane\-::\-Data\-Plane (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-module\-\_\-name}]{p\-\_\-\-Module\-Name, }
+\item[{{\bf Control\-Plane\-Config} $\ast$const}]{p\-\_\-\-Config}
+\end{DoxyParamCaption}
+)}}\label{classDataPlane_a7b191716d490d613fed8a7b206fc5be2}
+
+
+Constructor. 
+
+Builds the router 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em p\-\_\-\-Name} & The name of the module \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 15 of file Data\-Plane.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classDataPlane_ae73b68600990f70ac98e35c19f01fab5}{\index{Data\-Plane@{Data\-Plane}!S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}}
+\index{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}!DataPlane@{Data\-Plane}}
+\subsubsection[{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}]{\setlength{\rightskip}{0pt plus 5cm}Data\-Plane\-::\-S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S (
+\begin{DoxyParamCaption}
+\item[{{\bf Data\-Plane}}]{}
+\end{DoxyParamCaption}
+)}}\label{classDataPlane_ae73b68600990f70ac98e35c19f01fab5}
+
+
+Indicate the system\-C producer that this module has a process. 
+
+\begin{DoxySeeAlso}{See Also}
+\href{http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html}{\tt http\-://www.\-iro.\-umontreal.\-ca/$\sim$lablasso/docs/\-System\-C2.\-0.\-1/html/classproducer.\-html} 
+\end{DoxySeeAlso}
+\hypertarget{classDataPlane_a5ffc92484ff41f3ec1a2998ac598fe2f}{\index{Data\-Plane@{Data\-Plane}!write@{write}}
+\index{write@{write}!DataPlane@{Data\-Plane}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}bool Data\-Plane\-::write (
+\begin{DoxyParamCaption}
+\item[{{\bf B\-G\-P\-Message} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classDataPlane_a5ffc92484ff41f3ec1a2998ac598fe2f}
+
+
+Allows the session to pass B\-G\-P messages to the \hyperlink{classDataPlane}{Data\-Plane}. 
+
+The method shall implement a mutex that takes care of the arbitraton between sessions 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classBGPMessage}{B\-G\-P\-Message}} & p\-\_\-\-B\-G\-P\-Msg The B\-G\-P message to be send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True\-: if success is valid, False\-: if not success 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classOutput__If_aeef0f3dff2d02e85375e914e83140602}{Output\-\_\-\-If$<$ B\-G\-P\-Message $>$}.
+
+
+
+Definition at line 141 of file Data\-Plane.\-cpp.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{classDataPlane_a3e86cb0494125c28df71313925463b61}{\index{Data\-Plane@{Data\-Plane}!port\-\_\-\-To\-Control\-Plane@{port\-\_\-\-To\-Control\-Plane}}
+\index{port\-\_\-\-To\-Control\-Plane@{port\-\_\-\-To\-Control\-Plane}!DataPlane@{Data\-Plane}}
+\subsubsection[{port\-\_\-\-To\-Control\-Plane}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-port$<$sc\-\_\-fifo\-\_\-out\-\_\-if$<${\bf B\-G\-P\-Message}$>$,1, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D$>$ Data\-Plane\-::port\-\_\-\-To\-Control\-Plane}}\label{classDataPlane_a3e86cb0494125c28df71313925463b61}
+
+
+Output port for B\-G\-P messages. 
+
+Data Plane writes all the received B\-G\-P messages into this port. The port shall be bind to the Control Plane's receiving F\-I\-F\-O 
+
+Definition at line 57 of file Data\-Plane.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{DataPlane_8hpp}{Data\-Plane.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{DataPlane_8cpp}{Data\-Plane.\-cpp}\end{DoxyCompactItemize}

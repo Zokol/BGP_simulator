@@ -1,0 +1,292 @@
+\hypertarget{classRouter}{\section{Router Class Reference}
+\label{classRouter}\index{Router@{Router}}
+}
+
+
+\hyperlink{classRouter}{Router} module.  
+
+
+
+
+{\ttfamily \#include $<$Router.\-hpp$>$}
+
+Inheritance diagram for Router\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classRouter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classRouter_a9f15cc9e3d8349adfac38175ae9ebd64}{Router} (sc\-\_\-module\-\_\-name p\-\_\-\-Module\-Name, \hyperlink{classRouterConfig}{Router\-Config} $\ast$const p\-\_\-\-Router\-Configuration)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \hyperlink{classRouter_a31324e31f2c02c9998afdbeeb9e34c08}{interface\-Up} (int p\-\_\-\-Interface\-Id)
+\begin{DoxyCompactList}\small\item\em Sets the given interface up. \end{DoxyCompactList}\item 
+void \hyperlink{classRouter_ae9c407addfa058a197d005ccc600b3e1}{interface\-Down} (int p\-\_\-\-Interface\-Id)
+\begin{DoxyCompactList}\small\item\em Sets the given interface down. \end{DoxyCompactList}\item 
+bool \hyperlink{classRouter_aff2f6f94c5d27c2b3eb6751475f82231}{interface\-Is\-Up} (int p\-\_\-\-Interface\-Id)
+\begin{DoxyCompactList}\small\item\em Checks whether the given interface is up or not. \end{DoxyCompactList}\item 
+bool \hyperlink{classRouter_a6d9dd4f4e1abc82e92ab082da52f2abd}{connect\-Interface} (\hyperlink{classRouter}{Router} $\ast$p\-\_\-\-Target\-Router, int p\-\_\-\-Local\-Interface, int p\-\_\-\-Target\-Interface)
+\begin{DoxyCompactList}\small\item\em Connects the given interface of this router to the given interface of the given router. \end{DoxyCompactList}\item 
+\hypertarget{classRouter_aad50fac7b3c4de2e91c60a07a2bc5928}{bool {\bfseries connect\-Interface} (\hyperlink{classHost}{Host} $\ast$p\-\_\-\-Target\-Host, int p\-\_\-\-Local\-Interface)}\label{classRouter_aad50fac7b3c4de2e91c60a07a2bc5928}
+
+\item 
+\hypertarget{classRouter_aeb1245557614ed4a64e2985cec097d5b}{void \hyperlink{classRouter_aeb1245557614ed4a64e2985cec097d5b}{kill\-Router} (void)}\label{classRouter_aeb1245557614ed4a64e2985cec097d5b}
+
+\begin{DoxyCompactList}\small\item\em Sets all the interfaces of this router down, clears all the buffers, clears all B\-G\-P sessions, resets the B\-G\-P. \end{DoxyCompactList}\item 
+\hypertarget{classRouter_a9999f57baf9d5256ec69dcac3ca353f2}{void {\bfseries reset\-Router} (void)}\label{classRouter_a9999f57baf9d5256ec69dcac3ca353f2}
+
+\item 
+\hypertarget{classRouter_aa319f6fa86518d738e88dbbc7f6c07ea}{void {\bfseries revive\-Router} (void)}\label{classRouter_aa319f6fa86518d738e88dbbc7f6c07ea}
+
+\item 
+void \hyperlink{classRouter_a40a957094f6af8be1b3e8d0aae7d4c46}{kill\-Interface} (int p\-\_\-\-Interface\-Id)
+\begin{DoxyCompactList}\small\item\em kills the given interface \end{DoxyCompactList}\item 
+void \hyperlink{classRouter_a32df24b6aabbca7eb5bceb6e114bec2b}{reset\-Interface} (int p\-\_\-\-Interface\-Id)
+\begin{DoxyCompactList}\small\item\em reset the given interface \end{DoxyCompactList}\item 
+void \hyperlink{classRouter_a77e20f60d40305bcc245724c0e1224d3}{disconnect\-Interface} (int p\-\_\-\-Interface\-Id)
+\begin{DoxyCompactList}\small\item\em disconnects the given interface \end{DoxyCompactList}\item 
+\hypertarget{classRouter_ae8dd59d5faf07e8b95b912acba63910d}{void {\bfseries connect\-Interface} (int p\-\_\-\-Interface\-Id)}\label{classRouter_ae8dd59d5faf07e8b95b912acba63910d}
+
+\item 
+\hypertarget{classRouter_aaa7a2f17b0ab3f316c8fcf4340d23cb9}{void \hyperlink{classRouter_aaa7a2f17b0ab3f316c8fcf4340d23cb9}{disconnect\-Interfaces} (void)}\label{classRouter_aaa7a2f17b0ab3f316c8fcf4340d23cb9}
+
+\begin{DoxyCompactList}\small\item\em disconnects all the interfaces \end{DoxyCompactList}\item 
+\hypertarget{classRouter_aaafae7a061d23b34668e4bcd2d6c09fa}{void {\bfseries connect\-Interfaces} (void)}\label{classRouter_aaafae7a061d23b34668e4bcd2d6c09fa}
+
+\item 
+\hypertarget{classRouter_a88a647aff2e6e2f27c1a905a3e514b08}{string \hyperlink{classRouter_a88a647aff2e6e2f27c1a905a3e514b08}{get\-Routing\-Table} (void)}\label{classRouter_a88a647aff2e6e2f27c1a905a3e514b08}
+
+\begin{DoxyCompactList}\small\item\em get the routing table as a string \end{DoxyCompactList}\item 
+\hypertarget{classRouter_a93327fb1efd8d25e2f71c3761d9f77e9}{string \hyperlink{classRouter_a93327fb1efd8d25e2f71c3761d9f77e9}{get\-Raw\-Routing\-Table} (void)}\label{classRouter_a93327fb1efd8d25e2f71c3761d9f77e9}
+
+\begin{DoxyCompactList}\small\item\em get the raw routing table as a string \end{DoxyCompactList}\item 
+\hypertarget{classRouter_a8d4f91c2cf123344658ecce29c48fc03}{void \hyperlink{classRouter_a8d4f91c2cf123344658ecce29c48fc03}{set\-Preferred\-A\-S} (int p\-\_\-\-A\-S, int p\-\_\-pref\-\_\-value)}\label{classRouter_a8d4f91c2cf123344658ecce29c48fc03}
+
+\begin{DoxyCompactList}\small\item\em give preference value for A\-S \end{DoxyCompactList}\item 
+\hypertarget{classRouter_a0099c9da9f1a15f2b09b802a821fa28a}{void \hyperlink{classRouter_a0099c9da9f1a15f2b09b802a821fa28a}{remove\-Local\-Pref} (int p\-\_\-\-A\-S)}\label{classRouter_a0099c9da9f1a15f2b09b802a821fa28a}
+
+\begin{DoxyCompactList}\small\item\em remove given A\-S from the list of preferred A\-Ses \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRouter_ad129f204d0b4465cd04c32d49064f9bc}{sc\-\_\-export$<$ \hyperlink{classInterface__If}{Interface\-\_\-\-If} $>$ $\ast$$\ast$ {\bfseries export\-\_\-\-Receiving\-Interface}}\label{classRouter_ad129f204d0b4465cd04c32d49064f9bc}
+
+\item 
+\hypertarget{classRouter_a4c1aadfe9e469ea46f77cdb1a652ba3d}{sc\-\_\-port$<$ \hyperlink{classInterface__If}{Interface\-\_\-\-If}, \\*
+1, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ $\ast$$\ast$ {\bfseries port\-\_\-\-Forwarding\-Interface}}\label{classRouter_a4c1aadfe9e469ea46f77cdb1a652ba3d}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classRouter}{Router} module. 
+
+The module combines \hyperlink{classDataPlane}{Data\-Plane}, \hyperlink{classControlPlane}{Control\-Plane}, \hyperlink{classRoutingTable}{Routing\-Table}, and \hyperlink{classInterface}{Interface} modules to a single \hyperlink{classRouter}{Router} module. In addition, the router module offer a set of methods to extract data from the submodules. The router builds the submodules and binds their ports. The number of interfaces in the router is defined in the configuration object that is passed to the router as constructor argument. 
+
+Definition at line 40 of file Router.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classRouter_a9f15cc9e3d8349adfac38175ae9ebd64}{\index{Router@{Router}!Router@{Router}}
+\index{Router@{Router}!Router@{Router}}
+\subsubsection[{Router}]{\setlength{\rightskip}{0pt plus 5cm}Router\-::\-Router (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-module\-\_\-name}]{p\-\_\-\-Module\-Name, }
+\item[{{\bf Router\-Config} $\ast$const}]{p\-\_\-\-Router\-Configuration}
+\end{DoxyParamCaption}
+)}}\label{classRouter_a9f15cc9e3d8349adfac38175ae9ebd64}
+
+
+Constructor. 
+
+Builds the router 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em p\-\_\-\-Name} & The name of the module \\
+\hline
+\end{DoxyParams}
+\hyperlink{classStringTools}{String\-Tools} instance for reporting
+
+\begin{DoxyItemize}
+\item define clock period for \hyperlink{classRouter}{Router}\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Allocate clock for the Routers using the previously allocated period \end{DoxyItemize}
+
+
+Definition at line 13 of file Router.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classRouter_a6d9dd4f4e1abc82e92ab082da52f2abd}{\index{Router@{Router}!connect\-Interface@{connect\-Interface}}
+\index{connect\-Interface@{connect\-Interface}!Router@{Router}}
+\subsubsection[{connect\-Interface}]{\setlength{\rightskip}{0pt plus 5cm}bool Router\-::connect\-Interface (
+\begin{DoxyParamCaption}
+\item[{{\bf Router} $\ast$}]{p\-\_\-\-Target\-Router, }
+\item[{int}]{p\-\_\-\-Local\-Interface, }
+\item[{int}]{p\-\_\-\-Target\-Interface}
+\end{DoxyParamCaption}
+)}}\label{classRouter_a6d9dd4f4e1abc82e92ab082da52f2abd}
+
+
+Connects the given interface of this router to the given interface of the given router. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classRouter}{Router}} & $\ast$p\-\_\-\-Target\-Router \\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Local\-Interface \\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Target\-Interface \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true\-: if success or alredy connected -\/ false\-: if one of the interfaces is conected and the other is not 
+\end{DoxyReturn}
+
+
+Definition at line 172 of file Router.\-cpp.
+
+\hypertarget{classRouter_a77e20f60d40305bcc245724c0e1224d3}{\index{Router@{Router}!disconnect\-Interface@{disconnect\-Interface}}
+\index{disconnect\-Interface@{disconnect\-Interface}!Router@{Router}}
+\subsubsection[{disconnect\-Interface}]{\setlength{\rightskip}{0pt plus 5cm}void Router\-::disconnect\-Interface (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface\-Id}
+\end{DoxyParamCaption}
+)}}\label{classRouter_a77e20f60d40305bcc245724c0e1224d3}
+
+
+disconnects the given interface 
+
+connects all the interfaces
+
+connects the given interface
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface\-Id The id of the interface to be disconnected\\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface\-Id The id of the interface to be connected \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 263 of file Router.\-cpp.
+
+\hypertarget{classRouter_ae9c407addfa058a197d005ccc600b3e1}{\index{Router@{Router}!interface\-Down@{interface\-Down}}
+\index{interface\-Down@{interface\-Down}!Router@{Router}}
+\subsubsection[{interface\-Down}]{\setlength{\rightskip}{0pt plus 5cm}void Router\-::interface\-Down (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface\-Id}
+\end{DoxyParamCaption}
+)}}\label{classRouter_ae9c407addfa058a197d005ccc600b3e1}
+
+
+Sets the given interface down. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Number\-Of\-Routers The id of the interface to be set down \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 146 of file Router.\-cpp.
+
+\hypertarget{classRouter_aff2f6f94c5d27c2b3eb6751475f82231}{\index{Router@{Router}!interface\-Is\-Up@{interface\-Is\-Up}}
+\index{interface\-Is\-Up@{interface\-Is\-Up}!Router@{Router}}
+\subsubsection[{interface\-Is\-Up}]{\setlength{\rightskip}{0pt plus 5cm}bool Router\-::interface\-Is\-Up (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface\-Id}
+\end{DoxyParamCaption}
+)}}\label{classRouter_aff2f6f94c5d27c2b3eb6751475f82231}
+
+
+Checks whether the given interface is up or not. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface\-Id The id of the interface to be set checked \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true\-: if up -\/ false\-: if down 
+\end{DoxyReturn}
+
+
+Definition at line 154 of file Router.\-cpp.
+
+\hypertarget{classRouter_a31324e31f2c02c9998afdbeeb9e34c08}{\index{Router@{Router}!interface\-Up@{interface\-Up}}
+\index{interface\-Up@{interface\-Up}!Router@{Router}}
+\subsubsection[{interface\-Up}]{\setlength{\rightskip}{0pt plus 5cm}void Router\-::interface\-Up (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface\-Id}
+\end{DoxyParamCaption}
+)}}\label{classRouter_a31324e31f2c02c9998afdbeeb9e34c08}
+
+
+Sets the given interface up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface\-Id The id of the interface to be set up \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 138 of file Router.\-cpp.
+
+\hypertarget{classRouter_a40a957094f6af8be1b3e8d0aae7d4c46}{\index{Router@{Router}!kill\-Interface@{kill\-Interface}}
+\index{kill\-Interface@{kill\-Interface}!Router@{Router}}
+\subsubsection[{kill\-Interface}]{\setlength{\rightskip}{0pt plus 5cm}void Router\-::kill\-Interface (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface\-Id}
+\end{DoxyParamCaption}
+)}}\label{classRouter_a40a957094f6af8be1b3e8d0aae7d4c46}
+
+
+kills the given interface 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface\-Id The id of the interface to be disconnected \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 274 of file Router.\-cpp.
+
+\hypertarget{classRouter_a32df24b6aabbca7eb5bceb6e114bec2b}{\index{Router@{Router}!reset\-Interface@{reset\-Interface}}
+\index{reset\-Interface@{reset\-Interface}!Router@{Router}}
+\subsubsection[{reset\-Interface}]{\setlength{\rightskip}{0pt plus 5cm}void Router\-::reset\-Interface (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface\-Id}
+\end{DoxyParamCaption}
+)}}\label{classRouter_a32df24b6aabbca7eb5bceb6e114bec2b}
+
+
+reset the given interface 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classInterface__If}{Interface\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface\-Id The id of the interface to be connected \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 279 of file Router.\-cpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Router_8hpp}{Router.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Router_8cpp}{Router.\-cpp}\end{DoxyCompactItemize}

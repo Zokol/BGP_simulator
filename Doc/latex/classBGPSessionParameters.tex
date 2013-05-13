@@ -1,0 +1,621 @@
+\hypertarget{classBGPSessionParameters}{\section{B\-G\-P\-Session\-Parameters Class Reference}
+\label{classBGPSessionParameters}\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}}
+}
+
+
+Holds the parameters for B\-G\-P session.  
+
+
+
+
+{\ttfamily \#include $<$Configuration.\-hpp$>$}
+
+Inheritance diagram for B\-G\-P\-Session\-Parameters\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classBGPSessionParameters}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classBGPSessionParameters_ae3d4f579822be095d01bfd4cab18033e}{B\-G\-P\-Session\-Parameters} ()
+\item 
+\hyperlink{classBGPSessionParameters_a11f44412906552a220daff73da0c1992}{B\-G\-P\-Session\-Parameters} (int p\-\_\-\-Keepalive\-Time, int p\-\_\-\-Hold\-Down\-Time\-Factor)
+\item 
+virtual \hyperlink{classBGPSessionParameters_a3f2dc608214dc93d33862c194be3fbee}{$\sim$\-B\-G\-P\-Session\-Parameters} ()
+\item 
+void \hyperlink{classBGPSessionParameters_af9feb193d7de00f2e44d9866dc7c7100}{set\-Keepalive\-Time} (int p\-\_\-\-Keepalive\-Time)
+\begin{DoxyCompactList}\small\item\em Sets the Keepalive time. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a4164a26b4457a22e93fd78f098c1691c}{void {\bfseries set\-Hold\-Down\-Time} (int p\-\_\-\-Hold\-Down\-Time)}\label{classBGPSessionParameters_a4164a26b4457a22e93fd78f098c1691c}
+
+\item 
+void \hyperlink{classBGPSessionParameters_a9ecde9c6514a451337b8f3043268286e}{set\-Hold\-Down\-Time\-Factor} (int p\-\_\-\-Hold\-Down\-Time\-Factor)
+\begin{DoxyCompactList}\small\item\em Sets the Hold\-Down time factor. \end{DoxyCompactList}\item 
+void \hyperlink{classBGPSessionParameters_a7348f562b2c3a6acec49cf2d10c535b1}{set\-N\-I\-C\-Mode} (int p\-\_\-\-Interface, int p\-\_\-\-Mode)
+\begin{DoxyCompactList}\small\item\em Sets the interface mode used in T\-C\-P session establishment. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_abbb9bf5608aa7a47047496bf2a04d46e}{int {\bfseries get\-N\-I\-C\-Mode} (int p\-\_\-\-Interface)}\label{classBGPSessionParameters_abbb9bf5608aa7a47047496bf2a04d46e}
+
+\item 
+int \hyperlink{classBGPSessionParameters_ad1c71417fc4b9361f4ef49734c580418}{get\-Keepalive\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Returns the keepalive time. \end{DoxyCompactList}\item 
+int \hyperlink{classBGPSessionParameters_ad38c18d312e65ab03f6bc3f4b659c4ce}{get\-Hold\-Down\-Time} (void)
+\begin{DoxyCompactList}\small\item\em Returns the hold-\/down time. \end{DoxyCompactList}\item 
+int \hyperlink{classBGPSessionParameters_a67b75e762c37bc79afe0c23d32ceec4f}{get\-Hol\-Down\-Time\-Factor} (void)
+\begin{DoxyCompactList}\small\item\em Returns the hold-\/down time factor. \end{DoxyCompactList}\item 
+bool \hyperlink{classBGPSessionParameters_a2681ec8adc40cc7dac2a03e7cb3d1994}{is\-Client} (int p\-\_\-\-Interface)
+\begin{DoxyCompactList}\small\item\em Checks whether the given interface is in the client mode. \end{DoxyCompactList}\item 
+void \hyperlink{classBGPSessionParameters_a7e04197d15b3df124836aad920ea2d1a}{set\-Prefix} (string p\-\_\-\-Prefix)
+\begin{DoxyCompactList}\small\item\em Sets the prefix I\-P of the A\-S as string. \end{DoxyCompactList}\item 
+void \hyperlink{classBGPSessionParameters_a943d68b6970da3a82b81d89b16fe3aeb}{set\-Prefix} (sc\-\_\-uint$<$ 32 $>$ p\-\_\-\-Prefix)
+\begin{DoxyCompactList}\small\item\em Sets the prefix I\-P of the A\-S. \end{DoxyCompactList}\item 
+void \hyperlink{classBGPSessionParameters_a2a7ad268d1b26c1de1cb6b793bc8a5db}{set\-Prefix\-Mask} (sc\-\_\-uint$<$ 32 $>$ p\-\_\-\-Prefix\-Mask)
+\begin{DoxyCompactList}\small\item\em Sets the mask for the prefix I\-P. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a46ce107efaa09ccdb5a226c9e52976e9}{void {\bfseries set\-A\-S\-Number} (int p\-\_\-\-A\-S\-Number)}\label{classBGPSessionParameters_a46ce107efaa09ccdb5a226c9e52976e9}
+
+\item 
+void \hyperlink{classBGPSessionParameters_ab6f1e71374d250392eabe4571245137d}{set\-M\-E\-D} (int p\-\_\-\-M\-E\-D)
+\begin{DoxyCompactList}\small\item\em Sets the Multi-\/exit discriminator(\-M\-E\-D) attribute of B\-G\-P. \end{DoxyCompactList}\item 
+void \hyperlink{classBGPSessionParameters_a898ff54a5ddb05b8212fe8b1cdbb16be}{set\-Local\-Pref} (int p\-\_\-\-Local\-Pref)
+\begin{DoxyCompactList}\small\item\em Sets the Local Preference atribute of B\-G\-P. \end{DoxyCompactList}\item 
+string \hyperlink{classBGPSessionParameters_a4221d963d60974d8236164b29743aec8}{get\-I\-P\-As\-String} (void)
+\begin{DoxyCompactList}\small\item\em Returns the I\-P prefix as string. \end{DoxyCompactList}\item 
+string \hyperlink{classBGPSessionParameters_a5da0c2ccd227626e379db649965ee5f2}{get\-B\-G\-P\-Identifier} (void)
+\begin{DoxyCompactList}\small\item\em Returns the B\-G\-P identifier I\-P. \end{DoxyCompactList}\item 
+string \hyperlink{classBGPSessionParameters_a5e810c8d0bd6eff56233507adf6dabe7}{get\-I\-P\-Mask\-As\-String} (void)
+\begin{DoxyCompactList}\small\item\em Returns the prefix mask value\-: the number of bits set to one starting from the 31st bit. \end{DoxyCompactList}\item 
+sc\-\_\-uint$<$ 32 $>$ \hyperlink{classBGPSessionParameters_a32780ac488ad12575334f9b004426bc3}{get\-Prefix} (void)
+\begin{DoxyCompactList}\small\item\em Returns the I\-P prefix. \end{DoxyCompactList}\item 
+sc\-\_\-uint$<$ 32 $>$ \hyperlink{classBGPSessionParameters_afa843363c1ad8881e957c5a7a53004a9}{get\-Prefix\-Mask} (void)
+\begin{DoxyCompactList}\small\item\em Returns the prefix mask. \end{DoxyCompactList}\item 
+int \hyperlink{classBGPSessionParameters_afc93bac9efde675d8071894ee95c021a}{get\-A\-S\-Number} (void)
+\begin{DoxyCompactList}\small\item\em Returns the A\-S number. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a740e52b61810ef405acc6ade93e796b4}{string {\bfseries get\-A\-S\-Number\-As\-String} (void)}\label{classBGPSessionParameters_a740e52b61810ef405acc6ade93e796b4}
+
+\item 
+int \hyperlink{classBGPSessionParameters_ab3f7cbe1af9f3ce6965042ea39250cb9}{get\-M\-E\-D} (void)
+\begin{DoxyCompactList}\small\item\em Returns the Multi-\/exit discriminator value. \end{DoxyCompactList}\item 
+int \hyperlink{classBGPSessionParameters_a4ee03778f9715e90243fc16a47514f64}{get\-Local\-Pref} (void)
+\begin{DoxyCompactList}\small\item\em Returns the Local preference value. \end{DoxyCompactList}\item 
+\hyperlink{classBGPSessionParameters}{B\-G\-P\-Session\-Parameters} \& \hyperlink{classBGPSessionParameters_aa15e1258ca1d21dabb6d146a38a051cb}{operator=} (const \hyperlink{classBGPSessionParameters}{B\-G\-P\-Session\-Parameters} \&p\-\_\-\-Original)
+\begin{DoxyCompactList}\small\item\em clones the passed \hyperlink{classBGPSessionParameters}{B\-G\-P\-Session\-Parameters} object to this object \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classBGPSessionParameters_aa7bb99315626377510fd16ba688a3ff4}{sc\-\_\-uint$<$ 32 $>$ \hyperlink{classBGPSessionParameters_aa7bb99315626377510fd16ba688a3ff4}{m\-\_\-\-Prefix\-Mask}}\label{classBGPSessionParameters_aa7bb99315626377510fd16ba688a3ff4}
+
+\begin{DoxyCompactList}\small\item\em The mask defined by prefix /-\/notation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classBGPSessionParameters_a465c4710f73834f9d0daaf9defe6ccc8}{m\-\_\-\-Keepalive\-Time}
+\begin{DoxyCompactList}\small\item\em Hold\-Down time for this session. \end{DoxyCompactList}\item 
+int \hyperlink{classBGPSessionParameters_aadc4f5c38dc8e8d4765391aaad8b5c5c}{m\-\_\-\-Hold\-Down\-Time}
+\begin{DoxyCompactList}\small\item\em Hold\-Down time for this session. \end{DoxyCompactList}\item 
+int \hyperlink{classBGPSessionParameters_a363e577b5765ea3c0bafa2b7a66efa7a}{m\-\_\-\-Hold\-Down\-Time\-Factor}
+\begin{DoxyCompactList}\small\item\em Hold\-Down time factor. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a817cad3f0d23762e4bfe5d0e38d82ea4}{int $\ast$ \hyperlink{classBGPSessionParameters_a817cad3f0d23762e4bfe5d0e38d82ea4}{m\-\_\-\-N\-I\-C\-Mode}}\label{classBGPSessionParameters_a817cad3f0d23762e4bfe5d0e38d82ea4}
+
+\begin{DoxyCompactList}\small\item\em holds the network interface mode information \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a010fa1f90adcad91d8e1ba027b88860a}{sc\-\_\-uint$<$ 32 $>$ \hyperlink{classBGPSessionParameters_a010fa1f90adcad91d8e1ba027b88860a}{m\-\_\-\-Prefix}}\label{classBGPSessionParameters_a010fa1f90adcad91d8e1ba027b88860a}
+
+\begin{DoxyCompactList}\small\item\em The prefix of the A\-S connecting this router. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a9c063d3534b94fc0987f4942380a1657}{int \hyperlink{classBGPSessionParameters_a9c063d3534b94fc0987f4942380a1657}{m\-\_\-\-A\-S\-Number}}\label{classBGPSessionParameters_a9c063d3534b94fc0987f4942380a1657}
+
+\begin{DoxyCompactList}\small\item\em The A\-S number of this router. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_ab6e0afde596352b6b1df9c207c67277a}{int \hyperlink{classBGPSessionParameters_ab6e0afde596352b6b1df9c207c67277a}{m\-\_\-\-M\-E\-D}}\label{classBGPSessionParameters_ab6e0afde596352b6b1df9c207c67277a}
+
+\begin{DoxyCompactList}\small\item\em B\-G\-P M\-E\-D variable. \end{DoxyCompactList}\item 
+\hypertarget{classBGPSessionParameters_a60219f0863cc5803a0c73dcdfc95d958}{int \hyperlink{classBGPSessionParameters_a60219f0863cc5803a0c73dcdfc95d958}{m\-\_\-\-Local\-Pref}}\label{classBGPSessionParameters_a60219f0863cc5803a0c73dcdfc95d958}
+
+\begin{DoxyCompactList}\small\item\em B\-G\-P Local Preference variable. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Holds the parameters for B\-G\-P session. 
+
+Members are Keepalive time and Hold\-Down time factor 
+
+Definition at line 28 of file Configuration.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classBGPSessionParameters_ae3d4f579822be095d01bfd4cab18033e}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}}
+\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{B\-G\-P\-Session\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}B\-G\-P\-Session\-Parameters\-::\-B\-G\-P\-Session\-Parameters (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_ae3d4f579822be095d01bfd4cab18033e}
+Default constructor of B\-G\-P\-Session\-Parameters-\/class
+
+Sets the keepalive time to 60 and the holddown time factor to 3 
+
+Definition at line 5 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a11f44412906552a220daff73da0c1992}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}}
+\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{B\-G\-P\-Session\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}B\-G\-P\-Session\-Parameters\-::\-B\-G\-P\-Session\-Parameters (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Keepalive\-Time, }
+\item[{int}]{p\-\_\-\-Hold\-Down\-Time\-Factor}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a11f44412906552a220daff73da0c1992}
+Constructor of B\-G\-P\-Session\-Parameters-\/class with parameters
+
+Allows to set the member values while initiating the object 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Keepalive\-Time The keepalive time value \\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Hold\-Down\-Time\-Factor The multiplier that defines the Hold\-Down time in relation to Keepalive time. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 10 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a3f2dc608214dc93d33862c194be3fbee}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!$\sim$\-B\-G\-P\-Session\-Parameters@{$\sim$\-B\-G\-P\-Session\-Parameters}}
+\index{$\sim$\-B\-G\-P\-Session\-Parameters@{$\sim$\-B\-G\-P\-Session\-Parameters}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{$\sim$\-B\-G\-P\-Session\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}B\-G\-P\-Session\-Parameters\-::$\sim$\-B\-G\-P\-Session\-Parameters (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classBGPSessionParameters_a3f2dc608214dc93d33862c194be3fbee}
+Default destructor
+
+The class does not contain dynamic memory allocations 
+
+Definition at line 15 of file Configuration.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classBGPSessionParameters_afc93bac9efde675d8071894ee95c021a}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-A\-S\-Number@{get\-A\-S\-Number}}
+\index{get\-A\-S\-Number@{get\-A\-S\-Number}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-A\-S\-Number}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::get\-A\-S\-Number (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_afc93bac9efde675d8071894ee95c021a}
+
+
+Returns the A\-S number. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 130 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a5da0c2ccd227626e379db649965ee5f2}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-B\-G\-P\-Identifier@{get\-B\-G\-P\-Identifier}}
+\index{get\-B\-G\-P\-Identifier@{get\-B\-G\-P\-Identifier}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-B\-G\-P\-Identifier}]{\setlength{\rightskip}{0pt plus 5cm}string B\-G\-P\-Session\-Parameters\-::get\-B\-G\-P\-Identifier (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a5da0c2ccd227626e379db649965ee5f2}
+
+
+Returns the B\-G\-P identifier I\-P. 
+
+\begin{DoxyReturn}{Returns}
+string value 
+\end{DoxyReturn}
+
+
+Definition at line 122 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_ad38c18d312e65ab03f6bc3f4b659c4ce}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-Hold\-Down\-Time@{get\-Hold\-Down\-Time}}
+\index{get\-Hold\-Down\-Time@{get\-Hold\-Down\-Time}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-Hold\-Down\-Time}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::get\-Hold\-Down\-Time (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_ad38c18d312e65ab03f6bc3f4b659c4ce}
+
+
+Returns the hold-\/down time. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 36 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a67b75e762c37bc79afe0c23d32ceec4f}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-Hol\-Down\-Time\-Factor@{get\-Hol\-Down\-Time\-Factor}}
+\index{get\-Hol\-Down\-Time\-Factor@{get\-Hol\-Down\-Time\-Factor}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-Hol\-Down\-Time\-Factor}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::get\-Hol\-Down\-Time\-Factor (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a67b75e762c37bc79afe0c23d32ceec4f}
+
+
+Returns the hold-\/down time factor. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 38 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a4221d963d60974d8236164b29743aec8}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-I\-P\-As\-String@{get\-I\-P\-As\-String}}
+\index{get\-I\-P\-As\-String@{get\-I\-P\-As\-String}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-I\-P\-As\-String}]{\setlength{\rightskip}{0pt plus 5cm}string B\-G\-P\-Session\-Parameters\-::get\-I\-P\-As\-String (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a4221d963d60974d8236164b29743aec8}
+
+
+Returns the I\-P prefix as string. 
+
+\begin{DoxyReturn}{Returns}
+string value 
+\end{DoxyReturn}
+
+
+Definition at line 120 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a5e810c8d0bd6eff56233507adf6dabe7}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-I\-P\-Mask\-As\-String@{get\-I\-P\-Mask\-As\-String}}
+\index{get\-I\-P\-Mask\-As\-String@{get\-I\-P\-Mask\-As\-String}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-I\-P\-Mask\-As\-String}]{\setlength{\rightskip}{0pt plus 5cm}string B\-G\-P\-Session\-Parameters\-::get\-I\-P\-Mask\-As\-String (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a5e810c8d0bd6eff56233507adf6dabe7}
+
+
+Returns the prefix mask value\-: the number of bits set to one starting from the 31st bit. 
+
+\begin{DoxyReturn}{Returns}
+string value 
+\end{DoxyReturn}
+
+
+Definition at line 124 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_ad1c71417fc4b9361f4ef49734c580418}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-Keepalive\-Time@{get\-Keepalive\-Time}}
+\index{get\-Keepalive\-Time@{get\-Keepalive\-Time}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-Keepalive\-Time}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::get\-Keepalive\-Time (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_ad1c71417fc4b9361f4ef49734c580418}
+
+
+Returns the keepalive time. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 34 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a4ee03778f9715e90243fc16a47514f64}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-Local\-Pref@{get\-Local\-Pref}}
+\index{get\-Local\-Pref@{get\-Local\-Pref}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-Local\-Pref}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::get\-Local\-Pref (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a4ee03778f9715e90243fc16a47514f64}
+
+
+Returns the Local preference value. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 136 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_ab3f7cbe1af9f3ce6965042ea39250cb9}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-M\-E\-D@{get\-M\-E\-D}}
+\index{get\-M\-E\-D@{get\-M\-E\-D}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-M\-E\-D}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::get\-M\-E\-D (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_ab3f7cbe1af9f3ce6965042ea39250cb9}
+
+
+Returns the Multi-\/exit discriminator value. 
+
+\begin{DoxyReturn}{Returns}
+integer value 
+\end{DoxyReturn}
+
+
+Definition at line 134 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a32780ac488ad12575334f9b004426bc3}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-Prefix@{get\-Prefix}}
+\index{get\-Prefix@{get\-Prefix}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-Prefix}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-uint$<$ 32 $>$ B\-G\-P\-Session\-Parameters\-::get\-Prefix (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a32780ac488ad12575334f9b004426bc3}
+
+
+Returns the I\-P prefix. 
+
+\begin{DoxyReturn}{Returns}
+sc\-\_\-uint$<$32$>$ value 
+\end{DoxyReturn}
+
+
+Definition at line 126 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_afa843363c1ad8881e957c5a7a53004a9}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!get\-Prefix\-Mask@{get\-Prefix\-Mask}}
+\index{get\-Prefix\-Mask@{get\-Prefix\-Mask}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{get\-Prefix\-Mask}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-uint$<$ 32 $>$ B\-G\-P\-Session\-Parameters\-::get\-Prefix\-Mask (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_afa843363c1ad8881e957c5a7a53004a9}
+
+
+Returns the prefix mask. 
+
+\begin{DoxyReturn}{Returns}
+sc\-\_\-uint$<$32$>$ value 
+\end{DoxyReturn}
+
+
+Definition at line 128 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a2681ec8adc40cc7dac2a03e7cb3d1994}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!is\-Client@{is\-Client}}
+\index{is\-Client@{is\-Client}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{is\-Client}]{\setlength{\rightskip}{0pt plus 5cm}bool B\-G\-P\-Session\-Parameters\-::is\-Client (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a2681ec8adc40cc7dac2a03e7cb3d1994}
+
+
+Checks whether the given interface is in the client mode. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface The interface id \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true\-: interface is in C\-L\-I\-E\-N\-T-\/mode -\/ false\-: interface is in S\-E\-R\-V\-E\-R-\/mode 
+\end{DoxyReturn}
+
+
+Definition at line 82 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_aa15e1258ca1d21dabb6d146a38a051cb}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!operator=@{operator=}}
+\index{operator=@{operator=}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf B\-G\-P\-Session\-Parameters} \& B\-G\-P\-Session\-Parameters\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf B\-G\-P\-Session\-Parameters} \&}]{p\-\_\-\-Original}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_aa15e1258ca1d21dabb6d146a38a051cb}
+
+
+clones the passed \hyperlink{classBGPSessionParameters}{B\-G\-P\-Session\-Parameters} object to this object 
+
+\begin{DoxyReturn}{Returns}
+reference \hyperlink{classBGPSessionParameters}{B\-G\-P\-Session\-Parameters}\& 
+\end{DoxyReturn}
+
+
+Definition at line 41 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a9ecde9c6514a451337b8f3043268286e}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-Hold\-Down\-Time\-Factor@{set\-Hold\-Down\-Time\-Factor}}
+\index{set\-Hold\-Down\-Time\-Factor@{set\-Hold\-Down\-Time\-Factor}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-Hold\-Down\-Time\-Factor}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-Hold\-Down\-Time\-Factor (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Hold\-Down\-Time\-Factor}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a9ecde9c6514a451337b8f3043268286e}
+
+
+Sets the Hold\-Down time factor. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Hold\-Down\-Time\-Factor The multiplier that defines the Hold\-Down time in relation to Keepalive time. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 26 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_af9feb193d7de00f2e44d9866dc7c7100}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-Keepalive\-Time@{set\-Keepalive\-Time}}
+\index{set\-Keepalive\-Time@{set\-Keepalive\-Time}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-Keepalive\-Time}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-Keepalive\-Time (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Keepalive\-Time}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_af9feb193d7de00f2e44d9866dc7c7100}
+
+
+Sets the Keepalive time. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Keepalive\-Time The keepalive time value \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 18 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a898ff54a5ddb05b8212fe8b1cdbb16be}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-Local\-Pref@{set\-Local\-Pref}}
+\index{set\-Local\-Pref@{set\-Local\-Pref}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-Local\-Pref}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-Local\-Pref (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Local\-Pref}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a898ff54a5ddb05b8212fe8b1cdbb16be}
+
+
+Sets the Local Preference atribute of B\-G\-P. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & m\-\_\-\-Local\-Pref The Local preference value \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 114 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_ab6f1e71374d250392eabe4571245137d}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-M\-E\-D@{set\-M\-E\-D}}
+\index{set\-M\-E\-D@{set\-M\-E\-D}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-M\-E\-D}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-M\-E\-D (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-M\-E\-D}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_ab6f1e71374d250392eabe4571245137d}
+
+
+Sets the Multi-\/exit discriminator(\-M\-E\-D) attribute of B\-G\-P. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & m\-\_\-\-M\-E\-D The Multi-\/exit discriminator value \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 109 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a7348f562b2c3a6acec49cf2d10c535b1}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-N\-I\-C\-Mode@{set\-N\-I\-C\-Mode}}
+\index{set\-N\-I\-C\-Mode@{set\-N\-I\-C\-Mode}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-N\-I\-C\-Mode}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-N\-I\-C\-Mode (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Interface, }
+\item[{int}]{p\-\_\-\-Mode}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a7348f562b2c3a6acec49cf2d10c535b1}
+
+
+Sets the interface mode used in T\-C\-P session establishment. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Interface The interface id \\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Mode The mode value\-: S\-E\-R\-V\-E\-R $|$$|$ C\-L\-I\-E\-N\-T \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 71 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a7e04197d15b3df124836aad920ea2d1a}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-Prefix@{set\-Prefix}}
+\index{set\-Prefix@{set\-Prefix}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-Prefix}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-Prefix (
+\begin{DoxyParamCaption}
+\item[{string}]{p\-\_\-\-Prefix}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a7e04197d15b3df124836aad920ea2d1a}
+
+
+Sets the prefix I\-P of the A\-S as string. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Prefix The I\-P prefix \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 88 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a943d68b6970da3a82b81d89b16fe3aeb}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-Prefix@{set\-Prefix}}
+\index{set\-Prefix@{set\-Prefix}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-Prefix}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-Prefix (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-uint$<$ 32 $>$}]{p\-\_\-\-Prefix}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a943d68b6970da3a82b81d89b16fe3aeb}
+
+
+Sets the prefix I\-P of the A\-S. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em sc\-\_\-uint$<$32$>$} & p\-\_\-\-Prefix The I\-P prefix \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 94 of file Configuration.\-cpp.
+
+\hypertarget{classBGPSessionParameters_a2a7ad268d1b26c1de1cb6b793bc8a5db}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!set\-Prefix\-Mask@{set\-Prefix\-Mask}}
+\index{set\-Prefix\-Mask@{set\-Prefix\-Mask}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{set\-Prefix\-Mask}]{\setlength{\rightskip}{0pt plus 5cm}void B\-G\-P\-Session\-Parameters\-::set\-Prefix\-Mask (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-uint$<$ 32 $>$}]{p\-\_\-\-Prefix\-Mask}
+\end{DoxyParamCaption}
+)}}\label{classBGPSessionParameters_a2a7ad268d1b26c1de1cb6b793bc8a5db}
+
+
+Sets the mask for the prefix I\-P. 
+
+Sets the A\-S Identifier to which this router connects.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em sc\-\_\-uint$<$32$>$} & p\-\_\-\-Prefix\-Mask The prefix mask\\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-A\-S\-Number The A\-S identifier of the local A\-S \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 99 of file Configuration.\-cpp.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{classBGPSessionParameters_aadc4f5c38dc8e8d4765391aaad8b5c5c}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!m\-\_\-\-Hold\-Down\-Time@{m\-\_\-\-Hold\-Down\-Time}}
+\index{m\-\_\-\-Hold\-Down\-Time@{m\-\_\-\-Hold\-Down\-Time}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{m\-\_\-\-Hold\-Down\-Time}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::m\-\_\-\-Hold\-Down\-Time\hspace{0.3cm}{\ttfamily [protected]}}}\label{classBGPSessionParameters_aadc4f5c38dc8e8d4765391aaad8b5c5c}
+
+
+Hold\-Down time for this session. 
+
+Defines the hold\-Down time for this session. The default value needs to be set in the elaboration phase. After that the B\-G\-P session may negotiated a new value between the session peers 
+
+Definition at line 242 of file Configuration.\-hpp.
+
+\hypertarget{classBGPSessionParameters_a363e577b5765ea3c0bafa2b7a66efa7a}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!m\-\_\-\-Hold\-Down\-Time\-Factor@{m\-\_\-\-Hold\-Down\-Time\-Factor}}
+\index{m\-\_\-\-Hold\-Down\-Time\-Factor@{m\-\_\-\-Hold\-Down\-Time\-Factor}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{m\-\_\-\-Hold\-Down\-Time\-Factor}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::m\-\_\-\-Hold\-Down\-Time\-Factor\hspace{0.3cm}{\ttfamily [protected]}}}\label{classBGPSessionParameters_a363e577b5765ea3c0bafa2b7a66efa7a}
+
+
+Hold\-Down time factor. 
+
+Defines the multiplier that determines the hold\-Down time by m\-\_\-\-Keepalive\-Time X m\-\_\-\-Hold\-Down\-Time\-Factor 
+
+Definition at line 249 of file Configuration.\-hpp.
+
+\hypertarget{classBGPSessionParameters_a465c4710f73834f9d0daaf9defe6ccc8}{\index{B\-G\-P\-Session\-Parameters@{B\-G\-P\-Session\-Parameters}!m\-\_\-\-Keepalive\-Time@{m\-\_\-\-Keepalive\-Time}}
+\index{m\-\_\-\-Keepalive\-Time@{m\-\_\-\-Keepalive\-Time}!BGPSessionParameters@{B\-G\-P\-Session\-Parameters}}
+\subsubsection[{m\-\_\-\-Keepalive\-Time}]{\setlength{\rightskip}{0pt plus 5cm}int B\-G\-P\-Session\-Parameters\-::m\-\_\-\-Keepalive\-Time\hspace{0.3cm}{\ttfamily [protected]}}}\label{classBGPSessionParameters_a465c4710f73834f9d0daaf9defe6ccc8}
+
+
+Hold\-Down time for this session. 
+
+Defines the keepalive time for this session. The default value needs to be set in the elaboration phase. After that the B\-G\-P session may negotiated a new value between the session peers 
+
+Definition at line 234 of file Configuration.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Configuration_8hpp}{Configuration.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/Configuration.\-cpp\end{DoxyCompactItemize}

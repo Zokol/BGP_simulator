@@ -1,0 +1,63 @@
+\hypertarget{BGPSession_8hpp}{\section{/home/antipant/\-Protocol\-P\-\_\-\-Project/\-B\-G\-P\-Session.hpp File Reference}
+\label{BGPSession_8hpp}\index{/home/antipant/\-Protocol\-P\-\_\-\-Project/\-B\-G\-P\-Session.\-hpp@{/home/antipant/\-Protocol\-P\-\_\-\-Project/\-B\-G\-P\-Session.\-hpp}}
+}
+
+
+Header file of \hyperlink{classBGPSession}{B\-G\-P\-Session} module.  
+
+
+{\ttfamily \#include \char`\"{}systemc\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}B\-G\-P\-Session\-\_\-\-If.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}B\-G\-P\-Message.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Configuration.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Output\-\_\-\-If.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}String\-Tools.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Interface\-\_\-\-If.\-hpp\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classBGPSession}{B\-G\-P\-Session}
+\begin{DoxyCompactList}\small\item\em \hyperlink{classBGPSession}{B\-G\-P\-Session} module handles the Hold\-Down and Keepalive timers of the session and sends keepalive messages to the session peer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{BGPSession_8hpp_a5ae6f07aa75aad273ae0dc9c2580e9e5}{\#define {\bfseries T\-C\-P\-\_\-\-R\-T\-\_\-\-D\-E\-L\-A\-Y}~20}\label{BGPSession_8hpp_a5ae6f07aa75aad273ae0dc9c2580e9e5}
+
+\item 
+\hypertarget{BGPSession_8hpp_a9bd1caf41aa7de01fc1fdd395dd1df9c}{\#define {\bfseries O\-P\-E\-N\-S\-E\-N\-D\-\_\-\-R\-T\-\_\-\-D\-E\-L\-A\-Y}~20}\label{BGPSession_8hpp_a9bd1caf41aa7de01fc1fdd395dd1df9c}
+
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries B\-G\-P\-\_\-\-States} \{ \\*
+{\bfseries I\-D\-L\-E}, 
+{\bfseries C\-O\-N\-N\-E\-C\-T}, 
+{\bfseries A\-C\-T\-I\-V\-E}, 
+{\bfseries O\-P\-E\-N\-\_\-\-S\-E\-N\-T}, 
+\\*
+{\bfseries O\-P\-E\-N\-\_\-\-C\-O\-N\-F\-I\-R\-M}, 
+{\bfseries E\-S\-T\-A\-B\-L\-I\-S\-H\-E\-D}
+ \}
+\item 
+enum {\bfseries T\-C\-P\-\_\-\-States} \{ {\bfseries S\-Y\-N}, 
+{\bfseries A\-C\-K}, 
+{\bfseries O\-P\-E\-N\-\_\-\-S\-E\-N\-D}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file of \hyperlink{classBGPSession}{B\-G\-P\-Session} module. \begin{DoxyAuthor}{Author}
+Antti Siirilä, 501449 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\-0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+12.\-2.\-2013 
+\end{DoxyDate}
+
+
+Definition in file \hyperlink{BGPSession_8hpp_source}{B\-G\-P\-Session.\-hpp}.
+

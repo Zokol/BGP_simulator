@@ -1,0 +1,81 @@
+\hypertarget{classCommunication__If}{\section{Communication\-\_\-\-If Class Reference}
+\label{classCommunication__If}\index{Communication\-\_\-\-If@{Communication\-\_\-\-If}}
+}
+Inheritance diagram for Communication\-\_\-\-If\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classCommunication__If}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classCommunication__If_ab9c0279d64e4ce15b2f54c0df6d8ee3a}{send\-Message} (string p\-\_\-\-Destination\-I\-P, string p\-\_\-\-Source\-I\-P, string p\-\_\-\-Payload)=0
+\begin{DoxyCompactList}\small\item\em Builds an I\-P packet using the passed fields as data. \end{DoxyCompactList}\item 
+virtual string \hyperlink{classCommunication__If_a6a6083e9f88d3bd0897ccd1c6448f9c8}{rea\-Message\-Buffer} (void)=0
+\begin{DoxyCompactList}\small\item\em Return the content of the message buffer string. \end{DoxyCompactList}\item 
+\hypertarget{classCommunication__If_ad0a41ea2bebc146be6ee6db89d49486d}{virtual void \hyperlink{classCommunication__If_ad0a41ea2bebc146be6ee6db89d49486d}{clear\-Message\-Buffer} (void)=0}\label{classCommunication__If_ad0a41ea2bebc146be6ee6db89d49486d}
+
+\begin{DoxyCompactList}\small\item\em Clears the message buffer string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 30 of file Communication\-\_\-\-If.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classCommunication__If_a6a6083e9f88d3bd0897ccd1c6448f9c8}{\index{Communication\-\_\-\-If@{Communication\-\_\-\-If}!rea\-Message\-Buffer@{rea\-Message\-Buffer}}
+\index{rea\-Message\-Buffer@{rea\-Message\-Buffer}!Communication_If@{Communication\-\_\-\-If}}
+\subsubsection[{rea\-Message\-Buffer}]{\setlength{\rightskip}{0pt plus 5cm}string Communication\-\_\-\-If\-::rea\-Message\-Buffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classCommunication__If_a6a6083e9f88d3bd0897ccd1c6448f9c8}
+
+
+Return the content of the message buffer string. 
+
+\begin{DoxyReturn}{Returns}
+Message buffer string 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classHost_a4393bc6a6521e084d9f2663f8d0564bb}{Host}.
+
+\hypertarget{classCommunication__If_ab9c0279d64e4ce15b2f54c0df6d8ee3a}{\index{Communication\-\_\-\-If@{Communication\-\_\-\-If}!send\-Message@{send\-Message}}
+\index{send\-Message@{send\-Message}!Communication_If@{Communication\-\_\-\-If}}
+\subsubsection[{send\-Message}]{\setlength{\rightskip}{0pt plus 5cm}bool Communication\-\_\-\-If\-::send\-Message (
+\begin{DoxyParamCaption}
+\item[{string}]{p\-\_\-\-Destination\-I\-P, }
+\item[{string}]{p\-\_\-\-Source\-I\-P, }
+\item[{string}]{p\-\_\-\-Payload}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classCommunication__If_ab9c0279d64e4ce15b2f54c0df6d8ee3a}
+
+
+Builds an I\-P packet using the passed fields as data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Destination\-I\-P \\
+\hline
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Source\-I\-P \\
+\hline
+\mbox{\tt in}  & {\em string} & p\-\_\-\-Payload \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true\-: message send succeeded -\/ false\-: error 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classHost_a56eb630fcf00ef1184d5df27f66a9b9e}{Host}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Communication__If_8hpp}{Communication\-\_\-\-If.\-hpp}\end{DoxyCompactItemize}

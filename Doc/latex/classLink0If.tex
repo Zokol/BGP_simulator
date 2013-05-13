@@ -1,0 +1,108 @@
+\hypertarget{classLink0If}{\section{Link0\-If Interface Reference}
+\label{classLink0If}\index{Link0\-If@{Link0\-If}}
+}
+
+
+\hyperlink{classInterface}{Interface} to the link's 0-\/end.  
+
+
+
+
+{\ttfamily \#include $<$link\-\_\-0\-\_\-if.\-hpp$>$}
+
+Inheritance diagram for Link0\-If\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classLink0If}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classLink0If_ab93e2071be429d5199d4918f5962f729}{write0} (addressed\-Pkt p\-\_\-\-Packet)=0
+\begin{DoxyCompactList}\small\item\em \hyperlink{classLink}{Link}'s write method for 0-\/end. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classLink0If_a5f5b3e589ccba326e64658b3e58f621e}{read0} (addressed\-Pkt \&p\-\_\-\-Packet)=0
+\begin{DoxyCompactList}\small\item\em \hyperlink{classLink}{Link}'s read method for 0-\/end. \end{DoxyCompactList}\item 
+virtual sc\-\_\-event \& \hyperlink{classLink0If_a689fa9b8ec98a1aba98dde64f8c63eee}{read0\-\_\-event} (void)=0
+\begin{DoxyCompactList}\small\item\em 1-\/end has written event \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classInterface}{Interface} to the link's 0-\/end. 
+
+This interface defines the function prototypes for reading and writing from/to the 0-\/end of the link 
+
+Definition at line 25 of file link\-\_\-0\-\_\-if.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classLink0If_a5f5b3e589ccba326e64658b3e58f621e}{\index{Link0\-If@{Link0\-If}!read0@{read0}}
+\index{read0@{read0}!Link0If@{Link0\-If}}
+\subsubsection[{read0}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Link0\-If\-::read0 (
+\begin{DoxyParamCaption}
+\item[{addressed\-Pkt \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classLink0If_a5f5b3e589ccba326e64658b3e58f621e}
+
+
+\hyperlink{classLink}{Link}'s read method for 0-\/end. 
+
+makes it possible to receive packets via the link 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em p\-\_\-\-Packet} & The packet will be saved in this \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true for success $|$ false for fail 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classLink_a3a56178230de2c4a8ca2409f6f1e55bb}{Link}.
+
+\hypertarget{classLink0If_a689fa9b8ec98a1aba98dde64f8c63eee}{\index{Link0\-If@{Link0\-If}!read0\-\_\-event@{read0\-\_\-event}}
+\index{read0\-\_\-event@{read0\-\_\-event}!Link0If@{Link0\-If}}
+\subsubsection[{read0\-\_\-event}]{\setlength{\rightskip}{0pt plus 5cm}virtual sc\-\_\-event\& Link0\-If\-::read0\-\_\-event (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classLink0If_a689fa9b8ec98a1aba98dde64f8c63eee}
+
+
+1-\/end has written event 
+
+\begin{DoxyReturn}{Returns}
+reference to event object 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classLink_a32184a40c508f744fb7f2f9c3b7211e8}{Link}.
+
+\hypertarget{classLink0If_ab93e2071be429d5199d4918f5962f729}{\index{Link0\-If@{Link0\-If}!write0@{write0}}
+\index{write0@{write0}!Link0If@{Link0\-If}}
+\subsubsection[{write0}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Link0\-If\-::write0 (
+\begin{DoxyParamCaption}
+\item[{addressed\-Pkt}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classLink0If_ab93e2071be429d5199d4918f5962f729}
+
+
+\hyperlink{classLink}{Link}'s write method for 0-\/end. 
+
+makes it possible to send packets via the link 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em p\-\_\-\-Packet} & The packet to be sent through the link \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true for success $|$ false for fail 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classLink_a0903f9afe6c65ac518eb3f44aa565cff}{Link}.
+
+
+
+The documentation for this interface was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\-Not\-Much\-To\-Tell\-About/\hyperlink{link__0__if_8hpp}{link\-\_\-0\-\_\-if.\-hpp}\end{DoxyCompactItemize}

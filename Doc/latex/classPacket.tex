@@ -1,0 +1,353 @@
+\hypertarget{classPacket}{\section{Packet Class Reference}
+\label{classPacket}\index{Packet@{Packet}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPacket_a421cbed17ae12cd3e9941f8adc788e54}{Packet} (void)
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\hyperlink{classPacket_a15a1f007e2e37e855e5533c27fc3fb7b}{$\sim$\-Packet} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\hyperlink{classPacket_a7c102fea0b78944fb8391d35d643898c}{Packet} (const \hyperlink{classPacket}{Packet} \&p\-\_\-\-Packet)
+\begin{DoxyCompactList}\small\item\em Constructor with member data. \end{DoxyCompactList}\item 
+\hyperlink{classPacket_afb9f290d6e42db32d3888e902dc7ae50}{Packet} (\hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-B\-G\-P\-Payload, int p\-\_\-\-Protocol\-Type)
+\begin{DoxyCompactList}\small\item\em Constructor with member data. \end{DoxyCompactList}\item 
+void \hyperlink{classPacket_a90ef09654230e093510fea3f42a88777}{set\-B\-G\-P\-Payload} (\hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-B\-G\-P\-Payload)
+\begin{DoxyCompactList}\small\item\em Set B\-G\-P message as payload. \end{DoxyCompactList}\item 
+bool \hyperlink{classPacket_a14f94e97dfcaeaeebe7dc04b5ca71de1}{set\-Protocol\-Type} (int p\-\_\-\-Protocol\-Type)
+\begin{DoxyCompactList}\small\item\em Set the upper layer protocol type. \end{DoxyCompactList}\item 
+void \hyperlink{classPacket_a49433148c75138f3057e46271ec2f8fc}{set\-P\-D\-U} (const unsigned char $\ast$p\-\_\-\-P\-D\-U)
+\begin{DoxyCompactList}\small\item\em Sets the P\-D\-U. \end{DoxyCompactList}\item 
+void \hyperlink{classPacket_a1b85389d4a39fdc6f261f09b08041e8d}{get\-P\-D\-U} (unsigned char $\ast$p\-\_\-\-P\-D\-U)
+\begin{DoxyCompactList}\small\item\em Copy P\-D\-U to the array pointed by p\-\_\-\-P\-D\-U. \end{DoxyCompactList}\item 
+\hyperlink{classBGPMessage}{B\-G\-P\-Message} \& \hyperlink{classPacket_a5e573f357e5f3805041f5f0048e4e228}{get\-B\-G\-P\-Payload} (void)
+\begin{DoxyCompactList}\small\item\em Get B\-G\-P Message. \end{DoxyCompactList}\item 
+int \hyperlink{classPacket_a8238b0ebe88dacd1977641538cdeeba3}{get\-Protocol\-Type} (void)
+\begin{DoxyCompactList}\small\item\em Get upper layer protocol type. \end{DoxyCompactList}\item 
+bool \hyperlink{classPacket_a1cc5dc6d64534c637a78fdc36e9f402c}{operator==} (const \hyperlink{classPacket}{Packet} \&p\-\_\-\-Packet) const 
+\begin{DoxyCompactList}\small\item\em Overload of compare operator. \end{DoxyCompactList}\item 
+\hyperlink{classPacket}{Packet} \& \hyperlink{classPacket_a43e76d516ec6d5ad389e0763943f7614}{operator=} (const \hyperlink{classPacket}{Packet} \&p\-\_\-\-Packet)
+\begin{DoxyCompactList}\small\item\em Overload of assign operator. \end{DoxyCompactList}\item 
+\hypertarget{classPacket_a62734b071034179836086a07d6d5f35d}{string {\bfseries output\-P\-D\-U} (void)}\label{classPacket_a62734b071034179836086a07d6d5f35d}
+
+\item 
+\hypertarget{classPacket_a1a07a62259534b5764044d62551a0d9a}{void {\bfseries clear\-Packet} (void)}\label{classPacket_a1a07a62259534b5764044d62551a0d9a}
+
+\end{DoxyCompactItemize}
+\subsection*{Related Functions}
+(Note that these are not member functions.) \begin{DoxyCompactItemize}
+\item 
+ostream \& \hyperlink{classPacket_ab2c958d68a3078ef321d8b4214f900ad}{operator$<$$<$} (ostream \&os, \hyperlink{classPacket}{Packet} const \&p\-\_\-\-Packet)
+\begin{DoxyCompactList}\small\item\em Overload stream operator. \end{DoxyCompactList}\item 
+void \hyperlink{classPacket_aa36ade96e213959a396cacd51c712a19}{sc\-\_\-trace} (sc\-\_\-trace\-\_\-file $\ast$p\-\_\-\-Trace\-File\-Pointer, const \hyperlink{classPacket}{Packet} \&p\-\_\-\-Packet, const string \&p\-\_\-\-Trace\-Object\-Name)
+\begin{DoxyCompactList}\small\item\em Set trace file for this packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 38 of file Packet.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPacket_a421cbed17ae12cd3e9941f8adc788e54}{\index{Packet@{Packet}!Packet@{Packet}}
+\index{Packet@{Packet}!Packet@{Packet}}
+\subsubsection[{Packet}]{\setlength{\rightskip}{0pt plus 5cm}Packet\-::\-Packet (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a421cbed17ae12cd3e9941f8adc788e54}
+
+
+Default constructor. 
+
+Initiates the packet fields to zero 
+
+Definition at line 17 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a15a1f007e2e37e855e5533c27fc3fb7b}{\index{Packet@{Packet}!$\sim$\-Packet@{$\sim$\-Packet}}
+\index{$\sim$\-Packet@{$\sim$\-Packet}!Packet@{Packet}}
+\subsubsection[{$\sim$\-Packet}]{\setlength{\rightskip}{0pt plus 5cm}Packet\-::$\sim$\-Packet (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a15a1f007e2e37e855e5533c27fc3fb7b}
+
+
+Destructor. 
+
+Frees the member memory allocations 
+
+Definition at line 22 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a7c102fea0b78944fb8391d35d643898c}{\index{Packet@{Packet}!Packet@{Packet}}
+\index{Packet@{Packet}!Packet@{Packet}}
+\subsubsection[{Packet}]{\setlength{\rightskip}{0pt plus 5cm}Packet\-::\-Packet (
+\begin{DoxyParamCaption}
+\item[{const {\bf Packet} \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a7c102fea0b78944fb8391d35d643898c}
+
+
+Constructor with member data. 
+
+Initiates the packet data and all the id fields to given values. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em const} & \hyperlink{classPacket}{Packet}\& Reference to the object to be copied into this \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 26 of file Packet.\-cpp.
+
+\hypertarget{classPacket_afb9f290d6e42db32d3888e902dc7ae50}{\index{Packet@{Packet}!Packet@{Packet}}
+\index{Packet@{Packet}!Packet@{Packet}}
+\subsubsection[{Packet}]{\setlength{\rightskip}{0pt plus 5cm}Packet\-::\-Packet (
+\begin{DoxyParamCaption}
+\item[{{\bf B\-G\-P\-Message} \&}]{p\-\_\-\-B\-G\-P\-Payload, }
+\item[{int}]{p\-\_\-\-Protocol\-Type}
+\end{DoxyParamCaption}
+)}}\label{classPacket_afb9f290d6e42db32d3888e902dc7ae50}
+
+
+Constructor with member data. 
+
+Initiates the packet data and all the id fields to given values. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em B\-G\-P\-Message\&} & p\-\_\-\-B\-G\-P\-Payload Reference to the B\-G\-P payload object \\
+\hline
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Protocol\-Type The upper layer protocol type carried in the payload \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 33 of file Packet.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPacket_a5e573f357e5f3805041f5f0048e4e228}{\index{Packet@{Packet}!get\-B\-G\-P\-Payload@{get\-B\-G\-P\-Payload}}
+\index{get\-B\-G\-P\-Payload@{get\-B\-G\-P\-Payload}!Packet@{Packet}}
+\subsubsection[{get\-B\-G\-P\-Payload}]{\setlength{\rightskip}{0pt plus 5cm}{\bf B\-G\-P\-Message} \& Packet\-::get\-B\-G\-P\-Payload (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a5e573f357e5f3805041f5f0048e4e228}
+
+
+Get B\-G\-P Message. 
+
+\begin{DoxyReturn}{Returns}
+{\bfseries \hyperlink{classBGPMessage}{B\-G\-P\-Message}\&} Reference to B\-G\-P message object 
+\end{DoxyReturn}
+
+
+Definition at line 53 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a1b85389d4a39fdc6f261f09b08041e8d}{\index{Packet@{Packet}!get\-P\-D\-U@{get\-P\-D\-U}}
+\index{get\-P\-D\-U@{get\-P\-D\-U}!Packet@{Packet}}
+\subsubsection[{get\-P\-D\-U}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\-::get\-P\-D\-U (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{p\-\_\-\-P\-D\-U}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a1b85389d4a39fdc6f261f09b08041e8d}
+
+
+Copy P\-D\-U to the array pointed by p\-\_\-\-P\-D\-U. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classPacket}{Packet}
+\end{DoxySeeAlso}
+\begin{DoxyReturn}{Returns}
+unsigned char $\ast$p\-\_\-\-P\-D\-U 
+\end{DoxyReturn}
+
+
+Definition at line 74 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a8238b0ebe88dacd1977641538cdeeba3}{\index{Packet@{Packet}!get\-Protocol\-Type@{get\-Protocol\-Type}}
+\index{get\-Protocol\-Type@{get\-Protocol\-Type}!Packet@{Packet}}
+\subsubsection[{get\-Protocol\-Type}]{\setlength{\rightskip}{0pt plus 5cm}int Packet\-::get\-Protocol\-Type (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a8238b0ebe88dacd1977641538cdeeba3}
+
+
+Get upper layer protocol type. 
+
+\begin{DoxyReturn}{Returns}
+{\bfseries int} Indicates the upper layer protocol 
+\end{DoxyReturn}
+
+
+Definition at line 59 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a43e76d516ec6d5ad389e0763943f7614}{\index{Packet@{Packet}!operator=@{operator=}}
+\index{operator=@{operator=}!Packet@{Packet}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Packet} \& Packet\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Packet} \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a43e76d516ec6d5ad389e0763943f7614}
+
+
+Overload of assign operator. 
+
+Copy the data fields of given Packet-\/object to the this. Return a reference to this. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em \hyperlink{classPacket}{Packet}} & p\-\_\-\-Packet Reference to a Packet-\/object, which member values is to be assigned to the member fields of this object accordingly \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\bfseries } $<$\-Packet$>$ Reference to this object 
+\end{DoxyReturn}
+
+
+Definition at line 95 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a1cc5dc6d64534c637a78fdc36e9f402c}{\index{Packet@{Packet}!operator==@{operator==}}
+\index{operator==@{operator==}!Packet@{Packet}}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Packet\-::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Packet} \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+) const}}\label{classPacket_a1cc5dc6d64534c637a78fdc36e9f402c}
+
+
+Overload of compare operator. 
+
+Compare the data fields of this Packet-\/object to the onces in the given Packet-\/object. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Packet\&} & p\-\_\-\-Packet Reference to a Packet-\/object to be compared with this object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\bfseries } $<$bool$>$ true if the member fields of both objects match otherwise false. 
+\end{DoxyReturn}
+
+
+Definition at line 85 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a90ef09654230e093510fea3f42a88777}{\index{Packet@{Packet}!set\-B\-G\-P\-Payload@{set\-B\-G\-P\-Payload}}
+\index{set\-B\-G\-P\-Payload@{set\-B\-G\-P\-Payload}!Packet@{Packet}}
+\subsubsection[{set\-B\-G\-P\-Payload}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\-::set\-B\-G\-P\-Payload (
+\begin{DoxyParamCaption}
+\item[{{\bf B\-G\-P\-Message} \&}]{p\-\_\-\-B\-G\-P\-Payload}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a90ef09654230e093510fea3f42a88777}
+
+
+Set B\-G\-P message as payload. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em B\-G\-P\-Message\&} & p\-\_\-\-B\-G\-P\-Payload Reference to the B\-G\-P payload object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 48 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a49433148c75138f3057e46271ec2f8fc}{\index{Packet@{Packet}!set\-P\-D\-U@{set\-P\-D\-U}}
+\index{set\-P\-D\-U@{set\-P\-D\-U}!Packet@{Packet}}
+\subsubsection[{set\-P\-D\-U}]{\setlength{\rightskip}{0pt plus 5cm}void Packet\-::set\-P\-D\-U (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{p\-\_\-\-P\-D\-U}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a49433148c75138f3057e46271ec2f8fc}
+
+
+Sets the P\-D\-U. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em const} & unsigned char $\ast$p\-\_\-\-P\-D\-U \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 64 of file Packet.\-cpp.
+
+\hypertarget{classPacket_a14f94e97dfcaeaeebe7dc04b5ca71de1}{\index{Packet@{Packet}!set\-Protocol\-Type@{set\-Protocol\-Type}}
+\index{set\-Protocol\-Type@{set\-Protocol\-Type}!Packet@{Packet}}
+\subsubsection[{set\-Protocol\-Type}]{\setlength{\rightskip}{0pt plus 5cm}bool Packet\-::set\-Protocol\-Type (
+\begin{DoxyParamCaption}
+\item[{int}]{p\-\_\-\-Protocol\-Type}
+\end{DoxyParamCaption}
+)}}\label{classPacket_a14f94e97dfcaeaeebe7dc04b5ca71de1}
+
+
+Set the upper layer protocol type. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em int} & p\-\_\-\-Protocol\-Type Value to indicate the upper layer protocol type \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 42 of file Packet.\-cpp.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\hypertarget{classPacket_ab2c958d68a3078ef321d8b4214f900ad}{\index{Packet@{Packet}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Packet@{Packet}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}ostream\& operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{ostream \&}]{os, }
+\item[{{\bf Packet} const \&}]{p\-\_\-\-Packet}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}}\label{classPacket_ab2c958d68a3078ef321d8b4214f900ad}
+
+
+Overload stream operator. 
+
+Write data members into given output stream. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em os} & Reference to outputstream in which the member field values is to be written. \\
+\hline
+\mbox{\tt in}  & {\em p\-\_\-\-Packet} & Reference to Packet-\/object, which member fields is to be written into outputstream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\bfseries } $<$ostream$>$ Reference to the outputstream containing the written values 
+\end{DoxyReturn}
+
+
+Definition at line 153 of file Packet.\-hpp.
+
+\hypertarget{classPacket_aa36ade96e213959a396cacd51c712a19}{\index{Packet@{Packet}!sc\-\_\-trace@{sc\-\_\-trace}}
+\index{sc\-\_\-trace@{sc\-\_\-trace}!Packet@{Packet}}
+\subsubsection[{sc\-\_\-trace}]{\setlength{\rightskip}{0pt plus 5cm}void sc\-\_\-trace (
+\begin{DoxyParamCaption}
+\item[{sc\-\_\-trace\-\_\-file $\ast$}]{p\-\_\-\-Trace\-File\-Pointer, }
+\item[{const {\bf Packet} \&}]{p\-\_\-\-Packet, }
+\item[{const string \&}]{p\-\_\-\-Trace\-Object\-Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}}\label{classPacket_aa36ade96e213959a396cacd51c712a19}
+
+
+Set trace file for this packet. 
+
+All the member fields shall be traced. Allow system\-C library to access the private members of this class by declaring the function as friend 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em p\-\_\-\-Trace\-File\-Pointer} & Pointer to sc\-\_\-trace\-\_\-file-\/object \\
+\hline
+\mbox{\tt in}  & {\em p\-\_\-\-Packet} & Reference to Packet-\/object to be traced \\
+\hline
+\mbox{\tt in}  & {\em p\-\_\-\-Trace\-Object\-Name} & Name of the Packet-\/object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 206 of file Packet.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Packet_8hpp}{Packet.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Packet_8cpp}{Packet.\-cpp}\end{DoxyCompactItemize}

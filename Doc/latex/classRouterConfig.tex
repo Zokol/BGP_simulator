@@ -1,0 +1,92 @@
+\hypertarget{classRouterConfig}{\section{Router\-Config Class Reference}
+\label{classRouterConfig}\index{Router\-Config@{Router\-Config}}
+}
+
+
+Holds the parameters for a router including interface connection parameters.  
+
+
+
+
+{\ttfamily \#include $<$Configuration.\-hpp$>$}
+
+Inheritance diagram for Router\-Config\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classRouterConfig}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRouterConfig_a245e33f079a54805e0beb3497916ca5c}{\hyperlink{classRouterConfig_a245e33f079a54805e0beb3497916ca5c}{Router\-Config} (int p\-\_\-\-Number\-Of\-Interfaces)}\label{classRouterConfig_a245e33f079a54805e0beb3497916ca5c}
+
+\begin{DoxyCompactList}\small\item\em Constructors and Destructor. \end{DoxyCompactList}\item 
+\hypertarget{classRouterConfig_ab023773bfcea4de1fe396aae125979a9}{void \hyperlink{classRouterConfig_ab023773bfcea4de1fe396aae125979a9}{add\-Connection\-Config} (int p\-\_\-\-Local\-Interface\-Id, int p\-\_\-\-Neighbor\-Interface\-Id, int p\-\_\-\-Neighbor\-Router\-Id)}\label{classRouterConfig_ab023773bfcea4de1fe396aae125979a9}
+
+\begin{DoxyCompactList}\small\item\em Setters. \end{DoxyCompactList}\item 
+\hypertarget{classRouterConfig_a8ceb1f75bcb649d52e521e3133f0937d}{bool {\bfseries is\-Connection} (int p\-\_\-\-Interface\-Id)}\label{classRouterConfig_a8ceb1f75bcb649d52e521e3133f0937d}
+
+\item 
+\hypertarget{classRouterConfig_a047260a9321d06d46cab34c884c14ee7}{int {\bfseries get\-Neighbor\-Router\-Id} (int p\-\_\-\-Local\-Interface)}\label{classRouterConfig_a047260a9321d06d46cab34c884c14ee7}
+
+\item 
+\hypertarget{classRouterConfig_a0246df47bf6e9ff3c9c45be81c161787}{int {\bfseries get\-Neighbor\-Interface\-Id} (int p\-\_\-\-Local\-Interface)}\label{classRouterConfig_a0246df47bf6e9ff3c9c45be81c161787}
+
+\item 
+\hypertarget{classRouterConfig_a31ed6306e2aaf83fee80a046bdcfa7fb}{\hyperlink{classConnection}{Connection} $\ast$ {\bfseries get\-Connection} (int p\-\_\-\-Connection\-Id)}\label{classRouterConfig_a31ed6306e2aaf83fee80a046bdcfa7fb}
+
+\item 
+\hypertarget{classRouterConfig_a96ff8dc23d79b94afc220690d73eecbf}{void {\bfseries print\-N\-I\-C\-Modes} (void)}\label{classRouterConfig_a96ff8dc23d79b94afc220690d73eecbf}
+
+\item 
+\hypertarget{classRouterConfig_abfd13ba5c09c9d9544de65ae923eaaad}{string {\bfseries to\-String} (void)}\label{classRouterConfig_abfd13ba5c09c9d9544de65ae923eaaad}
+
+\item 
+\hyperlink{classRouterConfig}{Router\-Config} \& \hyperlink{classRouterConfig_ab0bb5ea6cea6663966400c69c231560b}{operator=} (const \hyperlink{classRouterConfig}{Router\-Config} \&p\-\_\-\-Original)
+\begin{DoxyCompactList}\small\item\em Getters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRouterConfig_a14109cff8cff86a75f09fa502ef181f2}{\hyperlink{classConnection}{Connection} $\ast$$\ast$ \hyperlink{classRouterConfig_a14109cff8cff86a75f09fa502ef181f2}{m\-\_\-\-Neighbor\-Connections}}\label{classRouterConfig_a14109cff8cff86a75f09fa502ef181f2}
+
+\begin{DoxyCompactList}\small\item\em Linked list that holds the connection information for each interface of the router. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Holds the parameters for a router including interface connection parameters. 
+
+Definition at line 421 of file Configuration.\-hpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classRouterConfig_ab0bb5ea6cea6663966400c69c231560b}{\index{Router\-Config@{Router\-Config}!operator=@{operator=}}
+\index{operator=@{operator=}!RouterConfig@{Router\-Config}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Router\-Config} \& Router\-Config\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Router\-Config} \&}]{p\-\_\-\-Original}
+\end{DoxyParamCaption}
+)}}\label{classRouterConfig_ab0bb5ea6cea6663966400c69c231560b}
+
+
+Getters. 
+
+clones the passed \hyperlink{classRouterConfig}{Router\-Config} object to this object
+
+Operators
+
+\begin{DoxyReturn}{Returns}
+reference \hyperlink{classRouterConfig}{Router\-Config}\& 
+\end{DoxyReturn}
+
+
+Definition at line 240 of file Configuration.\-cpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{Configuration_8hpp}{Configuration.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/Configuration.\-cpp\end{DoxyCompactItemize}

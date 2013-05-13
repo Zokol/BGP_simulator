@@ -1,0 +1,201 @@
+\hypertarget{classControlPlane}{\section{Control\-Plane Class Reference}
+\label{classControlPlane}\index{Control\-Plane@{Control\-Plane}}
+}
+
+
+\hyperlink{classControlPlane}{Control\-Plane} module runs the B\-G\-P process.  
+
+
+
+
+{\ttfamily \#include $<$Control\-Plane.\-hpp$>$}
+
+Inheritance diagram for Control\-Plane\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classControlPlane}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classControlPlane_a5f1b4e4cd901efc31af6d97b325b2a50}{void {\bfseries before\-\_\-end\-\_\-of\-\_\-elaboration} ()}\label{classControlPlane_a5f1b4e4cd901efc31af6d97b325b2a50}
+
+\item 
+\hypertarget{classControlPlane_a03b8627e5a45efd3c5b1cdcdfc36257d}{\hyperlink{classControlPlane_a03b8627e5a45efd3c5b1cdcdfc36257d}{Control\-Plane} (sc\-\_\-module\-\_\-name p\-\_\-\-Mod\-Name, \hyperlink{classControlPlaneConfig}{Control\-Plane\-Config} $\ast$const p\-\_\-\-B\-G\-P\-Config)}\label{classControlPlane_a03b8627e5a45efd3c5b1cdcdfc36257d}
+
+\begin{DoxyCompactList}\small\item\em Elaborates the \hyperlink{classControlPlane}{Control\-Plane} module. \end{DoxyCompactList}\item 
+\hyperlink{classControlPlane_a89e252e0ec65d15f1b9cc3a1248c6875}{$\sim$\-Control\-Plane} ()
+\begin{DoxyCompactList}\small\item\em Destructor of the \hyperlink{classControlPlane}{Control\-Plane} module. \end{DoxyCompactList}\item 
+void \hyperlink{classControlPlane_af1439606467be6968d9b8bc74e797c9b}{control\-Plane\-Main} (void)
+\begin{DoxyCompactList}\small\item\em The main process of Control Plane module. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classControlPlane_a602bc55e4d99aab6e0b38468afecdc1f}{write} (\hyperlink{classBGPMessage}{B\-G\-P\-Message} \&p\-\_\-\-B\-G\-P\-Msg)
+\item 
+\hypertarget{classControlPlane_a75d7a33d6f0ce90d016fc5834e946d89}{void {\bfseries kill\-Control\-Plane} (void)}\label{classControlPlane_a75d7a33d6f0ce90d016fc5834e946d89}
+
+\item 
+\hypertarget{classControlPlane_ab1d2f0ce243546442eedf76053811154}{void {\bfseries set\-Up} (bool p\-\_\-\-Value)}\label{classControlPlane_ab1d2f0ce243546442eedf76053811154}
+
+\item 
+\hypertarget{classControlPlane_a0b791170af33147760ae97cec79dfe68}{void {\bfseries revive\-Control\-Plane} (void)}\label{classControlPlane_a0b791170af33147760ae97cec79dfe68}
+
+\item 
+\hypertarget{classControlPlane_aad1a701de61f52e2827a37250ec35048}{bool {\bfseries is\-Running} (void)}\label{classControlPlane_aad1a701de61f52e2827a37250ec35048}
+
+\item 
+\hyperlink{classControlPlane_a1ea8212be6d995f37ea9bc42c0f0adc2}{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S} (\hyperlink{classControlPlane}{Control\-Plane})
+\begin{DoxyCompactList}\small\item\em Indicate the system\-C producer that this module has a process. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+sc\-\_\-in\-\_\-clk \hyperlink{classControlPlane_ab0c4f01f5a65a86750cc4011bc531b70}{port\-\_\-\-Clk}
+\begin{DoxyCompactList}\small\item\em System clock signal. \end{DoxyCompactList}\item 
+sc\-\_\-port$<$ \hyperlink{classOutput__If}{Output\-\_\-\-If}$<$ \hyperlink{classBGPMessage}{B\-G\-P\-Message} $>$\\*
+,0, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D $>$ \hyperlink{classControlPlane_adff1abdc123100e569d92ce1485a378e}{port\-\_\-\-To\-Data\-Plane}
+\begin{DoxyCompactList}\small\item\em Forwarding port. \end{DoxyCompactList}\item 
+\hypertarget{classControlPlane_a76e565e9e2be198c1d67944db521f466}{sc\-\_\-export$<$ \hyperlink{classInterface__If}{Interface\-\_\-\-If} $>$ $\ast$$\ast$ \hyperlink{classControlPlane_a76e565e9e2be198c1d67944db521f466}{export\-\_\-\-Interface\-Control}}\label{classControlPlane_a76e565e9e2be198c1d67944db521f466}
+
+\begin{DoxyCompactList}\small\item\em N\-I\-C control port. \end{DoxyCompactList}\item 
+sc\-\_\-export$<$ \hyperlink{classOutput__If}{Output\-\_\-\-If}\\*
+$<$ \hyperlink{classBGPMessage}{B\-G\-P\-Message} $>$ $>$ $\ast$$\ast$ \hyperlink{classControlPlane_a7045b3cc322a96eed95d40df9e388964}{export\-\_\-\-Routing\-Table}
+\begin{DoxyCompactList}\small\item\em Routing table If. \end{DoxyCompactList}\item 
+sc\-\_\-export$<$ sc\-\_\-fifo\-\_\-out\-\_\-if\\*
+$<$ \hyperlink{classBGPMessage}{B\-G\-P\-Message} $>$ $>$ \hyperlink{classControlPlane_a8eeed022eec78d21f65728c01490684e}{export\-\_\-\-To\-Control\-Plane}
+\begin{DoxyCompactList}\small\item\em Input interface. \end{DoxyCompactList}\item 
+\hypertarget{classControlPlane_a69d5761d8047ee6e73f7b539cf8676a0}{sc\-\_\-export$<$ \hyperlink{classBGPSession__If}{B\-G\-P\-Session\-\_\-\-If} $>$ $\ast$$\ast$ {\bfseries export\-\_\-\-Session}}\label{classControlPlane_a69d5761d8047ee6e73f7b539cf8676a0}
+
+\item 
+\hypertarget{classControlPlane_a2ea2be172ff69fd4e7260a0c853edfb6}{sc\-\_\-export$<$ \hyperlink{classOutput__If}{Output\-\_\-\-If}\\*
+$<$ \hyperlink{classBGPMessage}{B\-G\-P\-Message} $>$ $>$ \hyperlink{classControlPlane_a2ea2be172ff69fd4e7260a0c853edfb6}{export\-\_\-\-To\-Data\-Plane}}\label{classControlPlane_a2ea2be172ff69fd4e7260a0c853edfb6}
+
+\begin{DoxyCompactList}\small\item\em This provides the Data\-Plane\-\_\-\-In\-\_\-\-If for B\-G\-P sessions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classControlPlane}{Control\-Plane} module runs the B\-G\-P process. 
+
+Definition at line 38 of file Control\-Plane.\-hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classControlPlane_a89e252e0ec65d15f1b9cc3a1248c6875}{\index{Control\-Plane@{Control\-Plane}!$\sim$\-Control\-Plane@{$\sim$\-Control\-Plane}}
+\index{$\sim$\-Control\-Plane@{$\sim$\-Control\-Plane}!ControlPlane@{Control\-Plane}}
+\subsubsection[{$\sim$\-Control\-Plane}]{\setlength{\rightskip}{0pt plus 5cm}Control\-Plane\-::$\sim$\-Control\-Plane (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classControlPlane_a89e252e0ec65d15f1b9cc3a1248c6875}
+
+
+Destructor of the \hyperlink{classControlPlane}{Control\-Plane} module. 
+
+Free's all the dynamically allocated memory 
+
+Definition at line 50 of file Control\-Plane.\-cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classControlPlane_af1439606467be6968d9b8bc74e797c9b}{\index{Control\-Plane@{Control\-Plane}!control\-Plane\-Main@{control\-Plane\-Main}}
+\index{control\-Plane\-Main@{control\-Plane\-Main}!ControlPlane@{Control\-Plane}}
+\subsubsection[{control\-Plane\-Main}]{\setlength{\rightskip}{0pt plus 5cm}void Control\-Plane\-::control\-Plane\-Main (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{classControlPlane_af1439606467be6968d9b8bc74e797c9b}
+
+
+The main process of Control Plane module. 
+
+\begin{DoxyItemize}
+\item Reads B\-G\-P messages from the m\-\_\-\-Receiving\-Buffer.\item performs the route resolution process accoriding to B\-G\-P protocol. \item Generates the required update messages.\item Keeps track on different B\-G\-P sessions. \end{DoxyItemize}
+
+
+Definition at line 60 of file Control\-Plane.\-cpp.
+
+\hypertarget{classControlPlane_a1ea8212be6d995f37ea9bc42c0f0adc2}{\index{Control\-Plane@{Control\-Plane}!S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}}
+\index{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S@{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}!ControlPlane@{Control\-Plane}}
+\subsubsection[{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S}]{\setlength{\rightskip}{0pt plus 5cm}Control\-Plane\-::\-S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S (
+\begin{DoxyParamCaption}
+\item[{{\bf Control\-Plane}}]{}
+\end{DoxyParamCaption}
+)}}\label{classControlPlane_a1ea8212be6d995f37ea9bc42c0f0adc2}
+
+
+Indicate the system\-C producer that this module has a process. 
+
+\begin{DoxySeeAlso}{See Also}
+\href{http://www.iro.umontreal.ca/~lablasso/docs/SystemC2.0.1/html/classproducer.html}{\tt http\-://www.\-iro.\-umontreal.\-ca/$\sim$lablasso/docs/\-System\-C2.\-0.\-1/html/classproducer.\-html} 
+\end{DoxySeeAlso}
+\hypertarget{classControlPlane_a602bc55e4d99aab6e0b38468afecdc1f}{\index{Control\-Plane@{Control\-Plane}!write@{write}}
+\index{write@{write}!ControlPlane@{Control\-Plane}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}bool Control\-Plane\-::write (
+\begin{DoxyParamCaption}
+\item[{{\bf B\-G\-P\-Message} \&}]{p\-\_\-\-B\-G\-P\-Msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classControlPlane_a602bc55e4d99aab6e0b38468afecdc1f}
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classOutput__If}{Output\-\_\-\-If} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classOutput__If_aeef0f3dff2d02e85375e914e83140602}{Output\-\_\-\-If$<$ B\-G\-P\-Message $>$}.
+
+
+
+Definition at line 121 of file Control\-Plane.\-cpp.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{classControlPlane_a7045b3cc322a96eed95d40df9e388964}{\index{Control\-Plane@{Control\-Plane}!export\-\_\-\-Routing\-Table@{export\-\_\-\-Routing\-Table}}
+\index{export\-\_\-\-Routing\-Table@{export\-\_\-\-Routing\-Table}!ControlPlane@{Control\-Plane}}
+\subsubsection[{export\-\_\-\-Routing\-Table}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-export$<${\bf Output\-\_\-\-If}$<${\bf B\-G\-P\-Message}$>$ $>$$\ast$$\ast$ Control\-Plane\-::export\-\_\-\-Routing\-Table}}\label{classControlPlane_a7045b3cc322a96eed95d40df9e388964}
+
+
+Routing table If. 
+
+exports the output\-\_\-if of routing table for \hyperlink{classBGPSession}{B\-G\-P\-Session} 
+
+Definition at line 66 of file Control\-Plane.\-hpp.
+
+\hypertarget{classControlPlane_a8eeed022eec78d21f65728c01490684e}{\index{Control\-Plane@{Control\-Plane}!export\-\_\-\-To\-Control\-Plane@{export\-\_\-\-To\-Control\-Plane}}
+\index{export\-\_\-\-To\-Control\-Plane@{export\-\_\-\-To\-Control\-Plane}!ControlPlane@{Control\-Plane}}
+\subsubsection[{export\-\_\-\-To\-Control\-Plane}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-export$<$sc\-\_\-fifo\-\_\-out\-\_\-if$<${\bf B\-G\-P\-Message}$>$ $>$ Control\-Plane\-::export\-\_\-\-To\-Control\-Plane}}\label{classControlPlane_a8eeed022eec78d21f65728c01490684e}
+
+
+Input interface. 
+
+Allows data plane to write received B\-G\-P messages into m\-\_\-\-Receiving\-Buffer-\/fifo 
+
+Definition at line 75 of file Control\-Plane.\-hpp.
+
+\hypertarget{classControlPlane_ab0c4f01f5a65a86750cc4011bc531b70}{\index{Control\-Plane@{Control\-Plane}!port\-\_\-\-Clk@{port\-\_\-\-Clk}}
+\index{port\-\_\-\-Clk@{port\-\_\-\-Clk}!ControlPlane@{Control\-Plane}}
+\subsubsection[{port\-\_\-\-Clk}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-in\-\_\-clk Control\-Plane\-::port\-\_\-\-Clk}}\label{classControlPlane_ab0c4f01f5a65a86750cc4011bc531b70}
+
+
+System clock signal. 
+
+The router's internal clock 
+
+Definition at line 48 of file Control\-Plane.\-hpp.
+
+\hypertarget{classControlPlane_adff1abdc123100e569d92ce1485a378e}{\index{Control\-Plane@{Control\-Plane}!port\-\_\-\-To\-Data\-Plane@{port\-\_\-\-To\-Data\-Plane}}
+\index{port\-\_\-\-To\-Data\-Plane@{port\-\_\-\-To\-Data\-Plane}!ControlPlane@{Control\-Plane}}
+\subsubsection[{port\-\_\-\-To\-Data\-Plane}]{\setlength{\rightskip}{0pt plus 5cm}sc\-\_\-port$<${\bf Output\-\_\-\-If}$<${\bf B\-G\-P\-Message}$>$ ,0, S\-C\-\_\-\-Z\-E\-R\-O\-\_\-\-O\-R\-\_\-\-M\-O\-R\-E\-\_\-\-B\-O\-U\-N\-D$>$ Control\-Plane\-::port\-\_\-\-To\-Data\-Plane}}\label{classControlPlane_adff1abdc123100e569d92ce1485a378e}
+
+
+Forwarding port. 
+
+Used to write B\-G\-P messages to the data plane 
+
+Definition at line 54 of file Control\-Plane.\-hpp.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{ControlPlane_8hpp}{Control\-Plane.\-hpp}\item 
+/home/antipant/\-Protocol\-P\-\_\-\-Project/\hyperlink{ControlPlane_8cpp}{Control\-Plane.\-cpp}\end{DoxyCompactItemize}
