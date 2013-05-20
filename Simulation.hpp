@@ -7,10 +7,20 @@
 
 
 /*!
- * \mainpage Example: Connecting two routers
- * \author Antti Siirilä, 501449, anjosi@utu.fi
- * \date 29.1.2013
- * \section s_intro
+ * \mainpage BGP Simulator
+ * \authors \li Antti Siirilä, 501449, anjosi@utu.fi \li Heikki Juva \li Iiro Räsänen
+ * \date 13.5.2013
+ * \section s_intro Introduction
+ * BGP is a vital part of the Internet providing routing services between autonomous system. The goal of this projecs was to get familiar with the BGP protocol through a programming project. The programming projects contained the design and implementation of a BGP simulator. The design contains two main components the Simulation and the User Interface (UI). The implementation of the Simulation bases on SystemC where as the UI was implemeted with Python.
+ * \section s_design Design
+ * @image html Top.png "Figure 1. The top level of the BGP simulator"
+ * \subsection sub_Simulation Simulation
+ * @image html Simulation_diagram.png "Figure 2. The router modules inside the Simulation module"
+ * @image html Module_diagram.png "Figure 3. The submodules of the Router module"
+ * \subsection sub_UI User Interface
+ * \section s_conclusion Conclusion
+ * \subsection sub_futureImprovements Future Improvements
+ * \subsection sub_whatwelearned What We Learned
  */
 
 
