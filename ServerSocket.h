@@ -1,4 +1,19 @@
-// Definition of the ServerSocket class
+
+/*! \file ServerSocket.h
+ *  \brief Definition of the ServerSocket class 
+ *  \details
+ *  \author    
+ *  \version   
+ *  \date      
+ */
+
+/*!
+ * \class ServerSocket
+ * \brief Definition of the ServerSocket class
+ */
+
+
+
 
 #ifndef ServerSocket_class
 #define ServerSocket_class

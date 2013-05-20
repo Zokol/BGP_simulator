@@ -1,3 +1,12 @@
+
+/*! \file StringTools.cpp
+ *  \brief Implementation of the StringTools class
+ *  \details
+ *  \author    Antti Siirilä, anjosi@utu.fi
+ *  \version   
+ *  \date      
+ */
+
 #include "StringTools.hpp"
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,4 +1,14 @@
-// SocketException class
+
+/*! \file SocketException.h
+ *  \brief 
+ *  \details
+ *  \author    
+ *  \version   
+ *  \date      
+ */
+
+/// \class SocketException
+/// \brief 
 
 
 #ifndef SocketException_class

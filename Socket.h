@@ -1,6 +1,6 @@
 
 /*! \file Socket.h
- *  \brief     
+ *  \brief Definition of the Socket class     
  *  \details
  *  \author    
  *  \version   

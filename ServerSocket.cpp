@@ -1,4 +1,13 @@
-// Implementation of the ServerSocket class
+
+/*! \file ServerSocket.cpp
+ *  \brief Implementation of the ServerSocket class 
+ *  \details
+ *  \author    
+ *  \version   
+ *  \date      
+ */
+
+
 
 #include "ServerSocket.h"
 #include "SocketException.h"
