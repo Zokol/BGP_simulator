@@ -1,5 +1,17 @@
+
 #include "Configuration.hpp"
 
+/*! \file Configuration.cpp
+ *  \brief     Implementation file of Configuration classes
+ *  \details
+ *  \author    Antti Siirilä, 501449
+ *  \version   1.0
+ *  \date      
+ */
+
+/*!
+ * \brief Implementation of Configuration classes
+ */
 
 /************* Implementation of BGPSessionParameters *****************/
 BGPSessionParameters::BGPSessionParameters():m_KeepaliveTime(60), m_HoldDownTimeFactor(3)

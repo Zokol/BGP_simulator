@@ -9,8 +9,9 @@
 /*!
  * \class RoutingTable
  * \brief RoutingTable module
- *  \details Routing Table contains BGP routes and offers methods
- * to manage, and access them
+ *  \details RoutingTable is responsible for building the router's routingtable. It has RawRoutingTable(RRT) and MainRoutingTable(MRT). These routingtables store routes which has the following fields: Id, Prefix, Maks, AS-path and OutputPort. RRT stores every route that it has received from it's peers. MRT is constructed by iterating through the RRT and each unique Prefix&Mask-combination is copied to MRT. RRT usually has multiple routes with same Prefix-Mask combination and then a decision has to be made, which one of those routes is copied to MRT. That decision is made upon policies and there are two kind of them. The first policy is to check if route's AS-path has preferred AS in it. RoutingTable has a list of preferred ASs and a preference value for them. When two routes are being compared and one has higher AS value than the other, the one with higher value is copied to MRT and no other policies are checked. If those two routes have the same preference value then the second policy is used to determine which route belongs to MRT. The second policy is AS-path length. It simply counts how many ASs each route have and the one with shorter path is the selected one.
+
+When link to peer is going down, RoutingTable removes every route that is behind that link and sends an UPDATE-message to peers. UPDATE-messages are used to advertise or withdraw routes. UPDATE-messages have the following fields: Prefix,Mask and AS-path. When router receives an UPDATE-message it adds it's own AS-number in message's AS-path and then forwards the message to all of it's peers. This is done if the message's AS-path doesn't already contain router's own AS-number, if it does, then the message has already been processed by this router and no actions are required.
  */
 
 

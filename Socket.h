@@ -1,4 +1,17 @@
-// Definition of the Socket class
+
+/*! \file Socket.h
+ *  \brief     
+ *  \details
+ *  \author    
+ *  \version   
+ *  \date      
+ */
+
+
+/*! \class Socket
+ *
+ *  \brief Definition of the Socket class
+ */
 
 #ifndef Socket_class
 #define Socket_class

@@ -9,7 +9,6 @@ var searchData=
   ['bgpsession_5fif',['BGPSession_If',['../classBGPSession__If.html',1,'']]],
   ['bgpsession_5fif_2ehpp',['BGPSession_If.hpp',['../BGPSession__If_8hpp.html',1,'']]],
   ['bgpsessionparameters',['BGPSessionParameters',['../classBGPSessionParameters.html',1,'BGPSessionParameters'],['../classBGPSessionParameters.html#ae3d4f579822be095d01bfd4cab18033e',1,'BGPSessionParameters::BGPSessionParameters()'],['../classBGPSessionParameters.html#a11f44412906552a220daff73da0c1992',1,'BGPSessionParameters::BGPSessionParameters(int p_KeepaliveTime, int p_HoldDownTimeFactor)']]],
-  ['brakelink',['brakeLink',['../classLink.html#adde13066127564c38d314f37c1ccfdd4',1,'Link::brakeLink()'],['../classLinkSimIf.html#a071cb3d3cbfbac72bc8c473aaafcf83b',1,'LinkSimIf::brakeLink()']]],
   ['buildippacket',['buildIPPacket',['../classPacketProcessor.html#a2e64f01458bcc7fbe2b1fd922e1e4340',1,'PacketProcessor']]],
   ['button',['Button',['../classselectdialog_1_1Button.html',1,'selectdialog']]],
   ['button',['Button',['../classUI_1_1Button.html',1,'UI']]],

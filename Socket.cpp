@@ -1,4 +1,11 @@
-// Implementation of the Socket class.
+
+/*! \file Socket.cpp
+ *  \brief Implementation of the Socket class.     
+ *  \details
+ *  \author    
+ *  \version   
+ *  \date      
+ */
 
 
 #include "Socket.h"

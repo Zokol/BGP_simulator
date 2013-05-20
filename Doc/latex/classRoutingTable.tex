@@ -28,7 +28,7 @@ void \hyperlink{classRoutingTable_a9cde93247eb0ec479d085c427e8c040d}{routing\-Ta
 \begin{DoxyCompactList}\small\item\em The main process of Control Plane module. \end{DoxyCompactList}\item 
 \hypertarget{classRoutingTable_a15cac9bbc532546c14ce29d5b19772bc}{virtual int \hyperlink{classRoutingTable_a15cac9bbc532546c14ce29d5b19772bc}{resolve\-Route} (string p\-\_\-\-I\-P\-Address)}\label{classRoutingTable_a15cac9bbc532546c14ce29d5b19772bc}
 
-\begin{DoxyCompactList}\small\item\em Set new route to the Routing \hyperlink{classTable}{Table}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Set new route to the Routing Table. \end{DoxyCompactList}\item 
 \hyperlink{classRoutingTable_a6672fa1eeba99406384473815b27b6ea}{S\-C\-\_\-\-H\-A\-S\-\_\-\-P\-R\-O\-C\-E\-S\-S} (\hyperlink{classRoutingTable}{Routing\-Table})
 \begin{DoxyCompactList}\small\item\em Indicate the system\-C producer that this module has a process. \end{DoxyCompactList}\item 
 \hypertarget{classRoutingTable_a2d64d4f1e7d3a8cbb209633c1f50cae2}{bool {\bfseries add\-Route\-To\-Raw\-Table} (string p\-\_\-msg, int p\-\_\-output\-Port)}\label{classRoutingTable_a2d64d4f1e7d3a8cbb209633c1f50cae2}
@@ -77,15 +77,17 @@ sc\-\_\-port$<$ \hyperlink{classBGPSession__If}{B\-G\-P\-Session\-\_\-\-If}, \\*
 sc\-\_\-port$<$ \hyperlink{classOutput__If}{Output\-\_\-\-If} $>$ \hyperlink{classRoutingTable_ac463a755c9a322a1641ae0422ee845e3}{port\-\_\-\-Output}
 \begin{DoxyCompactList}\small\item\em Output port for B\-G\-P messages. \end{DoxyCompactList}\item 
 bool \hyperlink{classRoutingTable_a4a4945747e35355545c416e5965b83bc}{m\-\_\-\-New\-Input\-Msg}
-\begin{DoxyCompactList}\small\item\em Set new route to the Routing \hyperlink{classTable}{Table}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Set new route to the Routing Table. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 \hyperlink{classRoutingTable}{Routing\-Table} module. 
 
-Routing \hyperlink{classTable}{Table} contains B\-G\-P routes and offers methods to manage, and access them 
+\hyperlink{classRoutingTable}{Routing\-Table} is responsible for building the router's routingtable. It has Raw\-Routing\-Table(\-R\-R\-T) and Main\-Routing\-Table(\-M\-R\-T). These routingtables store routes which has the following fields\-: Id, Prefix, Maks, A\-S-\/path and Output\-Port. R\-R\-T stores every route that it has received from it's peers. M\-R\-T is constructed by iterating through the R\-R\-T and each unique Prefix\&Mask-\/combination is copied to M\-R\-T. R\-R\-T usually has multiple routes with same Prefix-\/\-Mask combination and then a decision has to be made, which one of those routes is copied to M\-R\-T. That decision is made upon policies and there are two kind of them. The first policy is to check if route's A\-S-\/path has preferred A\-S in it. \hyperlink{classRoutingTable}{Routing\-Table} has a list of preferred A\-Ss and a preference value for them. When two routes are being compared and one has higher A\-S value than the other, the one with higher value is copied to M\-R\-T and no other policies are checked. If those two routes have the same preference value then the second policy is used to determine which route belongs to M\-R\-T. The second policy is A\-S-\/path length. It simply counts how many A\-Ss each route have and the one with shorter path is the selected one.
 
-Definition at line 45 of file Routing\-Table.\-hpp.
+When link to peer is going down, \hyperlink{classRoutingTable}{Routing\-Table} removes every route that is behind that link and sends an U\-P\-D\-A\-T\-E-\/message to peers. U\-P\-D\-A\-T\-E-\/messages are used to advertise or withdraw routes. U\-P\-D\-A\-T\-E-\/messages have the following fields\-: Prefix,Mask and A\-S-\/path. When router receives an U\-P\-D\-A\-T\-E-\/message it adds it's own A\-S-\/number in message's A\-S-\/path and then forwards the message to all of it's peers. This is done if the message's A\-S-\/path doesn't already contain router's own A\-S-\/number, if it does, then the message has already been processed by this router and no actions are required. 
+
+Definition at line 46 of file Routing\-Table.\-hpp.
 
 
 
@@ -174,11 +176,11 @@ Definition at line 1152 of file Routing\-Table.\-cpp.
 \subsubsection[{m\-\_\-\-New\-Input\-Msg}]{\setlength{\rightskip}{0pt plus 5cm}bool Routing\-Table\-::m\-\_\-\-New\-Input\-Msg}}\label{classRoutingTable_a4a4945747e35355545c416e5965b83bc}
 
 
-Set new route to the Routing \hyperlink{classTable}{Table}. 
+Set new route to the Routing Table. 
 
-Set new route to the Routing \hyperlink{classTable}{Table} 
+Set new route to the Routing Table 
 
-Definition at line 283 of file Routing\-Table.\-hpp.
+Definition at line 284 of file Routing\-Table.\-hpp.
 
 \hypertarget{classRoutingTable_a3f57617a0dbdfabc34534eda6731da74}{\index{Routing\-Table@{Routing\-Table}!port\-\_\-\-Clk@{port\-\_\-\-Clk}}
 \index{port\-\_\-\-Clk@{port\-\_\-\-Clk}!RoutingTable@{Routing\-Table}}
@@ -189,7 +191,7 @@ System clock signal.
 
 The router's internal clock 
 
-Definition at line 55 of file Routing\-Table.\-hpp.
+Definition at line 56 of file Routing\-Table.\-hpp.
 
 \hypertarget{classRoutingTable_ac463a755c9a322a1641ae0422ee845e3}{\index{Routing\-Table@{Routing\-Table}!port\-\_\-\-Output@{port\-\_\-\-Output}}
 \index{port\-\_\-\-Output@{port\-\_\-\-Output}!RoutingTable@{Routing\-Table}}
@@ -200,7 +202,7 @@ Output port for B\-G\-P messages.
 
 The \hyperlink{classRoutingTable}{Routing\-Table} writes all the B\-G\-P messages to be send to its neighbors into this port. The port should be bind to the Data Plane's. receiving F\-I\-F\-O 
 
-Definition at line 72 of file Routing\-Table.\-hpp.
+Definition at line 73 of file Routing\-Table.\-hpp.
 
 \hypertarget{classRoutingTable_af24047fc955ca1e81caee0468f70f62c}{\index{Routing\-Table@{Routing\-Table}!port\-\_\-\-Session@{port\-\_\-\-Session}}
 \index{port\-\_\-\-Session@{port\-\_\-\-Session}!RoutingTable@{Routing\-Table}}
@@ -211,7 +213,7 @@ Control port.
 
 Routing table can check through this port whether the network interfaces are up or not. 
 
-Definition at line 63 of file Routing\-Table.\-hpp.
+Definition at line 64 of file Routing\-Table.\-hpp.
 
 
 

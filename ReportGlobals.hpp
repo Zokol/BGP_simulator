@@ -1,3 +1,13 @@
+
+/*! \file ReportGlobals.hpp
+ *  \brief     Contains the global variables for sc reporting
+ *  \details
+ *  \author    Antti Siirilä, 501449
+ *  \version   1.0
+ *  \date      
+ */
+
+
 #ifndef _REPORTGLOBALS_H_
 #define _REPORTGLOBALS_H_
 

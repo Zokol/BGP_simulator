@@ -89,8 +89,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <a href="Simulation_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Simulation_8hpp.html" title="Builds the simulation environment.">Simulation.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;ReportGlobals.hpp&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;GUIProtocolTags.hpp&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ReportGlobals_8hpp.html" title="Contains the global variables for sc reporting.">ReportGlobals.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="GUIProtocolTags_8hpp.html" title="Contains all the defines of the Simulation.">GUIProtocolTags.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno"><a class="code" href="classSimulation.html#aa163d3b4d5be9400573bb651087130d3">   14</a></span>&#160;<a class="code" href="classSimulation.html#aa163d3b4d5be9400573bb651087130d3" title="Constructor.">Simulation::Simulation</a>(sc_module_name p_ModuleName, <a class="code" href="classServerSocket.html">ServerSocket</a>&amp; p_GUISocket, <a class="code" href="classSimulationConfig.html" title="Holds all the simulation parameters received from GUI.">SimulationConfig</a> * <span class="keyword">const</span> p_SimuConfiguration):sc_module(p_ModuleName), m_GUISocket(p_GUISocket), m_SimuConfiguration(p_SimuConfiguration)</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
@@ -242,7 +242,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="keywordflow">case</span> TERMINATE:</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            m_Word = STOP;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#ae19b6bb2940d2fbe0a79852b070eeafd">STOP</a>;</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="keywordflow">if</span>(m_GUISocket.is_valid())</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                sendRoutine();</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            run = <span class="keyword">false</span>;</div>
@@ -300,14 +300,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            }</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        }</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        <span class="keywordflow">if</span>(m_Cmd.compare(STOP) == 0) </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        <span class="keywordflow">if</span>(m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#ae19b6bb2940d2fbe0a79852b070eeafd">STOP</a>) == 0) </div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        {</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            <span class="comment">//set the next server state to TERMINATE</span></div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            enum_State = TERMINATE;</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        }</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(RESET_ROUTER) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a1898d09c9ad2f40168b53ba9e9518de6">RESET_ROUTER</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        {</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            <span class="comment">//get the router ID</span></div>
@@ -315,11 +315,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            <span class="comment">//reset router</span></div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            m_Router[m_IntBuffer[0]]-&gt;resetRouter();</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            <span class="comment">//set next server state to ACTIVE</span></div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        }</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(KILL_ROUTER) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a2433743dd592dd9a8a28363868d9dbaf">KILL_ROUTER</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        {</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;            <span class="comment">//get the router ID</span></div>
@@ -327,12 +327,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            <span class="comment">//kill the router</span></div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;            m_Router[m_IntBuffer[0]]-&gt;<a class="code" href="classRouter.html#aeb1245557614ed4a64e2985cec097d5b" title="Sets all the interfaces of this router down, clears all the buffers, clears all BGP sessions...">killRouter</a>();</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(REVIVE_ROUTER) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a002f62696fedca073a82c4624b60cf92">REVIVE_ROUTER</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        {</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="comment">//get the router ID</span></div>
@@ -340,11 +340,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            <span class="comment">//kill the router</span></div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            m_Router[m_IntBuffer[0]]-&gt;reviveRouter();</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        }</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(READ_PACKET) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a4559bf7ed8e094fb3140bc0e390e2cff">READ_PACKET</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        {</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            fieldRoutine(1);</div>
@@ -355,7 +355,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        }</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(CLEAR_PACKET) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a3f9cda0eb3df512ad78e05df4d35f627">CLEAR_PACKET</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        {</div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            fieldRoutine(1);</div>
@@ -364,52 +364,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;            m_Host[m_IntBuffer[0]]-&gt;<a class="code" href="classHost.html#aa70d91a0fd3b482f001909569b3396be">clearMessageBuffer</a>();</div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;</div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        }</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(SEND_PACKET) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#aeef915347621910144b72e00cf7a6310">SEND_PACKET</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        {</div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            fieldRoutine(3);</div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            <span class="keywordflow">if</span>(m_Host[m_IntBuffer[1]]-&gt;sendMessage(m_FieldBuffer[0],m_SimuConfiguration-&gt;<a class="code" href="classSimulationConfig.html#a66aa890c0bdae066484b14adc6e056e7" title="Returns the reference to the RouterConfig-object defined by p_RouterId.">getRouterConfiguration</a>(m_IntBuffer[1]).<a class="code" href="classBGPSessionParameters.html#a5da0c2ccd227626e379db649965ee5f2" title="Returns the BGP identifier IP.">getBGPIdentifier</a>(), m_FieldBuffer[2]))</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                m_Word = ACK;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                m_Word = NACK;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a958518a45b12053ae33606ee7cb68a55">NACK</a>;</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        }</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(CONNECT) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a65528c74adc6691eac2c7a2f39328064">CONNECT</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        {</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;            fieldRoutine(2);</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;            <span class="comment">//kill the router</span></div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;            m_Router[m_IntBuffer[0]]-&gt;<a class="code" href="classRouter.html#a6d9dd4f4e1abc82e92ab082da52f2abd" title="Connects the given interface of this router to the given interface of the given router.">connectInterface</a>(m_IntBuffer[1]);</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;</div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        }</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(DISCONNECT) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a587604e6f3570c0fc32794384d4d0d1f">DISCONNECT</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        {</div>
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            fieldRoutine(2);</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;            <span class="comment">//kill the router</span></div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;            m_Router[m_IntBuffer[0]]-&gt;<a class="code" href="classRouter.html#a77e20f60d40305bcc245724c0e1224d3" title="disconnects the given interface">disconnectInterface</a>(m_IntBuffer[1]);</div>
 <div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;</div>
 <div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        }</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(READ_TABLE) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a1344e68949f37794ac2d9fc9e8821d5c">READ_TABLE</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        {</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;            fieldRoutine(1);</div>
@@ -420,7 +420,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;</div>
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        }</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(READ_RAW_TABLE) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a4cf1c423f0690df9d4b497d65e3eba88">READ_RAW_TABLE</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;        {</div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;            fieldRoutine(1);</div>
@@ -431,7 +431,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;</div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        }</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(SET_LOCAL_PREF) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a2dd6ccd81cecef765ca9bc1423be5ee7">SET_LOCAL_PREF</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        {</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;            fieldRoutine(3);</div>
@@ -441,13 +441,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            m_Router[m_IntBuffer[0]]-&gt;<a class="code" href="classRouter.html#a8d4f91c2cf123344658ecce29c48fc03" title="give preference value for AS">setPreferredAS</a>(m_IntBuffer[1], m_IntBuffer[2]);</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;</div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;</div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        }</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(SET_KEEPALIVE) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a7f32b5742cccdc5a9a2147c7d5339c8f">SET_KEEPALIVE</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        {</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;            fieldRoutine(2);</div>
@@ -457,12 +457,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;            <a class="code" href="classRouterConfig.html" title="Holds the parameters for a router including interface connection parameters.">RouterConfig</a> *l_RConfig = m_SimuConfiguration-&gt;getRouterConfigurationPtr(m_IntBuffer[0]);</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;            l_RConfig-&gt;<a class="code" href="classBGPSessionParameters.html#af9feb193d7de00f2e44d9866dc7c7100" title="Sets the Keepalive time.">setKeepaliveTime</a>(m_IntBuffer[1]);</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        }</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(SET_HOLDDOWN_MULT) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a87d6f1d2a66a85a486f8216104550105">SET_HOLDDOWN_MULT</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;        {</div>
 <div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            <span class="comment">//get the router ID</span></div>
 <div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            fieldRoutine(2);</div>
@@ -470,25 +470,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;            <a class="code" href="classRouterConfig.html" title="Holds the parameters for a router including interface connection parameters.">RouterConfig</a> *l_RConfig = m_SimuConfiguration-&gt;getRouterConfigurationPtr(m_IntBuffer[0]);</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;            l_RConfig-&gt;<a class="code" href="classBGPSessionParameters.html#a9ecde9c6514a451337b8f3043268286e" title="Sets the HoldDown time factor.">setHoldDownTimeFactor</a>(m_IntBuffer[1]);</div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            <span class="comment">//send acknowledgement</span></div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            m_Word = ACK;</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a6f6489887e08bff4887d0bc5dcf214d8" title="************************ Simulation commands *******************************">ACK</a>;</div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;            <span class="comment">//set next server state to SEND</span></div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;</div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        }</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(SHOW_IF) == 0 &amp;&amp; l_Param) </div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Cmd.compare(<a class="code" href="GUIProtocolTags_8hpp.html#a66d5b0de0ce5643e4c371bc519847b26">SHOW_IF</a>) == 0 &amp;&amp; l_Param) </div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        {</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;            <span class="comment">//TODO: to be implemented if extra time is left</span></div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        }</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        {</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;            cout &lt;&lt; m_Word &lt;&lt; endl;</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;            m_Word = NACK;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;            m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a958518a45b12053ae33606ee7cb68a55">NACK</a>;</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            enum_State = SEND;</div>
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        }</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    }</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="keywordflow">catch</span>(...)</div>
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    {</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        m_Word = NACK;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        m_Word = <a class="code" href="GUIProtocolTags_8hpp.html#a958518a45b12053ae33606ee7cb68a55">NACK</a>;</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;        enum_State = SEND;</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    }</div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;</div>
@@ -568,7 +568,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 20 2013 21:34:48 for BGP Simulator by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon May 20 2013 22:20:45 for BGP Simulator by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

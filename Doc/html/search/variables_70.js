@@ -8,8 +8,5 @@ var searchData=
   ['port_5ftocontrolplane',['port_ToControlPlane',['../classDataPlane.html#a3e86cb0494125c28df71313925463b61',1,'DataPlane']]],
   ['port_5ftodataplane',['port_ToDataPlane',['../classBGPSession.html#ad7689f7d5de2710e4d9803de7e274517',1,'BGPSession::port_ToDataPlane()'],['../classControlPlane.html#adff1abdc123100e569d92ce1485a378e',1,'ControlPlane::port_ToDataPlane()']]],
   ['port_5ftointerface',['port_ToInterface',['../classDataPlane.html#ae60298408ddadaf00f0d3405d00af6cd',1,'DataPlane']]],
-  ['port_5ftoroutingtable',['port_ToRoutingTable',['../classBGPSession.html#a32b5d9138c0c9eb611e07f642b8397fc',1,'BGPSession::port_ToRoutingTable()'],['../classDataPlane.html#ab4e32e4ecbe4ec6e448f30c4ea629ad7',1,'DataPlane::port_ToRoutingTable()']]],
-  ['pt_5flink0',['pt_Link0',['../classLink.html#a6dc662e66d2955d93b2097e3b76a293c',1,'Link']]],
-  ['pt_5flink1',['pt_Link1',['../classLink.html#a937ffa502e7eb0d15e26b8fe5d8fac59',1,'Link']]],
-  ['pt_5flinksim',['pt_LinkSim',['../classLink.html#a135ddeaf0e024e2076edbe9ea1c6bc95',1,'Link']]]
+  ['port_5ftoroutingtable',['port_ToRoutingTable',['../classBGPSession.html#a32b5d9138c0c9eb611e07f642b8397fc',1,'BGPSession::port_ToRoutingTable()'],['../classDataPlane.html#ab4e32e4ecbe4ec6e448f30c4ea629ad7',1,'DataPlane::port_ToRoutingTable()']]]
 ];

@@ -26,5 +26,6 @@ var searchData=
   ['getrawroutingtable',['getRawRoutingTable',['../classRouter.html#a93327fb1efd8d25e2f71c3761d9f77e9',1,'Router']]],
   ['getrouterconfiguration',['getRouterConfiguration',['../classSimulationConfig.html#a66aa890c0bdae066484b14adc6e056e7',1,'SimulationConfig']]],
   ['getroutingtable',['getRoutingTable',['../classRouter.html#a88a647aff2e6e2f27c1a905a3e514b08',1,'Router']]],
-  ['gettcpid',['getTCPId',['../classBGPSession.html#a8110431fc392eff7efc7d5ab3a2a515d',1,'BGPSession']]]
+  ['gettcpid',['getTCPId',['../classBGPSession.html#a8110431fc392eff7efc7d5ab3a2a515d',1,'BGPSession']]],
+  ['guiprotocoltags_2ehpp',['GUIProtocolTags.hpp',['../GUIProtocolTags_8hpp.html',1,'']]]
 ];

@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['read0',['read0',['../classLink.html#a3a56178230de2c4a8ca2409f6f1e55bb',1,'Link::read0()'],['../classLink0If.html#a5f5b3e589ccba326e64658b3e58f621e',1,'Link0If::read0()']]],
-  ['read0_5fevent',['read0_event',['../classLink.html#a32184a40c508f744fb7f2f9c3b7211e8',1,'Link::read0_event()'],['../classLink0If.html#a689fa9b8ec98a1aba98dde64f8c63eee',1,'Link0If::read0_event()']]],
-  ['read1',['read1',['../classLink.html#ac6cb4a6569a46f21ff2b1c7e60c27e22',1,'Link::read1()'],['../classLink1If.html#aed95671720ed114162dfa5b8ad8864c8',1,'Link1If::read1()']]],
-  ['read1_5fevent',['read1_event',['../classLink.html#a87842ba06901c709fa7b2460fdf29041',1,'Link::read1_event()'],['../classLink1If.html#a921db0c6c77ef9363aa5e6d880606c86',1,'Link1If::read1_event()']]],
   ['readippacket',['readIPPacket',['../classPacketProcessor.html#aa47781f9d17becf245930e46470261ff',1,'PacketProcessor']]],
   ['reamessagebuffer',['reaMessageBuffer',['../classCommunication__If.html#a6a6083e9f88d3bd0897ccd1c6448f9c8',1,'Communication_If::reaMessageBuffer()'],['../classHost.html#a4393bc6a6521e084d9f2663f8d0564bb',1,'Host::reaMessageBuffer()']]],
   ['removelocalpref',['removeLocalPref',['../classRouter.html#a0099c9da9f1a15f2b09b802a821fa28a',1,'Router']]],
